@@ -29,7 +29,7 @@ Diuji di Chromium headless (meniru GitHub Pages di subfolder `/gowithdme/`, URL 
 1. **Supabase > Authentication > URL Configuration**: tambahkan `https://calvfinka.github.io/gowithdme/id/login` dan `…/en/login` (dan origin yang sama di Google Cloud OAuth). Selama domain .com belum aktif, login hanya jalan bila alamat ini terdaftar.
 2. SQL untuk fitur ajakan (`invitations*`, view `invitations_public`, RPC `request_join`, `decide_member`, `leave_or_cancel`, `create_invitation`) serta `schema_tahap2/google/kota.sql` **tidak ada di repo**. Tanpa itu RLS admin dan ajakan tidak bisa diaudit. Simpan semuanya di `supabase/`.
 3. Edge Function `log-login` tidak ada di repo; privasi menjanjikan retensi log 90 hari.
-4. `halo@gowithdme.com` belum bisa menerima email sebelum domain dan MX aktif.
+4. `halo@gowithdme.com` belum bisa menerima email sebelum domain dan MX aktif. Sementara, Bantuan, Privasi, dan Syarat memakai email alternatif; ganti `CONTACT_EMAIL` di `js/config.js` dan teks di `src/privacy.*.body.html` / `src/terms.*.body.html` setelah email domain aktif.
 5. Poster hotlink ke indonesia.travel dan jadwal.events: IP pengunjung ikut terkirim ke host itu, dan izin hak ciptanya belum jelas.
 6. Kartu statistik di halaman profil masih angka 0 tetap; `IB_SAMPLE` menampilkan event contoh bila Supabase gagal dimuat.
 

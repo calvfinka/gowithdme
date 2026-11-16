@@ -35,13 +35,39 @@ try{localStorage.setItem("ib_lang",L)}catch(e){}
 })();
 ''' % (json.dumps(dic,ensure_ascii=False),json.dumps(PROV_EN,ensure_ascii=False))
 open(ROOT+"/js/i18n.js","w",encoding="utf-8").write(js)
+# ---- js/search-index.js: indeks statis untuk pencarian (halaman, kategori, FAQ). Dua bahasa dicari sekaligus. ----
+def plain(t): return re.sub(r"\s+"," ",re.sub(r"<[^>]+>","",t).replace("&amp;","&").replace("&nbsp;"," ")).strip()
+# (kunci, tujuan, kunci judul di J, jenis, kata kunci tambahan ID+EN)
+SX_PAGES=[
+ ("home","./","sx_p_home","page","beranda home utama awal sedang berlangsung live"),
+ ("events","event","sx_p_events","page","semua event acara kalender daftar all events calendar"),
+ ("hike","gunung","sx_p_mtn","page","naik gunung pendakian hiking open trip checklist packing patungan kalkulator"),
+ ("invite","event?ajakan=1","sx_p_invite","page","ajakan barengan teman bareng cari teman meet up invite buddy gabung join"),
+ ("comm","komunitas","sx_p_comm","page","komunitas forum diskusi grup whatsapp telegram discord community"),
+ ("submit","ajukan","sx_p_submit","page","ajukan pengajuan tambah event buat open trip poster submit create host"),
+ ("help","bantuan","sx_p_help","page","bantuan faq tanya jawab pertanyaan help support"),
+ ("contact","bantuan#kontak","sx_p_contact","page","kontak hubungi email whatsapp wa laporan lapor contact report"),
+ ("terms","terms","sx_p_terms","page","syarat ketentuan aturan terms conditions rules"),
+ ("privacy","privacy","sx_p_privacy","page","privasi kebijakan data pribadi pdp lokasi privacy policy personal data"),
+ ("login","login","sx_p_login","page","masuk login daftar register sign up akun google password lupa"),
+ ("profile","profil","sx_p_profile","page","profil profile akun edit nama panggilan nickname kota bio foto pengunjung"),
+ ("saved","event?kat=tersimpan","sx_p_saved","cat","tersimpan favorit simpan saved bookmark"),
+ ("done","event?kat=selesai","sx_p_done","cat","selesai lewat arsip riwayat ended past archive"),
+ ("concert","event?kat=konser","sx_p_concert","cat","konser musik festival gig live concert music"),
+ ("expo","event?kat=pameran","sx_p_expo","cat","pameran expo exhibition seni art"),
+ ("hiking","gunung","sx_p_hike","cat","naik gunung pendakian trekking camping hiking mountain open trip"),
+]
+sx={"pages":[{"k":k,"h":h,"t":[J[tk][0],J[tk][1]],"type":ty,"kw":kw} for k,h,tk,ty,kw in SX_PAGES],
+    "faq":[{"n":n,"q":[plain(S[f"fq{n}_q"][0]),plain(S[f"fq{n}_q"][1])],"a":[plain(S[f"fq{n}_a"][0]),plain(S[f"fq{n}_a"][1])]} for n in range(1,14)]}
+sx["prov"]=PROV_EN
+open(ROOT+"/js/search-index.js","w",encoding="utf-8").write("/* Dibuat oleh tools/build.py dari tools/strings.py. Jangan edit tangan. */\nwindow.IB_SX="+json.dumps(sx,ensure_ascii=False)+";\n")
 # ---- halaman per bahasa ----
 for l in LANGS:
     o="en" if l=="id" else "id"
     os.makedirs(f"{ROOT}/{l}",exist_ok=True)
     for p in PAGES:
         h=inc(open(f"{ROOT}/src/{p}.html",encoding="utf-8").read())
-        h=h.replace("{{search}}",inc("{{>search}}") if p in APP else "<span></span>")
+        h=h.replace("{{search}}",inc("{{>search}}"))
         h=h.replace("{{pgshare}}",'<button class="ico-btn sh" id="pgShare" type="button" aria-label="{{sh_aria}}"><svg class="i" aria-hidden="true"><use href="#i-share"/></svg></button>' if p in APP else "")
         h=h.replace("{{auth}}",'<a class="btn pri" id="login" href="login">{{login_btn}}</a>' if p in APP else '<a class="btn line" href="./">{{back_home}}</a>')
         if p in("privacy","terms"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
@@ -52,6 +78,8 @@ for l in LANGS:
         h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl)
         h=re.sub(r"\{\{(\w+)\}\}",lambda m:S[m.group(1)][IDX[l]],h)
         assert "{{" not in h,(l,p)
+        need=[x for x in ("i18n","config","regions","gunung-data","search-index","search") if f"../js/{x}.js" not in h]
+        h=h.replace("</body>","".join(f'<script src="../js/{x}.js"></script>' for x in need)+"\n</body>",1)
         open(f"{ROOT}/{l}/{p}.html","w",encoding="utf-8").write(h)
 # ---- pengalih di root (tautan lama /event, /gunung, /login tetap jalan) ----
 for p in PAGES:
