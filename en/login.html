@@ -69,11 +69,23 @@
 <div class="card" id="me" hidden>
   <div class="ph"><div class="av" id="av">?</div><div><h3 id="nm">Name</h3><div class="meta" id="em"></div>
     <span class="badge ok" id="bv" hidden>✓ Verified</span> <span class="badge adm" id="ba" hidden>Admin</span></div></div>
-  <div class="st"><div><b>0</b>events joined</div><div><b>0</b>buddies</div><div><b>0</b>invites created</div></div>
+  <div class="st"><div><b id="sPosts">0</b>forum posts</div><div><b id="sJoined">0</b>invites joined</div><div><b id="sHosted">0</b>invites created</div></div>
   <form id="fProf">
     <label class="f">Nickname<input id="pNick" type="text" maxlength="30" placeholder="Name shown to other users"></label>
     <label class="f">Home city<select id="pCity"></select></label>
     <button class="btn" type="submit">Save profile</button>
+  </form>
+  <form id="fExtra">
+    <h3 class="kh">About you</h3>
+    <label class="f">Bio (max. 200) <i class="cc" id="pBioN">0</i><textarea id="pBio" rows="3" maxlength="200" placeholder="Briefly: which concerts you like, where you hike. No links or phone numbers."></textarea></label>
+    <div class="f"><span>Interests (max. 8)</span><div class="chips" id="pInt"></div></div>
+    <label class="f">Hiking level<select id="pLevel"></select></label>
+    <h3 class="kh">Profile privacy</h3>
+    <label class="chk"><input id="pPublic" type="checkbox"> My profile can be opened by logged-in users</label>
+    <label class="chk"><input id="pShowV" type="checkbox"> Show the visitor list on my profile</label>
+    <label class="chk"><input id="pLog" type="checkbox"> Record my visits to other people's profiles. If off, I won't appear in their visitor lists and my history is deleted.</label>
+    <p class="meta">Full profiles can only be opened by logged-in users. Nickname, photo, and badge still show in the forum and invites.</p>
+    <div class="row"><button class="btn" type="submit">Save profile</button><a class="btn ghost" id="pView" href="profil">View my public profile</a></div>
   </form>
   <div class="msg" style="margin-top:14px"><b>Location check</b><br><span id="locSt">Not checked yet. Location is used to keep the community safe.</span><br><button class="btn ghost sm" id="bLoc" type="button" style="margin-top:6px">Allow &amp; check location</button></div>
   <div class="row" style="margin-top:12px"><a class="btn" href="ajukan">Submit an event / open trip</a><a class="btn ghost" id="lAdmin" href="../admin" hidden>Admin panel</a><button class="btn ghost" id="bOut" type="button">Log out</button></div>

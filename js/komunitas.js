@@ -13,6 +13,7 @@ function ago(ts){var s=(new Date(ts).getTime()-Date.now())/1000,a=Math.abs(s),r;
   if(a<60)return r.format(0,"second");if(a<3600)return r.format(Math.round(s/60),"minute");
   if(a<86400)return r.format(Math.round(s/3600),"hour");if(a<2592000)return r.format(Math.round(s/86400),"day");
   return r.format(Math.round(s/2592000),"month")}
+function who(n,ref,v){var t=esc(n||tr("k_user"))+(v?" ✓":"");return ref?'<a class="lnk" href="profil?u='+encodeURIComponent(ref)+'">'+t+'</a>':t}
 function plat(u){return/whatsapp/i.test(u)?"WhatsApp":/t\.me/i.test(u)?"Telegram":/discord/i.test(u)?"Discord":""}
 /* dialog kecil pengganti prompt/confirm */
 function ask(o){return new Promise(function(res){
@@ -75,10 +76,10 @@ function openPost(id){
   sb.from("forum_posts_public").select("*").eq("id",id).maybeSingle().then(function(r){if(r.data)show(r.data);else toast(tr("k_gone"))})}
 function drawPost(p,R){
   var act=function(mine,t,id){return st.me?'<button class="lnk" data-x="'+(mine?"del":"rep")+'-'+t+'" data-id="'+id+'">'+esc(tr(mine?"k_delete":"k_report"))+'</button>':""};
-  var h='<span class="kk kk-'+p.kind+'">'+esc(tr("k_tab_"+p.kind))+'</span><h2>'+esc(p.title)+'</h2><div class="meta">'+esc(tr("k_by"))+' '+esc(p.author_name||tr("k_user"))+(p.author_verified?" ✓":"")+' · '+esc(ago(p.created_at))+'</div>'+
+  var h='<span class="kk kk-'+p.kind+'">'+esc(tr("k_tab_"+p.kind))+'</span><h2>'+esc(p.title)+'</h2><div class="meta">'+esc(tr("k_by"))+' '+who(p.author_name,p.author_ref,p.author_verified)+' · '+esc(ago(p.created_at))+'</div>'+
    (p.event_title?'<p class="meta"><a class="lnk" href="event?e='+encodeURIComponent(p.event_slug||p.event_id)+'">'+esc(p.event_title)+'</a></p>':'')+
    '<p class="kbody">'+esc(p.body)+'</p><div class="row">'+act(p.is_mine,"post",p.id)+'</div><h3 class="kh">'+esc(tr("k_replies",{n:R.length}))+'</h3>'+
-   (R.length?R.map(function(x){return'<div class="krep"><b>'+esc(x.author_name||tr("k_user"))+(x.author_verified?" ✓":"")+'</b> <small>'+esc(ago(x.created_at))+'</small><p class="kbody">'+esc(x.body)+'</p>'+act(x.is_mine,"reply",x.id)+'</div>'}).join(""):'<p class="meta">'+esc(tr("k_no_replies"))+'</p>')+
+   (R.length?R.map(function(x){return'<div class="krep"><b>'+who(x.author_name,x.author_ref,x.author_verified)+'</b> <small>'+esc(ago(x.created_at))+'</small><p class="kbody">'+esc(x.body)+'</p>'+act(x.is_mine,"reply",x.id)+'</div>'}).join(""):'<p class="meta">'+esc(tr("k_no_replies"))+'</p>')+
    (st.me?'<form id="kRep"><textarea name="b" rows="3" minlength="2" maxlength="600" required placeholder="'+esc(tr("k_reply_ph"))+'"></textarea><div class="row"><button class="btn sm" type="submit">'+esc(tr("k_reply_send"))+'</button></div></form>'
          :'<button class="btn sm" data-x="login">'+esc(tr("k_login_write"))+'</button>')+
    '<div class="row"><button class="btn ghost sm" data-x="close">'+esc(tr("close"))+'</button></div>';

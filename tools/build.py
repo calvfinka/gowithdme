@@ -8,8 +8,8 @@ ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Setelah domain .com aktif:  GWM_SITE=https://gowithdme.com python3 tools/build.py
 BASE=os.environ.get("GWM_SITE","https://calvfinka.github.io/gowithdme").rstrip("/")
 LANGS=["id","en"]; IDX={"id":0,"en":1}
-PAGES=["index","event","gunung","login","privacy","terms","ajukan","komunitas"]
-NOINDEX=("login","ajukan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
+PAGES=["index","event","gunung","login","privacy","terms","ajukan","komunitas","profil"]
+NOINDEX=("login","ajukan","profil")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
 APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
 def path(p): return "" if p=="index" else p
 def inc(h):
@@ -77,5 +77,5 @@ for l in LANGS:
         rows.append(f"<url><loc>{url(l,p)}</loc>{alt}</url>")
 open(ROOT+"/sitemap.xml","w",encoding="utf-8").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+"".join(rows)+"</urlset>\n")
 pre=urlparse(BASE).path.rstrip("/")
-open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login","ajukan","id/ajukan","en/ajukan"))+f"Sitemap: {BASE}/sitemap.xml\n")
+open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login","ajukan","id/ajukan","en/ajukan","profil","id/profil","en/profil"))+f"Sitemap: {BASE}/sitemap.xml\n")
 print("selesai ->",BASE)

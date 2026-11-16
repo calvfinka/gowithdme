@@ -85,3 +85,9 @@ Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (
 - **Manual:** tombol *Blokir penulis* di kartu moderasi (lama hari, 0 = permanen, plus alasan). Tab **Diblokir** menampilkan semua blokir (otomatis/manual) dengan tombol Cabut blokir, yang juga menghapus catatan pelanggaran.
 - Penulis yang diblokir tetap bisa membaca dan melapor, tetapi tidak bisa menulis kiriman atau balasan; pesan blokir (sampai kapan dan alasannya) muncul saat mencoba menulis.
 - Tambahan pengaman di `forum_post`/`forum_reply`: kiriman kembar dalam sehari ditolak, dan batas kecepatan (3 kiriman atau 8 balasan per 10 menit).
+
+## Profil diperluas + pengunjung terakhir
+- Jalankan `supabase/schema_profil.sql` (setelah `schema_forum.sql` dan `schema_ajakan_fix.sql`). Menambah `profile_extra`, `profile_visits`, fungsi `profile_view/save/visitors/visitors_clear/log_visits`, dan kolom `author_ref`/`host_ref` pada view forum dan ajakan (berisi id hanya untuk pengguna yang sudah masuk, anonim mendapat null).
+- Halaman baru `/id/profil` dan `/en/profil` (`js/profil.js`, `?u=<id>`; tanpa `u` = profil sendiri). Hanya bisa dibuka pengguna yang sudah masuk; tidak diindeks Google. Nama penulis di forum dan host ajakan menaut ke profilnya.
+- Editor di `/login` (kartu profil): bio (tanpa tautan/nomor), minat, level pendakian, statistik asli (kiriman, ajakan diikuti, ajakan dibuat), dan tiga saklar privasi.
+- **Pengunjung terakhir:** membuka profil orang lain mencatat nama, foto, dan waktu selama 30 hari, tampil ke pengguna login. Aturan privasi: pemilik bisa mematikan profil, menyembunyikan daftar, atau menghapus daftar; pengunjung bisa mematikan pencatatan (riwayatnya ikut terhapus) langsung dari halaman profil; tidak ada jam terakhir online, lokasi, atau hitungan kunjungan per orang. Kebijakan privasi sudah ditambah butir "Profil dan pengunjung".

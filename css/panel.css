@@ -73,3 +73,15 @@ select,input[type=search],input[type=number]{background:var(--field);color:var(-
 .fm .rs.hot{border-left:3px solid var(--err)}
 .fm .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .fm .ctx{font-size:12px;color:var(--mute);margin-bottom:2px}
+
+/* ---- profil + pengunjung ---- */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{border:1px solid var(--line);background:var(--s1);color:var(--ink);border-radius:999px;padding:5px 12px;font:600 12px var(--f);cursor:pointer}
+.chip[aria-pressed="true"],.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}span.chip{cursor:default}
+.pfh{display:flex;gap:14px;align-items:center;margin-bottom:10px}.pfh h1{font-size:20px;margin:0 0 2px;overflow-wrap:anywhere}
+.pavb{flex:0 0 64px;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--ember),var(--sun));color:#12302a;display:grid;place-items:center;font:700 26px var(--f)}
+.pf .card{margin-bottom:12px}.pf .row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+.pvl{display:grid;gap:6px;margin:6px 0 10px}
+.pv{display:flex;gap:10px;align-items:center;padding:6px 8px;border:1px solid var(--line);border-radius:10px;background:var(--s1);color:inherit;text-decoration:none}
+.pv b{display:block;font-size:14px}.pv small{display:block;font-size:12px;color:var(--mute)}
+.pav{flex:0 0 34px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--ember),var(--sun));color:#12302a;display:grid;place-items:center;font:700 14px var(--f)}
