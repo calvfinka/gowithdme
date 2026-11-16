@@ -499,3 +499,34 @@ J.update({
 "sx_p_sub_page": ("Halaman", "Page"), "sx_p_sub_cat": ("Kategori event", "Event category"),
 "sx_status_live": ("Berlangsung", "Live"), "sx_status_today": ("Hari ini", "Today"),
 })
+
+# --- Sesi 3: pesan antar pengguna + header sadar-login ---
+S.update({
+"ms_title": ("Pesan — GWM", "Messages — GWM"),
+"ms_desc": ("Kirim pesan, gambar, dan voice note antar pengguna. Semua pesan hilang dalam 10 menit.", "Send messages, images and voice notes between users. Everything disappears after 10 minutes."),
+})
+J.update({
+"nav_profile": ("Profil", "Profile"), "msg_nav": ("Pesan", "Messages"), "sx_p_msgs": ("Pesan", "Messages"),
+"ms_h": ("Pesan", "Messages"),
+"ms_rule": ("Pesan, gambar, dan voice note hilang 10 menit setelah dikirim. Lampiran maks. 5 MB. Dilarang tautan dan nomor telepon. Laporkan pesan yang mengganggu dengan tombol ⚑.", "Messages, images and voice notes disappear 10 minutes after sending. Attachments max 5 MB. No links or phone numbers. Report abusive messages with the ⚑ button."),
+"ms_req": ("Permintaan pesan", "Message requests"), "ms_all": ("Percakapan", "Conversations"),
+"ms_empty": ("Belum ada percakapan. Buka profil seseorang lalu tekan Kirim pesan.", "No conversations yet. Open someone's profile and tap Send message."),
+"ms_img": ("Gambar", "Image"), "ms_vn": ("Voice note", "Voice note"), "ms_gone": ("Pesan sudah hilang", "Message has expired"),
+"ms_gone_all": ("Belum ada pesan aktif. Pesan yang dikirim akan hilang dalam 10 menit.", "No active messages. Sent messages disappear within 10 minutes."),
+"ms_left": ("hilang {t}", "gone in {t}"), "ms_ph": ("Tulis pesan…", "Write a message…"),
+"ms_wait": ("Menunggu balasan. Sebelum diterima kamu hanya bisa mengirim 1 pesan teks, tanpa gambar atau voice note.", "Waiting for a reply. Until accepted you can only send 1 text message, no images or voice notes."),
+"ms_acc_hint": ("Terima permintaan atau balas untuk membuka gambar dan voice note.", "Accept the request or reply to unlock images and voice notes."),
+"ms_req_in": ("Orang ini belum kamu kenal. Terima untuk melanjutkan, atau blokir bila mengganggu.", "You don't know this person yet. Accept to continue, or block if unwanted."),
+"ms_acc": ("Terima", "Accept"), "ms_block": ("Blokir", "Block"), "ms_unblock": ("Buka blokir", "Unblock"),
+"ms_blocked": ("Kamu memblokir pengguna ini. Buka blokir untuk berkirim pesan lagi.", "You blocked this user. Unblock to message again."),
+"ms_sure_block": ("Blokir pengguna ini? Kalian tidak bisa saling berkirim pesan.", "Block this user? Neither of you can message the other."),
+"ms_rep": ("Laporkan pesan", "Report message"), "ms_rep_p": ("Alasan laporan (opsional):", "Reason for report (optional):"),
+"ms_rep_ok": ("Laporan terkirim. Salinan teks disimpan 30 hari untuk moderator.", "Report sent. A text copy is kept for 30 days for moderators."),
+"ms_sent_req": ("Permintaan terkirim. Tunggu balasan.", "Request sent. Wait for a reply."),
+"ms_big": ("Lampiran melebihi 5 MB.", "Attachment is over 5 MB."), "ms_type": ("Jenis berkas tidak didukung.", "Unsupported file type."),
+"ms_err": ("Terjadi kesalahan. Coba lagi.", "Something went wrong. Try again."),
+"ms_mic_deny": ("Mikrofon tidak tersedia atau izin ditolak.", "Microphone unavailable or permission denied."),
+"ms_need": ("Masuk untuk memakai pesan. Fitur ini hanya untuk pengguna yang sudah masuk.", "Log in to use messages. This feature is for logged-in users only."),
+"ms_login": ("Masuk", "Log in"), "ms_back": ("Kembali", "Back"), "ms_send": ("Kirim pesan", "Send message"), "ms_send_btn": ("Kirim", "Send"),
+"ms_sql": ("Fitur pesan belum aktif: jalankan supabase/schema_pesan.sql di Supabase.", "Messaging is not enabled yet: run supabase/schema_pesan.sql in Supabase."),
+})

@@ -35,6 +35,7 @@ function draw(d,V,logOn){
     if(d.level)h+='<p class="meta">'+esc(tr("pf_level",{l:tr("lv_"+d.level)}))+'</p>';
     h+='<div class="st"><div><b>'+(st.posts||0)+'</b>'+esc(tr("pf_s1"))+'</div><div><b>'+(st.joined||0)+'</b>'+esc(tr("pf_s2"))+'</div><div><b>'+(st.hosted||0)+'</b>'+esc(tr("pf_s3"))+'</div></div>';
     if(d.mine)h+='<div class="row"><a class="btn sm" href="login?next=profil">'+esc(tr("pf_edit"))+'</a></div>';
+    else if(Q)h+='<div class="row"><a class="btn sm" href="pesan?u='+encodeURIComponent(Q)+'">'+esc(tr("ms_send"))+'</a></div>';
     h+='</div><div class="card pfc">'+drawVisitors(d,V,logOn)+'</div>'}
   box.innerHTML=h;
   box.onclick=function(ev){var b=ev.target.closest("[data-x]");if(!b)return;

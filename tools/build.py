@@ -8,8 +8,8 @@ ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Setelah domain .com aktif:  GWM_SITE=https://gowithdme.com python3 tools/build.py
 BASE=os.environ.get("GWM_SITE","https://calvfinka.github.io/gowithdme").rstrip("/")
 LANGS=["id","en"]; IDX={"id":0,"en":1}
-PAGES=["index","event","gunung","login","privacy","terms","ajukan","komunitas","profil","bantuan"]
-NOINDEX=("login","ajukan","profil")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
+PAGES=["index","event","gunung","login","privacy","terms","ajukan","komunitas","profil","bantuan","pesan"]
+NOINDEX=("login","ajukan","profil","pesan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
 APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
 def path(p): return "" if p=="index" else p
 def inc(h):
@@ -51,6 +51,7 @@ SX_PAGES=[
  ("privacy","privacy","sx_p_privacy","page","privasi kebijakan data pribadi pdp lokasi privacy policy personal data"),
  ("login","login","sx_p_login","page","masuk login daftar register sign up akun google password lupa"),
  ("profile","profil","sx_p_profile","page","profil profile akun edit nama panggilan nickname kota bio foto pengunjung"),
+ ("msgs","pesan","sx_p_msgs","page","pesan chat dm inbox voice note gambar kirim pesan message messages"),
  ("saved","event?kat=tersimpan","sx_p_saved","cat","tersimpan favorit simpan saved bookmark"),
  ("done","event?kat=selesai","sx_p_done","cat","selesai lewat arsip riwayat ended past archive"),
  ("concert","event?kat=konser","sx_p_concert","cat","konser musik festival gig live concert music"),
@@ -78,7 +79,7 @@ for l in LANGS:
         h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl)
         h=re.sub(r"\{\{(\w+)\}\}",lambda m:S[m.group(1)][IDX[l]],h)
         assert "{{" not in h,(l,p)
-        need=[x for x in ("i18n","config","regions","gunung-data","search-index","search") if f"../js/{x}.js" not in h]
+        need=[x for x in ("i18n","config","regions","gunung-data","search-index","search","navauth") if f"../js/{x}.js" not in h]
         h=h.replace("</body>","".join(f'<script src="../js/{x}.js"></script>' for x in need)+"\n</body>",1)
         open(f"{ROOT}/{l}/{p}.html","w",encoding="utf-8").write(h)
 # ---- pengalih di root (tautan lama /event, /gunung, /login tetap jalan) ----
@@ -105,5 +106,5 @@ for l in LANGS:
         rows.append(f"<url><loc>{url(l,p)}</loc>{alt}</url>")
 open(ROOT+"/sitemap.xml","w",encoding="utf-8").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+"".join(rows)+"</urlset>\n")
 pre=urlparse(BASE).path.rstrip("/")
-open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login","ajukan","id/ajukan","en/ajukan","profil","id/profil","en/profil"))+f"Sitemap: {BASE}/sitemap.xml\n")
+open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login","ajukan","id/ajukan","en/ajukan","profil","id/profil","en/profil","pesan","id/pesan","en/pesan"))+f"Sitemap: {BASE}/sitemap.xml\n")
 print("selesai ->",BASE)

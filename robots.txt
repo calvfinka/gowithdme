@@ -10,4 +10,7 @@ Disallow: /gowithdme/en/ajukan
 Disallow: /gowithdme/profil
 Disallow: /gowithdme/id/profil
 Disallow: /gowithdme/en/profil
+Disallow: /gowithdme/pesan
+Disallow: /gowithdme/id/pesan
+Disallow: /gowithdme/en/pesan
 Sitemap: https://calvfinka.github.io/gowithdme/sitemap.xml

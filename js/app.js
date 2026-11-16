@@ -227,7 +227,7 @@ $("tick").onclick=function(ev){var b=ev.target.closest(".tk");if(b&&b.dataset.id
 $("list").onkeydown=function(ev){if((ev.key==="Enter"||ev.key===" ")&&ev.target.dataset&&ev.target.dataset.id&&(ev.target.classList.contains("tile")||ev.target.classList.contains("r"))){ev.preventDefault();openEv(ev.target.dataset.id)}};
 $("dlg").onclick=function(ev){if(ev.target===this)this.close()};
 $("dlg").addEventListener("close",function(){if(history.replaceState){var u=new URL(location.href);if(u.searchParams.has("e")){u.searchParams.delete("e");history.replaceState(null,"",u.pathname+u.search)}}});
-$("login").onclick=function(ev){ev.preventDefault();location.href="login"};
+$("login").onclick=function(ev){ev.preventDefault();location.href=this.getAttribute("href")||"login"};
 $("year").textContent=new Date().getFullYear();
 [].forEach.call(document.querySelectorAll("[data-mail]"),function(a){if(C.CONTACT_EMAIL)a.href="mailto:"+C.CONTACT_EMAIL});
 loadChips();
