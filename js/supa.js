@@ -1,3 +1,4 @@
+if(/\.html$/.test(location.pathname))history.replaceState(null,"",location.pathname.replace(/index\.html$/,"").replace(/\.html$/,""));
 // Klien Supabase bersama (login.html & admin.html). SDK dimuat dari CDN sebelum file ini.
 (function(){
   var C=window.IB_CONFIG||{};

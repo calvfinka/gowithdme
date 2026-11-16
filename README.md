@@ -32,3 +32,9 @@ Tambah di `js/regions.js` dan baris di tabel `provinces`/`cities`.
 2. Supabase > Authentication > URL Configuration: Site URL = domain situs, tambahkan Redirect URL `https://infobarengan.com/login.html`.
 3. Daftar akun di `/login.html`, lalu jalankan query `update profiles set role='admin' ...` (ada di akhir schema_tahap2.sql).
 4. Buka `/admin.html`. Penjagaan sebenarnya ada di RLS, bukan di JavaScript.
+
+## Tahap 2b: Login Google & URL bersih
+- Jalankan `supabase/schema_google.sql`. Aktifkan provider Google di Supabase (Authentication > Providers).
+- Google Cloud Console > OAuth client (Web): Authorized redirect URI = `https://jhqkylnqvhrljpaknjcg.supabase.co/auth/v1/callback`, Authorized JavaScript origins = domain situs. Salin Client ID dan Secret ke Supabase.
+- Redirect URL Supabase: `https://infobarengan.com/login`.
+- GitHub Pages otomatis melayani `/login` dan `/admin` dari file `.html`.

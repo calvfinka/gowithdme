@@ -12,6 +12,8 @@ $("fReg").onsubmit=function(e){e.preventDefault();
   sb.auth.signUp({email:$("rEmail").value.trim(),password:$("rPass").value,options:{data:{nickname:$("rNick").value.trim()},emailRedirectTo:location.href}}).then(function(r){
     if(r.error)return msg(r.error.message,"err");
     msg(r.data.session?"Akun dibuat.":"Akun dibuat. Cek email untuk konfirmasi, lalu masuk.","ok")})};
+$("bGoogle").onclick=function(){msg("Mengarahkan ke Google…");
+  sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:"select_account"}}}).then(function(r){if(r.error)msg("Login Google belum diaktifkan di Supabase.","err")})};
 $("lForgot").onclick=function(){var em=$("lEmail").value.trim();if(!em)return msg("Isi email dahulu.","err");
   sb.auth.resetPasswordForEmail(em,{redirectTo:location.href}).then(function(r){msg(r.error?r.error.message:"Tautan reset dikirim ke email.",r.error?"err":"ok")})};
 $("bOut").onclick=function(){sb.auth.signOut()};
@@ -30,7 +32,7 @@ $("bLoc").onclick=logLocation;
 function show(){getMe().then(function(m){
   $("guest").hidden=!!m;$("me").hidden=!m;if(!m)return;
   var p=m.profile,n=p.nickname||m.user.email.split("@")[0];
-  $("av").textContent=n.charAt(0).toUpperCase();$("nm").textContent=n;$("em").textContent=m.user.email;
+  $("av").textContent=p.avatar_url?"":n.charAt(0).toUpperCase();$("av").style.background=p.avatar_url?"center/cover url('"+p.avatar_url.replace(/'/g,"%27")+"')":"";$("nm").textContent=n;$("em").textContent=m.user.email;
   $("bv").hidden=!p.verified;$("ba").hidden=p.role!=="admin";$("lAdmin").hidden=p.role!=="admin";
   $("pNick").value=p.nickname||"";loadCities($("pCity"),true).then(function(){$("pCity").value=p.city_id||""});
 })}
