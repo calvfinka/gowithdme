@@ -4,7 +4,9 @@ import os,re,json,sys
 sys.path.insert(0,os.path.dirname(__file__))
 from strings import S,J,PROV_EN
 ROOT=os.path.join(os.path.dirname(__file__),"..")
-BASE="https://gowithdme.com"
+# Alamat situs untuk canonical, hreflang, dan sitemap. Saat ini situs hidup di GitHub Pages.
+# Setelah domain .com aktif:  GWM_SITE=https://gowithdme.com python3 tools/build.py
+BASE=os.environ.get("GWM_SITE","https://calvfinka.github.io/gowithdme").rstrip("/")
 LANGS=["id","en"]; IDX={"id":0,"en":1}
 PAGES=["index","event","gunung","login","privacy","terms"]
 APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
@@ -44,7 +46,7 @@ for l in LANGS:
         sw=f'<a class="lang" href="../{o}/{path(p)}" data-sw="{o}" hreflang="{o}" lang="{o}" aria-label="{S["lang_label"][IDX[l]]}">{o.upper()}</a>'
         hl="" if p=="login" else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
             +"".join(f'<link rel="alternate" hreflang="{x}" href="{BASE}/{x}/{path(p)}">' for x in LANGS)
-            +f'<link rel="alternate" hreflang="x-default" href="{BASE}/{path(p)}">')
+            +f'<link rel="alternate" hreflang="x-default" href="{BASE}/id/{path(p)}">')
         h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl)
         h=re.sub(r"\{\{(\w+)\}\}",lambda m:S[m.group(1)][IDX[l]],h)
         assert "{{" not in h,(l,p)
@@ -54,7 +56,7 @@ for p in PAGES:
     t=path(p)
     h=f'''<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GWM</title><meta name="robots" content="noindex,follow">
-<link rel="alternate" hreflang="id" href="{BASE}/id/{t}"><link rel="alternate" hreflang="en" href="{BASE}/en/{t}"><link rel="alternate" hreflang="x-default" href="{BASE}/{t}">
+<link rel="alternate" hreflang="id" href="{BASE}/id/{t}"><link rel="alternate" hreflang="en" href="{BASE}/en/{t}"><link rel="alternate" hreflang="x-default" href="{BASE}/id/{t}">
 <script>(function(){{var l;try{{l=localStorage.getItem("ib_lang")}}catch(e){{}}
 if(l!=="id"&&l!=="en")l=/^id/i.test(navigator.language||"")?"id":"en";
 location.replace(l+"/{t}"+location.search+location.hash)}})()</script></head>
@@ -62,4 +64,16 @@ location.replace(l+"/{t}"+location.search+location.hash)}})()</script></head>
 <p><a href="id/{t}">Bahasa Indonesia</a> · <a href="en/{t}">English</a></p></body></html>
 '''
     open(f"{ROOT}/{p}.html","w",encoding="utf-8").write(h)
-print("selesai")
+# ---- sitemap.xml dan robots.txt (ikut BASE, jadi tidak perlu diedit tangan saat pindah domain) ----
+from urllib.parse import urlparse
+pub=[p for p in PAGES if p!="login"]
+def url(l,p): return f"{BASE}/{l}/{path(p)}"
+rows=[]
+for l in LANGS:
+    for p in pub:
+        alt="".join(f'<xhtml:link rel="alternate" hreflang="{x}" href="{url(x,p)}"/>' for x in LANGS)
+        rows.append(f"<url><loc>{url(l,p)}</loc>{alt}</url>")
+open(ROOT+"/sitemap.xml","w",encoding="utf-8").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+"".join(rows)+"</urlset>\n")
+pre=urlparse(BASE).path.rstrip("/")
+open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login"))+f"Sitemap: {BASE}/sitemap.xml\n")
+print("selesai ->",BASE)

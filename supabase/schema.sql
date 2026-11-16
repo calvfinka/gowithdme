@@ -35,7 +35,14 @@ create policy "ubah profil sendiri" on profiles for update to authenticated usin
 create policy "baca log sendiri" on login_logs for select to authenticated using (auth.uid()=user_id);
 
 create function handle_new_user() returns trigger language plpgsql security definer set search_path=public as $$
-begin insert into profiles(id,nickname) values (new.id, split_part(new.email,'@',1)); return new; end $$;
+begin
+  insert into profiles(id,nickname,avatar_url) values (new.id,
+    left(coalesce(nullif(trim(new.raw_user_meta_data->>'nickname'),''), nullif(trim(new.raw_user_meta_data->>'full_name'),''),
+                  nullif(trim(new.raw_user_meta_data->>'name'),''), split_part(new.email,'@',1)),30),
+    coalesce(new.raw_user_meta_data->>'avatar_url', new.raw_user_meta_data->>'picture'))
+  on conflict (id) do nothing;
+  return new;
+end $$;
 create trigger on_auth_user_created after insert on auth.users for each row execute function handle_new_user();
 
 insert into categories values ('konser','Konser'),('naikgunung','Naik Gunung');

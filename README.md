@@ -14,7 +14,7 @@ assets/ CNAME .nojekyll robots.txt
 ```
 ## Deploy
 1. Ekstrak zip, ganti isi repo, commit & push.
-2. Settings > Pages > Deploy from branch (main, root). Domain: gowithdme.com (file CNAME sudah ada).
+2. Settings > Pages > Deploy from branch (main, root). Domain: gowithdme.com (buat file `CNAME` berisi `gowithdme.com` hanya setelah DNS siap; lihat AUDIT.md).
 3. Supabase: buat proyek, jalankan `supabase/schema.sql`, isi `js/config.js`. Tambah event lewat Table Editor (status `published`).
 ## Tambah daerah
 Tambah di `js/regions.js` dan baris di tabel `provinces`/`cities`.

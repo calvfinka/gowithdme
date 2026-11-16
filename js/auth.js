@@ -5,12 +5,13 @@ function seg(m){mode=m;$("fLogin").hidden=m!=="login";$("fReg").hidden=m!=="reg"
 $("sLogin").onclick=function(){seg("login")};$("sReg").onclick=function(){seg("reg")};
 $("fLogin").onsubmit=function(e){e.preventDefault();msg(tr("processing"));
   sb.auth.signInWithPassword({email:$("lEmail").value.trim(),password:$("lPass").value}).then(function(r){
-    if(r.error)return msg(tr("a_bad"),"err");msg("");logLocation()})};
+    if(r.error)return msg(/not confirmed/i.test(r.error.message||"")?tr("a_unconfirmed"):tr("a_bad"),"err");msg("");logLocation()})};
 $("fReg").onsubmit=function(e){e.preventDefault();
   if(!$("rConsent").checked)return msg(tr("a_consent"),"err");
   msg(tr("processing"));
   sb.auth.signUp({email:$("rEmail").value.trim(),password:$("rPass").value,options:{data:{nickname:$("rNick").value.trim()},emailRedirectTo:location.href}}).then(function(r){
     if(r.error)return msg(r.error.message,"err");
+    var us=r.data&&r.data.user;if(us&&us.identities&&us.identities.length===0)return msg(tr("a_exists"),"err");
     msg(r.data.session?tr("a_created"):tr("a_created_mail"),"ok")})};
 $("bGoogle").onclick=function(){msg(tr("a_gredir"));
   sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:"select_account"}}}).then(function(r){if(r.error)msg(tr("a_goff"),"err")})};
@@ -29,12 +30,20 @@ function logLocation(){
   },function(){$("locSt").textContent=tr("a_denied")},{enableHighAccuracy:true,timeout:10000});
 }
 $("bLoc").onclick=logLocation;
-function show(){getMe().then(function(m){
+var recovering=false;
+function show(){if(recovering)return;getMe().then(function(m){
   $("guest").hidden=!!m;$("me").hidden=!m;if(!m)return;
   var p=m.profile,n=p.nickname||m.user.email.split("@")[0];
   $("av").textContent=p.avatar_url?"":n.charAt(0).toUpperCase();$("av").style.background=p.avatar_url?"center/cover url('"+p.avatar_url.replace(/'/g,"%27")+"')":"";$("nm").textContent=n;$("em").textContent=m.user.email;
   $("bv").hidden=!p.verified;$("ba").hidden=p.role!=="admin";$("lAdmin").hidden=p.role!=="admin";
   $("pNick").value=p.nickname||"";loadCities($("pCity"),true).then(function(){$("pCity").value=p.city_id||""});
 })}
-sb.auth.onAuthStateChange(function(){show()});show();
+sb.auth.onAuthStateChange(function(ev){
+  if(ev==="PASSWORD_RECOVERY"){recovering=true;$("guest").hidden=true;$("me").hidden=true;$("rec").hidden=false;msg(tr("a_recover"),"ok");return}
+  show()});
+$("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
+  if(p.length<8)return msg(tr("a_pass8"),"err");
+  sb.auth.updateUser({password:p}).then(function(r){if(r.error)return msg(r.error.message,"err");
+    recovering=false;$("rec").hidden=true;$("nPass").value="";msg(tr("a_passok"),"ok");show()})};
+show();
 })();

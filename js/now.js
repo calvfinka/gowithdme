@@ -22,21 +22,21 @@ function todayIso(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakar
 function paint(name,d,isDefault){
   var h=d.days[0];
   $("wNow").innerHTML=icon(d.ic)+'<div class="deg">'+d.t+'°</div><div class="wd"><b>'+esc(label(d.ic))+'</b><span>'+esc(name)+(isDefault?" ("+esc(tr("wx_def"))+")":"")+'</span><span>'+esc(tr("wx_hl",{h:h.max,l:h.min,p:h.p}))+'</span></div>';
-  var t=todayIso();
+  var t=d.today||todayIso();
   $("wFc").innerHTML='<div class="fc">'+d.days.map(function(x){
     return'<div class="fd"><span class="w">'+esc(x.d===t?tr("wx_today"):dayName(x.d))+'</span>'+icon(x.ic)+'<span class="t">'+x.max+'° <i>'+x.min+'°</i></span><span class="p">'+x.p+'%</span></div>'}).join("")+'</div>';
   $("wSrc").textContent=tr("wx_src")}
 function msg(t){$("wNow").innerHTML='<div class="wmsg">'+esc(t)+'</div>';$("wFc").innerHTML="";$("wSrc").textContent=""}
 function load(){
-  var isDef=!city||city==="semua",name=isDef?(C.DEFAULT_CITY||"Jakarta"):city,g=GEO[name];
+  var isDef=!city||city==="semua",name=isDef?(C.DEFAULT_CITY||"Jakarta"):city,g=GEO[name],my=++seq;
   if(!g)return msg(tr("wx_fail",{c:name}));
   if(cache[name])return paint(name,cache[name],isDef);
-  var my=++seq;msg(tr("wx_load"));
+  msg(tr("wx_load"));
   var ctl=window.AbortController?new AbortController():null,to=setTimeout(function(){ctl&&ctl.abort()},8000);
   fetch("https://api.open-meteo.com/v1/forecast?latitude="+g[0]+"&longitude="+g[1]+"&current=temperature_2m,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=5",ctl?{signal:ctl.signal}:{})
   .then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){
     clearTimeout(to);
-    var d={t:Math.round(j.current.temperature_2m),ic:wmo(j.current.weather_code,j.current.is_day===1),
+    var d={today:String(j.current.time||"").slice(0,10),t:Math.round(j.current.temperature_2m),ic:wmo(j.current.weather_code,j.current.is_day===1),
       days:j.daily.time.map(function(t,i){var p=j.daily.precipitation_probability_max[i]||0,c=j.daily.weather_code[i],ic=wmo(c,true);
         if(ic==="sun"&&p>=60)ic="rain";else if((ic==="sun"||ic==="partly")&&p>=40&&c<=3)ic="partly";
         return{d:t,max:Math.round(j.daily.temperature_2m_max[i]),min:Math.round(j.daily.temperature_2m_min[i]),p:p,ic:ic}})};

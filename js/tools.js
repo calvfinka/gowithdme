@@ -9,8 +9,9 @@ $("pl").onchange=function(e){saved[e.target.dataset.i]=e.target.checked;try{loca
 $("pReset").onclick=function(){saved={};try{localStorage.removeItem(KEY)}catch(x){}[].forEach.call(document.querySelectorAll("#pl input"),function(i){i.checked=false});prog()};
 prog();
 function calc(){
-  var t=+$("total").value||0,n=Math.max(1,+$("orang").value||1),a=+$("admin").value||0;
-  var per=Math.ceil((t*(1+a/100))/n/1000)*1000;
+  var t=Math.max(0,+$("total").value||0),n=Math.max(1,Math.floor(+$("orang").value||1)),a=Math.min(30,Math.max(0,+$("admin").value||0));
+  /* hitung dengan bilangan bulat (t*(100+a)) supaya tidak kena galat desimal: 100000/2 orang/10% = 55.000, bukan 56.000 */
+  var per=Math.ceil(t*(100+a)/(100000*n))*1000;
   $("hasil").innerHTML=t?tr("per")+' <b>Rp'+per.toLocaleString(tr("numloc"))+'</b><br><small>'+tr("round",{a:a})+'</small>':tr("fill");
 }
 ["total","orang","admin"].forEach(function(i){$(i).oninput=calc});calc();

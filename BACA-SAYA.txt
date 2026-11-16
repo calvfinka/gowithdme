@@ -1,6 +1,4 @@
-UPDATE 2: poster + info lengkap + terbit
+Cara deploy: ubah teks di tools/strings.py atau src/*.html, lalu jalankan  python3 tools/build.py
+(id/, en/, js/i18n.js, sitemap.xml, robots.txt dibuat otomatis). Setelah itu: git add -A && git commit && git push.
 
-1) Ekstrak ke ROOT repo:  unzip -o gwm-update-2.zip
-2) Supabase > SQL Editor: jalankan supabase/event_poster_info.sql
-   (setelah events_mendatang.sql)
-3) Deploy: git add -A && git commit -m "poster event mendatang" && git push
+Migrasi ke gowithdme.com: lihat AUDIT.md bagian "Saat pindah domain".

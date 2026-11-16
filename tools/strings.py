@@ -116,6 +116,9 @@ S = {
 "aria_view": ("Tampilan", "View"), "v_grid": ("Tampilan kisi", "Grid view"), "v_list": ("Tampilan daftar", "List view"),
 "st_week": ("mulai 7 hari ke depan", "starting in the next 7 days"), "st_next": ("sampai event pertama", "until the first event"),
 "tick_h": ("Akan datang", "Coming up"), "tick_aria": ("Event yang akan datang (berjalan otomatis, arahkan atau sentuh untuk menjeda)", "Upcoming events (scrolls automatically, hover or touch to pause)"),
+"lg_rec_h": ("Buat password baru", "Set a new password"),
+"lg_rec_p": ("Tautan reset berhasil. Isi password baru untuk akunmu.", "Reset link accepted. Enter a new password for your account."),
+"lg_rec_btn": ("Simpan password baru", "Save new password"),
 }
 # ---- Teks dinamis untuk JavaScript (j_*) ----
 J = {
@@ -197,5 +200,10 @@ J = {
 "wx_hl": ("T {h}° · R {l}° · Hujan {p}%", "H {h}° · L {l}° · Rain {p}%"), "wx_today": ("Hari ini", "Today"),
 "wx_def": ("kota awal", "default city"), "wx_src": ("Sumber: Open-Meteo · diperbarui saat halaman dibuka", "Source: Open-Meteo · updated when the page opens"),
 "wx_fail": ("Cuaca {c} belum bisa dimuat.", "Weather for {c} could not be loaded."), "wx_load": ("Memuat cuaca…", "Loading weather…"),
+"a_exists": ("Email ini sudah terdaftar. Silakan masuk, atau pakai Lupa password.", "This email is already registered. Log in, or use Forgot password."),
+"a_unconfirmed": ("Email belum dikonfirmasi. Cek kotak masuk (dan folder spam) untuk tautan konfirmasi.", "Email not confirmed yet. Check your inbox (and spam folder) for the confirmation link."),
+"a_recover": ("Tautan reset diterima. Isi password baru di bawah.", "Reset link accepted. Enter your new password below."),
+"a_pass8": ("Password minimal 8 karakter.", "Password must be at least 8 characters."),
+"a_passok": ("Password diperbarui.", "Password updated."),
 }
 PROV_EN = {"DKI Jakarta":"Jakarta Capital Region","Banten":"Banten","Jawa Barat":"West Java","Jawa Tengah":"Central Java","DI Yogyakarta":"Yogyakarta Special Region","Jawa Timur":"East Java","Bali":"Bali","Sumatera Utara":"North Sumatra","Sumatera Barat":"West Sumatra","Riau":"Riau","Kepulauan Riau":"Riau Islands","Sumatera Selatan":"South Sumatra","Lampung":"Lampung","Aceh":"Aceh","Kalimantan Timur":"East Kalimantan","Kalimantan Selatan":"South Kalimantan","Kalimantan Barat":"West Kalimantan","Sulawesi Selatan":"South Sulawesi","Sulawesi Utara":"North Sulawesi","Nusa Tenggara Barat":"West Nusa Tenggara"}

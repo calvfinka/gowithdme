@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /login
-Disallow: /id/login
-Disallow: /en/login
-Sitemap: https://gowithdme.com/sitemap.xml
+Disallow: /gowithdme/admin
+Disallow: /gowithdme/login
+Disallow: /gowithdme/id/login
+Disallow: /gowithdme/en/login
+Sitemap: https://calvfinka.github.io/gowithdme/sitemap.xml

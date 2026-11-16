@@ -76,6 +76,11 @@
   <div class="msg" style="margin-top:14px"><b>Location check</b><br><span id="locSt">Not checked yet. Location is used to keep the community safe.</span><br><button class="btn ghost sm" id="bLoc" type="button" style="margin-top:6px">Allow &amp; check location</button></div>
   <div class="row" style="margin-top:12px"><a class="btn ghost" id="lAdmin" href="../admin" hidden>Admin panel</a><button class="btn ghost" id="bOut" type="button">Log out</button></div>
 </div>
+<div class="card" id="rec" hidden>
+  <h3>Set a new password</h3><p>Reset link accepted. Enter a new password for your account.</p>
+  <form id="fRec"><label class="f">Password (min. 8 characters)<input id="nPass" type="password" minlength="8" autocomplete="new-password" placeholder="Create a password" required></label>
+  <button class="btn block" type="submit">Save new password</button></form>
+</div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
 <script src="../js/i18n.js"></script><script src="../js/config.js"></script><script src="../js/supa.js"></script><script src="../js/auth.js"></script>
