@@ -1,11 +1,11 @@
-if(/\.html$/.test(location.pathname))history.replaceState(null,"",location.pathname.replace(/index\.html$/,"").replace(/\.html$/,""));
+if(/\.html$/.test(location.pathname))history.replaceState(null,"",location.pathname.replace(/index\.html$/,"").replace(/\.html$/,"")+location.search);
 (function(){
 var C=window.IB_CONFIG,DUM=document.createElement("div"),MODE=window.IB_MODE||"all",$=function(i){return document.getElementById(i)||DUM};
 var MON=["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGU","SEP","OKT","NOV","DES"];
 var CAT={konser:"🎤 Konser",naikgunung:"⛰️ Naik Gunung"};
 var DIF={pemula:"Pemula",menengah:"Menengah",sulit:"Sulit"};
 var state={cat:"semua",city:"semua",when:"semua",price:"semua",sort:"date",q:"",events:[]};
-var saved=read("ib_saved",[]);if(MODE==="home")state.when="live";if(MODE==="gunung")state.cat="naikgunung";
+var saved=read("ib_saved",[]);var kp=new URLSearchParams(location.search).get("kat");if(MODE==="all"&&(kp==="konser"||kp==="naikgunung"))state.cat=kp;if(MODE==="home")state.when="live";if(MODE==="gunung")state.cat="naikgunung";
 function read(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
 function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -23,8 +23,9 @@ function status(e){var t=today(),s=days(t,e.event_date),en=days(t,endOf(e));
   return{k:s<=7?"soon":"next",l:s===1?"Besok":"H-"+s,n:s}}
 function gratis(e){return/gratis|free/i.test(e.price_label||"")}
 function dparts(s){var d=new Date(s+"T00:00:00");return{d:("0"+d.getDate()).slice(-2),m:MON[d.getMonth()],full:d.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}}
-function posterStyle(e){var g=e.g||["#14532d","#ff5a1f"],bg="linear-gradient(160deg,"+g[0]+","+g[1]+")";return"background:"+(e.poster_url?"url('"+esc(e.poster_url).replace(/'/g,"%27")+"') center/cover,":"")+bg}
-var ridge='<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M0 80V50l40-30 30 25 40-35 45 40 25-20 20 15v35z" fill="rgba(0,0,0,.32)"/></svg>';
+function posterStyle(e){var g=e.g||(e.category==="konser"?["#3b1a78","#ff3d81"]:["#14532d","#ff5a1f"]),bg="linear-gradient(160deg,"+g[0]+","+g[1]+")";return"background:"+(e.poster_url?"url('"+esc(e.poster_url).replace(/'/g,"%27")+"') center/cover,":"")+bg}
+var RIDGE='<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M0 80V50l40-30 30 25 40-35 45 40 25-20 20 15v35z" fill="rgba(0,0,0,.32)"/></svg>',BARS='<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M10 80V40h14v40zM34 80V20h14v60zM58 80V50h14v30zM82 80V10h14v70zM106 80V35h14v45zM130 80V25h14v55zM154 80V48h14v32zM178 80V30h14v50z" fill="rgba(0,0,0,.28)"/></svg>';
+function deco(e){return e.category==="konser"?BARS:RIDGE}
 function extra(e){var t=e.category==="konser"?(e.genre?"🎵 "+esc(e.genre):""):[e.mountain?"⛰️ "+esc(e.mountain):"",e.altitude_mdpl?e.altitude_mdpl+" mdpl":"",DIF[e.difficulty]||"",esc(e.duration||"")].filter(Boolean).join(" · ");return t?'<div class="meta">'+t+'</div>':""}
 /* ---- Data ---- */
 function load(){
@@ -50,7 +51,7 @@ function list(){var past=state.cat==="selesai";
      if(state.sort==="new")return(b.created_at||"")<(a.created_at||"")?-1:1;
      return a.event_date<b.event_date?-1:1})}
 function card(e){var p=dparts(e.event_date),s=status(e),on=saved.indexOf(String(e.id))>-1;
-  return'<div class="ev'+(s.k==="past"?' past':'')+'" data-id="'+esc(e.id)+'" tabindex="0" role="button" aria-label="'+esc(e.title)+'"><div class="poster" style="'+posterStyle(e)+'"><span class="tag">'+CAT[e.category]+'</span><div class="dt">'+p.d+'<small>'+p.m+'</small></div>'+ridge+'<span class="st-b '+s.k+'">'+(s.k==="live"?'● ':'')+s.l+'</span><button class="sv'+(on?' on':'')+'" data-sv="'+esc(e.id)+'" aria-label="Simpan event" aria-pressed="'+on+'">'+(on?'♥':'♡')+'</button></div><div class="eb"><h3>'+esc(e.title)+'</h3><div class="meta">📍 '+esc(e.venue||e.city)+(state.city==="semua"&&e.city?', '+esc(e.city):'')+'</div>'+extra(e)+'<div class="price">'+esc(e.price_label||"Info menyusul")+'</div></div></div>'}
+  return'<div class="ev'+(s.k==="past"?' past':'')+'" data-id="'+esc(e.id)+'" tabindex="0" role="button" aria-label="'+esc(e.title)+'"><div class="poster" style="'+posterStyle(e)+'"><span class="tag">'+CAT[e.category]+'</span><div class="dt">'+p.d+'<small>'+p.m+'</small></div>'+deco(e)+'<span class="st-b '+s.k+'">'+(s.k==="live"?'● ':'')+s.l+'</span><button class="sv'+(on?' on':'')+'" data-sv="'+esc(e.id)+'" aria-label="Simpan event" aria-pressed="'+on+'">'+(on?'♥':'♡')+'</button></div><div class="eb"><h3>'+esc(e.title)+'</h3><div class="meta">📍 '+esc(e.venue||e.city)+(state.city==="semua"&&e.city?', '+esc(e.city):'')+'</div>'+extra(e)+'<div class="price">'+esc(e.price_label||"Info menyusul")+'</div></div></div>'}
 function group(l){var G=[["live","Sedang berlangsung"],["soon","7 hari ke depan"],["next","Akan datang"]];
   if(state.cat==="selesai"||state.sort!=="date")return'<div class="grid">'+l.map(card).join("")+'</div>';
   return G.map(function(g){var x=l.filter(function(e){return status(e).k===g[0]});
@@ -79,7 +80,7 @@ function share(e){var d={title:e.title,text:e.title+" di "+(e.city||"")+" — in
   if(navigator.share)navigator.share(d).catch(function(){});else if(navigator.clipboard)navigator.clipboard.writeText(d.text+" "+d.url).then(function(){toast("Tautan disalin")});else toast("Salin alamat situs dari browser")}
 function openEv(id){
   var e=state.events.filter(function(x){return String(x.id)===String(id)})[0];if(!e)return;var p=dparts(e.event_date),s=status(e);
-  $("dBody").innerHTML='<div class="poster" style="'+posterStyle(e)+'"><span class="tag">'+CAT[e.category]+'</span>'+ridge+'<span class="st-b '+s.k+'">'+s.l+'</span></div><div class="db"><h2>'+esc(e.title)+'</h2><div class="meta">🗓 '+p.full+(e.end_date&&e.end_date!==e.event_date?' s/d '+dparts(e.end_date).full:'')+'<br>📍 '+esc(e.venue||e.city)+', '+esc(e.city)+'<br>💰 '+esc(e.price_label||"Info menyusul")+'</div>'+extra(e)+(e.lineup?'<p><b>Line-up:</b> '+esc(e.lineup)+'</p>':'')+'<p>'+esc(e.description||"Deskripsi belum tersedia.")+'</p><div class="row">'
+  $("dBody").innerHTML='<div class="poster" style="'+posterStyle(e)+'"><span class="tag">'+CAT[e.category]+'</span>'+deco(e)+'<span class="st-b '+s.k+'">'+s.l+'</span></div><div class="db"><h2>'+esc(e.title)+'</h2><div class="meta">🗓 '+p.full+(e.end_date&&e.end_date!==e.event_date?' s/d '+dparts(e.end_date).full:'')+'<br>📍 '+esc(e.venue||e.city)+', '+esc(e.city)+'<br>💰 '+esc(e.price_label||"Info menyusul")+'</div>'+extra(e)+(e.lineup?'<p><b>Line-up:</b> '+esc(e.lineup)+'</p>':'')+'<p>'+esc(e.description||"Deskripsi belum tersedia.")+'</p><div class="row">'
    +(e.ticket_url?'<a class="btn" target="_blank" rel="noopener noreferrer" href="'+esc(e.ticket_url)+'">Tiket / Daftar</a>':'<span class="btn ghost" style="opacity:.6">Link tiket belum tersedia</span>')
    +(e.source_ig?'<a class="btn ghost" target="_blank" rel="noopener noreferrer" href="https://instagram.com/'+esc(String(e.source_ig).replace(/^@/,""))+'">Sumber: @'+esc(String(e.source_ig).replace(/^@/,""))+'</a>':'')
    +'<a class="btn ghost" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((e.venue||"")+" "+(e.city||""))+'">🗺 Peta</a>'
