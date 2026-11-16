@@ -11,6 +11,8 @@ function dparts(s){var d=new Date(s+"T00:00:00");return{d:("0"+d.getDate()).slic
 function grad(e){var g=e.g||["#14532d","#ff6b35"];return"linear-gradient(160deg,"+g[0]+","+g[1]+")"}
 function posterStyle(e){return e.poster_url?"background-image:url('"+esc(e.poster_url)+"')":"background:"+grad(e)}
 var ridge='<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M0 80V50l40-30 30 25 40-35 45 40 25-20 20 15v35z" fill="rgba(0,0,0,.32)"/></svg>';
+var DIF={pemula:"Pemula",menengah:"Menengah",sulit:"Sulit"};
+function extra(e){var t=e.category==="konser"?(e.genre?"🎵 "+esc(e.genre):""):[e.mountain?"⛰️ "+esc(e.mountain):"",e.altitude_mdpl?e.altitude_mdpl+" mdpl":"",DIF[e.difficulty]||"",esc(e.duration||"")].filter(Boolean).join(" · ");return t?'<div class="meta">'+t+'</div>':""}
 function load(){
   if(!C.SUPABASE_URL||!C.SUPABASE_ANON_KEY){state.events=IB_SAMPLE;return Promise.resolve()}
   var u=C.SUPABASE_URL+"/rest/v1/events?select=*,cities(name)&status=eq.published&order=event_date.asc";
@@ -26,12 +28,12 @@ function render(){
   $("evTitle").textContent="Event di "+state.city;
   $("sEv").textContent=state.events.filter(function(e){return e.city===state.city}).length;
   $("grid").innerHTML=l.length?l.map(function(e){var p=dparts(e.event_date);
-    return '<button class="ev" data-id="'+esc(e.id)+'"><div class="poster" style="'+posterStyle(e)+'"><span class="tag">'+CAT[e.category]+'</span><div class="dt">'+p.d+'<small>'+p.m+'</small></div>'+ridge+'</div><div class="eb"><h3>'+esc(e.title)+'</h3><div class="meta">📍 '+esc(e.venue||e.city)+'</div><div class="price">'+esc(e.price_label||"Info menyusul")+'</div></div></button>'}).join("")
+    return '<button class="ev" data-id="'+esc(e.id)+'"><div class="poster" style="'+posterStyle(e)+'"><span class="tag">'+CAT[e.category]+'</span><div class="dt">'+p.d+'<small>'+p.m+'</small></div>'+ridge+'</div><div class="eb"><h3>'+esc(e.title)+'</h3><div class="meta">📍 '+esc(e.venue||e.city)+'</div>'+extra(e)+'<div class="price">'+esc(e.price_label||"Info menyusul")+'</div></div></button>'}).join("")
    :'<div class="empty">Belum ada event untuk filter ini.<br>Coba kategori lain, ganti kota, atau kosongkan kolom cari.</div>';
 }
 function openEv(id){
   var e=state.events.filter(function(x){return String(x.id)===String(id)})[0];if(!e)return;var p=dparts(e.event_date);
-  $("dBody").innerHTML='<div class="poster" style="'+posterStyle(e)+'"><span class="tag">'+CAT[e.category]+'</span>'+ridge+'</div><div class="db"><h2>'+esc(e.title)+'</h2><div class="meta">🗓 '+p.full+'<br>📍 '+esc(e.venue||e.city)+', '+esc(e.city)+'<br>💰 '+esc(e.price_label||"Info menyusul")+'</div><p>'+esc(e.description||"")+'</p><div class="row">'
+  $("dBody").innerHTML='<div class="poster" style="'+posterStyle(e)+'"><span class="tag">'+CAT[e.category]+'</span>'+ridge+'</div><div class="db"><h2>'+esc(e.title)+'</h2><div class="meta">🗓 '+p.full+(e.end_date&&e.end_date!==e.event_date?' s/d '+dparts(e.end_date).full:'')+'<br>📍 '+esc(e.venue||e.city)+', '+esc(e.city)+'<br>💰 '+esc(e.price_label||"Info menyusul")+'</div>'+extra(e)+(e.lineup?'<p><b>Line-up:</b> '+esc(e.lineup)+'</p>':'')+'<p>'+esc(e.description||"")+'</p><div class="row">'
    +(e.ticket_url?'<a class="btn" target="_blank" rel="noopener" href="'+esc(e.ticket_url)+'">Tiket / Daftar</a>':'')
    +(e.source_ig?'<a class="btn ghost" target="_blank" rel="noopener" href="https://instagram.com/'+esc(e.source_ig)+'">Sumber: @'+esc(e.source_ig)+'</a>':'')
    +'<button class="btn ghost" id="barengan">🤝 Cari teman barengan</button><button class="btn ghost" id="close">Tutup</button></div></div>';

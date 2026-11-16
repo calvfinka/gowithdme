@@ -38,3 +38,6 @@ Tambah di `js/regions.js` dan baris di tabel `provinces`/`cities`.
 - Google Cloud Console > OAuth client (Web): Authorized redirect URI = `https://jhqkylnqvhrljpaknjcg.supabase.co/auth/v1/callback`, Authorized JavaScript origins = domain situs. Salin Client ID dan Secret ke Supabase.
 - Redirect URL Supabase: `https://infobarengan.com/login`.
 - GitHub Pages otomatis melayani `/login` dan `/admin` dari file `.html`.
+
+## Panel admin v2
+Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (filter kategori/status/kota), Buat baru (form khusus konser atau pendakian, simpan draft atau terbitkan).
