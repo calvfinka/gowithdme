@@ -1,6 +1,6 @@
 // Isi setelah proyek Supabase dibuat (Project Settings > API). Kosong = pakai data contoh.
 window.IB_CONFIG = {
-  SUPABASE_URL: "",       // contoh: https://xxxx.supabase.co
-  SUPABASE_ANON_KEY: "",  // anon public key (aman di frontend, dilindungi RLS)
+  SUPABASE_URL: "https://jhqkylnqvhrljpaknjcg.supabase.co",       // contoh: https://xxxx.supabase.co
+  SUPABASE_ANON_KEY: "sb_publishable_WEpourxfk4IKga2XyxKucQ_hkmxuJnY",  // anon public key (aman di frontend, dilindungi RLS)
   DEFAULT_CITY: "Bandung"
 };
