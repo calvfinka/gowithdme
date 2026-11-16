@@ -50,3 +50,12 @@ $("login").onclick=function(){location.href="login"};
 $("year").textContent=new Date().getFullYear();
 load().then(function(){$("sCity").textContent=Object.keys(IB_REGIONS).reduce(function(n,p){return n+IB_REGIONS[p].length},0);render()});
 })();
+
+// Link anchor tanpa menambah # di alamat
+if(location.hash)history.replaceState(null,"",location.pathname+location.search);
+document.addEventListener("click",function(e){
+  var a=e.target.closest('a[href^="#"]');if(!a)return;
+  e.preventDefault();
+  var t=document.getElementById(a.getAttribute("href").slice(1));
+  if(t)t.scrollIntoView({behavior:"smooth"});else scrollTo({top:0,behavior:"smooth"});
+});
