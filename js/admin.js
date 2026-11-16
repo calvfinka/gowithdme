@@ -68,8 +68,12 @@ $("fEv").onsubmit=function(e){e.preventDefault();var d={};saveAs=(e.submitter&&e
   if(d.end_date&&d.end_date<d.event_date)return msg("Tanggal selesai tidak boleh sebelum tanggal mulai.","err");
   if(kind!=="konser"){d.genre=d.lineup=null}if(kind!=="naikgunung"){d.mountain=d.altitude_mdpl=d.difficulty=d.duration=d.quota=d.organizer=d.contact_wa=null}
   d.category=kind;d.status=saveAs;
+  /* Anti-duplikat: kota + tanggal mulai + 10 huruf/angka pertama judul yang sama dengan postingan lain */
+  var nk=function(t){return String(t||"").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,10)};
+  var dup=rows.filter(function(x){return x.id!==editing&&x.city_id===d.city_id&&x.event_date===d.event_date&&nk(x.title)===nk(d.title)})[0];
+  if(dup)return msg('Sudah ada postingan yang sama: "'+dup.title+'" ('+(ST[dup.status]||dup.status)+'). Edit yang itu, atau ubah judul/tanggal.',"err");
   var q;if(editing)q=sb.from("events").update(d).eq("id",editing);else{d.slug=slug(d.title+" "+(($("f_city_id").selectedOptions[0]||{}).text||""),d.event_date);q=sb.from("events").insert(d)}
-  q.then(function(r){if(r.error)return msg(r.error.message.indexOf("duplicate")>-1?"Judul dan tanggal yang sama sudah ada.":r.error.message,"err");
+  q.then(function(r){if(r.error)return msg(r.error.message.indexOf("duplicate")>-1?"Postingan yang sama (kota, tanggal, judul) sudah ada.":r.error.message,"err");
     load().then(function(){go("list");msg(saveAs==="published"?"Tersimpan dan terbit.":"Tersimpan sebagai draft.","ok")})})};
 getMe().then(function(m){
   if(!m||m.profile.role!=="admin"){$("lock").hidden=false;$("lockT").textContent=m?"Akun ini bukan admin.":"Silakan masuk dahulu.";return}

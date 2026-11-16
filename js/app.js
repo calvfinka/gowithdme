@@ -44,13 +44,17 @@ function kind(e){return[CAT[e.category]||e.category].concat(info(e)).filter(Bool
 function ttl(e){return window.IB_LANG==="en"&&e.title_en?e.title_en:e.title}
 function dsc(e){return window.IB_LANG==="en"&&e.description_en?e.description_en:e.description}
 function isSaved(id){return saved.indexOf(String(id))>-1}
+/* Buang duplikat: kota + tanggal mulai + 10 huruf/angka pertama judul sama = satu event (pertahankan yang punya poster/tiket). */
+function nk(t){return String(t||"").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,10)}
+function dedupe(rows){var m={},out=[];rows.forEach(function(r){var k=[r.city_id||r.city,r.event_date,nk(r.title)].join("|"),i=m[k];
+  if(i===undefined){m[k]=out.length;out.push(r)}else if(!out[i].poster_url&&r.poster_url||!out[i].ticket_url&&r.ticket_url&&!!out[i].poster_url===!!r.poster_url)out[i]=r});return out}
 /* ---- Data ---- */
 function load(){
   if(!C.SUPABASE_URL||!C.SUPABASE_ANON_KEY){state.events=IB_SAMPLE;return Promise.resolve()}
   var u=C.SUPABASE_URL+"/rest/v1/events?select=*,cities(name)&status=eq.published&order=event_date.asc";
   return fetch(u,{headers:{apikey:C.SUPABASE_ANON_KEY,Authorization:"Bearer "+C.SUPABASE_ANON_KEY}})
    .then(function(r){if(!r.ok)throw 0;return r.json()})
-   .then(function(rows){state.events=rows.map(function(r){r.city=r.cities&&r.cities.name;return r})})
+   .then(function(rows){state.events=dedupe(rows.map(function(r){r.city=r.cities&&r.cities.name;return r}))})
    .catch(function(){state.events=IB_SAMPLE;toast(tr("loadfail"))});
 }
 /* ---- Klasifikasi & filter ---- */

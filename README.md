@@ -64,3 +64,7 @@ Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (
 - Open trip memakai kategori `naikgunung` yang sudah ada, jadi otomatis tampil di halaman Gunung, kalender (.ics), pencarian, dan ajakan barengan. Daftar gunung ada di `js/gunung-data.js` (146 gunung populer & gunung api utama; nama lain bisa diketik sendiri).
 - Tombol bagikan (`js/share.js`): kartu grid & daftar, rincian event, tiap ajakan barengan, bilah atas, dan pengajuan saya. Tautan langsung ke event: `?e=<slug>` (dialog rincian terbuka otomatis).
 - Setelah mengubah teks di `tools/strings.py` atau `src/*.html`, jalankan `python3 tools/build.py`.
+
+## Daftar konser per kota tanpa duplikat (v3)
+- Jalankan `supabase/konser_per_kota.sql` di Supabase > SQL Editor (aman diulang). Isinya: kota baru (Sleman, Bantul, Lamongan), pembersihan duplikat lama, 34 konser baru di 16 kota lengkap dengan harga, poster, dan link tiket, penerbitan konser Bandung yang masih draft, serta indeks unik `events_no_dupe` sehingga database menolak duplikat (kota + tanggal + judul).
+- `js/app.js` membuang duplikat saat memuat, `js/admin.js` menolak simpan postingan yang sama. Daftar lengkap: `supabase/DAFTAR_KONSER_PER_KOTA.md`.
