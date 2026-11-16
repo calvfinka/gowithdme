@@ -1,6 +1,7 @@
 // Pengganti provinsi.py: tambah provinsi/kota baru di sini (atau di tabel provinces/cities).
 window.IB_REGIONS = {
-  "Jawa Barat": ["Bandung", "Cimahi", "Bogor", "Bekasi"]
+  "Jawa Barat": ["Bandung", "Cimahi", "Bogor", "Bekasi"],
+  "DKI Jakarta": ["Jakarta"]
 };
 // Data contoh (dipakai bila Supabase belum diisi)
 window.IB_SAMPLE = [
