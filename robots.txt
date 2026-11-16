@@ -4,4 +4,4 @@ Disallow: /admin
 Disallow: /login
 Disallow: /id/login
 Disallow: /en/login
-Sitemap: https://infobarengan.com/sitemap.xml
+Sitemap: https://gowithdme.com/sitemap.xml

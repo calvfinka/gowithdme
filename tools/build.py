@@ -4,10 +4,16 @@ import os,re,json,sys
 sys.path.insert(0,os.path.dirname(__file__))
 from strings import S,J,PROV_EN
 ROOT=os.path.join(os.path.dirname(__file__),"..")
-BASE="https://infobarengan.com"
+BASE="https://gowithdme.com"
 LANGS=["id","en"]; IDX={"id":0,"en":1}
 PAGES=["index","event","gunung","login","privacy","terms"]
+APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
 def path(p): return "" if p=="index" else p
+def inc(h):
+    # sisipkan potongan bersama: {{>nama}} -> src/_nama.html (boleh bersarang)
+    while re.search(r"\{\{>(\w+)\}\}",h):
+        h=re.sub(r"\{\{>(\w+)\}\}",lambda m:open(f"{ROOT}/src/_{m.group(1)}.html",encoding="utf-8").read(),h)
+    return h
 # ---- js/i18n.js ----
 dic={l:{k:v[IDX[l]] for k,v in J.items()} for l in LANGS}
 js='''/* Dibuat oleh tools/build.py dari tools/strings.py. Jangan edit tangan. */
@@ -31,7 +37,9 @@ for l in LANGS:
     o="en" if l=="id" else "id"
     os.makedirs(f"{ROOT}/{l}",exist_ok=True)
     for p in PAGES:
-        h=open(f"{ROOT}/src/{p}.html",encoding="utf-8").read()
+        h=inc(open(f"{ROOT}/src/{p}.html",encoding="utf-8").read())
+        h=h.replace("{{search}}",inc("{{>search}}") if p in APP else "<span></span>")
+        h=h.replace("{{auth}}",'<a class="btn pri" id="login" href="login">{{login_btn}}</a>' if p in APP else '<a class="btn line" href="./">{{back_home}}</a>')
         if p in("privacy","terms"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
         sw=f'<a class="lang" href="../{o}/{path(p)}" data-sw="{o}" hreflang="{o}" lang="{o}" aria-label="{S["lang_label"][IDX[l]]}">{o.upper()}</a>'
         hl="" if p=="login" else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
@@ -45,12 +53,12 @@ for l in LANGS:
 for p in PAGES:
     t=path(p)
     h=f'''<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>InfoBarengan</title><meta name="robots" content="noindex,follow">
+<title>GWM</title><meta name="robots" content="noindex,follow">
 <link rel="alternate" hreflang="id" href="{BASE}/id/{t}"><link rel="alternate" hreflang="en" href="{BASE}/en/{t}"><link rel="alternate" hreflang="x-default" href="{BASE}/{t}">
 <script>(function(){{var l;try{{l=localStorage.getItem("ib_lang")}}catch(e){{}}
 if(l!=="id"&&l!=="en")l=/^id/i.test(navigator.language||"")?"id":"en";
 location.replace(l+"/{t}"+location.search+location.hash)}})()</script></head>
-<body style="font-family:sans-serif;text-align:center;padding:40px"><p>InfoBarengan</p>
+<body style="font-family:sans-serif;text-align:center;padding:40px"><p>GWM</p>
 <p><a href="id/{t}">Bahasa Indonesia</a> · <a href="en/{t}">English</a></p></body></html>
 '''
     open(f"{ROOT}/{p}.html","w",encoding="utf-8").write(h)

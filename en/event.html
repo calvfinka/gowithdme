@@ -3,35 +3,76 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>All Events — InfoBarengan</title>
-<meta name="description" content="All active concerts, expos, and hiking events, filterable by city, time, and price.">
-<meta name="author" content="Jurkon Studio"><meta name="theme-color" content="#12302a">
-<meta property="og:title" content="InfoBarengan — Concerts & Hiking"><meta property="og:description" content="Go together, don't go alone. Event info and travel buddies in your city.">
+<meta name="author" content="Jurkon Studio"><meta name="theme-color" content="#0E5A46">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css">
-<link rel="canonical" href="https://infobarengan.com/en/event"><link rel="alternate" hreflang="id" href="https://infobarengan.com/id/event"><link rel="alternate" hreflang="en" href="https://infobarengan.com/en/event"><link rel="alternate" hreflang="x-default" href="https://infobarengan.com/event"></head>
-<body><div class="top"><div class="wrap"><a class="logo" href="./"><img src="../assets/favicon.svg" alt="">Info<b>Barengan</b></a><nav class="nav"><a href="./">Home</a><a href="event" class="on">Events</a><a href="event?kat=konser">Concerts</a><a href="gunung">Hiking</a></nav><span class="sp"></span><a class="lang" href="../id/event" data-sw="id" hreflang="id" lang="id" aria-label="Change language">ID</a><button class="btn sm" id="login">Log in</button></div></div>
-<main class="wrap">
-<section id="event">
-  <div class="sec-h"><h2 id="evTitle">All events</h2><p>Filter by category, city, time, and price.</p></div>
-  <div class="bar" id="tabs"></div>
-  <div class="bar"><input id="q" type="search" placeholder="Search event name, venue, or mountain" aria-label="Search events"></div>
-  <div class="fil">
-    <select id="city" aria-label="City"></select>
-    <select id="when" aria-label="Time"><option value="semua">Any time</option><option value="live">Happening now</option><option value="week">Next 7 days</option><option value="month">Next 30 days</option></select>
-    <select id="price" aria-label="Price"><option value="semua">Any price</option><option value="gratis">Free</option><option value="bayar">Paid</option></select>
-    <select id="sort" aria-label="Sort"><option value="date">Soonest</option><option value="new">Newest added</option></select>
-    <button class="btn ghost sm" id="reset" type="button">Reset</button>
-    <div class="cnt" id="cnt" aria-live="polite"></div>
+<script src="../js/theme.js"></script>
+<title>All Events — GWM</title>
+<meta name="description" content="All active concerts, expos, and hiking events, filterable by city, time, and price.">
+<meta property="og:title" content="GWM — Concerts & Hiking"><meta property="og:description" content="Go together, don't go alone. Event info and travel buddies in your city.">
+<link rel="canonical" href="https://gowithdme.com/en/event"><link rel="alternate" hreflang="id" href="https://gowithdme.com/id/event"><link rel="alternate" hreflang="en" href="https://gowithdme.com/en/event"><link rel="alternate" hreflang="x-default" href="https://gowithdme.com/event"></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></symbol>
+  <symbol id="i-mtn" viewBox="0 0 24 24"><path d="M2.5 19.5l6.5-12 4 7 2.5-4 6 9z"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3.5 12.5V4.5a1 1 0 0 1 1-1h8l8 8-9 9z"/><circle cx="8.5" cy="8.5" r="1.3"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M9 18V5l10-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V3.5M7.5 8L12 3.5 16.5 8M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+  <symbol id="w-sun" viewBox="0 0 48 48"><circle cx="24" cy="24" r="8.5" fill="#F5B416"/><g stroke="#F5B416" stroke-width="2.6" stroke-linecap="round"><path d="M24 6v4.5M24 37.5V42M6 24h4.5M37.5 24H42M11.3 11.3l3.2 3.2M33.5 33.5l3.2 3.2M11.3 36.7l3.2-3.2M33.5 14.5l3.2-3.2"/></g></symbol>
+  <symbol id="w-moon" viewBox="0 0 48 48"><path d="M30 7a17 17 0 1 0 11 30A14.5 14.5 0 0 1 30 7z" fill="#9FB3C8"/></symbol>
+  <symbol id="w-partly" viewBox="0 0 48 48"><circle cx="18" cy="17" r="7" fill="#F5B416"/><g stroke="#F5B416" stroke-width="2.4" stroke-linecap="round"><path d="M18 5v3M5.5 17h3M8.6 7.6l2.1 2.1M27.4 7.6l-2.1 2.1"/></g><path d="M16 41h19a7.5 7.5 0 0 0 .9-14.9A10.5 10.5 0 0 0 16.4 28 6.5 6.5 0 0 0 16 41z" style="fill:var(--cloud)"/></symbol>
+  <symbol id="w-cloud" viewBox="0 0 48 48"><path d="M13 38h22a8 8 0 0 0 1-15.9A11.5 11.5 0 0 0 14.2 24 7 7 0 0 0 13 38z" style="fill:var(--cloud)"/></symbol>
+  <symbol id="w-drizzle" viewBox="0 0 48 48"><path d="M13 31h22a8 8 0 0 0 1-15.9A11.5 11.5 0 0 0 14.2 17 7 7 0 0 0 13 31z" style="fill:var(--cloud)"/><g stroke="#3B8EEA" stroke-width="2.4" stroke-linecap="round"><path d="M17 36l-1 3M25 36l-1 3M33 36l-1 3M21 41l-1 3M29 41l-1 3"/></g></symbol>
+  <symbol id="w-rain" viewBox="0 0 48 48"><path d="M13 30h22a8 8 0 0 0 1-15.9A11.5 11.5 0 0 0 14.2 16 7 7 0 0 0 13 30z" style="fill:var(--cloud)"/><g stroke="#3B8EEA" stroke-width="2.8" stroke-linecap="round"><path d="M17 35l-2.5 6M25 35l-2.5 6M33 35l-2.5 6"/></g></symbol>
+  <symbol id="w-storm" viewBox="0 0 48 48"><path d="M13 30h22a8 8 0 0 0 1-15.9A11.5 11.5 0 0 0 14.2 16 7 7 0 0 0 13 30z" style="fill:var(--cloud)"/><path d="M26 28l-6 9h5l-2 8 8-11h-5z" fill="#F5B416"/></symbol>
+  <symbol id="w-fog" viewBox="0 0 48 48"><path d="M13 27h22a8 8 0 0 0 1-15.9A11.5 11.5 0 0 0 14.2 13 7 7 0 0 0 13 27z" style="fill:var(--cloud)"/><g stroke="var(--cloud)" stroke-width="2.6" stroke-linecap="round"><path d="M10 33h28M14 39h20"/></g></symbol>
+  <symbol id="bars" viewBox="0 0 100 100"><g fill="currentColor"><rect x="2" y="55" width="6" height="45"/><rect x="12" y="75" width="6" height="25"/><rect x="22" y="30" width="6" height="70"/><rect x="32" y="62" width="6" height="38"/><rect x="42" y="45" width="6" height="55"/><rect x="52" y="80" width="6" height="20"/><rect x="62" y="38" width="6" height="62"/><rect x="72" y="58" width="6" height="42"/><rect x="82" y="15" width="6" height="85"/><rect x="92" y="50" width="6" height="50"/></g></symbol>
+  <symbol id="ridge" viewBox="0 0 100 100"><path fill="currentColor" d="M0 100V62l18-26 14 18 20-34 22 36 12-14 14 20v40z"/></symbol>
+</svg>
+<header class="topbar"><a class="logo" href="./" aria-label="GWM"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="mk-bg" width="32" height="32" rx="9"/><path class="mk-pin" d="M16 5.2c-4.8 0-8.4 3.6-8.4 8.2 0 5.8 6.6 11.4 7.8 12.4a1 1 0 0 0 1.2 0c1.2-1 7.8-6.6 7.8-12.4 0-4.6-3.6-8.2-8.4-8.2z"/><circle cx="12.9" cy="13.4" r="2.6" fill="#E4501A"/><circle cx="19.1" cy="13.4" r="2.6" fill="#F5B416"/></svg><span class="w">GWM</span></a><label class="search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search event name, venue, or mountain" autocomplete="off" aria-label="Search events"></label>
+<div class="right"><button class="ico-btn" id="theme" type="button" aria-label="Switch light or dark theme"><svg class="i t-moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="i t-sun" aria-hidden="true"><use href="#i-sun"/></svg></button><a class="lang" href="../id/event" data-sw="id" hreflang="id" lang="id" aria-label="Change language">ID</a><a class="btn pri" id="login" href="login">Log in</a></div></header>
+
+<div class="shell">
+<aside class="side" aria-label="Navigation"><h4>Browse</h4><div class="nav" id="navCat"></div><h4>City</h4><div class="nav" id="navCity"></div><h4>Yours</h4><div class="nav" id="navMine"></div></aside>
+
+<main class="main">
+  <div class="head">
+    <div><h1 id="evTitle">All events</h1><p>Filter by category, city, time, and price.</p></div>
+    <div class="hx"><select class="sel" id="city" aria-label="City"></select>
+<select class="sel" id="when" aria-label="Time"><option value="semua">Any time</option><option value="live">Happening now</option><option value="week">Next 7 days</option><option value="month">Next 30 days</option></select>
+<select class="sel" id="price" aria-label="Price"><option value="semua">Any price</option><option value="gratis">Free</option><option value="bayar">Paid</option></select>
+<select class="sel" id="sort" aria-label="Sort"><option value="date">Soonest</option><option value="new">Newest added</option></select>
+<button class="btn line sm" id="reset" type="button">Reset</button>
+<div class="vseg" role="group" aria-label="View"><button type="button" id="vGrid" aria-pressed="true" aria-label="Grid view"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg></button><button type="button" id="vList" aria-pressed="false" aria-label="List view"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg></button></div>
+</div>
   </div>
-  <div id="list"><div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
-</section>
+  <section class="now" aria-label="Date, time, and weather"><div class="clock"><div class="day" id="nDay">&nbsp;</div><div class="dt" id="nDate">&nbsp;</div><div class="tm"><span id="nTime">--:--:--</span><small>WIB</small></div></div><div class="wx" id="wNow"></div><div id="wFc"></div><div class="src" id="wSrc"></div></section>
+
+  <div class="mfilters" id="mCat" role="group" aria-label="Event type"></div>
+  <div class="stats"><div class="stat"><b id="sEv">0</b><span>active events</span></div><div class="stat"><b id="sLive">0</b><span>happening today</span></div><div class="stat"><b id="sWeek">0</b><span>starting in the next 7 days</span></div><div class="stat"><b id="sNext">-</b><span>until the first event</span></div></div>
+
+  <div class="cnt" id="cnt" aria-live="polite"></div>
+  <div id="list"><div class="group"><div class="tiles"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div></div>
+  <div class="foot"><span>© <span id="year"></span> GWM · Jurkon Studio. Posters and copyrights belong to their organizers.</span><nav><a href="terms">Terms &amp; Conditions</a><a href="privacy">Privacy Policy</a><a href="mailto:halo@gowithdme.com" data-mail>Contact</a></nav></div>
+
 </main>
-<footer><div class="wrap"><span>© <span id="year"></span> InfoBarengan · Jurkon Studio. Posters and copyrights belong to their organizers.</span><nav><a href="terms">Terms &amp; Conditions</a><a href="privacy">Privacy Policy</a><a href="mailto:halo@infobarengan.com" data-mail>Contact</a></nav></div></footer>
+</div>
 <dialog id="dlg"><div id="dBody"></div></dialog>
 <div id="toast" role="status"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="../js/i18n.js"></script><script src="../js/config.js"></script><script src="../js/supa.js"></script><script src="../js/regions.js"></script><script>window.IB_MODE="all"</script><script src="../js/ajakan.js"></script><script src="../js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="../js/i18n.js"></script><script src="../js/config.js"></script><script src="../js/supa.js"></script><script src="../js/regions.js"></script>
+<script>window.IB_MODE="all"</script><script src="../js/ajakan.js"></script><script src="../js/now.js"></script><script src="../js/app.js"></script>
 </body>
 </html>

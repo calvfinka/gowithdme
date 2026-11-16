@@ -1,4 +1,4 @@
--- InfoBarengan by Jurkon Studio. Jalankan di Supabase > SQL Editor.
+-- GWM by Jurkon Studio. Jalankan di Supabase > SQL Editor.
 create table provinces(id serial primary key, name text unique not null);
 create table cities(id serial primary key, province_id int not null references provinces(id), name text not null, slug text unique not null);
 create table categories(slug text primary key, name text not null);

@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{lang}}"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{{tm_title}}</title><meta name="description" content="{{tm_desc}}">
-<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css">
+{{>head}}<title>{{tm_title}}</title><meta name="description" content="{{tm_desc}}">
 {{hreflang}}</head><body>
-<div class="top"><div class="wrap"><a class="logo" href="./"><img src="../assets/favicon.svg" alt="">Info<b>Barengan</b></a><span class="sp"></span>{{switch}}<a class="btn ghost sm" href="./">{{back_home}}</a></div></div>
+{{>icons}}{{>bar}}
 {{body}}
-<footer><div class="wrap"><span>© <span id="year"></span> InfoBarengan · Jurkon Studio</span><nav><a href="terms">{{f_terms}}</a><a href="privacy">{{f_privacy}}</a><a href="mailto:halo@infobarengan.com" data-mail>{{f_contact}}</a></nav></div></footer>
+<div class="page" style="padding-top:0">{{>foot}}</div>
 <script src="../js/i18n.js"></script><script src="../js/config.js"></script><script>document.getElementById("year").textContent=new Date().getFullYear();[].forEach.call(document.querySelectorAll("[data-mail]"),function(a){a.href="mailto:"+IB_CONFIG.CONTACT_EMAIL;if(a.hasAttribute("data-t"))a.textContent=IB_CONFIG.CONTACT_EMAIL})</script>
 </body></html>
