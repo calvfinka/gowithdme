@@ -221,6 +221,23 @@ input[type=number],input[type=search],select{font-family:var(--f)}
 .legal .note{background:none;border:1px solid var(--line);color:var(--ink);font-weight:400;padding:10px 14px;border-radius:10px;margin-top:14px}
 
 /* ---- responsif ---- */
+/* ---- ticker event akan datang ---- */
+.tick{display:flex;align-items:stretch;margin-top:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg)}
+.tick[hidden]{display:none}
+.tick .tl{flex:none;display:flex;align-items:center;padding:0 12px;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:12px;letter-spacing:.02em;text-transform:uppercase}
+.tick .vp{flex:1;min-width:0;overflow:hidden}
+.tick .trk{display:flex;width:max-content;animation:tickmove linear infinite}
+.tick:hover .trk,.tick:focus-within .trk,.tick:active .trk{animation-play-state:paused}
+.tick .tg{display:flex;flex:none}
+.tick .tk{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;border:0;border-right:1px solid var(--line);background:none;color:var(--ink);font:inherit;font-size:13px;white-space:nowrap;cursor:pointer}
+.tick .tk:hover{background:var(--hover)}
+.tick .tk b{color:var(--brand);font-weight:700;font-variant-numeric:tabular-nums}
+.tick .tk .tn{font-weight:600}
+.tick .tk .tc{color:var(--mute)}
+.tick .tk i{font-style:normal;font-size:11px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--sel);color:var(--brand)}
+.tick .tk i.soon{background:var(--soon-bg);color:var(--soon)}
+@keyframes tickmove{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.tick .vp{overflow-x:auto}.tick .dup{display:none}}
 @media (max-width:1000px){
   .topbar{grid-template-columns:auto minmax(0,1fr) auto;gap:10px}
   .shell{grid-template-columns:1fr}

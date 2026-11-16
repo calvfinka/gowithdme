@@ -115,6 +115,7 @@ S = {
 "now_aria": ("Tanggal, waktu, dan cuaca", "Date, time, and weather"), "aria_kind": ("Jenis event", "Event type"),
 "aria_view": ("Tampilan", "View"), "v_grid": ("Tampilan kisi", "Grid view"), "v_list": ("Tampilan daftar", "List view"),
 "st_week": ("mulai 7 hari ke depan", "starting in the next 7 days"), "st_next": ("sampai event pertama", "until the first event"),
+"tick_h": ("Akan datang", "Coming up"), "tick_aria": ("Event yang akan datang (berjalan otomatis, arahkan atau sentuh untuk menjeda)", "Upcoming events (scrolls automatically, hover or touch to pause)"),
 }
 # ---- Teks dinamis untuk JavaScript (j_*) ----
 J = {

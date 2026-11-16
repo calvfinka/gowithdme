@@ -1,0 +1,10 @@
+UPDATE GWM: ticker "Akan datang" + kota Ponorogo + SQL event mendatang
+
+1) Ekstrak zip ini ke ROOT repo (timpa file yang sama):
+     unzip -o gwm-update.zip
+2) Jalankan (build ulang + server lokal):
+     bash jalankan.sh
+   Lalu buka port 8000 dari tab PORTS dan akses /id/ atau /en/
+3) Supabase > SQL Editor: jalankan supabase/events_mendatang.sql
+   (setelah schema_kota.sql; aman dijalankan ulang)
+4) Deploy: git add -A && git commit -m "ticker event mendatang" && git push

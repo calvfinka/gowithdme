@@ -101,6 +101,16 @@ function nav(){
   if(state.city!=="semua"&&names.indexOf(state.city)<0)names.push(state.city);
   $("navCity").innerHTML=[["semua",tr("n_allcity"),all.length]].concat(names.map(function(c){return[c,c,cnt[c]||0]})).map(function(c){
     return'<button type="button" data-city="'+esc(c[0])+'" aria-pressed="'+(state.city===c[0])+'">'+ic("pin")+esc(c[1])+'<span class="n">'+c[2]+'</span></button>'}).join("")}
+/* ---- Ticker event akan datang (hanya di beranda) ---- */
+function tick(){var box=$("tick");if(MODE!=="home")return;
+  var up=state.events.filter(function(e){var k=status(e).k;return(k==="soon"||k==="next")&&base(e,true)})
+   .sort(function(a,b){return a.event_date<b.event_date?-1:a.event_date>b.event_date?1:0}).slice(0,12);
+  if(!up.length){box.hidden=true;return}
+  var set=up.map(function(e){var p=dparts(e.event_date),s=status(e);
+    return'<button type="button" class="tk" data-id="'+esc(e.id)+'"><b>'+p.d+' '+p.m+'</b><span class="tn">'+esc(ttl(e))+'</span>'+(e.city?'<span class="tc">'+esc(e.city)+'</span>':'')+'<i class="'+s.k+'">'+esc(s.l)+'</i></button>'}).join("");
+  var dup=set.replace(/<button /g,'<button tabindex="-1" aria-hidden="true" ');
+  $("trk").innerHTML='<div class="tg">'+set+'</div><div class="tg dup" aria-hidden="true">'+dup+'</div>';
+  $("trk").style.animationDuration=Math.max(18,up.length*5)+"s";box.hidden=false}
 function render(){
   var l=list(),act=state.events.filter(isActive),pv=prov(state.city);
   if(MODE==="all")$("evTitle").textContent=state.cat==="selesai"?tr("h_archive"):state.cat==="tersimpan"?tr("h_saved"):(state.city==="semua"?tr("h_active"):tr("h_active_city",{c:state.city}));
@@ -112,6 +122,7 @@ function render(){
   $("vGrid").setAttribute("aria-pressed",state.view==="grid");$("vList").setAttribute("aria-pressed",state.view==="list");
   $("list").innerHTML=l.length?group(l):'<div class="group"><div class="empty"><b>'+(state.cat==="tersimpan"?tr("empty_saved"):(MODE==="home"?tr("empty_home"):tr("empty")))+'</b>'+(state.cat==="tersimpan"?'':MODE==="home"?'<a class="btn line" href="event">'+tr("see_all")+'</a>':'<button class="btn line" id="reset2" type="button">'+tr("reset_f")+'</button>')+'</div></div>';
   var r=$("reset2");if(r)r.onclick=reset;
+  tick();
   if(window.IB_Now)IB_Now.setCity(state.city)}
 function reset(){state.cat=MODE==="gunung"?"naikgunung":"semua";state.city="semua";state.when="semua";state.price="semua";state.sort="date";state.q="";
   ["city","when","price","sort"].forEach(function(i){$(i).value=state[i]});$("q").value="";render()}
@@ -163,6 +174,7 @@ $("navCat").onclick=catClick;$("navMine").onclick=catClick;$("mCat").onclick=cat
 $("navCity").onclick=function(ev){var b=ev.target.closest("[data-city]");if(!b)return;state.city=b.dataset.city;render()};
 function openOrSave(ev){var s=ev.target.closest("[data-sv]");if(s){ev.stopPropagation();return toggleSave(s.dataset.sv)}var b=ev.target.closest(".tile,.r");if(b&&b.dataset.id)openEv(b.dataset.id)}
 $("list").onclick=openOrSave;
+$("tick").onclick=function(ev){var b=ev.target.closest(".tk");if(b&&b.dataset.id)openEv(b.dataset.id)};
 $("list").onkeydown=function(ev){if((ev.key==="Enter"||ev.key===" ")&&ev.target.dataset&&ev.target.dataset.id&&(ev.target.classList.contains("tile")||ev.target.classList.contains("r"))){ev.preventDefault();openEv(ev.target.dataset.id)}};
 $("dlg").onclick=function(ev){if(ev.target===this)this.close()};
 $("login").onclick=function(ev){ev.preventDefault();location.href="login"};
