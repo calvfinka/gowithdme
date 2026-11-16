@@ -2,5 +2,6 @@
 window.IB_CONFIG = {
   SUPABASE_URL: "https://jhqkylnqvhrljpaknjcg.supabase.co",       // contoh: https://xxxx.supabase.co
   SUPABASE_ANON_KEY: "sb_publishable_WEpourxfk4IKga2XyxKucQ_hkmxuJnY",  // anon public key (aman di frontend, dilindungi RLS)
-  DEFAULT_CITY: "Bandung"
+  DEFAULT_CITY: "Bandung",
+  CONTACT_EMAIL: "halo@infobarengan.com"   // GANTI dengan email kontak resmi
 };

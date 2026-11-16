@@ -3,10 +3,10 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Panel Admin — InfoBarengan</title><meta name="robots" content="noindex"><meta name="author" content="Jurkon Studio">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/panel.css">
 </head><body>
-<div class="top"><div class="wrap"><a class="logo" href="./"><img src="assets/favicon.svg" alt="">Info<b>Barengan</b> <span class="badge adm">Admin</span></a><span class="sp"></span><span class="meta" id="who"></span><a class="btn ghost sm" href="login">Profil</a></div></div>
+<div class="top"><div class="wrap"><a class="logo" href="./"><img src="assets/favicon.svg" alt="">Info<b>Barengan</b> <span class="badge adm">Admin</span></a><span class="sp"></span><span class="meta" id="who"></span><a class="btn ghost sm" href="./" target="_blank" rel="noopener">Lihat situs</a> <a class="btn ghost sm" href="login">Profil</a></div></div>
 <main class="wrap pg">
 <div id="msg" class="msg" hidden></div>
 <div class="card narrow" id="lock" hidden><h3>Akses dibatasi</h3><p id="lockT"></p><a class="btn" href="login">Ke halaman masuk</a></div>
@@ -28,42 +28,45 @@
 
 <section id="v_form" hidden>
   <h2 id="fTitle">Postingan baru</h2>
-  <form id="fEv">
+  <div class="msg" id="rest" hidden>Ada isian yang belum disimpan. <button class="lnk" id="bRest" type="button">Pulihkan</button> · <button class="lnk" id="bDrop" type="button">Buang</button></div>
+  <form id="fEv"><div class="fgrid"><div>
     <div class="kind"><button type="button" data-kind="konser">🎤 Konser</button><button type="button" data-kind="naikgunung">⛰️ Pendakian</button></div>
-    <fieldset class="fs"><legend>Info utama</legend>
-      <label class="f">Judul<input id="f_title" type="text" maxlength="120" placeholder="contoh: Festival Musik Dago" required></label>
+    <fieldset class="fs"><legend>1. Poster</legend>
+      <label class="pv drop" id="pv" for="f_file">Tarik poster ke sini atau ketuk untuk memilih (JPG/PNG, otomatis dikecilkan)</label>
+      <input class="sr" id="f_file" type="file" accept="image/*">
+      <label class="f">atau tempel URL poster<input id="f_poster_url" type="url" placeholder="https://contoh.com/poster.jpg"></label>
+    </fieldset>
+    <fieldset class="fs"><legend>2. Info utama</legend>
+      <label class="f">Judul <i class="req">wajib</i><input id="f_title" type="text" maxlength="120" placeholder="contoh: Festival Musik Dago" required></label>
       <div class="g2">
-        <label class="f">Kota<select id="f_city_id" required></select></label>
-        <label class="f">Harga<input id="f_price_label" type="text" placeholder="Gratis / Rp75 rb"></label>
-        <label class="f">Tanggal mulai<input id="f_event_date" type="date" required></label>
-        <label class="f">Tanggal selesai (opsional)<input id="f_end_date" type="date"></label>
+        <label class="f">Kota <i class="req">wajib</i><select id="f_city_id" required></select></label>
+        <label class="f">Harga<input id="f_price_label" type="text" placeholder="Gratis / Mulai Rp75 rb"></label>
+        <label class="f">Tanggal mulai <i class="req">wajib</i><input id="f_event_date" type="date" required></label>
+        <label class="f">Tanggal selesai<input id="f_end_date" type="date"></label>
       </div>
       <label class="f" id="lVenue">Lokasi / venue<input id="f_venue" type="text" placeholder="Nama tempat"></label>
     </fieldset>
-    <fieldset class="fs" data-for="konser"><legend>Detail konser</legend>
+    <fieldset class="fs" data-for="konser"><legend>3. Detail konser</legend>
       <label class="f">Genre<select id="f_genre"><option value="">Pilih genre</option><option>Pop</option><option>Rock</option><option>Indie</option><option>EDM</option><option>Hip-hop</option><option>Dangdut</option><option>Jazz</option><option>Festival campuran</option><option>Lainnya</option></select></label>
-      <label class="f">Line-up<textarea id="f_lineup" placeholder="Pisahkan dengan koma: Band A, Band B, Band C"></textarea></label>
+      <label class="f">Line-up<textarea id="f_lineup" placeholder="Pisahkan dengan koma: Band A, Band B"></textarea></label>
     </fieldset>
-    <fieldset class="fs" data-for="naikgunung" hidden><legend>Detail pendakian</legend>
+    <fieldset class="fs" data-for="naikgunung" hidden><legend>3. Detail pendakian</legend>
       <label class="f">Nama gunung<input id="f_mountain" type="text" placeholder="contoh: Gunung Papandayan"></label>
       <div class="g2">
         <label class="f">Ketinggian (mdpl)<input id="f_altitude_mdpl" type="number" min="0" inputmode="numeric" placeholder="2665"></label>
-        <label class="f">Tingkat kesulitan<select id="f_difficulty"><option value="">Pilih</option><option value="pemula">Pemula</option><option value="menengah">Menengah</option><option value="sulit">Sulit</option></select></label>
+        <label class="f">Kesulitan<select id="f_difficulty"><option value="">Pilih</option><option value="pemula">Pemula</option><option value="menengah">Menengah</option><option value="sulit">Sulit</option></select></label>
       </div>
       <label class="f">Durasi<input id="f_duration" type="text" placeholder="contoh: 2 hari 1 malam"></label>
     </fieldset>
-    <fieldset class="fs"><legend>Deskripsi &amp; poster</legend>
-      <label class="f">Deskripsi<textarea id="f_description" placeholder="Ringkasan, syarat, fasilitas, info penting"></textarea></label>
-      <div class="pv" id="pv">Pratinjau poster</div>
-      <label class="f">Unggah poster (maks. 2 MB)<input id="f_file" type="file" accept="image/*"></label>
-      <label class="f">atau URL poster<input id="f_poster_url" type="url" placeholder="https://…"></label>
-    </fieldset>
-    <fieldset class="fs"><legend>Sumber &amp; tiket</legend>
+    <fieldset class="fs"><legend>4. Deskripsi &amp; sumber</legend>
+      <label class="f">Deskripsi <i class="cc" id="ccDesc">0</i><textarea id="f_description" placeholder="Ringkasan, syarat, fasilitas, info penting"></textarea></label>
       <label class="f">Link tiket / pendaftaran<input id="f_ticket_url" type="url" placeholder="https://…"></label>
       <label class="f">Akun IG sumber<input id="f_source_ig" type="text" placeholder="@akunresmi"></label>
     </fieldset>
-    <div class="sticky"><button class="btn ghost" data-save="draft" type="submit">Simpan draft</button><button class="btn" data-save="published" type="submit">Terbitkan</button></div>
-    <p style="text-align:center"><button class="lnk" id="bCancel" type="button">Batal</button></p>
+  </div>
+  <aside class="prev"><h3>Pratinjau di situs</h3><div id="pvCard"></div><h3 style="margin-top:14px">Kelengkapan <span id="pvPct"></span></h3><ul class="ck" id="ck"></ul></aside></div>
+  <div class="sticky"><button class="btn ghost" data-save="draft" type="submit">Simpan draft</button><button class="btn" data-save="published" type="submit">Terbitkan</button></div>
+  <p style="text-align:center"><button class="lnk" id="bCancel" type="button">Batal</button></p>
   </form>
 </section>
 </div>
@@ -74,5 +77,5 @@
   <button data-v="form" type="button"><i>➕</i>Buat baru</button>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/admin.js"></script>
+<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script>
 </body></html>

@@ -7,7 +7,7 @@ var rows=[],editing=null,kind="konser",fk="",view="dash";
 function tdy(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
 function fd(s){if(!s)return"";var d=new Date(s+"T00:00:00");return d.getDate()+" "+MON[d.getMonth()]+" "+d.getFullYear()}
 function slug(t,d){return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+d}
-function pv(u){var p=$("pv");p.style.backgroundImage=u?"url('"+u.replace(/'/g,"%27")+"')":"";p.textContent=u?"":"Pratinjau poster"}
+function pv(u){var p=$("pv");p.style.backgroundImage=u?"url('"+u.replace(/'/g,"%27")+"')":"";p.textContent=u?"":"Tarik poster ke sini atau ketuk untuk memilih (JPG/PNG, otomatis dikecilkan)"}
 function go(v){view=v;["dash","list","form"].forEach(function(x){$("v_"+x).hidden=x!==v});
   [].forEach.call(document.querySelectorAll("#bnav button"),function(b){b.classList.toggle("on",b.dataset.v===v)});scrollTo(0,0);msg("")}
 function setKind(k){kind=k;[].forEach.call(document.querySelectorAll(".kind button"),function(b){b.classList.toggle("on",b.dataset.kind===k)});
