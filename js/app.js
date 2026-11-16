@@ -45,7 +45,7 @@ sel.onchange=function(){state.city=sel.value;render()};
 $("q").oninput=function(){state.q=this.value;render()};
 $("tabs").onclick=function(ev){var b=ev.target.closest(".tab");if(!b)return;state.cat=b.dataset.c;[].forEach.call(document.querySelectorAll(".tab"),function(t){t.classList.toggle("on",t===b)});render()};
 $("grid").onclick=function(ev){var b=ev.target.closest(".ev");if(b)openEv(b.dataset.id)};
-$("login").onclick=function(){toast("Login (Supabase Auth) hadir di tahap 2")};
+$("login").onclick=function(){location.href="login.html"};
 $("year").textContent=new Date().getFullYear();
 load().then(function(){$("sCity").textContent=Object.keys(IB_REGIONS).reduce(function(n,p){return n+IB_REGIONS[p].length},0);render()});
 })();

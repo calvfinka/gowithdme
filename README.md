@@ -22,3 +22,13 @@ Tambah di `js/regions.js` dan baris di tabel `provinces`/`cities`.
 - Hanya anon key di frontend; semua akses dijaga RLS. Jangan pernah taruh service role key di repo.
 - Log lokasi login diisi lewat Edge Function (tahap 2) dan butuh persetujuan eksplisit + kebijakan privasi (UU PDP).
 - Poster milik penyelenggara: minta izin dan cantumkan sumber.
+
+## Tahap 2: Login, Profil, Panel Admin
+- `login.html` + `js/auth.js`: daftar, masuk, lupa password, profil, cek lokasi (placeholder).
+- `admin.html` + `js/admin.js`: tambah/edit/terbitkan/hapus event, unggah poster ke Storage.
+- `supabase/schema_tahap2.sql`: kolom `role`, fungsi `is_admin()`, policy admin, bucket `posters`.
+### Setup
+1. Jalankan `schema.sql` lalu `schema_tahap2.sql` di SQL Editor.
+2. Supabase > Authentication > URL Configuration: Site URL = domain situs, tambahkan Redirect URL `https://infobarengan.com/login.html`.
+3. Daftar akun di `/login.html`, lalu jalankan query `update profiles set role='admin' ...` (ada di akhir schema_tahap2.sql).
+4. Buka `/admin.html`. Penjagaan sebenarnya ada di RLS, bukan di JavaScript.
