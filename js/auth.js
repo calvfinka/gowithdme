@@ -1,5 +1,5 @@
 (function(){
-if(!sb){msg("Supabase belum dikonfigurasi di js/config.js","err");return}
+if(!sb){msg((!window.supabase?"Pustaka Supabase gagal dimuat dari CDN. Cek koneksi/pemblokir iklan lalu muat ulang.":!(window.IB_CONFIG&&IB_CONFIG.SUPABASE_URL)?"File js/config.js tidak terbaca atau kosong. Buka alamat /js/config.js untuk mengeceknya.":"Supabase belum siap. Muat ulang halaman."),"err");return}
 var mode="login";
 function seg(m){mode=m;$("fLogin").hidden=m!=="login";$("fReg").hidden=m!=="reg";$("sLogin").classList.toggle("on",m==="login");$("sReg").classList.toggle("on",m==="reg");msg("")}
 $("sLogin").onclick=function(){seg("login")};$("sReg").onclick=function(){seg("reg")};

@@ -1,5 +1,5 @@
 (function(){
-if(!sb){$("lock").hidden=false;$("lockT").textContent="Supabase belum dikonfigurasi di js/config.js.";return}
+if(!sb){$("lock").hidden=false;$("lockT").textContent=(!window.supabase?"Pustaka Supabase gagal dimuat dari CDN. Cek koneksi/pemblokir iklan lalu muat ulang.":!(window.IB_CONFIG&&IB_CONFIG.SUPABASE_URL)?"File js/config.js tidak terbaca atau kosong. Buka alamat /js/config.js untuk mengeceknya.":"Supabase belum siap. Muat ulang halaman.");return}
 var KEYS=["title","city_id","event_date","end_date","price_label","venue","genre","lineup","mountain","altitude_mdpl","difficulty","duration","description","poster_url","ticket_url","source_ig"];
 var CAT={konser:"🎤 Konser",naikgunung:"⛰️ Naik Gunung"},DIF={pemula:"Pemula",menengah:"Menengah",sulit:"Sulit"};
 var MON=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
