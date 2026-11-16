@@ -284,3 +284,15 @@ dialog.shr{width:min(380px,92vw)}
 .ajsh{margin-left:auto}
 .ico-btn.sh{display:inline-grid}
 .cmty{display:inline-flex;font-size:11px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--field);color:var(--mute)}
+
+/* ---- ajakan: dialog kecil, filter, badge, Ajakan saya ---- */
+dialog.aqd{width:min(380px,92vw)}.aqf,.amb{padding:16px}.aqf h3,.amb h3{font-size:16px;margin:0 0 8px}.aqf p{margin:0 0 10px;color:var(--ink)}
+.aqf textarea{width:100%;box-sizing:border-box;margin-bottom:10px;font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.aqf .row,.amb>.row{display:flex;gap:8px;justify-content:flex-end}
+.aji{margin:0 0 10px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+#fInv[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.badge.inv{background:#0E5A46;color:#fff}.badge.int{background:transparent;color:var(--ink);border:1px solid var(--line)}
+#ajMy{position:relative}.ajn{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#E4501A;color:#fff;font-size:10px;font-weight:700;line-height:16px;text-align:center;box-sizing:border-box}
+.amb h4{font-size:13px;margin:14px 0 6px;color:var(--muted,var(--ink))}
+.amr{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;text-align:left;border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-bottom:6px;background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}
+.amr b{display:block;font-size:14px}.amr small{display:block;font-size:12px;opacity:.7}.amr em{font-style:normal;font-size:11px;font-weight:700;white-space:nowrap;color:#0E5A46}

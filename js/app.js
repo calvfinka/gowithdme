@@ -4,7 +4,7 @@ var C=window.IB_CONFIG,DUM=document.createElement("div"),MODE=window.IB_MODE||"a
 var tr=window.IB_T||function(k){return k},LOC=tr("locale"),MON=tr("mon").split(",");
 var CAT={konser:tr("cat_konser"),naikgunung:tr("cat_naikgunung"),pameran:tr("cat_pameran")};
 var DIF={pemula:tr("dif_pemula"),menengah:tr("dif_menengah"),sulit:tr("dif_sulit")};
-var state={cat:"semua",city:"semua",when:"semua",price:"semua",sort:"date",q:"",view:"grid",events:[]};
+var SOC={},state={inv:false,cat:"semua",city:"semua",when:"semua",price:"semua",sort:"date",q:"",view:"grid",events:[]};
 var saved=read("ib_saved",[]);
 var kp=new URLSearchParams(location.search).get("kat");
 if(MODE==="all"&&/^(konser|naikgunung|pameran|tersimpan|selesai)$/.test(kp||""))state.cat=kp;
@@ -55,12 +55,19 @@ function load(){
   return fetch(u,{headers:{apikey:C.SUPABASE_ANON_KEY,Authorization:"Bearer "+C.SUPABASE_ANON_KEY}})
    .then(function(r){if(!r.ok)throw 0;return r.json()})
    .then(function(rows){state.events=dedupe(rows.map(function(r){r.city=r.cities&&r.cities.name;return r}))})
-   .catch(function(){state.events=IB_SAMPLE;toast(tr("loadfail"))});
+   .catch(function(){state.events=IB_SAMPLE;toast(tr("loadfail"))})
+   .then(loadSocial);
 }
+function loadSocial(){if(!window.sb)return;
+  return window.sb.from("event_social").select("*").then(function(r){(r.data||[]).forEach(function(z){SOC[z.event_id]=z})},function(){})}
+function invN(e){return SOC[e.id]?+SOC[e.id].open_invites||0:0}
+function invBadge(e){var n=invN(e),w=SOC[e.id]?+SOC[e.id].interested||0:0;
+  return n?'<span class="badge inv">'+esc(tr("aj_open_badge",{n:n}))+'</span>':(w?'<span class="badge int">'+esc(tr("aj_interest_n",{n:w}))+'</span>':"")}
 /* ---- Klasifikasi & filter ---- */
 function base(e,noWhen){var q=state.q.toLowerCase();
   return(state.city==="semua"||e.city===state.city)
    &&(noWhen||state.when==="semua"||(state.when==="live"?status(e).k==="live":status(e).n<=(state.when==="week"?7:30)))
+   &&(!state.inv||invN(e)>0)
    &&(state.price==="semua"||(state.price==="gratis"?gratis(e):paid(e)))
    &&(e.title+" "+(e.title_en||"")+" "+(e.venue||"")+" "+(e.mountain||"")+" "+(e.genre||"")+" "+(e.city||"")).toLowerCase().indexOf(q)>-1}
 function list(){var past=state.cat==="selesai";
@@ -79,12 +86,12 @@ function tile(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
     '<div class="d"><b>'+p.d+'</b><span>'+p.m+'</span></div>'+
     '<button class="fav sh" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
     '<button class="fav" type="button" data-sv="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr("sv_label"))+'">'+ic("heart")+'</button></div>'+
-    '<div><div class="tt">'+esc(ttl(e))+'</div><div class="tm">'+where(e)+'</div><div class="tm">'+esc(kind(e))+'</div><div class="tm">'+badge(e)+'</div>'+
+    '<div><div class="tt">'+esc(ttl(e))+'</div><div class="tm">'+where(e)+'</div><div class="tm">'+esc(kind(e))+'</div><div class="tm">'+badge(e)+invBadge(e)+'</div>'+
     '<div class="tm p'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_tbd"))+'</div></div></div>'}
 function row(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
   return'<div class="r'+(s.k==="past"?' past':'')+'" data-id="'+esc(e.id)+'" role="button" tabindex="0"><div class="rd" style="'+posterStyle(e)+'"><div><b>'+p.d+'</b><span>'+p.m+'</span></div></div>'+
     '<div class="rt"><b>'+esc(ttl(e))+'</b><span>'+esc(kind(e))+' · '+esc(rng(e))+'</span></div>'+
-    '<div class="rc">'+where(e)+'</div><div class="rs">'+badge(e)+'</div>'+
+    '<div class="rc">'+where(e)+'</div><div class="rs">'+badge(e)+invBadge(e)+'</div>'+
     '<div class="rp'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_soon"))+'</div>'+
     '<div class="ra"><button class="rf" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
     '<button class="rf" type="button" data-sv="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr("sv_label"))+'">'+ic("heart")+'</button></div></div>'}
@@ -135,7 +142,7 @@ function render(){
   var r=$("reset2");if(r)r.onclick=reset;
   tick();
   if(window.IB_Now)IB_Now.setCity(state.city)}
-function reset(){state.cat=MODE==="gunung"?"naikgunung":"semua";state.city="semua";state.when="semua";state.price="semua";state.sort="date";state.q="";
+function reset(){state.inv=false;var fb=$("fInv");if(fb){fb.setAttribute("aria-pressed","false");fb.classList.remove("on")}state.cat=MODE==="gunung"?"naikgunung":"semua";state.city="semua";state.when="semua";state.price="semua";state.sort="date";state.q="";
   ["city","when","price","sort"].forEach(function(i){$(i).value=state[i]});$("q").value="";render()}
 /* ---- Aksi: simpan, bagikan, kalender, peta ---- */
 function toggleSave(id){id=String(id);var i=saved.indexOf(id);if(i>-1)saved.splice(i,1);else saved.push(id);write("ib_saved",saved);toast(i>-1?tr("sv_rm"):tr("sv_add"));render()}
@@ -188,6 +195,7 @@ function buildCities(){var cur=state.city,cnt={},act=state.events.filter(isActiv
 buildCities();
 ["city","when","price","sort"].forEach(function(i){$(i).onchange=function(){state[i]=this.value;render()}});
 $("reset").onclick=reset;
+var fi=$("fInv");if(fi){fi.textContent=tr("f_inv");fi.onclick=function(){state.inv=!state.inv;this.setAttribute("aria-pressed",state.inv);this.classList.toggle("on",state.inv);render()}}
 $("q").oninput=function(){state.q=this.value;render()};
 $("vGrid").onclick=function(){state.view="grid";try{localStorage.setItem("gwm_view","grid")}catch(e){}render()};
 $("vList").onclick=function(){state.view="list";try{localStorage.setItem("gwm_view","list")}catch(e){}render()};
@@ -205,6 +213,7 @@ $("dlg").addEventListener("close",function(){if(history.replaceState){var u=new 
 $("login").onclick=function(ev){ev.preventDefault();location.href="login"};
 $("year").textContent=new Date().getFullYear();
 [].forEach.call(document.querySelectorAll("[data-mail]"),function(a){if(C.CONTACT_EMAIL)a.href="mailto:"+C.CONTACT_EMAIL});
+window.IB_OpenEv=function(id){var e=byId(id);if(!e)return false;openEv(id)};
 load().then(function(){buildCities();if(MODE==="home"&&!state.events.some(function(e){return isActive(e)&&status(e).k==="live"})){state.when="week";$("note").hidden=false}render();
   var want=new URLSearchParams(location.search).get("e");if(want){var w=state.events.filter(function(x){return String(x.slug)===want||String(x.id)===want})[0];if(w)openEv(w.id)}});
 })();
