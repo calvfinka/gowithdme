@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Semua Event — InfoBarengan</title>
+<meta name="description" content="Semua event konser dan naik gunung yang aktif, bisa disaring menurut kota, waktu, dan harga.">
+<meta name="author" content="Jurkon Studio"><meta name="theme-color" content="#12302a">
+<meta property="og:title" content="InfoBarengan — Konser & Naik Gunung"><meta property="og:description" content="Gas barengan, jangan sendirian. Info event dan teman seperjalanan di kotamu.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body><div class="top"><div class="wrap"><a class="logo" href="./"><img src="assets/favicon.svg" alt="">Info<b>Barengan</b></a><nav class="nav"><a href="./">Beranda</a><a href="event" class="on">Event</a><a href="gunung">Gunung</a></nav><span class="sp"></span><button class="btn sm" id="login">Masuk</button></div></div>
+<main class="wrap">
+<section id="event">
+  <div class="sec-h"><h2 id="evTitle">Semua event</h2><p>Saring menurut kategori, kota, waktu, dan harga.</p></div>
+  <div class="bar" id="tabs"></div>
+  <div class="bar"><input id="q" type="search" placeholder="Cari nama event, lokasi, atau gunung" aria-label="Cari event"></div>
+  <div class="fil">
+    <select id="city" aria-label="Kota"></select>
+    <select id="when" aria-label="Waktu"><option value="semua">Semua waktu</option><option value="live">Berlangsung sekarang</option><option value="week">7 hari ke depan</option><option value="month">30 hari ke depan</option></select>
+    <select id="price" aria-label="Harga"><option value="semua">Semua harga</option><option value="gratis">Gratis</option><option value="bayar">Berbayar</option></select>
+    <select id="sort" aria-label="Urutan"><option value="date">Paling dekat</option><option value="new">Terbaru ditambahkan</option></select>
+    <button class="btn ghost sm" id="reset" type="button">Reset</button>
+    <div class="cnt" id="cnt" aria-live="polite"></div>
+  </div>
+  <div id="list"><div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
+</section>
+</main>
+<footer><div class="wrap"><span>© <span id="year"></span> InfoBarengan · Jurkon Studio. Poster dan hak cipta milik penyelenggara.</span><nav><a href="terms">Syarat &amp; Ketentuan</a><a href="privacy">Kebijakan Privasi</a><a href="mailto:halo@infobarengan.com" data-mail>Kontak</a></nav></div></footer>
+<dialog id="dlg"><div id="dBody"></div></dialog>
+<div id="toast" role="status"></div>
+<dialog id="dlg"><div id="dBody"></div></dialog>
+<div id="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/regions.js"></script><script>window.IB_MODE="all"</script><script src="js/ajakan.js"></script><script src="js/app.js"></script>
+</body>
+</html>

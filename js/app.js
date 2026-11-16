@@ -1,11 +1,11 @@
 if(/\.html$/.test(location.pathname))history.replaceState(null,"",location.pathname.replace(/index\.html$/,"").replace(/\.html$/,""));
 (function(){
-var C=window.IB_CONFIG,$=function(i){return document.getElementById(i)};
+var C=window.IB_CONFIG,DUM=document.createElement("div"),MODE=window.IB_MODE||"all",$=function(i){return document.getElementById(i)||DUM};
 var MON=["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGU","SEP","OKT","NOV","DES"];
 var CAT={konser:"🎤 Konser",naikgunung:"⛰️ Naik Gunung"};
 var DIF={pemula:"Pemula",menengah:"Menengah",sulit:"Sulit"};
 var state={cat:"semua",city:"semua",when:"semua",price:"semua",sort:"date",q:"",events:[]};
-var saved=read("ib_saved",[]);
+var saved=read("ib_saved",[]);if(MODE==="home")state.when="live";if(MODE==="gunung")state.cat="naikgunung";
 function read(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
 function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -56,18 +56,18 @@ function group(l){var G=[["live","Sedang berlangsung"],["soon","7 hari ke depan"
   return G.map(function(g){var x=l.filter(function(e){return status(e).k===g[0]});
     return x.length?'<div class="gh">'+g[1]+' <span>'+x.length+'</span></div><div class="grid">'+x.map(card).join("")+'</div>':""}).join("")}
 function tabs(){var act=state.events.filter(function(e){return isActive(e)&&base(e)});
-  var T=[["semua","Semua",act.length],["konser","🎤 Konser",act.filter(function(e){return e.category==="konser"}).length],["naikgunung","⛰️ Naik Gunung",act.filter(function(e){return e.category==="naikgunung"}).length],["tersimpan","♥ Tersimpan",act.filter(function(e){return saved.indexOf(String(e.id))>-1}).length],["selesai","⏱ Selesai",state.events.filter(function(e){return!isActive(e)&&base(e)}).length]];
+  var T=[["semua","Semua",act.length],["konser","🎤 Konser",act.filter(function(e){return e.category==="konser"}).length],["naikgunung","⛰️ Naik Gunung",act.filter(function(e){return e.category==="naikgunung"}).length],["tersimpan","♥ Tersimpan",act.filter(function(e){return saved.indexOf(String(e.id))>-1}).length],["selesai","⏱ Selesai",state.events.filter(function(e){return!isActive(e)&&base(e)}).length]];if(MODE==="home")T=T.slice(0,3);
   $("tabs").innerHTML=T.map(function(t){return'<button class="tab'+(state.cat===t[0]?' on':'')+'" data-c="'+t[0]+'">'+t[1]+'<small>'+t[2]+'</small></button>'}).join("")}
 function render(){
   var l=list(),act=state.events.filter(isActive);
   $("chip").textContent="📍 "+(state.city==="semua"?"Semua kota":state.city+(prov(state.city)?", "+prov(state.city):""));
-  $("evTitle").textContent=state.cat==="selesai"?"Arsip event selesai":"Event aktif"+(state.city==="semua"?"":" di "+state.city);
+  if(MODE==="all")$("evTitle").textContent=state.cat==="selesai"?"Arsip event selesai":"Event aktif"+(state.city==="semua"?"":" di "+state.city);
   $("sEv").textContent=act.length;$("sLive").textContent=act.filter(function(e){return status(e).k==="live"}).length;
   $("sWeek").textContent=act.filter(function(e){var s=status(e);return s.k!=="live"&&s.n<=7}).length;
   tabs();$("cnt").textContent=l.length+" event ditemukan";
-  $("list").innerHTML=l.length?group(l):'<div class="grid"><div class="empty">'+(state.cat==="tersimpan"?'Belum ada event tersimpan. Tekan ♡ di kartu event untuk menyimpannya.':'Tidak ada event yang cocok dengan filter ini.<br><button class="btn sm" id="reset2">Reset filter</button>')+'</div></div>';
+  $("list").innerHTML=l.length?group(l):'<div class="grid"><div class="empty">'+(state.cat==="tersimpan"?'Belum ada event tersimpan. Tekan ♡ di kartu event untuk menyimpannya.':(MODE==="home"?'Belum ada event dalam 7 hari ke depan.<br><a class="btn sm" style="margin-top:10px" href="event">Lihat semua event</a>':'Tidak ada event yang cocok dengan filter ini.<br><button class="btn sm" id="reset2">Reset filter</button>'))+'</div></div>';
   var r=$("reset2");if(r)r.onclick=reset}
-function reset(){state.cat="semua";state.city="semua";state.when="semua";state.price="semua";state.sort="date";state.q="";
+function reset(){state.cat=MODE==="gunung"?"naikgunung":"semua";state.city="semua";state.when="semua";state.price="semua";state.sort="date";state.q="";
   ["city","when","price","sort"].forEach(function(i){$(i).value=state[i]});$("q").value="";render()}
 /* ---- Aksi: simpan, bagikan, kalender, peta ---- */
 function toggleSave(id){id=String(id);var i=saved.indexOf(id);if(i>-1)saved.splice(i,1);else saved.push(id);write("ib_saved",saved);toast(i>-1?"Dihapus dari tersimpan":"Disimpan di perangkat ini");render()}
@@ -84,11 +84,11 @@ function openEv(id){
    +(e.source_ig?'<a class="btn ghost" target="_blank" rel="noopener noreferrer" href="https://instagram.com/'+esc(String(e.source_ig).replace(/^@/,""))+'">Sumber: @'+esc(String(e.source_ig).replace(/^@/,""))+'</a>':'')
    +'<a class="btn ghost" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((e.venue||"")+" "+(e.city||""))+'">🗺 Peta</a>'
    +'<button class="btn ghost" id="dIcs">📅 Kalender</button><button class="btn ghost" id="dShare">↗ Bagikan</button>'
-   +'<button class="btn ghost" id="barengan">🤝 Cari teman barengan</button><button class="btn ghost" id="close">Tutup</button></div></div>';
+   +'<button class="btn ghost" id="close">Tutup</button></div><div id="ajk" class="ajk"></div></div>';
   $("dlg").showModal();
   $("close").onclick=function(){$("dlg").close()};
   $("dIcs").onclick=function(){ics(e)};$("dShare").onclick=function(){share(e)};
-  $("barengan").onclick=function(){var w=read("ib_barengan",[]);if(w.indexOf(String(e.id))<0){w.push(String(e.id));write("ib_barengan",w)}toast("Minatmu dicatat. Fitur barengan segera hadir, masuk dulu agar siap dipakai.")};
+  if(window.IB_Ajakan)IB_Ajakan.mount(e,$("ajk"));else $("ajk").innerHTML='<p class="meta">Fitur ajakan belum aktif di situs ini.</p>';
 }
 /* ---- Pasang elemen & event ---- */
 var sel=$("city");sel.innerHTML='<option value="semua">Semua kota</option>';
@@ -103,7 +103,7 @@ $("dlg").onclick=function(ev){if(ev.target===this)this.close()};
 $("login").onclick=function(){location.href="login"};
 $("year").textContent=new Date().getFullYear();
 [].forEach.call(document.querySelectorAll("[data-mail]"),function(a){if(C.CONTACT_EMAIL)a.href="mailto:"+C.CONTACT_EMAIL});
-load().then(render);
+load().then(function(){if(MODE==="home"&&!state.events.some(function(e){return isActive(e)&&status(e).k==="live"})){state.when="week";$("note").hidden=false}render()});
 })();
 if(location.hash)history.replaceState(null,"",location.pathname+location.search);
 document.addEventListener("click",function(e){
