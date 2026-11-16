@@ -1,51 +1,8 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Niche Gunung — InfoBarengan</title>
-<meta name="description" content="Open trip dan jadwal naik gunung, checklist packing, dan kalkulator patungan.">
-<meta name="author" content="Jurkon Studio"><meta name="theme-color" content="#12302a">
-<meta property="og:title" content="InfoBarengan — Konser & Naik Gunung"><meta property="og:description" content="Gas barengan, jangan sendirian. Info event dan teman seperjalanan di kotamu.">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body><div class="top"><div class="wrap"><a class="logo" href="./"><img src="assets/favicon.svg" alt="">Info<b>Barengan</b></a><nav class="nav"><a href="./">Beranda</a><a href="event">Event</a><a href="event?kat=konser">Konser</a><a href="gunung" class="on">Gunung</a></nav><span class="sp"></span><button class="btn sm" id="login">Masuk</button></div></div>
-<main class="wrap">
-<section id="event">
-  <div class="sec-h"><h2 id="evTitle">Event naik gunung</h2><p>Open trip dan pendakian bersama yang masih aktif.</p></div>
-  <div class="bar"><input id="q" type="search" placeholder="Cari nama event, lokasi, atau gunung" aria-label="Cari event"></div>
-  <div class="fil">
-    <select id="city" aria-label="Kota"></select>
-    <select id="when" aria-label="Waktu"><option value="semua">Semua waktu</option><option value="live">Berlangsung sekarang</option><option value="week">7 hari ke depan</option><option value="month">30 hari ke depan</option></select>
-    <select id="price" aria-label="Harga"><option value="semua">Semua harga</option><option value="gratis">Gratis</option><option value="bayar">Berbayar</option></select>
-    <select id="sort" aria-label="Urutan"><option value="date">Paling dekat</option><option value="new">Terbaru ditambahkan</option></select>
-    <button class="btn ghost sm" id="reset" type="button">Reset</button>
-    <div class="cnt" id="cnt" aria-live="polite"></div>
-  </div>
-  <div id="list"><div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
-</section>
-<section id="tools">
-  <div class="sec-h"><h2>Tools Barengan</h2><p>Alat bantu praktis sebelum berangkat. Data tersimpan di perangkatmu, tanpa login.</p></div>
-  <div class="tools">
-    <div class="card"><h3>🎒 Checklist Packing Pendakian</h3><p>Centang perlengkapan yang sudah siap. Progres tersimpan otomatis.</p>
-      <div class="prog"><i id="pbar"></i></div><div class="meta" id="pcount"></div><ul class="pl" id="pl"></ul>
-      <button class="btn ghost sm" id="pReset" style="margin-top:8px">Reset</button></div>
-    <div class="card"><h3>💸 Kalkulator Patungan</h3><p>Bagi biaya transport, tiket, atau sewa tenda dengan adil.</p>
-      <div class="form">
-        <label>Total biaya (Rp)<input id="total" type="number" min="0" inputmode="numeric" placeholder="contoh: 1200000"></label>
-        <label>Jumlah orang<input id="orang" type="number" min="1" inputmode="numeric" value="4"></label>
-        <label>Cadangan (%)<input id="admin" type="number" min="0" max="30" inputmode="numeric" value="5"></label>
-      </div><div class="res" id="hasil"></div></div>
-  </div>
-</section>
-</main>
-<footer><div class="wrap"><span>© <span id="year"></span> InfoBarengan · Jurkon Studio. Poster dan hak cipta milik penyelenggara.</span><nav><a href="terms">Syarat &amp; Ketentuan</a><a href="privacy">Kebijakan Privasi</a><a href="mailto:halo@infobarengan.com" data-mail>Kontak</a></nav></div></footer>
-<dialog id="dlg"><div id="dBody"></div></dialog>
-<div id="toast" role="status"></div>
-<dialog id="dlg"><div id="dBody"></div></dialog>
-<div id="toast" role="status"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/regions.js"></script><script>window.IB_MODE="gunung"</script><script src="js/ajakan.js"></script><script src="js/app.js"></script><script src="js/tools.js"></script></body>
-</html>
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InfoBarengan</title><meta name="robots" content="noindex,follow">
+<link rel="alternate" hreflang="id" href="https://infobarengan.com/id/gunung"><link rel="alternate" hreflang="en" href="https://infobarengan.com/en/gunung"><link rel="alternate" hreflang="x-default" href="https://infobarengan.com/gunung">
+<script>(function(){var l;try{l=localStorage.getItem("ib_lang")}catch(e){}
+if(l!=="id"&&l!=="en")l=/^id/i.test(navigator.language||"")?"id":"en";
+location.replace(l+"/gunung"+location.search+location.hash)})()</script></head>
+<body style="font-family:sans-serif;text-align:center;padding:40px"><p>InfoBarengan</p>
+<p><a href="id/gunung">Bahasa Indonesia</a> · <a href="en/gunung">English</a></p></body></html>

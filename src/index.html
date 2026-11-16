@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{idx_title}}</title>
+<meta name="description" content="{{idx_desc}}">
+<meta name="author" content="Jurkon Studio"><meta name="theme-color" content="#12302a">
+<meta property="og:title" content="{{og_title}}"><meta property="og:description" content="{{og_desc}}">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+{{hreflang}}</head>
+<body><div class="top"><div class="wrap"><a class="logo" href="./"><img src="../assets/favicon.svg" alt="">Info<b>Barengan</b></a><nav class="nav"><a href="./" class="on">{{nav_home}}</a><a href="event">{{nav_events}}</a><a href="event?kat=konser">{{nav_concerts}}</a><a href="gunung">{{nav_mountain}}</a></nav><span class="sp"></span>{{switch}}<button class="btn sm" id="login">{{login_btn}}</button></div></div>
+<main class="wrap">
+<div class="hero">
+  <span class="k" id="chip">📍 {{all_cities}}</span>
+  <h1>{{hero_h}}</h1>
+  <p>{{hero_p}}</p>
+  <a class="btn" href="event?kat=konser">{{btn_concert}}</a><a class="btn" href="event?kat=naikgunung">{{btn_hike}}</a> <a class="btn ghost" style="color:#fff;border-color:#fff" href="event">{{all_events}}</a>
+  <div class="stats"><div><b id="sEv">0</b>{{st_active}}</div><div><b id="sLive">0</b>{{st_live}}</div><div><b id="sWeek">0</b>{{next7}}</div></div>
+  </div>
+
+<section id="event">
+  <div class="sec-h"><h2 id="evTitle">{{home_h}}</h2><p>{{home_p}}</p></div>
+  <p id="note" hidden>{{home_note}}</p>
+  <div class="bar" id="tabs"></div>
+  <div id="list"><div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
+  <p style="margin-top:16px"><a class="btn" href="event">{{see_filter}}</a></p>
+</section>
+<section><div class="cta"><a class="card" href="event?kat=konser"><h3>{{cta1_h}}</h3><p>{{cta1_p}}</p></a><a class="card" href="event"><h3>{{cta2_h}}</h3><p>{{cta2_p}}</p></a><a class="card" href="gunung"><h3>{{cta3_h}}</h3><p>{{cta3_p}}</p></a></div></section>
+<section id="tentang">
+  <div class="sec-h"><h2>{{why_h}}</h2><p>{{why_p}}</p></div>
+  <div class="feat">
+    <div class="card"><h3><b>01</b> {{f1_h}}</h3><p>{{f1_p}}</p></div>
+    <div class="card"><h3><b>02</b> {{f2_h}}</h3><p>{{f2_p}}</p></div>
+    <div class="card"><h3><b>03</b> {{f3_h}}</h3><p>{{f3_p}}</p></div>
+  </div>
+  
+</section>
+</main>
+<footer><div class="wrap"><span>{{f_poster}}</span><nav><a href="terms">{{f_terms}}</a><a href="privacy">{{f_privacy}}</a><a href="mailto:halo@infobarengan.com" data-mail>{{f_contact}}</a></nav></div></footer>
+<dialog id="dlg"><div id="dBody"></div></dialog>
+<div id="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="../js/i18n.js"></script><script src="../js/config.js"></script><script src="../js/supa.js"></script><script src="../js/regions.js"></script><script>window.IB_MODE="home"</script><script src="../js/ajakan.js"></script><script src="../js/app.js"></script>
+</body>
+</html>

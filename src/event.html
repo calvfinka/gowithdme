@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{ev_title}}</title>
+<meta name="description" content="{{ev_desc}}">
+<meta name="author" content="Jurkon Studio"><meta name="theme-color" content="#12302a">
+<meta property="og:title" content="{{og_title}}"><meta property="og:description" content="{{og_desc}}">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+{{hreflang}}</head>
+<body><div class="top"><div class="wrap"><a class="logo" href="./"><img src="../assets/favicon.svg" alt="">Info<b>Barengan</b></a><nav class="nav"><a href="./">{{nav_home}}</a><a href="event" class="on">{{nav_events}}</a><a href="event?kat=konser">{{nav_concerts}}</a><a href="gunung">{{nav_mountain}}</a></nav><span class="sp"></span>{{switch}}<button class="btn sm" id="login">{{login_btn}}</button></div></div>
+<main class="wrap">
+<section id="event">
+  <div class="sec-h"><h2 id="evTitle">{{ev_h}}</h2><p>{{ev_p}}</p></div>
+  <div class="bar" id="tabs"></div>
+  <div class="bar"><input id="q" type="search" placeholder="{{search_ph}}" aria-label="{{search_aria}}"></div>
+  <div class="fil">
+    <select id="city" aria-label="{{aria_city}}"></select>
+    <select id="when" aria-label="{{aria_when}}"><option value="semua">{{w_all}}</option><option value="live">{{w_live}}</option><option value="week">{{next7}}</option><option value="month">{{w_30}}</option></select>
+    <select id="price" aria-label="{{aria_price}}"><option value="semua">{{p_all}}</option><option value="gratis">{{p_free}}</option><option value="bayar">{{p_paid}}</option></select>
+    <select id="sort" aria-label="{{aria_sort}}"><option value="date">{{s_near}}</option><option value="new">{{s_new}}</option></select>
+    <button class="btn ghost sm" id="reset" type="button">{{reset}}</button>
+    <div class="cnt" id="cnt" aria-live="polite"></div>
+  </div>
+  <div id="list"><div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
+</section>
+</main>
+<footer><div class="wrap"><span>{{f_poster}}</span><nav><a href="terms">{{f_terms}}</a><a href="privacy">{{f_privacy}}</a><a href="mailto:halo@infobarengan.com" data-mail>{{f_contact}}</a></nav></div></footer>
+<dialog id="dlg"><div id="dBody"></div></dialog>
+<div id="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="../js/i18n.js"></script><script src="../js/config.js"></script><script src="../js/supa.js"></script><script src="../js/regions.js"></script><script>window.IB_MODE="all"</script><script src="../js/ajakan.js"></script><script src="../js/app.js"></script>
+</body>
+</html>

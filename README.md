@@ -41,3 +41,10 @@ Tambah di `js/regions.js` dan baris di tabel `provinces`/`cities`.
 
 ## Panel admin v2
 Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (filter kategori/status/kota), Buat baru (form khusus konser atau pendakian, simpan draft atau terbitkan).
+
+## Dua bahasa (/id dan /en) & kota baru
+- Halaman ada di `id/` dan `en/` (Beranda, Event, Gunung, Login, Privasi, Syarat). Alamat lama `/event`, `/gunung`, `/login` otomatis diarahkan sesuai bahasa pilihan atau bahasa browser. Panel admin tetap satu (Indonesia) di `/admin`.
+- Teks: ubah di `tools/strings.py`, lalu jalankan `python3 tools/build.py`. Naskah privasi dan syarat ada di `src/*.id.body.html` dan `src/*.en.body.html`. File di `id/`, `en/`, dan `js/i18n.js` dibuat otomatis, jangan diedit tangan.
+- Supabase > Authentication > URL Configuration: tambahkan Redirect URL `https://infobarengan.com/id/login` dan `https://infobarengan.com/en/login` (yang lama `/login` boleh dibiarkan).
+- Jalankan `supabase/schema_kota.sql`: menambah 35 kota di 20 provinsi, kategori Pameran, dan kolom `title_en` / `description_en` untuk teks event berbahasa Inggris (opsional; kosong = tampil teks Indonesia).
+- Kota baru: tambah di `js/regions.js` dan di tabel `cities`.

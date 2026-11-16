@@ -13,6 +13,6 @@ if(/\.html$/.test(location.pathname))history.replaceState(null,"",location.pathn
   };
   window.loadCities=function(sel,withEmpty){
     return sb.from("cities").select("id,name").order("name").then(function(r){
-      sel.innerHTML=(withEmpty?'<option value="">Pilih kota</option>':"")+(r.data||[]).map(function(c){return'<option value="'+c.id+'">'+esc(c.name)+'</option>'}).join("")});
+      sel.innerHTML=(withEmpty?'<option value="">'+(window.IB_T?IB_T("pickcity"):"Pilih kota")+'</option>':"")+(r.data||[]).map(function(c){return'<option value="'+c.id+'">'+esc(c.name)+'</option>'}).join("")});
   };
 })();

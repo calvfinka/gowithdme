@@ -1,50 +1,8 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>InfoBarengan — Info Konser & Naik Gunung, Cari Teman Seperjalanan</title>
-<meta name="description" content="Info konser dan jadwal naik gunung terbaru di Bandung dan sekitarnya. Temukan teman barengan, siapkan packing list, dan hitung patungan. Oleh Jurkon Studio.">
-<meta name="author" content="Jurkon Studio"><meta name="theme-color" content="#12302a">
-<meta property="og:title" content="InfoBarengan — Konser & Naik Gunung"><meta property="og:description" content="Gas barengan, jangan sendirian. Info event dan teman seperjalanan di kotamu.">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body><div class="top"><div class="wrap"><a class="logo" href="./"><img src="assets/favicon.svg" alt="">Info<b>Barengan</b></a><nav class="nav"><a href="./" class="on">Beranda</a><a href="event">Event</a><a href="event?kat=konser">Konser</a><a href="gunung">Gunung</a></nav><span class="sp"></span><button class="btn sm" id="login">Masuk</button></div></div>
-<main class="wrap">
-<div class="hero">
-  <span class="k" id="chip">📍 Semua kota</span>
-  <h1>Gas barengan, jangan sendirian.</h1>
-  <p>Yang sedang berlangsung sekarang: konser dan pendakian yang bisa kamu datangi hari ini.</p>
-  <a class="btn" href="event?kat=konser">🎤 Konser</a><a class="btn" href="event?kat=naikgunung">⛰️ Naik gunung</a> <a class="btn ghost" style="color:#fff;border-color:#fff" href="event">Semua event</a>
-  <div class="stats"><div><b id="sEv">0</b>event aktif</div><div><b id="sLive">0</b>berlangsung</div><div><b id="sWeek">0</b>7 hari ke depan</div></div>
-  </div>
-
-<section id="event">
-  <div class="sec-h"><h2 id="evTitle">Sedang berlangsung</h2><p>Event yang aktif hari ini. Klik kartu untuk detail, tiket, dan ajakan barengan.</p></div>
-  <p id="note" hidden>Belum ada event yang berlangsung hari ini. Ini yang akan mulai dalam 7 hari ke depan.</p>
-  <div class="bar" id="tabs"></div>
-  <div id="list"><div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
-  <p style="margin-top:16px"><a class="btn" href="event">Lihat semua event dan filter</a></p>
-</section>
-<section><div class="cta"><a class="card" href="event?kat=konser"><h3>🎤 Konser &amp; festival</h3><p>Jadwal, harga tiket, dan teman nonton.</p></a><a class="card" href="event"><h3>🗂 Semua event</h3><p>Konser dan pendakian, disaring per kota, waktu, dan harga.</p></a><a class="card" href="gunung"><h3>⛰️ Niche gunung</h3><p>Open trip, checklist packing, dan kalkulator patungan.</p></a></div></section>
-<section id="tentang">
-  <div class="sec-h"><h2>Kenapa InfoBarengan?</h2><p>Satu tempat untuk info event, perlengkapan, dan teman perjalanan.</p></div>
-  <div class="feat">
-    <div class="card"><h3><b>01</b> Info terkurasi</h3><p>Event konser dan pendakian per kota dengan kredit ke sumber resmi.</p></div>
-    <div class="card"><h3><b>02</b> Komunitas aman</h3><p>Profil terverifikasi, deteksi lokasi login, dan moderasi laporan.</p></div>
-    <div class="card"><h3><b>03</b> Gratis &amp; ringan</h3><p>Jelajahi event, simpan favorit, dan buat kalender tanpa perlu akun.</p></div>
-  </div>
-  
-</section>
-</main>
-<footer><div class="wrap"><span>© <span id="year"></span> InfoBarengan · Jurkon Studio. Poster dan hak cipta milik penyelenggara.</span><nav><a href="terms">Syarat &amp; Ketentuan</a><a href="privacy">Kebijakan Privasi</a><a href="mailto:halo@infobarengan.com" data-mail>Kontak</a></nav></div></footer>
-<dialog id="dlg"><div id="dBody"></div></dialog>
-<div id="toast" role="status"></div>
-<dialog id="dlg"><div id="dBody"></div></dialog>
-<div id="toast" role="status"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/regions.js"></script><script>window.IB_MODE="home"</script><script src="js/ajakan.js"></script><script src="js/app.js"></script>
-</body>
-</html>
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InfoBarengan</title><meta name="robots" content="noindex,follow">
+<link rel="alternate" hreflang="id" href="https://infobarengan.com/id/"><link rel="alternate" hreflang="en" href="https://infobarengan.com/en/"><link rel="alternate" hreflang="x-default" href="https://infobarengan.com/">
+<script>(function(){var l;try{l=localStorage.getItem("ib_lang")}catch(e){}
+if(l!=="id"&&l!=="en")l=/^id/i.test(navigator.language||"")?"id":"en";
+location.replace(l+"/"+location.search+location.hash)})()</script></head>
+<body style="font-family:sans-serif;text-align:center;padding:40px"><p>InfoBarengan</p>
+<p><a href="id/">Bahasa Indonesia</a> · <a href="en/">English</a></p></body></html>

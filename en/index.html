@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>InfoBarengan — Concert & Hiking Event Info, Find Travel Buddies</title>
+<meta name="description" content="Latest concert and mountain hiking info in major Indonesian cities. Find travel buddies, prepare your packing list, and split costs. By Jurkon Studio.">
+<meta name="author" content="Jurkon Studio"><meta name="theme-color" content="#12302a">
+<meta property="og:title" content="InfoBarengan — Concerts & Hiking"><meta property="og:description" content="Go together, don't go alone. Event info and travel buddies in your city.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="canonical" href="https://infobarengan.com/en/"><link rel="alternate" hreflang="id" href="https://infobarengan.com/id/"><link rel="alternate" hreflang="en" href="https://infobarengan.com/en/"><link rel="alternate" hreflang="x-default" href="https://infobarengan.com/"></head>
+<body><div class="top"><div class="wrap"><a class="logo" href="./"><img src="../assets/favicon.svg" alt="">Info<b>Barengan</b></a><nav class="nav"><a href="./" class="on">Home</a><a href="event">Events</a><a href="event?kat=konser">Concerts</a><a href="gunung">Hiking</a></nav><span class="sp"></span><a class="lang" href="../id/" data-sw="id" hreflang="id" lang="id" aria-label="Change language">ID</a><button class="btn sm" id="login">Log in</button></div></div>
+<main class="wrap">
+<div class="hero">
+  <span class="k" id="chip">📍 All cities</span>
+  <h1>Go together, don't go alone.</h1>
+  <p>Happening right now: concerts and hikes you can join today.</p>
+  <a class="btn" href="event?kat=konser">🎤 Concerts</a><a class="btn" href="event?kat=naikgunung">⛰️ Hiking</a> <a class="btn ghost" style="color:#fff;border-color:#fff" href="event">All events</a>
+  <div class="stats"><div><b id="sEv">0</b>active events</div><div><b id="sLive">0</b>happening now</div><div><b id="sWeek">0</b>Next 7 days</div></div>
+  </div>
+
+<section id="event">
+  <div class="sec-h"><h2 id="evTitle">Happening now</h2><p>Events active today. Tap a card for details, tickets, and meet-up invites.</p></div>
+  <p id="note" hidden>Nothing is happening today. These start within the next 7 days.</p>
+  <div class="bar" id="tabs"></div>
+  <div id="list"><div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
+  <p style="margin-top:16px"><a class="btn" href="event">See all events and filters</a></p>
+</section>
+<section><div class="cta"><a class="card" href="event?kat=konser"><h3>🎤 Concerts &amp; festivals</h3><p>Schedules, ticket prices, and people to go with.</p></a><a class="card" href="event"><h3>🗂 All events</h3><p>Concerts, expos, and hikes, filtered by city, time, and price.</p></a><a class="card" href="gunung"><h3>⛰️ Mountain hiking</h3><p>Open trips, packing checklist, and cost-split calculator.</p></a></div></section>
+<section id="tentang">
+  <div class="sec-h"><h2>Why InfoBarengan?</h2><p>One place for event info, gear, and travel buddies.</p></div>
+  <div class="feat">
+    <div class="card"><h3><b>01</b> Curated info</h3><p>Concerts and hikes by city, with credit to official sources.</p></div>
+    <div class="card"><h3><b>02</b> Safe community</h3><p>Verified profiles, login location checks, and report moderation.</p></div>
+    <div class="card"><h3><b>03</b> Free &amp; light</h3><p>Browse events, save favorites, and add to your calendar without an account.</p></div>
+  </div>
+  
+</section>
+</main>
+<footer><div class="wrap"><span>© <span id="year"></span> InfoBarengan · Jurkon Studio. Posters and copyrights belong to their organizers.</span><nav><a href="terms">Terms &amp; Conditions</a><a href="privacy">Privacy Policy</a><a href="mailto:halo@infobarengan.com" data-mail>Contact</a></nav></div></footer>
+<dialog id="dlg"><div id="dBody"></div></dialog>
+<div id="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="../js/i18n.js"></script><script src="../js/config.js"></script><script src="../js/supa.js"></script><script src="../js/regions.js"></script><script>window.IB_MODE="home"</script><script src="../js/ajakan.js"></script><script src="../js/app.js"></script>
+</body>
+</html>

@@ -1,7 +1,25 @@
-// Pengganti provinsi.py: tambah provinsi/kota baru di sini (atau di tabel provinces/cities).
+// Daftar provinsi dan kota (dipakai filter kota). Kota baru juga harus ada di tabel cities (jalankan supabase/schema_kota.sql).
 window.IB_REGIONS = {
-  "Jawa Barat": ["Bandung", "Cimahi", "Bogor", "Bekasi"],
-  "DKI Jakarta": ["Jakarta"]
+  "DKI Jakarta": ["Jakarta"],
+  "Banten": ["Tangerang", "Tangerang Selatan", "Serang"],
+  "Jawa Barat": ["Bandung", "Cimahi", "Bogor", "Bekasi", "Depok", "Karawang", "Cirebon", "Tasikmalaya"],
+  "Jawa Tengah": ["Semarang", "Solo"],
+  "DI Yogyakarta": ["Yogyakarta"],
+  "Jawa Timur": ["Surabaya", "Malang", "Sidoarjo"],
+  "Bali": ["Denpasar", "Badung", "Gianyar"],
+  "Sumatera Utara": ["Medan"],
+  "Sumatera Barat": ["Padang"],
+  "Riau": ["Pekanbaru"],
+  "Kepulauan Riau": ["Batam"],
+  "Sumatera Selatan": ["Palembang"],
+  "Lampung": ["Bandar Lampung"],
+  "Aceh": ["Banda Aceh"],
+  "Kalimantan Timur": ["Balikpapan", "Samarinda"],
+  "Kalimantan Selatan": ["Banjarmasin"],
+  "Kalimantan Barat": ["Pontianak"],
+  "Sulawesi Selatan": ["Makassar"],
+  "Sulawesi Utara": ["Manado"],
+  "Nusa Tenggara Barat": ["Mataram"]
 };
 // Data contoh (dipakai bila Supabase belum diisi)
 window.IB_SAMPLE = [

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mountain Hiking — InfoBarengan</title>
+<meta name="description" content="Open trips and hiking schedules, packing checklist, and cost-split calculator.">
+<meta name="author" content="Jurkon Studio"><meta name="theme-color" content="#12302a">
+<meta property="og:title" content="InfoBarengan — Concerts & Hiking"><meta property="og:description" content="Go together, don't go alone. Event info and travel buddies in your city.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="canonical" href="https://infobarengan.com/en/gunung"><link rel="alternate" hreflang="id" href="https://infobarengan.com/id/gunung"><link rel="alternate" hreflang="en" href="https://infobarengan.com/en/gunung"><link rel="alternate" hreflang="x-default" href="https://infobarengan.com/gunung"></head>
+<body><div class="top"><div class="wrap"><a class="logo" href="./"><img src="../assets/favicon.svg" alt="">Info<b>Barengan</b></a><nav class="nav"><a href="./">Home</a><a href="event">Events</a><a href="event?kat=konser">Concerts</a><a href="gunung" class="on">Hiking</a></nav><span class="sp"></span><a class="lang" href="../id/gunung" data-sw="id" hreflang="id" lang="id" aria-label="Change language">ID</a><button class="btn sm" id="login">Log in</button></div></div>
+<main class="wrap">
+<section id="event">
+  <div class="sec-h"><h2 id="evTitle">Hiking events</h2><p>Open trips and group hikes that are still active.</p></div>
+  <div class="bar"><input id="q" type="search" placeholder="Search event name, venue, or mountain" aria-label="Search events"></div>
+  <div class="fil">
+    <select id="city" aria-label="City"></select>
+    <select id="when" aria-label="Time"><option value="semua">Any time</option><option value="live">Happening now</option><option value="week">Next 7 days</option><option value="month">Next 30 days</option></select>
+    <select id="price" aria-label="Price"><option value="semua">Any price</option><option value="gratis">Free</option><option value="bayar">Paid</option></select>
+    <select id="sort" aria-label="Sort"><option value="date">Soonest</option><option value="new">Newest added</option></select>
+    <button class="btn ghost sm" id="reset" type="button">Reset</button>
+    <div class="cnt" id="cnt" aria-live="polite"></div>
+  </div>
+  <div id="list"><div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
+</section>
+<section id="tools">
+  <div class="sec-h"><h2>Barengan Tools</h2><p>Handy tools before you go. Data stays on your device, no login needed.</p></div>
+  <div class="tools">
+    <div class="card"><h3>🎒 Hiking Packing Checklist</h3><p>Tick the gear that's ready. Progress is saved automatically.</p>
+      <div class="prog"><i id="pbar"></i></div><div class="meta" id="pcount"></div><ul class="pl" id="pl"></ul>
+      <button class="btn ghost sm" id="pReset" style="margin-top:8px">Reset</button></div>
+    <div class="card"><h3>💸 Cost-Split Calculator</h3><p>Split transport, tickets, or tent rental fairly.</p>
+      <div class="form">
+        <label>Total cost (Rp)<input id="total" type="number" min="0" inputmode="numeric" placeholder="e.g. 1200000"></label>
+        <label>Number of people<input id="orang" type="number" min="1" inputmode="numeric" value="4"></label>
+        <label>Buffer (%)<input id="admin" type="number" min="0" max="30" inputmode="numeric" value="5"></label>
+      </div><div class="res" id="hasil"></div></div>
+  </div>
+</section>
+</main>
+<footer><div class="wrap"><span>© <span id="year"></span> InfoBarengan · Jurkon Studio. Posters and copyrights belong to their organizers.</span><nav><a href="terms">Terms &amp; Conditions</a><a href="privacy">Privacy Policy</a><a href="mailto:halo@infobarengan.com" data-mail>Contact</a></nav></div></footer>
+<dialog id="dlg"><div id="dBody"></div></dialog>
+<div id="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="../js/i18n.js"></script><script src="../js/config.js"></script><script src="../js/supa.js"></script><script src="../js/regions.js"></script><script>window.IB_MODE="gunung"</script><script src="../js/ajakan.js"></script><script src="../js/app.js"></script><script src="../js/tools.js"></script></body>
+</html>
