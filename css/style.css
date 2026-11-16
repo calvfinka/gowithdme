@@ -75,7 +75,7 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stro
 .page.narrow{max-width:520px}
 
 .head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line)}
-.head h1{font-size:26px;line-height:1.15}
+.head h1,.head h2{font-size:26px;line-height:1.15}
 .head p{margin:4px 0 0;color:var(--mute);max-width:60ch}
 .hx{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .sel{height:32px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:0 10px;font-weight:500;cursor:pointer;min-width:0;max-width:170px}
@@ -256,7 +256,7 @@ input[type=number],input[type=search],select{font-family:var(--f)}
   .stat:nth-child(3){padding-left:0;border-left:0}.stat:nth-child(n+3){border-top:1px solid var(--line)}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
   .info{grid-template-columns:1fr}.info div+div{border-left:0;border-top:1px solid var(--line)}
-  .head h1{font-size:22px}
+  .head h1,.head h2{font-size:22px}
   .r{grid-template-columns:48px minmax(0,1fr) 64px}.r .rs{display:none}
   .now{grid-template-columns:1fr}
   .now>div{padding:12px 0}
@@ -315,3 +315,13 @@ dialog.aqd{width:min(380px,92vw)}.aqf,.amb{padding:16px}.aqf h3,.amb h3{font-siz
 .kb{padding:16px}.kb h2{font-size:18px;margin:8px 0 4px}.kbody{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0;font-size:14px}
 .krep{border-top:1px solid var(--line);padding:8px 0}.krep small{color:var(--mute)}.krep p{margin:4px 0}
 #kRep textarea,#kForm textarea{width:100%;box-sizing:border-box;padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--s1);color:var(--ink);font:inherit}
+
+/* ---- beranda: blok komunitas ---- */
+.khero{display:grid;gap:14px;padding:6px 0 16px;border-bottom:1px solid var(--line)}
+.khero h1{font-size:32px;line-height:1.1;letter-spacing:-.02em}.khero p{margin:8px 0 0;color:var(--mute);max-width:60ch}
+.khero .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.kchips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.kchip{flex:none;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--s1);color:var(--ink);text-decoration:none;font-size:13px;font-weight:600}
+.kchip small{font-size:11px;color:var(--mute);font-weight:500}.kchip.all{background:transparent;color:var(--mute)}
+.head{padding-top:16px}
+@media (max-width:640px){.khero h1{font-size:26px}}

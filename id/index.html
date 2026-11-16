@@ -9,9 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css">
 <script src="../js/theme.js"></script>
-<title>GWM — Info Konser & Naik Gunung, Cari Teman Seperjalanan</title>
-<meta name="description" content="Info konser dan jadwal naik gunung terbaru di kota-kota besar Indonesia. Temukan teman barengan, siapkan packing list, dan hitung patungan. Oleh Jurkon Studio.">
-<meta property="og:title" content="GWM — Konser & Naik Gunung"><meta property="og:description" content="Gas barengan, jangan sendirian. Info event dan teman seperjalanan di kotamu.">
+<title>GWM — Cari Teman Nonton Festival & Naik Gunung di Kotamu</title>
+<meta name="description" content="Pergi sendiri? Cari teman nonton konser, festival, dan naik gunung di kotamu. Info event terbaru, ajakan barengan, dan komunitas per kota. Oleh Jurkon Studio.">
+<meta property="og:title" content="GWM — Cari Teman Nonton & Naik Gunung"><meta property="og:description" content="Gas barengan, jangan sendirian. Info event dan teman seperjalanan di kotamu.">
 <link rel="canonical" href="https://calvfinka.github.io/gowithdme/id/"><link rel="alternate" hreflang="id" href="https://calvfinka.github.io/gowithdme/id/"><link rel="alternate" hreflang="en" href="https://calvfinka.github.io/gowithdme/en/"><link rel="alternate" hreflang="x-default" href="https://calvfinka.github.io/gowithdme/id/"></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -51,15 +51,20 @@
 <aside class="side" aria-label="Navigasi"><h4>Jelajahi</h4><div class="nav" id="navCat"></div><h4>Kota</h4><div class="nav" id="navCity"></div><h4>Milikmu</h4><div class="nav" id="navMine"></div></aside>
 
 <main class="main">
+  <section class="khero">
+    <div><h1 id="evTitle">Pergi sendiri? Cari teman jalan.</h1><p>Gabung komunitas kotamu untuk cari teman nonton festival dan naik gunung, tanya info, dan lihat ajakan barengan.</p>
+      <div class="row"><a class="btn" href="komunitas">Buka komunitas</a><a class="btn line" href="event?ajakan=1">Lihat ajakan terbuka</a></div></div>
+    <div class="kchips" id="kChips" role="group" aria-label="Komunitas per kota"></div>
+  </section>
   <div class="head">
-    <div><h1 id="evTitle">Sedang berlangsung</h1><p>Event yang aktif hari ini. Klik kartu untuk detail, tiket, dan ajakan barengan.</p></div>
+    <div><h2 id="nowH">Sedang berlangsung</h2><p>Event yang aktif hari ini. Klik kartu untuk detail, tiket, dan ajakan barengan.</p></div>
     <div class="hx"><select class="sel" id="city" aria-label="Kota"></select><div class="vseg" role="group" aria-label="Tampilan"><button type="button" id="vGrid" aria-pressed="true" aria-label="Tampilan kisi"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg></button><button type="button" id="vList" aria-pressed="false" aria-label="Tampilan daftar"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg></button></div>
 </div>
   </div>
   <section class="now" aria-label="Tanggal, waktu, dan cuaca"><div class="clock"><div class="day" id="nDay">&nbsp;</div><div class="dt" id="nDate">&nbsp;</div><div class="tm"><span id="nTime">--:--:--</span><small>WIB</small></div></div><div class="wx" id="wNow"></div><div id="wFc"></div><div class="src" id="wSrc"></div></section>
 
   <div class="mfilters" id="mCat" role="group" aria-label="Jenis event"></div>
-  <div class="stats"><div class="stat"><b id="sEv">0</b><span>event aktif</span></div><div class="stat"><b id="sLive">0</b><span>berlangsung hari ini</span></div><div class="stat"><b id="sWeek">0</b><span>mulai 7 hari ke depan</span></div><div class="stat"><b id="sNext">-</b><span>sampai event pertama</span></div></div>
+  <div class="stats"><div class="stat"><b id="sEv">0</b><span>event aktif</span></div><div class="stat"><b id="sInv">0</b><span>ajakan terbuka</span></div><div class="stat"><b id="sInt">0</b><span>orang cari teman</span></div><div class="stat"><b id="sNext">-</b><span>sampai event pertama</span></div></div>
 
   <section class="tick" id="tick" aria-label="Event yang akan datang (berjalan otomatis, arahkan atau sentuh untuk menjeda)" hidden><div class="tl">Akan datang</div><div class="vp"><div class="trk" id="trk"></div></div></section>
   <p class="note" id="note" hidden>Belum ada event yang berlangsung hari ini. Ini yang akan mulai dalam 7 hari ke depan.</p>
@@ -67,7 +72,7 @@
   <p style="margin:18px 0 0"><a class="btn line" href="event">Lihat semua event dan filter</a></p>
   <div class="info">
     <div><b>Info terkurasi</b><span>Event konser dan pendakian per kota dengan kredit ke sumber resmi.</span></div>
-    <div><b>Komunitas aman</b><span>Profil terverifikasi, deteksi lokasi login, dan moderasi laporan.</span></div>
+    <div><b>Komunitas aman</b><span>Tanpa tautan dan nomor telepon di kiriman, ada tombol laporkan, dan admin yang memoderasi.</span></div>
     <div><b>Gratis &amp; ringan</b><span>Jelajahi event, simpan favorit, dan buat kalender tanpa perlu akun.</span></div>
   </div>
   <div class="foot"><span>© <span id="year"></span> GWM · Jurkon Studio. Poster dan hak cipta milik penyelenggara.</span><nav><a href="terms">Syarat &amp; Ketentuan</a><a href="privacy">Kebijakan Privasi</a><a href="mailto:halo@gowithdme.com" data-mail>Kontak</a></nav></div>

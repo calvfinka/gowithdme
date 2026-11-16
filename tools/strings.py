@@ -14,10 +14,9 @@ S = {
 "f_contact": ("Kontak", "Contact"),
 "lang_label": ("Ganti bahasa", "Change language"),
 # --- meta ---
-"idx_title": ("GWM — Info Konser & Naik Gunung, Cari Teman Seperjalanan", "GWM — Concert & Hiking Event Info, Find Travel Buddies"),
-"idx_desc": ("Info konser dan jadwal naik gunung terbaru di kota-kota besar Indonesia. Temukan teman barengan, siapkan packing list, dan hitung patungan. Oleh Jurkon Studio.",
-             "Latest concert and mountain hiking info in major Indonesian cities. Find travel buddies, prepare your packing list, and split costs. By Jurkon Studio."),
-"og_title": ("GWM — Konser & Naik Gunung", "GWM — Concerts & Hiking"),
+"idx_title": ('GWM — Cari Teman Nonton Festival & Naik Gunung di Kotamu', 'GWM — Find Friends for Festivals & Hikes in Your City'),
+"idx_desc": ('Pergi sendiri? Cari teman nonton konser, festival, dan naik gunung di kotamu. Info event terbaru, ajakan barengan, dan komunitas per kota. Oleh Jurkon Studio.', 'Going solo? Find company for concerts, festivals, and hikes in your city. Latest event info, meet-up invites, and city communities. By Jurkon Studio.'),
+"og_title": ('GWM — Cari Teman Nonton & Naik Gunung', 'GWM — Find Friends for Festivals & Hikes'),
 "og_desc": ("Gas barengan, jangan sendirian. Info event dan teman seperjalanan di kotamu.", "Go together, don't go alone. Event info and travel buddies in your city."),
 "ev_title": ("Semua Event — GWM", "All Events — GWM"),
 "ev_desc": ("Semua event konser, pameran, dan naik gunung yang aktif, bisa disaring menurut kota, waktu, dan harga.",
@@ -37,10 +36,10 @@ S = {
 "btn_hike": ("⛰️ Naik gunung", "⛰️ Hiking"),
 "all_events": ("Semua event", "All events"),
 "st_active": ("event aktif", "active events"),
-"st_live": ("berlangsung hari ini", "happening today"),
+"st_live": ('ajakan terbuka', 'open invites'),
 "next7": ("7 hari ke depan", "Next 7 days"),
-"home_h": ("Sedang berlangsung", "Happening now"),
-"home_p": ("Event yang aktif hari ini. Klik kartu untuk detail, tiket, dan ajakan barengan.", "Events active today. Tap a card for details, tickets, and meet-up invites."),
+"home_h": ('Pergi sendiri? Cari teman jalan.', 'Going solo? Find someone to go with.'),
+"home_p": ('Gabung komunitas kotamu untuk cari teman nonton festival dan naik gunung, tanya info, dan lihat ajakan barengan.', "Join your city's community to find company for festivals and hikes, ask questions, and see meet-up invites."),
 "home_note": ("Belum ada event yang berlangsung hari ini. Ini yang akan mulai dalam 7 hari ke depan.", "Nothing is happening today. These start within the next 7 days."),
 "see_filter": ("Lihat semua event dan filter", "See all events and filters"),
 "cta1_h": ("🎤 Konser &amp; festival", "🎤 Concerts &amp; festivals"),
@@ -54,7 +53,7 @@ S = {
 "f1_h": ("Info terkurasi", "Curated info"),
 "f1_p": ("Event konser dan pendakian per kota dengan kredit ke sumber resmi.", "Concerts and hikes by city, with credit to official sources."),
 "f2_h": ("Komunitas aman", "Safe community"),
-"f2_p": ("Profil terverifikasi, deteksi lokasi login, dan moderasi laporan.", "Verified profiles, login location checks, and report moderation."),
+"f2_p": ('Tanpa tautan dan nomor telepon di kiriman, ada tombol laporkan, dan admin yang memoderasi.', 'No links or phone numbers in posts, a report button, and admin moderation.'),
 "f3_h": ("Gratis &amp; ringan", "Free &amp; light"),
 "f3_p": ("Jelajahi event, simpan favorit, dan buat kalender tanpa perlu akun.", "Browse events, save favorites, and add to your calendar without an account."),
 # --- event / gunung ---
@@ -114,7 +113,7 @@ S = {
 "nav_aria": ("Navigasi", "Navigation"), "nav_browse": ("Jelajahi", "Browse"), "nav_city": ("Kota", "City"), "nav_mine": ("Milikmu", "Yours"),
 "now_aria": ("Tanggal, waktu, dan cuaca", "Date, time, and weather"), "aria_kind": ("Jenis event", "Event type"),
 "aria_view": ("Tampilan", "View"), "v_grid": ("Tampilan kisi", "Grid view"), "v_list": ("Tampilan daftar", "List view"),
-"st_week": ("mulai 7 hari ke depan", "starting in the next 7 days"), "st_next": ("sampai event pertama", "until the first event"),
+"st_week": ('orang cari teman', 'people looking for company'), "st_next": ("sampai event pertama", "until the first event"),
 "tick_h": ("Akan datang", "Coming up"), "tick_aria": ("Event yang akan datang (berjalan otomatis, arahkan atau sentuh untuk menjeda)", "Upcoming events (scrolls automatically, hover or touch to pause)"),
 "lg_rec_h": ("Buat password baru", "Set a new password"),
 "lg_rec_p": ("Tautan reset berhasil. Isi password baru untuk akunmu.", "Reset link accepted. Enter a new password for your account."),
@@ -337,4 +336,14 @@ J.update({
 "k_report": ("Laporkan", "Report"), "k_report_h": ("Laporkan", "Report"), "k_report_ph": ("Apa yang bermasalah? (min. 3 huruf)", "What is wrong? (min. 3 characters)"), "k_reported": ("Laporan terkirim. Terima kasih.", "Report sent. Thank you."),
 "k_err": ("Terjadi kesalahan. Coba lagi.", "Something went wrong. Try again."), "k_cancel": ("Batal", "Cancel"), "k_yes": ("Ya", "Yes"), "k_send": ("Kirim", "Send"),
 "k_by": ("oleh", "by"), "k_user": ("Pengguna", "User"),
+})
+S.update({
+"home_cta": ("Buka komunitas", "Open community"), "home_cta2": ("Lihat ajakan terbuka", "See open invites"),
+"home_now_h": ("Sedang berlangsung", "Happening now"),
+"home_now_p": ("Event yang aktif hari ini. Klik kartu untuk detail, tiket, dan ajakan barengan.", "Events active today. Tap a card for details, tickets, and meet-up invites."),
+"home_chips_aria": ("Komunitas per kota", "Communities by city"),
+})
+J.update({
+"st_day1": ("{n} hari", "{n} day"),
+"home_allcities": ("Semua kota →", "All cities →"),
 })

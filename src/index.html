@@ -10,8 +10,13 @@
 <div class="shell">
 {{>side}}
 <main class="main">
+  <section class="khero">
+    <div><h1 id="evTitle">{{home_h}}</h1><p>{{home_p}}</p>
+      <div class="row"><a class="btn" href="komunitas">{{home_cta}}</a><a class="btn line" href="event?ajakan=1">{{home_cta2}}</a></div></div>
+    <div class="kchips" id="kChips" role="group" aria-label="{{home_chips_aria}}"></div>
+  </section>
   <div class="head">
-    <div><h1 id="evTitle">{{home_h}}</h1><p>{{home_p}}</p></div>
+    <div><h2 id="nowH">{{home_now_h}}</h2><p>{{home_now_p}}</p></div>
     <div class="hx"><select class="sel" id="city" aria-label="{{aria_city}}"></select>{{>view}}</div>
   </div>
   {{>now}}

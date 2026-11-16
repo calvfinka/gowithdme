@@ -9,9 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css">
 <script src="../js/theme.js"></script>
-<title>GWM — Concert & Hiking Event Info, Find Travel Buddies</title>
-<meta name="description" content="Latest concert and mountain hiking info in major Indonesian cities. Find travel buddies, prepare your packing list, and split costs. By Jurkon Studio.">
-<meta property="og:title" content="GWM — Concerts & Hiking"><meta property="og:description" content="Go together, don't go alone. Event info and travel buddies in your city.">
+<title>GWM — Find Friends for Festivals & Hikes in Your City</title>
+<meta name="description" content="Going solo? Find company for concerts, festivals, and hikes in your city. Latest event info, meet-up invites, and city communities. By Jurkon Studio.">
+<meta property="og:title" content="GWM — Find Friends for Festivals & Hikes"><meta property="og:description" content="Go together, don't go alone. Event info and travel buddies in your city.">
 <link rel="canonical" href="https://calvfinka.github.io/gowithdme/en/"><link rel="alternate" hreflang="id" href="https://calvfinka.github.io/gowithdme/id/"><link rel="alternate" hreflang="en" href="https://calvfinka.github.io/gowithdme/en/"><link rel="alternate" hreflang="x-default" href="https://calvfinka.github.io/gowithdme/id/"></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -51,15 +51,20 @@
 <aside class="side" aria-label="Navigation"><h4>Browse</h4><div class="nav" id="navCat"></div><h4>City</h4><div class="nav" id="navCity"></div><h4>Yours</h4><div class="nav" id="navMine"></div></aside>
 
 <main class="main">
+  <section class="khero">
+    <div><h1 id="evTitle">Going solo? Find someone to go with.</h1><p>Join your city's community to find company for festivals and hikes, ask questions, and see meet-up invites.</p>
+      <div class="row"><a class="btn" href="komunitas">Open community</a><a class="btn line" href="event?ajakan=1">See open invites</a></div></div>
+    <div class="kchips" id="kChips" role="group" aria-label="Communities by city"></div>
+  </section>
   <div class="head">
-    <div><h1 id="evTitle">Happening now</h1><p>Events active today. Tap a card for details, tickets, and meet-up invites.</p></div>
+    <div><h2 id="nowH">Happening now</h2><p>Events active today. Tap a card for details, tickets, and meet-up invites.</p></div>
     <div class="hx"><select class="sel" id="city" aria-label="City"></select><div class="vseg" role="group" aria-label="View"><button type="button" id="vGrid" aria-pressed="true" aria-label="Grid view"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg></button><button type="button" id="vList" aria-pressed="false" aria-label="List view"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg></button></div>
 </div>
   </div>
   <section class="now" aria-label="Date, time, and weather"><div class="clock"><div class="day" id="nDay">&nbsp;</div><div class="dt" id="nDate">&nbsp;</div><div class="tm"><span id="nTime">--:--:--</span><small>WIB</small></div></div><div class="wx" id="wNow"></div><div id="wFc"></div><div class="src" id="wSrc"></div></section>
 
   <div class="mfilters" id="mCat" role="group" aria-label="Event type"></div>
-  <div class="stats"><div class="stat"><b id="sEv">0</b><span>active events</span></div><div class="stat"><b id="sLive">0</b><span>happening today</span></div><div class="stat"><b id="sWeek">0</b><span>starting in the next 7 days</span></div><div class="stat"><b id="sNext">-</b><span>until the first event</span></div></div>
+  <div class="stats"><div class="stat"><b id="sEv">0</b><span>active events</span></div><div class="stat"><b id="sInv">0</b><span>open invites</span></div><div class="stat"><b id="sInt">0</b><span>people looking for company</span></div><div class="stat"><b id="sNext">-</b><span>until the first event</span></div></div>
 
   <section class="tick" id="tick" aria-label="Upcoming events (scrolls automatically, hover or touch to pause)" hidden><div class="tl">Coming up</div><div class="vp"><div class="trk" id="trk"></div></div></section>
   <p class="note" id="note" hidden>Nothing is happening today. These start within the next 7 days.</p>
@@ -67,7 +72,7 @@
   <p style="margin:18px 0 0"><a class="btn line" href="event">See all events and filters</a></p>
   <div class="info">
     <div><b>Curated info</b><span>Concerts and hikes by city, with credit to official sources.</span></div>
-    <div><b>Safe community</b><span>Verified profiles, login location checks, and report moderation.</span></div>
+    <div><b>Safe community</b><span>No links or phone numbers in posts, a report button, and admin moderation.</span></div>
     <div><b>Free &amp; light</b><span>Browse events, save favorites, and add to your calendar without an account.</span></div>
   </div>
   <div class="foot"><span>© <span id="year"></span> GWM · Jurkon Studio. Posters and copyrights belong to their organizers.</span><nav><a href="terms">Terms &amp; Conditions</a><a href="privacy">Privacy Policy</a><a href="mailto:halo@gowithdme.com" data-mail>Contact</a></nav></div>

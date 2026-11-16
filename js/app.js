@@ -60,6 +60,9 @@ function load(){
 }
 function loadSocial(){if(!window.sb)return;
   return window.sb.from("event_social").select("*").then(function(r){(r.data||[]).forEach(function(z){SOC[z.event_id]=z})},function(){})}
+function loadChips(){var box=$("kChips");if(!box||!window.sb)return;
+  window.sb.from("forum_city_stats").select("*").order("sort").then(function(r){var A=(r.data||[]).filter(function(c){return c.active});if(!A.length)return;
+    box.innerHTML=A.map(function(c){return'<a class="kchip" href="komunitas?kota='+encodeURIComponent(c.city)+'">'+esc(c.city)+(c.posts?' <small>'+c.posts+'</small>':'')+'</a>'}).join("")+'<a class="kchip all" href="komunitas">'+esc(tr("home_allcities"))+'</a>'},function(){})}
 function invN(e){return SOC[e.id]?+SOC[e.id].open_invites||0:0}
 function invBadge(e){var n=invN(e),w=SOC[e.id]?+SOC[e.id].interested||0:0;
   return n?'<span class="badge inv">'+esc(tr("aj_open_badge",{n:n}))+'</span>':(w?'<span class="badge int">'+esc(tr("aj_interest_n",{n:w}))+'</span>':"")}
@@ -133,9 +136,9 @@ function render(){
   var l=list(),act=state.events.filter(isActive),pv=prov(state.city);
   if(MODE==="all")$("evTitle").textContent=state.cat==="selesai"?tr("h_archive"):state.cat==="tersimpan"?tr("h_saved"):(state.city==="semua"?tr("h_active"):tr("h_active_city",{c:state.city}));
   var live=act.filter(function(e){return status(e).k==="live"}),up=act.filter(function(e){return status(e).k!=="live"});
-  $("sEv").textContent=act.length;$("sLive").textContent=live.length;
-  $("sWeek").textContent=act.filter(function(e){var s=status(e);return s.k!=="live"&&s.n<=7}).length;
-  $("sNext").textContent=live.length?tr("st_now"):up.length?tr("st_days",{n:Math.min.apply(null,up.map(function(e){return status(e).n}))}):"-";
+  $("sEv").textContent=act.length;$("sInv").textContent=act.reduce(function(t,e){return t+invN(e)},0);
+  $("sInt").textContent=act.reduce(function(t,e){return t+(SOC[e.id]?+SOC[e.id].interested||0:0)},0);
+  $("sNext").textContent=live.length?tr("st_now"):up.length?(function(n){return tr(n===1?"st_day1":"st_days",{n:n})})(Math.min.apply(null,up.map(function(e){return status(e).n}))):"-";
   nav();$("city").value=state.city;$("cnt").textContent=tr("found",{n:l.length});
   $("vGrid").setAttribute("aria-pressed",state.view==="grid");$("vList").setAttribute("aria-pressed",state.view==="list");
   $("list").innerHTML=l.length?group(l):'<div class="group"><div class="empty"><b>'+(state.cat==="tersimpan"?tr("empty_saved"):(MODE==="home"?tr("empty_home"):tr("empty")))+'</b>'+(state.cat==="tersimpan"?'':MODE==="home"?'<a class="btn line" href="event">'+tr("see_all")+'</a>':'<button class="btn line" id="reset2" type="button">'+tr("reset_f")+'</button>')+'</div></div>';
@@ -195,7 +198,8 @@ function buildCities(){var cur=state.city,cnt={},act=state.events.filter(isActiv
 buildCities();
 ["city","when","price","sort"].forEach(function(i){$(i).onchange=function(){state[i]=this.value;render()}});
 $("reset").onclick=reset;
-var fi=$("fInv");if(fi){fi.textContent=tr("f_inv");fi.onclick=function(){state.inv=!state.inv;this.setAttribute("aria-pressed",state.inv);this.classList.toggle("on",state.inv);render()}}
+if(new URLSearchParams(location.search).get("ajakan")==="1")state.inv=true;
+var fi=$("fInv");if(fi){if(state.inv){fi.setAttribute("aria-pressed","true");fi.classList.add("on")}fi.textContent=tr("f_inv");fi.onclick=function(){state.inv=!state.inv;this.setAttribute("aria-pressed",state.inv);this.classList.toggle("on",state.inv);render()}}
 $("q").oninput=function(){state.q=this.value;render()};
 $("vGrid").onclick=function(){state.view="grid";try{localStorage.setItem("gwm_view","grid")}catch(e){}render()};
 $("vList").onclick=function(){state.view="list";try{localStorage.setItem("gwm_view","list")}catch(e){}render()};
@@ -213,6 +217,7 @@ $("dlg").addEventListener("close",function(){if(history.replaceState){var u=new 
 $("login").onclick=function(ev){ev.preventDefault();location.href="login"};
 $("year").textContent=new Date().getFullYear();
 [].forEach.call(document.querySelectorAll("[data-mail]"),function(a){if(C.CONTACT_EMAIL)a.href="mailto:"+C.CONTACT_EMAIL});
+loadChips();
 window.IB_OpenEv=function(id){var e=byId(id);if(!e)return false;openEv(id)};
 load().then(function(){buildCities();if(MODE==="home"&&!state.events.some(function(e){return isActive(e)&&status(e).k==="live"})){state.when="week";$("note").hidden=false}render();
   var want=new URLSearchParams(location.search).get("e");if(want){var w=state.events.filter(function(x){return String(x.slug)===want||String(x.id)===want})[0];if(w)openEv(w.id)}});
