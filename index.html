@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>InfoBarengan — Info Konser & Naik Gunung, Cari Teman Seperjalanan</title>
+<meta name="description" content="Info konser dan jadwal naik gunung terbaru di Bandung dan sekitarnya. Temukan teman barengan, siapkan packing list, dan hitung patungan. Oleh Jurkon Studio.">
+<meta name="author" content="Jurkon Studio"><meta name="theme-color" content="#12302a">
+<meta property="og:title" content="InfoBarengan — Konser & Naik Gunung"><meta property="og:description" content="Gas barengan, jangan sendirian. Info event dan teman seperjalanan di kotamu.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="top"><div class="wrap">
+  <a class="logo" href="#"><img src="assets/favicon.svg" alt="">Info<b>Barengan</b></a>
+  <nav class="nav"><a href="#event">Event</a><a href="#tools">Tools</a><a href="#tentang">Tentang</a></nav>
+  <span class="sp"></span>
+  <select id="city" aria-label="Pilih kota"></select>
+  <button class="btn sm" id="login">Masuk</button>
+</div></div>
+
+<main class="wrap">
+<div class="hero">
+  <span class="k" id="chip">📍 Bandung</span>
+  <h1>Gas <span>Barengan</span>, jangan sendirian.</h1>
+  <p>Kurasi info konser dan jadwal naik gunung di kotamu, plus teman seperjalanan yang terverifikasi.</p>
+  <a class="btn" href="#event">Lihat event</a> <a class="btn ghost" style="color:#fff;border-color:rgba(255,255,255,.4)" href="#tools">Pakai tools</a>
+  <div class="stats"><div><b id="sEv">0</b>event aktif</div><div><b id="sCity">0</b>kota</div><div><b>2</b>kategori</div></div>
+  <div class="sun"></div>
+  <svg class="ridge" viewBox="0 0 800 90" preserveAspectRatio="none"><path d="M0 90V50l90-34 70 30 80-40 90 46 80-28 100 38 90-30 80 22 120-34v100z" fill="#143329" opacity=".7"/><path d="M0 90V70l110-30 80 34 100-40 110 44 90-30 120 38 190-34v38z" fill="#0c1f1a"/></svg>
+</div>
+
+<section id="event">
+  <div class="sec-h"><h2 id="evTitle">Event</h2><p>Poster dan info dikurasi dari akun resmi penyelenggara. Klik kartu untuk detail, tiket, dan sumber.</p></div>
+  <div class="bar" id="tabs">
+    <button class="tab on" data-c="semua">Semua</button><button class="tab" data-c="konser">🎤 Konser</button><button class="tab" data-c="naikgunung">⛰️ Naik Gunung</button>
+    <input id="q" type="search" placeholder="Cari nama event atau lokasi…" aria-label="Cari event">
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="tools">
+  <div class="sec-h"><h2>Tools Barengan</h2><p>Alat bantu praktis sebelum berangkat. Data tersimpan di perangkatmu, tanpa login.</p></div>
+  <div class="tools">
+    <div class="card"><h3>🎒 Checklist Packing Pendakian</h3><p>Centang perlengkapan yang sudah siap. Progres tersimpan otomatis.</p>
+      <div class="prog"><i id="pbar"></i></div><div class="meta" id="pcount"></div><ul class="pl" id="pl"></ul>
+      <button class="btn ghost sm" id="pReset" style="margin-top:8px">Reset</button></div>
+    <div class="card"><h3>💸 Kalkulator Patungan</h3><p>Bagi biaya transport, tiket, atau sewa tenda dengan adil.</p>
+      <div class="form">
+        <label>Total biaya (Rp)<input id="total" type="number" min="0" inputmode="numeric" placeholder="contoh: 1200000"></label>
+        <label>Jumlah orang<input id="orang" type="number" min="1" inputmode="numeric" value="4"></label>
+        <label>Cadangan (%)<input id="admin" type="number" min="0" max="30" inputmode="numeric" value="5"></label>
+      </div><div class="res" id="hasil"></div></div>
+  </div>
+</section>
+
+<section id="tentang">
+  <div class="sec-h"><h2>Kenapa InfoBarengan?</h2><p>Satu tempat untuk info event, perlengkapan, dan teman perjalanan.</p></div>
+  <div class="feat">
+    <div class="card"><h3><b>01</b> Info terkurasi</h3><p>Event konser dan pendakian per kota dengan kredit ke sumber resmi.</p></div>
+    <div class="card"><h3><b>02</b> Komunitas aman</h3><p>Profil terverifikasi, deteksi lokasi login, dan moderasi laporan.</p></div>
+    <div class="card"><h3><b>03</b> Siap dikembangkan</h3><p>Struktur provinsi dan kota modular. Tambah daerah baru tanpa ubah kode.</p></div>
+  </div>
+  <ul class="road"><li>Tahap 1: portal info event + tools (sekarang)</li><li>Tahap 2: login, profil, dan ajakan barengan</li><li>Tahap 3: ekspansi provinsi lain</li></ul>
+</section>
+</main>
+
+<footer><div class="wrap"><span>© <span id="year"></span> InfoBarengan · by Jurkon Studio</span><span>Poster &amp; hak cipta milik penyelenggara masing-masing.</span></div></footer>
+<dialog id="dlg"><div id="dBody"></div></dialog>
+<div id="toast" role="status"></div>
+<script src="js/config.js"></script><script src="js/regions.js"></script><script src="js/app.js"></script><script src="js/tools.js"></script>
+</body>
+</html>
