@@ -3,7 +3,7 @@
 var tr=window.IB_T||function(k){return k};
 if(!window.sb){msg(tr("k_off"),"err");return}
 var KINDS=["teman","tanya","tips"],st={city:null,kind:"semua",me:null,posts:[]};
-var CITY=new URLSearchParams(location.search).get("kota");
+var QS=new URLSearchParams(location.search),CITY=QS.get("kota"),POST=QS.get("p"),EVT=QS.get("event");
 function toast(m){var t=$("toast");if(!t)return;t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2800)}
 function needLogin(){toast(tr("aj_needlogin"));setTimeout(function(){location.href="login"},900)}
 function run(p,okMsg,after){return p.then(function(r){if(r.error){toast(r.error.message||tr("k_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("k_err"));return false})}
@@ -46,7 +46,10 @@ function city(name){
     document.title=tr("k_city_h",{c:name})+" — GWM";
     $("kTitle").textContent=tr("k_city_h",{c:name});$("kSub").textContent=tr("k_city_p",{c:name});$("kSafe").textContent=tr("k_safety");
     $("kNew").textContent=st.me?tr("k_new"):tr("k_login_write");
-    tabs();loadGroups(name);loadPosts(name)})}
+    tabs();loadGroups(name);
+    loadPosts(name).then(function(){
+      /* tautan dari halaman event: ?p=<id kiriman> membuka kiriman, ?event=<id event> membuka formulir dengan event terpilih */
+      if(POST){var id=POST;POST=null;openPost(id)}else if(EVT&&st.me){var ev=EVT;EVT=null;openForm(ev)}})})}
 function loadGroups(name){
   sb.from("forum_groups").select("*").eq("city",name).order("created_at").then(function(r){
     var G=(r.data||[]).filter(function(g){return/^https:\/\//.test(g.url)});
@@ -63,9 +66,13 @@ function drawPosts(){
 
 /* ---------- Rincian kiriman (dialog) ---------- */
 function openPost(id){
-  var p=st.posts.filter(function(x){return x.id===id})[0];if(!p)return;
-  $("dBody").innerHTML='<p class="meta">…</p>';if(!$("dlg").open)$("dlg").showModal();
-  sb.from("forum_replies_public").select("*").eq("post_id",id).order("created_at").then(function(r){drawPost(p,r.data||[])})}
+  var show=function(p){
+    $("dBody").innerHTML='<p class="meta">…</p>';if(!$("dlg").open)$("dlg").showModal();
+    sb.from("forum_replies_public").select("*").eq("post_id",p.id).order("created_at").then(function(r){drawPost(p,r.data||[])})};
+  var p=st.posts.filter(function(x){return x.id===id})[0];
+  if(p)return show(p);
+  /* kiriman lama yang tidak ada di 60 teratas (mis. dari tautan di halaman event) */
+  sb.from("forum_posts_public").select("*").eq("id",id).maybeSingle().then(function(r){if(r.data)show(r.data);else toast(tr("k_gone"))})}
 function drawPost(p,R){
   var act=function(mine,t,id){return st.me?'<button class="lnk" data-x="'+(mine?"del":"rep")+'-'+t+'" data-id="'+id+'">'+esc(tr(mine?"k_delete":"k_report"))+'</button>':""};
   var h='<span class="kk kk-'+p.kind+'">'+esc(tr("k_tab_"+p.kind))+'</span><h2>'+esc(p.title)+'</h2><div class="meta">'+esc(tr("k_by"))+' '+esc(p.author_name||tr("k_user"))+(p.author_verified?" ✓":"")+' · '+esc(ago(p.created_at))+'</div>'+
@@ -86,15 +93,17 @@ function drawPost(p,R){
     run(sb.rpc("forum_reply",{p_post:p.id,p_body:f.elements.b.value}),tr("k_replied"),again).then(function(ok){if(!ok)btn.disabled=false})}}
 
 /* ---------- Kiriman baru ---------- */
-function openForm(){
+function openForm(pre){
   if(!st.me)return needLogin();
   var t=today(),kind="teman";
-  sb.from("events").select("id,title,event_date,cities!inner(name)").eq("status","published").eq("cities.name",st.city).or("end_date.gte."+t+",event_date.gte."+t).order("event_date").limit(60).then(function(r){
-    var E=r.error?[]:(r.data||[]);
+  var pq=pre?sb.from("events").select("id,title").eq("id",pre).eq("status","published").maybeSingle():Promise.resolve({data:null});
+  Promise.all([sb.from("events").select("id,title,event_date,cities!inner(name)").eq("status","published").eq("cities.name",st.city).or("end_date.gte."+t+",event_date.gte."+t).order("event_date").limit(60),pq]).then(function(x){
+    var r=x[0],E=r.error?[]:(r.data||[]);
+    if(pre&&x[1].data&&!E.some(function(e){return e.id===pre}))E.unshift(x[1].data);
     $("dBody").innerHTML='<h2>'+esc(tr("k_form_h"))+'</h2><form id="kForm"><div class="seg" id="kfKind" role="group" aria-label="'+esc(tr("k_f_kind"))+'">'+KINDS.map(function(k){return'<button type="button" data-k="'+k+'"'+(k===kind?' class="on"':'')+'>'+esc(tr("k_tab_"+k))+'</button>'}).join("")+'</div>'+
      '<label class="f">'+esc(tr("k_f_title"))+'<input name="t" minlength="5" maxlength="100" required placeholder="'+esc(tr("k_f_title_ph"))+'"></label>'+
      '<label class="f">'+esc(tr("k_f_body"))+'<textarea name="b" rows="5" minlength="5" maxlength="1000" required placeholder="'+esc(tr("k_f_body_ph"))+'"></textarea></label>'+
-     '<label class="f">'+esc(tr("k_f_event"))+'<select name="e"><option value="">'+esc(tr("k_f_noevent"))+'</option>'+E.map(function(e){return'<option value="'+esc(e.id)+'">'+esc(e.title)+'</option>'}).join("")+'</select></label>'+
+     '<label class="f">'+esc(tr("k_f_event"))+'<select name="e"><option value="">'+esc(tr("k_f_noevent"))+'</option>'+E.map(function(e){return'<option value="'+esc(e.id)+'"'+(e.id===pre?' selected':'')+'>'+esc(e.title)+'</option>'}).join("")+'</select></label>'+
      '<div class="row"><button class="btn ghost sm" type="button" data-x="close">'+esc(tr("k_cancel"))+'</button><button class="btn" type="submit">'+esc(tr("k_f_submit"))+'</button></div></form>';
     $("dBody").onclick=function(ev){var c=ev.target.closest("[data-x]");if(c&&c.dataset.x==="close")return $("dlg").close();
       var k=ev.target.closest("#kfKind [data-k]");if(k){kind=k.dataset.k;[].forEach.call($("kfKind").children,function(b){b.classList.toggle("on",b===k)})}};
@@ -106,7 +115,7 @@ function openForm(){
 $("kTabs").onclick=function(ev){var b=ev.target.closest("[data-k]");if(!b)return;st.kind=b.dataset.k;tabs();drawPosts()};
 $("kList").onclick=function(ev){var p=ev.target.closest(".kpost");if(p)openPost(p.dataset.id)};
 $("kList").onkeydown=function(ev){if(ev.key!=="Enter"&&ev.key!==" ")return;var p=ev.target.closest(".kpost");if(p){ev.preventDefault();openPost(p.dataset.id)}};
-$("kNew").onclick=openForm;
+$("kNew").onclick=function(){openForm()};
 $("dlg").onclick=function(ev){if(ev.target===this)this.close()};
 $("dlg").addEventListener("close",function(){$("dBody").innerHTML="";$("dBody").onclick=null});
 sb.auth.getSession().then(function(r){st.me=r.data.session&&r.data.session.user;if(CITY)city(CITY);else home()});

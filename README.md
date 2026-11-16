@@ -68,3 +68,9 @@ Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (
 ## Daftar konser per kota tanpa duplikat (v3)
 - Jalankan `supabase/konser_per_kota.sql` di Supabase > SQL Editor (aman diulang). Isinya: kota baru (Sleman, Bantul, Lamongan), pembersihan duplikat lama, 34 konser baru di 16 kota lengkap dengan harga, poster, dan link tiket, penerbitan konser Bandung yang masih draft, serta indeks unik `events_no_dupe` sehingga database menolak duplikat (kota + tanggal + judul).
 - `js/app.js` membuang duplikat saat memuat, `js/admin.js` menolak simpan postingan yang sama. Daftar lengkap: `supabase/DAFTAR_KONSER_PER_KOTA.md`.
+
+## Komunitas v2: diskusi di halaman event + moderasi admin
+- Jalankan `supabase/schema_forum_admin.sql` (setelah `schema_forum.sql`). Menambah kolom `forum_reports.handled_at`, indeks kiriman per event, dan fungsi `admin_forum_moderate` (hanya admin).
+- **Rincian event** (Beranda, Event, Gunung): bagian "Diskusi komunitas" menampilkan sampai 5 kiriman forum yang ditautkan ke event itu, tautan "Tulis kiriman soal event ini" (membuka formulir dengan event terpilih), dan "Semua kiriman di <kota>". Kota yang belum buka dan event tanpa kiriman tidak menampilkan apa-apa. Kode: `js/forum-event.js`; tautan `komunitas?kota=X&p=<id>` membuka kiriman, `komunitas?kota=X&event=<id>` membuka formulir.
+- **Admin > Komunitas** (`js/admin-forum.js`): tab *Dilaporkan* (antrean laporan belum ditangani, lengkap dengan alasan dan pelapor), *Terbaru* (kiriman dan balasan terakhir), *Disembunyikan / dihapus*. Tindakan: Abaikan laporan (laporan dihapus, kiriman tayang lagi), Sembunyikan, Hapus (permanen dari sisi panel), Pulihkan (hanya yang disembunyikan). Lencana merah di menu bawah dan kartu di Dashboard menunjukkan jumlah yang menunggu.
+- Menambah grup WhatsApp/Telegram/Discord dan membuka kota baru masih lewat Table Editor (`forum_groups`, `forum_cities`).

@@ -347,3 +347,10 @@ J.update({
 "st_day1": ("{n} hari", "{n} day"),
 "home_allcities": ("Semua kota →", "All cities →"),
 })
+J.update({
+"fe_h": ("Diskusi komunitas ({n})", "Community discussion ({n})"),
+"fe_none": ("Belum ada kiriman untuk event ini. Tulis yang pertama: cari teman, tanya info, atau bagi tips.", "No posts about this event yet. Write the first: find company, ask a question, or share a tip."),
+"fe_write": ("+ Tulis kiriman soal event ini", "+ Write a post about this event"),
+"fe_all": ("Semua kiriman di {c}", "All posts in {c}"),
+"k_gone": ("Kiriman ini sudah tidak tersedia.", "This post is no longer available."),
+})

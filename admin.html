@@ -16,6 +16,7 @@
   <h2>Dashboard</h2><p class="meta">Ringkasan semua postingan dan jalan pintas.</p>
   <div class="st5"><div><b id="nAll">0</b>Total</div><div><b id="nPub">0</b>Terbit</div><div><b id="nDr">0</b>Draft</div><div><b id="nKon">0</b>Konser</div><div><b id="nGun">0</b>Naik Gunung</div><div><b id="nPend">0</b>Menunggu</div></div>
   <div class="card" id="pendCta" hidden><h3>Pengajuan menunggu persetujuan</h3><p>Ada <b id="nPend2">0</b> pengajuan dari publik yang belum diperiksa.</p><button class="btn" data-v="review" type="button">Periksa sekarang</button></div>
+  <div class="card" id="fCta" hidden><h3>Laporan komunitas menunggu</h3><p>Ada <b id="nFrep">0</b> kiriman atau balasan forum yang dilaporkan dan belum diperiksa.</p><button class="btn" data-v="forum" type="button">Periksa sekarang</button></div>
   <div class="qa"><button data-new="konser" type="button">🎤 Buat konser</button><button data-new="naikgunung" type="button">⛰️ Buat pendakian</button></div>
   <div class="card"><h3>Event terdekat</h3><p>Lima event terbit berikutnya.</p><div id="soon"></div></div>
 </section>
@@ -23,6 +24,12 @@
 <section id="v_review" hidden>
   <h2>Persetujuan</h2><p class="meta">Pengajuan event dan open trip dari publik. Periksa judul, tanggal, kontak, dan poster sebelum menyetujui. Yang ditolak bisa diberi alasan agar pengaju dapat memperbaiki.</p>
   <div id="rev"></div>
+</section>
+
+<section id="v_forum" hidden>
+  <h2>Moderasi komunitas</h2><p class="meta">Kiriman dan balasan forum kota. Tiga laporan dari orang berbeda menyembunyikan kiriman otomatis; di sini kamu memutuskan: abaikan laporan, biarkan tersembunyi, atau hapus. Yang disembunyikan bisa dipulihkan, yang dihapus tidak.</p>
+  <div class="bar" id="fmTabs"><button class="tab on" data-ft="rep" type="button">Dilaporkan <small id="fmNRep">0</small></button><button class="tab" data-ft="new" type="button">Terbaru</button><button class="tab" data-ft="off" type="button">Disembunyikan / dihapus</button></div>
+  <div id="fmList"></div>
 </section>
 
 <section id="v_list" hidden>
@@ -85,9 +92,10 @@
 <nav class="bnav" id="bnav" hidden>
   <button data-v="dash" class="on" type="button"><i>🏠</i>Dashboard</button>
   <button data-v="review" type="button"><i>✅</i>Persetujuan<b class="dot" id="bPend" hidden></b></button>
+  <button data-v="forum" type="button"><i>💬</i>Komunitas<b class="dot" id="bFrep" hidden></b></button>
   <button data-v="list" type="button"><i>📋</i>Postingan</button>
   <button data-v="form" type="button"><i>➕</i>Buat baru</button>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script>
+<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script>
 </body></html>

@@ -64,3 +64,12 @@ select,input[type=search],input[type=number]{background:var(--field);color:var(-
 /* ---- Antrean persetujuan admin ---- */
 .bnav button{position:relative}
 .dot{position:absolute;top:3px;left:calc(50% + 8px);background:var(--err);color:#fff;border-radius:99px;font:700 10px var(--f);padding:1px 6px;min-width:16px;text-align:center}
+
+/* ---- moderasi forum ---- */
+.fm{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-bottom:10px}
+.fm b.t{display:block;font-size:15px;margin:4px 0 2px;overflow-wrap:anywhere}
+.fm .bd{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;margin:6px 0}
+.fm .rs{margin:8px 0;padding:8px 10px;border-radius:8px;background:var(--s2);font-size:13px}.fm .rs div+div{margin-top:4px}
+.fm .rs.hot{border-left:3px solid var(--err)}
+.fm .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.fm .ctx{font-size:12px;color:var(--mute);margin-bottom:2px}

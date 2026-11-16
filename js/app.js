@@ -179,12 +179,13 @@ function openEv(id){
    +(igHandle(e.source_ig)?'<a class="btn line" target="_blank" rel="noopener noreferrer" href="https://instagram.com/'+encodeURIComponent(igHandle(e.source_ig))+'">'+tr("source")+esc(igHandle(e.source_ig))+'</a>':'')
    +'<a class="btn line" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((e.venue||"")+" "+(e.city||""))+'">'+ic("pin")+tr("map")+'</a>'
    +'<button class="btn line" type="button" id="dIcs">'+ic("cal")+tr("cal")+'</button><button class="btn line" type="button" id="dShare">'+ic("share")+tr("share")+'</button>'
-   +'<button class="btn line" type="button" id="close">'+tr("close")+'</button></div><div id="ajk" class="ajk"></div></div>';
+   +'<button class="btn line" type="button" id="close">'+tr("close")+'</button></div><div id="ajk" class="ajk"></div><div id="fe" class="fe"></div></div>';
   $("dlg").showModal();
   if(history.replaceState){var u=new URL(location.href);u.searchParams.set("e",e.slug||e.id);history.replaceState(null,"",u.pathname+u.search)}
   $("close").onclick=function(){$("dlg").close()};
   $("dIcs").onclick=function(){ics(e)};$("dShare").onclick=function(){share(e)};
   if(window.IB_Ajakan)IB_Ajakan.mount(e,$("ajk"));else $("ajk").innerHTML='<p class="meta">'+tr("aj_off")+'</p>';
+  if(window.IB_ForumEvent)IB_ForumEvent.mount(e,$("fe"));
 }
 /* ---- Pasang elemen & event ---- */
 var sel=$("city");
