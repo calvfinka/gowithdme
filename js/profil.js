@@ -3,7 +3,7 @@
 (function(){
 var tr=window.IB_T||function(k){return k};
 if(!window.sb){msg(tr("a_notready"),"err");return}
-var box=$("pfBox"),Q=new URLSearchParams(location.search).get("u");
+var box=$("pfBox"),Q=new URLSearchParams(location.search).get("u"),SAVED=new URLSearchParams(location.search).get("saved")==="1";
 function toast(m){var t=$("toast");if(!t)return;t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},Math.max(2800,m.length*60))}
 function ago(ts){var s=(new Date(ts).getTime()-Date.now())/1000,a=Math.abs(s),r;
   try{r=new Intl.RelativeTimeFormat(tr("locale"),{numeric:"auto"})}catch(e){return""}
@@ -12,7 +12,7 @@ function ago(ts){var s=(new Date(ts).getTime()-Date.now())/1000,a=Math.abs(s),r;
 function avatar(p,cls){var n=(p.nickname||"?").charAt(0).toUpperCase(),u=p.avatar_url;
   return'<span class="'+cls+'" aria-hidden="true"'+(u?' style="background:center/cover url(\''+esc(u).replace(/\'/g,"%27")+'\')"':"")+'>'+(u?"":esc(n))+'</span>'}
 function nameOf(p){return p.nickname||tr("k_user")}
-function need(){box.innerHTML='<div class="card"><p>'+esc(tr("pf_need"))+'</p><a class="btn" href="login">'+esc(tr("pf_login"))+'</a></div>'}
+function need(){box.innerHTML='<div class="card"><p>'+esc(tr("pf_need"))+'</p><a class="btn" href="login?next='+encodeURIComponent("profil"+location.search)+'">'+esc(tr("pf_login"))+'</a></div>'}
 function fail(r){box.innerHTML="";msg(/profile_view|schema cache|does not exist/i.test(r&&r.message||"")?tr("pf_sql"):tr("pf_err"),"err")}
 
 function drawVisitors(d,V,logOn){
@@ -34,7 +34,7 @@ function draw(d,V,logOn){
     if((d.interests||[]).length)h+='<div class="chips">'+d.interests.map(function(k){return'<span class="chip on">'+esc(tr("it_"+k))+'</span>'}).join("")+'</div>';
     if(d.level)h+='<p class="meta">'+esc(tr("pf_level",{l:tr("lv_"+d.level)}))+'</p>';
     h+='<div class="st"><div><b>'+(st.posts||0)+'</b>'+esc(tr("pf_s1"))+'</div><div><b>'+(st.joined||0)+'</b>'+esc(tr("pf_s2"))+'</div><div><b>'+(st.hosted||0)+'</b>'+esc(tr("pf_s3"))+'</div></div>';
-    if(d.mine)h+='<div class="row"><a class="btn sm" href="login">'+esc(tr("pf_edit"))+'</a></div>';
+    if(d.mine)h+='<div class="row"><a class="btn sm" href="login?next=profil">'+esc(tr("pf_edit"))+'</a></div>';
     h+='</div><div class="card pfc">'+drawVisitors(d,V,logOn)+'</div>'}
   box.innerHTML=h;
   box.onclick=function(ev){var b=ev.target.closest("[data-x]");if(!b)return;
@@ -50,6 +50,7 @@ function load(skipView){
       var r=x[0];if(r.error)return fail(r.error);if(!r.data){box.innerHTML="";return msg(tr("pf_nf"),"err")}
       var d=r.data,logOn=!(x[1].data&&x[1].data.log_visits===false);
       /* profile_view mencatat kunjungan sebelum daftar dibaca, jadi pengunjung langsung terlihat di daftar */
-      sb.rpc("profile_visitors",{p_id:id}).then(function(v){draw(d,v.data||[],logOn)})})})}
+      sb.rpc("profile_visitors",{p_id:id}).then(function(v){draw(d,v.data||[],logOn);
+        if(SAVED){SAVED=false;toast(tr("pf_saved"));try{history.replaceState(null,"",location.pathname+(Q?"?u="+encodeURIComponent(Q):""))}catch(e){}}})})})}
 load();
 })();

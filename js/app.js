@@ -106,15 +106,15 @@ function group(l){var G=[["live",tr("g_live")],["soon",tr("g_soon")],["next",tr(
   if(state.cat==="selesai"||state.sort!=="date")return sec("",l);
   return G.map(function(g){return sec(g[1],l.filter(function(e){return status(e).k===g[0]}))}).join("")}
 /* ---- Sidebar & chip kategori ---- */
-var NAVS=[["home","n_home","home","./"],["semua","n_all","cal","event"],["konser","cat_konser","mic","event?kat=konser"],["naikgunung","cat_naikgunung","mtn","gunung"],["pameran","cat_pameran","bag","event?kat=pameran"],["komunitas","n_forum","users","komunitas"],["ajukan","n_submit","plus","ajukan"]],
+var NAVS=[["home","n_home","home","./"],["semua","n_all","cal","event"],["konser","cat_konser","mic","event?kat=konser"],["naikgunung","cat_naikgunung","mtn","gunung"],["pameran","cat_pameran","bag","event?kat=pameran"],["komunitas","n_forum","users","komunitas"],["ajukan","n_submit","plus","ajukan"],["bantuan","n_help","help","bantuan"]],
     MINE=[["tersimpan","tab_saved","heart","event?kat=tersimpan"],["selesai","tab_done","clock","event?kat=selesai"]];
 function curKey(){return MODE==="home"?"home":MODE==="gunung"?"naikgunung":state.cat}
-function item(c,n,chip){var cur=curKey()===c[0],inpage=MODE==="all"&&c[0]!=="home"&&c[0]!=="naikgunung"&&c[0]!=="ajukan"&&c[0]!=="komunitas";
+function item(c,n,chip){var cur=curKey()===c[0],inpage=MODE==="all"&&c[0]!=="home"&&c[0]!=="naikgunung"&&c[0]!=="ajukan"&&c[0]!=="komunitas"&&c[0]!=="bantuan";
   return'<a href="'+c[3]+'" data-c="'+c[0]+'"'+(inpage?' data-in="1"':'')+(cur?' aria-current="true"':'')+'>'+(chip?'':ic(c[2]))+esc(tr(c[1]))+(chip||n==null?'':'<span class="n">'+n+'</span>')+'</a>'}
 function nav(){
   var act=state.events.filter(function(e){return isActive(e)&&base(e,true)}),n=function(c){return c==="semua"?act.length:act.filter(function(e){return e.category===c}).length};
   var nSaved=act.filter(function(e){return isSaved(e.id)}).length,nDone=state.events.filter(function(e){return!isActive(e)&&base(e,true)}).length;
-  $("navCat").innerHTML=NAVS.map(function(c){return item(c,c[0]==="home"||c[0]==="ajukan"||c[0]==="komunitas"?null:n(c[0]))}).join("");
+  $("navCat").innerHTML=NAVS.map(function(c){return item(c,c[0]==="home"||c[0]==="ajukan"||c[0]==="komunitas"||c[0]==="bantuan"?null:n(c[0]))}).join("");
   $("navMine").innerHTML=MINE.map(function(c){return item(c,c[0]==="tersimpan"?nSaved:nDone)}).join("");
   $("mCat").innerHTML=NAVS.concat(MINE).map(function(c){return item(c,null,true)}).join("");
   var cnt={},all=state.events.filter(isActive);all.forEach(function(e){if(e.city)cnt[e.city]=(cnt[e.city]||0)+1});

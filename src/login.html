@@ -31,25 +31,26 @@
   <div class="ph"><div class="av" id="av">?</div><div><h3 id="nm">{{lg_name}}</h3><div class="meta" id="em"></div>
     <span class="badge ok" id="bv" hidden>{{lg_verified}}</span> <span class="badge adm" id="ba" hidden>Admin</span></div></div>
   <div class="st"><div><b id="sPosts">0</b>{{lg_st1}}</div><div><b id="sJoined">0</b>{{lg_st2}}</div><div><b id="sHosted">0</b>{{lg_st3}}</div></div>
-  <form id="fProf">
+  <form id="fAll">
+    <h3 class="kh">{{pe_edit_h}}</h3>
     <label class="f">{{lg_nick}}<input id="pNick" type="text" maxlength="30" placeholder="{{lg_nick_ph2}}"></label>
     <label class="f">{{lg_home_city}}<select id="pCity"></select></label>
-    <button class="btn" type="submit">{{lg_save}}</button>
-  </form>
-  <form id="fExtra">
-    <h3 class="kh">{{pe_h}}</h3>
-    <label class="f">{{pe_bio}} <i class="cc" id="pBioN">0</i><textarea id="pBio" rows="3" maxlength="200" placeholder="{{pe_bio_ph}}"></textarea></label>
-    <div class="f"><span>{{pe_int}}</span><div class="chips" id="pInt"></div></div>
-    <label class="f">{{pe_level}}<select id="pLevel"></select></label>
-    <h3 class="kh">{{pe_priv_h}}</h3>
-    <label class="chk"><input id="pPublic" type="checkbox"> {{pe_public}}</label>
-    <label class="chk"><input id="pShowV" type="checkbox"> {{pe_showv}}</label>
-    <label class="chk"><input id="pLog" type="checkbox"> {{pe_log}}</label>
-    <p class="meta">{{pe_note}}</p>
-    <div class="row"><button class="btn" type="submit">{{lg_save}}</button><a class="btn ghost" id="pView" href="profil">{{pe_view}}</a></div>
+    <div id="fExtra" hidden>
+      <h3 class="kh">{{pe_h}}</h3>
+      <label class="f">{{pe_bio}} <i class="cc" id="pBioN">0</i><textarea id="pBio" rows="3" maxlength="200" placeholder="{{pe_bio_ph}}"></textarea></label>
+      <div class="f"><span>{{pe_int}}</span><div class="chips" id="pInt"></div></div>
+      <label class="f">{{pe_level}}<select id="pLevel"></select></label>
+      <h3 class="kh">{{pe_priv_h}}</h3>
+      <label class="chk"><input id="pPublic" type="checkbox"> {{pe_public}}</label>
+      <label class="chk"><input id="pShowV" type="checkbox"> {{pe_showv}}</label>
+      <label class="chk"><input id="pLog" type="checkbox"> {{pe_log}}</label>
+      <p class="meta">{{pe_note}}</p>
+    </div>
+    <div class="row"><button class="btn" type="submit">{{lg_save}}</button><a class="btn ghost" id="pCancel" href="profil">{{pe_cancel}}</a></div>
+    <p class="meta" style="margin-top:8px">{{pe_after}}</p>
   </form>
   <div class="msg" style="margin-top:14px"><b>{{lg_loc_h}}</b><br><span id="locSt">{{lg_loc_p}}</span><br><button class="btn ghost sm" id="bLoc" type="button" style="margin-top:6px">{{lg_loc_btn}}</button></div>
-  <div class="row" style="margin-top:12px"><a class="btn" href="ajukan">{{lg_submit}}</a><a class="btn ghost" id="lAdmin" href="../admin" hidden>{{lg_admin}}</a><button class="btn ghost" id="bOut" type="button">{{lg_out}}</button></div>
+  <div class="row" style="margin-top:12px"><a class="btn" href="ajukan">{{lg_submit}}</a><a class="btn ghost" href="bantuan">{{hp_h}}</a><a class="btn ghost" id="lAdmin" href="../admin" hidden>{{lg_admin}}</a><button class="btn ghost" id="bOut" type="button">{{lg_out}}</button></div>
 </div>
 <div class="card" id="rec" hidden>
   <h3>{{lg_rec_h}}</h3><p>{{lg_rec_p}}</p>

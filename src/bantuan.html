@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="{{lang}}"><head>
+{{>head}}<title>{{hp_title}}</title><meta name="description" content="{{hp_desc}}">
+<meta property="og:title" content="{{hp_title}}"><meta property="og:description" content="{{hp_desc}}">
+<link rel="stylesheet" href="../css/panel.css">
+{{hreflang}}</head><body>
+{{>icons}}{{>bar}}
+<main class="page sub hp">
+<h1>{{hp_h}}</h1><p class="meta">{{hp_p}}</p>
+<section id="kontak">
+  <h2 class="kh">{{hp_contact_h}}</h2><p class="meta">{{hp_contact_p}}</p>
+  <div class="hpc">
+    <div class="card"><h3>{{hp_email_h}}</h3><p class="meta">{{hp_email_p}}</p>
+      <div class="hpv"><b id="hpMail"></b><button class="btn ghost sm" type="button" data-copy="mail">{{hp_copy}}</button></div>
+      <div class="row"><a class="btn sm" id="hpMailBtn" href="#">{{hp_email_btn}}</a></div></div>
+    <div class="card"><h3>{{hp_wa_h}}</h3><p class="meta">{{hp_wa_p}}</p>
+      <div class="hpv"><b id="hpWa"></b><button class="btn ghost sm" type="button" data-copy="wa">{{hp_copy}}</button></div>
+      <div class="row"><a class="btn sm" id="hpWaBtn" href="#" target="_blank" rel="noopener">{{hp_wa_btn}}</a></div></div>
+  </div>
+  <p class="meta">{{hp_hours}}</p>
+</section>
+<section id="faq">
+  <h2 class="kh">{{hp_faq_h}}</h2>
+  <label class="hps"><input id="hq" type="search" placeholder="{{hp_search_ph}}" aria-label="{{hp_search_aria}}" autocomplete="off"></label>
+  <div id="faqBox">
+{{>faq}}
+  </div>
+  <p class="meta" id="faqNone" hidden>{{hp_none}}</p>
+</section>
+<div class="card hpend"><h3>{{hp_more_h}}</h3><p class="meta">{{hp_more_p}}</p>
+  <div class="row"><a class="btn ghost sm" href="terms">{{f_terms}}</a><a class="btn ghost sm" href="privacy">{{f_privacy}}</a></div></div>
+</main>
+<div class="page" style="padding-top:0">{{>foot}}</div>
+<div id="toast" role="status"></div>
+<script src="../js/i18n.js"></script><script src="../js/config.js"></script><script src="../js/bantuan.js"></script>
+</body></html>

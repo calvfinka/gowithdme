@@ -6,6 +6,9 @@ if(/\.html$/.test(location.pathname))history.replaceState(null,"",location.pathn
   window.$=function(i){return document.getElementById(i)};
   window.esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
   window.msg=function(t,type){var m=$("msg");if(!m)return;m.hidden=!t;m.textContent=t||"";m.className="msg "+(type||"")};
+  /* ?next=... : tujuan setelah masuk atau menyimpan profil. Hanya alamat relatif aman (tanpa skema, tanpa //). */
+  window.safeNext=function(def){var n=new URLSearchParams(location.search).get("next")||"";
+    return /^[a-z0-9][a-z0-9_\-\/.?=&%]*$/i.test(n)&&n.indexOf("..")<0?n:def};
   window.getMe=function(){
     if(!sb)return Promise.resolve(null);
     return sb.auth.getSession().then(function(r){var s=r.data.session;if(!s)return null;

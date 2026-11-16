@@ -38,6 +38,7 @@
   <symbol id="w-fog" viewBox="0 0 48 48"><path d="M13 27h22a8 8 0 0 0 1-15.9A11.5 11.5 0 0 0 14.2 13 7 7 0 0 0 13 27z" style="fill:var(--cloud)"/><g stroke="var(--cloud)" stroke-width="2.6" stroke-linecap="round"><path d="M10 33h28M14 39h20"/></g></symbol>
   <symbol id="bars" viewBox="0 0 100 100"><g fill="currentColor"><rect x="2" y="55" width="6" height="45"/><rect x="12" y="75" width="6" height="25"/><rect x="22" y="30" width="6" height="70"/><rect x="32" y="62" width="6" height="38"/><rect x="42" y="45" width="6" height="55"/><rect x="52" y="80" width="6" height="20"/><rect x="62" y="38" width="6" height="62"/><rect x="72" y="58" width="6" height="42"/><rect x="82" y="15" width="6" height="85"/><rect x="92" y="50" width="6" height="50"/></g></symbol>
   <symbol id="ridge" viewBox="0 0 100 100"><path fill="currentColor" d="M0 100V62l18-26 14 18 20-34 22 36 12-14 14 20v40z"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.5a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2 1-1.2 1.8M12 16.6v.1"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20v-1a5 5 0 0 1 5-5h3a5 5 0 0 1 5 5v1M16 4.6a3.5 3.5 0 0 1 0 6.8M18.5 14.4A5 5 0 0 1 21.5 19v1"/></symbol>
 </svg>
@@ -70,25 +71,26 @@
   <div class="ph"><div class="av" id="av">?</div><div><h3 id="nm">Nama</h3><div class="meta" id="em"></div>
     <span class="badge ok" id="bv" hidden>✓ Terverifikasi</span> <span class="badge adm" id="ba" hidden>Admin</span></div></div>
   <div class="st"><div><b id="sPosts">0</b>kiriman forum</div><div><b id="sJoined">0</b>ajakan diikuti</div><div><b id="sHosted">0</b>ajakan dibuat</div></div>
-  <form id="fProf">
+  <form id="fAll">
+    <h3 class="kh">Edit profil</h3>
     <label class="f">Nama panggilan<input id="pNick" type="text" maxlength="30" placeholder="Nama yang tampil ke pengguna lain"></label>
     <label class="f">Kota domisili<select id="pCity"></select></label>
-    <button class="btn" type="submit">Simpan profil</button>
-  </form>
-  <form id="fExtra">
-    <h3 class="kh">Tentang kamu</h3>
-    <label class="f">Bio (maks. 200) <i class="cc" id="pBioN">0</i><textarea id="pBio" rows="3" maxlength="200" placeholder="Ceritakan singkat: suka konser apa, sering naik gunung ke mana. Tanpa tautan atau nomor telepon."></textarea></label>
-    <div class="f"><span>Minat (maks. 8)</span><div class="chips" id="pInt"></div></div>
-    <label class="f">Level pendakian<select id="pLevel"></select></label>
-    <h3 class="kh">Privasi profil</h3>
-    <label class="chk"><input id="pPublic" type="checkbox"> Profilku bisa dibuka pengguna yang sudah masuk</label>
-    <label class="chk"><input id="pShowV" type="checkbox"> Tampilkan daftar pengunjung di profilku</label>
-    <label class="chk"><input id="pLog" type="checkbox"> Catat kunjunganku di profil orang lain. Kalau dimatikan, aku tidak muncul di daftar pengunjung mereka dan riwayatku dihapus.</label>
-    <p class="meta">Profil lengkap hanya bisa dibuka pengguna yang sudah masuk. Nama panggilan, foto, dan lencana tetap tampil di forum dan ajakan.</p>
-    <div class="row"><button class="btn" type="submit">Simpan profil</button><a class="btn ghost" id="pView" href="profil">Lihat profil publikku</a></div>
+    <div id="fExtra" hidden>
+      <h3 class="kh">Tentang kamu</h3>
+      <label class="f">Bio (maks. 200) <i class="cc" id="pBioN">0</i><textarea id="pBio" rows="3" maxlength="200" placeholder="Ceritakan singkat: suka konser apa, sering naik gunung ke mana. Tanpa tautan atau nomor telepon."></textarea></label>
+      <div class="f"><span>Minat (maks. 8)</span><div class="chips" id="pInt"></div></div>
+      <label class="f">Level pendakian<select id="pLevel"></select></label>
+      <h3 class="kh">Privasi profil</h3>
+      <label class="chk"><input id="pPublic" type="checkbox"> Profilku bisa dibuka pengguna yang sudah masuk</label>
+      <label class="chk"><input id="pShowV" type="checkbox"> Tampilkan daftar pengunjung di profilku</label>
+      <label class="chk"><input id="pLog" type="checkbox"> Catat kunjunganku di profil orang lain. Kalau dimatikan, aku tidak muncul di daftar pengunjung mereka dan riwayatku dihapus.</label>
+      <p class="meta">Profil lengkap hanya bisa dibuka pengguna yang sudah masuk. Nama panggilan, foto, dan lencana tetap tampil di forum dan ajakan.</p>
+    </div>
+    <div class="row"><button class="btn" type="submit">Simpan profil</button><a class="btn ghost" id="pCancel" href="profil">Batal</a></div>
+    <p class="meta" style="margin-top:8px">Setelah disimpan, kamu kembali ke halaman profilmu.</p>
   </form>
   <div class="msg" style="margin-top:14px"><b>Verifikasi lokasi</b><br><span id="locSt">Belum dicek. Lokasi dipakai untuk menjaga keamanan komunitas.</span><br><button class="btn ghost sm" id="bLoc" type="button" style="margin-top:6px">Izinkan &amp; cek lokasi</button></div>
-  <div class="row" style="margin-top:12px"><a class="btn" href="ajukan">Ajukan event / open trip</a><a class="btn ghost" id="lAdmin" href="../admin" hidden>Panel admin</a><button class="btn ghost" id="bOut" type="button">Keluar</button></div>
+  <div class="row" style="margin-top:12px"><a class="btn" href="ajukan">Ajukan event / open trip</a><a class="btn ghost" href="bantuan">Bantuan</a><a class="btn ghost" id="lAdmin" href="../admin" hidden>Panel admin</a><button class="btn ghost" id="bOut" type="button">Keluar</button></div>
 </div>
 <div class="card" id="rec" hidden>
   <h3>Buat password baru</h3><p>Tautan reset berhasil. Isi password baru untuk akunmu.</p>
