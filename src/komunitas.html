@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="{{lang}}"><head>
+{{>head}}<title>{{kom_title}}</title><meta name="description" content="{{kom_desc}}">
+<meta property="og:title" content="{{kom_title}}"><meta property="og:description" content="{{kom_desc}}">
+<link rel="stylesheet" href="../css/panel.css">
+{{hreflang}}</head><body>
+{{>icons}}{{>bar}}
+<main class="page sub kom">
+<div id="msg" class="msg" hidden></div>
+<section id="kHome">
+  <h1>{{kom_h}}</h1><p class="meta">{{kom_p}}</p>
+  <div class="kgrid" id="kCities"></div>
+  <div class="ksoon" id="kSoon" hidden></div>
+  <h2 class="kh">{{kom_rules_h}}</h2>
+  <ul class="krules"><li>{{kom_r1}}</li><li>{{kom_r2}}</li><li>{{kom_r3}}</li><li>{{kom_r4}}</li><li>{{kom_r5}}</li></ul>
+</section>
+<section id="kCity" hidden>
+  <p><a class="lnk" href="komunitas">{{kom_back}}</a></p>
+  <h1 id="kTitle"></h1><p class="meta" id="kSub"></p>
+  <p class="ksafe" id="kSafe"></p>
+  <div id="kGroups"></div>
+  <div class="row"><button class="btn" id="kNew" type="button"></button></div>
+  <div class="seg" id="kTabs" role="group"></div>
+  <div id="kList"></div>
+  <h2 class="kh">{{kom_rules_h}}</h2>
+  <ul class="krules"><li>{{kom_r1}}</li><li>{{kom_r2}}</li><li>{{kom_r3}}</li><li>{{kom_r4}}</li><li>{{kom_r5}}</li></ul>
+</section>
+</main>
+<dialog id="dlg"><div id="dBody" class="kb"></div></dialog>
+<div id="toast" role="status"></div>
+{{>libs}}<script src="../js/komunitas.js"></script>
+</body></html>

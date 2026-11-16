@@ -8,7 +8,7 @@ ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Setelah domain .com aktif:  GWM_SITE=https://gowithdme.com python3 tools/build.py
 BASE=os.environ.get("GWM_SITE","https://calvfinka.github.io/gowithdme").rstrip("/")
 LANGS=["id","en"]; IDX={"id":0,"en":1}
-PAGES=["index","event","gunung","login","privacy","terms","ajukan"]
+PAGES=["index","event","gunung","login","privacy","terms","ajukan","komunitas"]
 NOINDEX=("login","ajukan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
 APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
 def path(p): return "" if p=="index" else p
