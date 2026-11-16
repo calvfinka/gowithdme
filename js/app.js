@@ -21,14 +21,21 @@ function load(){
    .then(function(rows){state.events=rows.map(function(r){r.city=r.cities&&r.cities.name;return r})})
    .catch(function(){state.events=IB_SAMPLE;toast("Gagal memuat Supabase, memakai data contoh")});
 }
-function list(){var q=state.q.toLowerCase();return state.events.filter(function(e){return e.city===state.city&&(state.cat==="semua"||e.category===state.cat)&&(e.title+" "+(e.venue||"")).toLowerCase().indexOf(q)>-1})}
+// Logika event aktif: aktif selama tanggal selesai (atau tanggal mulai) belum lewat hari ini
+function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+function endOf(e){return e.end_date||e.event_date}
+function isActive(e){return endOf(e)>=today()}
+function isLive(e){var t=today();return e.event_date<=t&&endOf(e)>=t}
+function list(){var q=state.q.toLowerCase(),past=state.cat==="selesai";
+  return state.events.filter(function(e){return e.city===state.city&&(past?!isActive(e):(isActive(e)&&(state.cat==="semua"||e.category===state.cat)))&&(e.title+" "+(e.venue||"")).toLowerCase().indexOf(q)>-1})
+   .sort(function(a,b){return past?(a.event_date<b.event_date?1:-1):(a.event_date<b.event_date?-1:1)})}
 function render(){
   var l=list();
   $("chip").textContent="📍 "+state.city+", "+prov(state.city);
   $("evTitle").textContent="Event di "+state.city;
-  $("sEv").textContent=state.events.filter(function(e){return e.city===state.city}).length;
+  $("sEv").textContent=state.events.filter(function(e){return e.city===state.city&&isActive(e)}).length;
   $("grid").innerHTML=l.length?l.map(function(e){var p=dparts(e.event_date);
-    return '<button class="ev" data-id="'+esc(e.id)+'"><div class="poster" style="'+posterStyle(e)+'"><span class="tag">'+CAT[e.category]+'</span><div class="dt">'+p.d+'<small>'+p.m+'</small></div>'+ridge+'</div><div class="eb"><h3>'+esc(e.title)+'</h3><div class="meta">📍 '+esc(e.venue||e.city)+'</div>'+extra(e)+'<div class="price">'+esc(e.price_label||"Info menyusul")+'</div></div></button>'}).join("")
+    return '<button class="ev'+(isActive(e)?'':' past')+'" data-id="'+esc(e.id)+'"><div class="poster" style="'+posterStyle(e)+'"><span class="tag">'+CAT[e.category]+(isLive(e)?' · 🔴 Berlangsung':'')+'</span><div class="dt">'+p.d+'<small>'+p.m+'</small></div>'+ridge+'</div><div class="eb"><h3>'+esc(e.title)+'</h3><div class="meta">📍 '+esc(e.venue||e.city)+'</div>'+extra(e)+'<div class="price">'+esc(e.price_label||"Info menyusul")+'</div></div></button>'}).join("")
    :'<div class="empty">Belum ada event untuk filter ini.<br>Coba kategori lain, ganti kota, atau kosongkan kolom cari.</div>';
 }
 function openEv(id){
