@@ -23,7 +23,8 @@ function status(e){var t=today(),s=days(t,e.event_date),en=days(t,endOf(e));
   return{k:s<=7?"soon":"next",l:s===1?tr("tomorrow"):tr("indays",{n:s}),n:s}}
 function gratis(e){return/gratis|free/i.test(e.price_label||"")}
 function dparts(s){var d=new Date(s+"T00:00:00");return{d:("0"+d.getDate()).slice(-2),m:MON[d.getMonth()],full:d.toLocaleDateString(LOC,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}}
-function posterStyle(e){var g=e.g||(e.category==="konser"?["#3b1a78","#ff3d81"]:e.category==="pameran"?["#b45309","#e11d48"]:["#14532d","#ff5a1f"]),bg="linear-gradient(160deg,"+g[0]+","+g[1]+")";return"background:"+(e.poster_url?"url('"+esc(e.poster_url).replace(/'/g,"%27")+"') center/cover,":"")+bg}
+function purl(u){return/^(https?:|data:|\/)/.test(u)?u:"../"+u}
+function posterStyle(e){var g=e.g||(e.category==="konser"?["#3b1a78","#ff3d81"]:e.category==="pameran"?["#b45309","#e11d48"]:["#14532d","#ff5a1f"]),bg="linear-gradient(160deg,"+g[0]+","+g[1]+")";return"background:"+(e.poster_url?"url('"+esc(purl(e.poster_url)).replace(/'/g,"%27")+"') center/cover,":"")+bg}
 var RIDGE='<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M0 80V50l40-30 30 25 40-35 45 40 25-20 20 15v35z" fill="rgba(0,0,0,.32)"/></svg>',BARS='<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M10 80V40h14v40zM34 80V20h14v60zM58 80V50h14v30zM82 80V10h14v70zM106 80V35h14v45zM130 80V25h14v55zM154 80V48h14v32zM178 80V30h14v50z" fill="rgba(0,0,0,.28)"/></svg>';
 function deco(e){return e.category==="naikgunung"?RIDGE:BARS}
 function extra(e){var t=e.category==="konser"?(e.genre?"🎵 "+esc(e.genre):""):e.category!=="naikgunung"?"":[e.mountain?"⛰️ "+esc(e.mountain):"",e.altitude_mdpl?e.altitude_mdpl+" "+tr("mdpl"):"",DIF[e.difficulty]||"",esc(e.duration||"")].filter(Boolean).join(" · ");return t?'<div class="meta">'+t+'</div>':""}
