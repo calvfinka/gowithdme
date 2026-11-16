@@ -78,3 +78,10 @@ Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (
 ## Admin: grup & kota komunitas
 - Jalankan `supabase/schema_forum_admin2.sql` (fungsi `admin_forum_waitlist`, agar admin bisa melihat permintaan kota).
 - `/admin` > Komunitas > tab **Grup & kota**: buka/tutup kota dan atur urutan, lihat kota yang paling diminta lalu buka dengan satu tombol, tambah/edit/nonaktifkan/hapus grup WhatsApp, Telegram, Discord. Tautan diperiksa di browser dan di database (hanya https dari domain resmi). Kota tidak bisa dihapus dari panel (menghapus kota ikut menghapus semua kirimannya); pakai Tutup kota.
+
+## Blokir penulis (manual + otomatis)
+- Jalankan `supabase/schema_forum_ban.sql` (setelah `schema_forum.sql` dan `schema_forum_admin.sql`). Menambah tabel `forum_bans` dan `forum_strikes`, trigger pencatat pelanggaran, dan memperbarui `forum_post`, `forum_reply`, `admin_forum_moderate`; menambah `admin_forum_ban` dan `admin_forum_unban`.
+- **Otomatis:** satu pelanggaran = kiriman/balasan yang disembunyikan (3 laporan atau admin) atau dihapus admin. 3 pelanggaran dalam 30 hari = blokir menulis 3 hari, 5 = 14 hari, 8 = 90 hari. Admin tidak pernah diblokir otomatis. "Abaikan laporan" menghapus pelanggaran item itu.
+- **Manual:** tombol *Blokir penulis* di kartu moderasi (lama hari, 0 = permanen, plus alasan). Tab **Diblokir** menampilkan semua blokir (otomatis/manual) dengan tombol Cabut blokir, yang juga menghapus catatan pelanggaran.
+- Penulis yang diblokir tetap bisa membaca dan melapor, tetapi tidak bisa menulis kiriman atau balasan; pesan blokir (sampai kapan dan alasannya) muncul saat mencoba menulis.
+- Tambahan pengaman di `forum_post`/`forum_reply`: kiriman kembar dalam sehari ditolak, dan batas kecepatan (3 kiriman atau 8 balasan per 10 menit).

@@ -1,7 +1,7 @@
 /* Moderasi komunitas di /admin. Baca langsung dari tabel forum_* (RLS: hanya admin), tindakan lewat admin_forum_moderate (supabase/schema_forum_admin.sql). */
 (function(){
 if(!window.sb)return;
-var tab="rep",reports={},ready=false,busy=false;
+var tab="rep",reports={},AU={},ready=false,busy=false;
 var KIND={teman:"Cari teman",tanya:"Tanya info",tips:"Tips"},ST={open:"Tayang",hidden:"Disembunyikan",deleted:"Dihapus"};
 function nm(p){return p&&p.nickname?p.nickname:"Pengguna"}
 function dt(s){if(!s)return"";try{return new Intl.DateTimeFormat("id-ID",{timeZone:"Asia/Jakarta",day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(new Date(s))}catch(e){return""}}
@@ -17,7 +17,7 @@ function loadReports(){
     $("fmNRep").textContent=n;$("nFrep").textContent=n;$("fCta").hidden=!n;$("bFrep").hidden=!n;$("bFrep").textContent=n;
     return true})}
 
-var PCOLS="id,city,kind,title,body,status,created_at,profiles(nickname),events(title)",RCOLS="id,post_id,body,status,created_at,profiles(nickname),forum_posts(id,title,city)";
+var PCOLS="id,author_id,city,kind,title,body,status,created_at,profiles(nickname),events(title)",RCOLS="id,author_id,post_id,body,status,created_at,profiles(nickname),forum_posts(id,title,city)";
 function fetchItems(){
   var ids=function(t){return Object.keys(reports).filter(function(k){return k.indexOf(t+":")===0}).map(function(k){return k.slice(t.length+1)})};
   var P,R;
@@ -43,15 +43,16 @@ function card(it){
   var ctx=t==="post"?'<span class="badge">'+(KIND[r.kind]||r.kind)+'</span> <span class="badge">'+esc(r.city)+'</span>':'<span class="badge">Balasan</span>'+(post?' <span class="meta">di: '+esc(post.title)+' · '+esc(post.city)+'</span>':'');
   var h='<div class="fm"><div class="ctx">'+ctx+' <span class="badge '+(r.status==="open"?"pub":"")+'">'+(ST[r.status]||r.status)+'</span></div>';
   if(t==="post")h+='<b class="t">'+esc(r.title)+'</b>';
-  h+='<div class="meta">'+esc(nm(one(r.profiles)))+' · '+esc(dt(r.created_at))+(t==="post"&&one(r.events)?' · event: '+esc(one(r.events).title):'')+'</div><div class="bd">'+esc(r.body)+'</div>';
+  var au=AU[r.author_id]||{};
+  h+='<div class="meta">'+esc(nm(one(r.profiles)))+(au.strikes?' <span class="badge">'+au.strikes+' pelanggaran/30 hari</span>':'')+(au.ban?' <span class="badge" style="color:var(--err)">'+banLabel(au.ban)+'</span>':'')+' · '+esc(dt(r.created_at))+(t==="post"&&one(r.events)?' · event: '+esc(one(r.events).title):'')+'</div><div class="bd">'+esc(r.body)+'</div>';
   if(rs.length)h+='<div class="rs hot"><b>'+rs.length+' laporan belum diperiksa</b>'+rs.slice(0,5).map(function(x){return'<div>“'+esc(x.reason)+'” <span class="meta">— '+esc(nm(one(x.profiles)))+', '+esc(dt(x.created_at))+'</span></div>'}).join("")+(rs.length>5?'<div class="meta">dan '+(rs.length-5)+' lainnya</div>':'')+'</div>';
   h+='<div class="row">';
   if(r.status==="open"){
     if(rs.length)h+=btn("keep",t,r.id,"Abaikan laporan");
-    h+=btn("hide",t,r.id,"Sembunyikan")+btn("delete",t,r.id,"Hapus");
+    h+=btn("hide",t,r.id,"Sembunyikan")+btn("delete",t,r.id,"Hapus")+banBtn(r);
     if(t==="post"&&city)h+='<a class="btn ghost sm" target="_blank" rel="noopener" href="id/komunitas?kota='+encodeURIComponent(city)+'&p='+encodeURIComponent(r.id)+'">Lihat di situs</a>';
-  }else if(r.status==="hidden"){h+=btn("keep",t,r.id,"Pulihkan","")+btn("delete",t,r.id,"Hapus")}
-  else h+='<span class="meta">Sudah dihapus. Tidak bisa dipulihkan dari panel.</span>';
+  }else if(r.status==="hidden"){h+=btn("keep",t,r.id,"Pulihkan","")+btn("delete",t,r.id,"Hapus")+banBtn(r)}
+  else h+='<span class="meta">Sudah dihapus. Tidak bisa dipulihkan dari panel.</span> '+banBtn(r);
   return h+'</div></div>'}
 
 
@@ -117,10 +118,44 @@ function cfgSubmit(f){
   var id=d("id"),q=id?sb.from("forum_groups").update(row).eq("id",id):sb.from("forum_groups").insert(row);
   return q.then(function(r){cfgDone(r,id?"Grup disimpan.":"Grup ditambahkan.")})}
 
+
+/* ---------- Blokir penulis ---------- */
+function active(b){return b&&(!b.until_at||new Date(b.until_at)>new Date())}
+function banLabel(b){return(b.auto?"Diblokir otomatis":"Diblokir")+(b.until_at?" s/d "+dt(b.until_at):" permanen")}
+function banBtn(r){var b=(AU[r.author_id]||{}).ban;return b?btn("unban","user",r.author_id,"Cabut blokir penulis"):btn("ban","user",r.author_id,"Blokir penulis")}
+function loadAuthors(L){
+  var ids=[];L.forEach(function(it){if(it.row.author_id&&ids.indexOf(it.row.author_id)<0)ids.push(it.row.author_id)});AU={};
+  if(!ids.length)return Promise.resolve();
+  var since=new Date(Date.now()-30*864e5).toISOString();
+  return Promise.all([sb.from("forum_strikes").select("user_id").in("user_id",ids).gte("created_at",since),sb.from("forum_bans").select("user_id,until_at,reason,auto").in("user_id",ids)]).then(function(x){
+    if(x[0].error||x[1].error){msg(sqlHint(x[0].error||x[1].error),"err");return}
+    (x[0].data||[]).forEach(function(r){var a=AU[r.user_id]=AU[r.user_id]||{};a.strikes=(a.strikes||0)+1});
+    (x[1].data||[]).forEach(function(r){if(active(r)){var a=AU[r.user_id]=AU[r.user_id]||{};a.ban=r}})})}
+function askBan(uid){
+  var d=prompt("Blokir menulis berapa hari? Isi 0 untuk permanen.","7");if(d===null)return Promise.resolve();
+  var days=parseInt(d,10);if(isNaN(days)||days<0||days>3650){msg("Isi angka hari 0 sampai 3650.","err");return Promise.resolve()}
+  var why=prompt("Alasan (dibaca pengguna saat mencoba menulis):","Melanggar aturan komunitas.");if(why===null)return Promise.resolve();
+  return sb.rpc("admin_forum_ban",{p_user:uid,p_days:days,p_reason:why}).then(function(r){if(r.error)return msg(sqlHint(r.error),"err");msg(days?"Penulis diblokir "+days+" hari.":"Penulis diblokir permanen.","ok");refresh()})}
+function doUnban(uid){
+  if(!confirm("Cabut blokir? Catatan pelanggaran pengguna ini juga dihapus."))return Promise.resolve();
+  return sb.rpc("admin_forum_unban",{p_user:uid}).then(function(r){if(r.error)return msg(sqlHint(r.error),"err");msg("Blokir dicabut.","ok");refresh()})}
+function showBans(){
+  var box=$("fmList");box.innerHTML='<div class="meta">Memuat…</div>';
+  var since=new Date(Date.now()-30*864e5).toISOString();
+  Promise.all([sb.from("forum_bans").select("user_id,reason,until_at,auto,created_at,profiles(nickname)").order("created_at",{ascending:false}).limit(100),sb.from("forum_strikes").select("user_id").gte("created_at",since)]).then(function(x){
+    var err=x[0].error||x[1].error;if(err){box.innerHTML="";msg(sqlHint(err),"err");return}
+    var n={};(x[1].data||[]).forEach(function(r){n[r.user_id]=(n[r.user_id]||0)+1});
+    var L=x[0].data||[];
+    box.innerHTML=L.length?L.map(function(b){var on=active(b);
+      return'<div class="fm"><b class="t">'+esc(nm(one(b.profiles)))+' <span class="badge '+(on?"":"pub")+'" style="'+(on?"color:var(--err)":"")+'">'+(on?"Diblokir":"Sudah berakhir")+'</span> <span class="badge">'+(b.auto?"Otomatis":"Manual")+'</span></b>'+
+       '<div class="meta">'+(b.until_at?"Sampai "+esc(dt(b.until_at)):"Permanen")+' · dipasang '+esc(dt(b.created_at))+' · '+(n[b.user_id]||0)+' pelanggaran/30 hari</div><div class="bd">'+esc(b.reason)+'</div>'+
+       '<div class="row">'+btn("unban","user",b.user_id,on?"Cabut blokir":"Bersihkan catatan")+'</div></div>'}).join(""):'<div class="empty">Belum ada penulis yang diblokir.</div>'})}
+
 function show(){
   if(tab==="cfg")return cfg();
+  if(tab==="ban")return showBans();
   var box=$("fmList");box.innerHTML='<div class="meta">Memuat…</div>';
-  fetchItems().then(function(L){
+  fetchItems().then(function(L){return loadAuthors(L).then(function(){return L})}).then(function(L){
     var none={rep:"Tidak ada laporan yang menunggu. 🎉",new:"Belum ada kiriman atau balasan.",off:"Tidak ada yang disembunyikan atau dihapus."}[tab];
     box.innerHTML=L.length?L.map(card).join(""):'<div class="empty">'+none+'</div>'})}
 function refresh(){return loadReports().then(function(ok){if(ok)show()})}
@@ -132,6 +167,7 @@ document.addEventListener("click",function(ev){
   if(b.dataset.ca){cfgAct(b.dataset.ca,b.dataset.id);return}
   if(b.dataset.fa){
     if(busy)return;var a=b.dataset.fa,t=b.dataset.t,id=b.dataset.id;
+    if(a==="ban"||a==="unban"){busy=true;Promise.resolve(a==="ban"?askBan(id):doUnban(id)).then(function(){busy=false},function(){busy=false;msg("Gagal menghubungi server.","err")});return}
     if(a==="delete"&&!confirm("Hapus permanen? Ini tidak bisa dipulihkan dari panel."))return;
     busy=true;
     sb.rpc("admin_forum_moderate",{p_post:t==="post"?id:null,p_reply:t==="reply"?id:null,p_action:a}).then(function(r){
