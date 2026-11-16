@@ -8,7 +8,8 @@ ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Setelah domain .com aktif:  GWM_SITE=https://gowithdme.com python3 tools/build.py
 BASE=os.environ.get("GWM_SITE","https://calvfinka.github.io/gowithdme").rstrip("/")
 LANGS=["id","en"]; IDX={"id":0,"en":1}
-PAGES=["index","event","gunung","login","privacy","terms"]
+PAGES=["index","event","gunung","login","privacy","terms","ajukan"]
+NOINDEX=("login","ajukan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
 APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
 def path(p): return "" if p=="index" else p
 def inc(h):
@@ -41,10 +42,11 @@ for l in LANGS:
     for p in PAGES:
         h=inc(open(f"{ROOT}/src/{p}.html",encoding="utf-8").read())
         h=h.replace("{{search}}",inc("{{>search}}") if p in APP else "<span></span>")
+        h=h.replace("{{pgshare}}",'<button class="ico-btn sh" id="pgShare" type="button" aria-label="{{sh_aria}}"><svg class="i" aria-hidden="true"><use href="#i-share"/></svg></button>' if p in APP else "")
         h=h.replace("{{auth}}",'<a class="btn pri" id="login" href="login">{{login_btn}}</a>' if p in APP else '<a class="btn line" href="./">{{back_home}}</a>')
         if p in("privacy","terms"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
         sw=f'<a class="lang" href="../{o}/{path(p)}" data-sw="{o}" hreflang="{o}" lang="{o}" aria-label="{S["lang_label"][IDX[l]]}">{o.upper()}</a>'
-        hl="" if p=="login" else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
+        hl="" if p in NOINDEX else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
             +"".join(f'<link rel="alternate" hreflang="{x}" href="{BASE}/{x}/{path(p)}">' for x in LANGS)
             +f'<link rel="alternate" hreflang="x-default" href="{BASE}/id/{path(p)}">')
         h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl)
@@ -66,7 +68,7 @@ location.replace(l+"/{t}"+location.search+location.hash)}})()</script></head>
     open(f"{ROOT}/{p}.html","w",encoding="utf-8").write(h)
 # ---- sitemap.xml dan robots.txt (ikut BASE, jadi tidak perlu diedit tangan saat pindah domain) ----
 from urllib.parse import urlparse
-pub=[p for p in PAGES if p!="login"]
+pub=[p for p in PAGES if p not in NOINDEX]
 def url(l,p): return f"{BASE}/{l}/{path(p)}"
 rows=[]
 for l in LANGS:
@@ -75,5 +77,5 @@ for l in LANGS:
         rows.append(f"<url><loc>{url(l,p)}</loc>{alt}</url>")
 open(ROOT+"/sitemap.xml","w",encoding="utf-8").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+"".join(rows)+"</urlset>\n")
 pre=urlparse(BASE).path.rstrip("/")
-open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login"))+f"Sitemap: {BASE}/sitemap.xml\n")
+open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login","ajukan","id/ajukan","en/ajukan"))+f"Sitemap: {BASE}/sitemap.xml\n")
 print("selesai ->",BASE)

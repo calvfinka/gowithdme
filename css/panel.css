@@ -56,3 +56,11 @@ select,input[type=search],input[type=number]{background:var(--field);color:var(-
 .poster .tag{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.7);padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
 .poster .dt{position:absolute;top:8px;right:8px;background:var(--bg);color:var(--ink);border-radius:7px;padding:3px 8px;text-align:center;font:700 16px/1 var(--f)}.dt small{display:block;font:600 9px var(--f);color:var(--mute)}
 .eb{padding:11px 13px 13px}.eb h3{font-size:15px;line-height:1.25}.price{color:var(--brand);font-weight:700;font-size:13px;margin-top:6px}
+
+/* ---- Halaman ajukan (publik) ---- */
+.sub{max-width:720px;margin:16px auto;padding:0 14px}.sub h1{font-size:22px;margin-bottom:4px}.sub h2{font-size:18px;margin-bottom:8px}
+.k3{grid-template-columns:repeat(3,1fr)}.k3 button{font-size:13px;padding:10px 6px}
+
+/* ---- Antrean persetujuan admin ---- */
+.bnav button{position:relative}
+.dot{position:absolute;top:3px;left:calc(50% + 8px);background:var(--err);color:#fff;border-radius:99px;font:700 10px var(--f);padding:1px 6px;min-width:16px;text-align:center}

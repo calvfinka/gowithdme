@@ -14,15 +14,21 @@
 
 <section id="v_dash">
   <h2>Dashboard</h2><p class="meta">Ringkasan semua postingan dan jalan pintas.</p>
-  <div class="st5"><div><b id="nAll">0</b>Total</div><div><b id="nPub">0</b>Terbit</div><div><b id="nDr">0</b>Draft</div><div><b id="nKon">0</b>Konser</div><div><b id="nGun">0</b>Naik Gunung</div></div>
+  <div class="st5"><div><b id="nAll">0</b>Total</div><div><b id="nPub">0</b>Terbit</div><div><b id="nDr">0</b>Draft</div><div><b id="nKon">0</b>Konser</div><div><b id="nGun">0</b>Naik Gunung</div><div><b id="nPend">0</b>Menunggu</div></div>
+  <div class="card" id="pendCta" hidden><h3>Pengajuan menunggu persetujuan</h3><p>Ada <b id="nPend2">0</b> pengajuan dari publik yang belum diperiksa.</p><button class="btn" data-v="review" type="button">Periksa sekarang</button></div>
   <div class="qa"><button data-new="konser" type="button">🎤 Buat konser</button><button data-new="naikgunung" type="button">⛰️ Buat pendakian</button></div>
   <div class="card"><h3>Event terdekat</h3><p>Lima event terbit berikutnya.</p><div id="soon"></div></div>
+</section>
+
+<section id="v_review" hidden>
+  <h2>Persetujuan</h2><p class="meta">Pengajuan event dan open trip dari publik. Periksa judul, tanggal, kontak, dan poster sebelum menyetujui. Yang ditolak bisa diberi alasan agar pengaju dapat memperbaiki.</p>
+  <div id="rev"></div>
 </section>
 
 <section id="v_list" hidden>
   <h2>Postingan</h2>
   <div class="bar" id="flKind"><button class="tab on" data-k="" type="button">Semua</button><button class="tab" data-k="konser" type="button">🎤 Konser</button><button class="tab" data-k="naikgunung" type="button">⛰️ Naik Gunung</button></div>
-  <div class="flt"><select id="flStatus" aria-label="Status"><option value="">Semua status</option><option value="published">Terbit</option><option value="draft">Draft</option></select><select id="flCity" aria-label="Kota"></select><input id="flQ" type="search" placeholder="Cari judul…"></div>
+  <div class="flt"><select id="flStatus" aria-label="Status"><option value="">Semua status</option><option value="published">Terbit</option><option value="pending">Menunggu</option><option value="rejected">Ditolak</option><option value="draft">Draft</option></select><select id="flCity" aria-label="Kota"></select><input id="flQ" type="search" placeholder="Cari judul…"></div>
   <div id="items"></div>
 </section>
 
@@ -51,12 +57,17 @@
       <label class="f">Line-up<textarea id="f_lineup" placeholder="Pisahkan dengan koma: Band A, Band B"></textarea></label>
     </fieldset>
     <fieldset class="fs" data-for="naikgunung" hidden><legend>3. Detail pendakian</legend>
-      <label class="f">Nama gunung<input id="f_mountain" type="text" placeholder="contoh: Gunung Papandayan"></label>
+      <label class="f">Nama gunung<input id="f_mountain" type="text" maxlength="80" placeholder="ketik untuk mencari, contoh: Gunung Papandayan"></label>
       <div class="g2">
         <label class="f">Ketinggian (mdpl)<input id="f_altitude_mdpl" type="number" min="0" inputmode="numeric" placeholder="2665"></label>
         <label class="f">Kesulitan<select id="f_difficulty"><option value="">Pilih</option><option value="pemula">Pemula</option><option value="menengah">Menengah</option><option value="sulit">Sulit</option></select></label>
       </div>
       <label class="f">Durasi<input id="f_duration" type="text" placeholder="contoh: 2 hari 1 malam"></label>
+      <div class="g2">
+        <label class="f">Kuota peserta<input id="f_quota" type="number" min="1" max="500" inputmode="numeric"></label>
+        <label class="f">Penyelenggara<input id="f_organizer" type="text" maxlength="80"></label>
+      </div>
+      <label class="f">WhatsApp penyelenggara (tampil publik)<input id="f_contact_wa" type="tel" inputmode="tel" placeholder="08xxxxxxxxxx"></label>
     </fieldset>
     <fieldset class="fs"><legend>4. Deskripsi &amp; sumber</legend>
       <label class="f">Deskripsi <i class="cc" id="ccDesc">0</i><textarea id="f_description" placeholder="Ringkasan, syarat, fasilitas, info penting"></textarea></label>
@@ -73,9 +84,10 @@
 </main>
 <nav class="bnav" id="bnav" hidden>
   <button data-v="dash" class="on" type="button"><i>🏠</i>Dashboard</button>
+  <button data-v="review" type="button"><i>✅</i>Persetujuan<b class="dot" id="bPend" hidden></b></button>
   <button data-v="list" type="button"><i>📋</i>Postingan</button>
   <button data-v="form" type="button"><i>➕</i>Buat baru</button>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script>
+<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script>
 </body></html>

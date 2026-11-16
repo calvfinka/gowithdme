@@ -1,5 +1,5 @@
 (function(){
-var F=["title","city_id","event_date","end_date","price_label","venue","genre","lineup","mountain","altitude_mdpl","difficulty","duration","description","poster_url","ticket_url","source_ig"],SK="ib_adm_draft";
+var F=["title","city_id","event_date","end_date","price_label","venue","genre","lineup","mountain","altitude_mdpl","difficulty","duration","quota","organizer","contact_wa","description","poster_url","ticket_url","source_ig"],SK="ib_adm_draft";
 var kind=function(){var b=document.querySelector(".kind button.on");return b?b.dataset.kind:"konser"};
 var v=function(k){return $("f_"+k).value.trim()};
 function card(){var t=v("title")||"Judul event",d=v("event_date"),dp=d?new Date(d+"T00:00:00"):null,M=["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGU","SEP","OKT","NOV","DES"],u=v("poster_url");

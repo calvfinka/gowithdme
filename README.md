@@ -56,3 +56,11 @@ Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (
 - `js/theme.js` tombol terang/gelap (pilihan disimpan di perangkat, awalnya mengikuti pengaturan perangkat).
 - `js/now.js` tanggal, jam WIB, dan cuaca asli dari Open-Meteo (gratis, tanpa kunci API) mengikuti kota yang dipilih. Koordinat kota ada di `IB_GEO` pada `js/regions.js`; kota baru perlu ditambah di sana juga.
 - Domain: gowithdme.com. Tambahkan Redirect URL Supabase `https://gowithdme.com/id/login` dan `https://gowithdme.com/en/login`, dan arahkan CNAME GitHub Pages ke domain baru.
+
+## Komunitas: pengajuan event & open trip, persetujuan admin, tombol bagikan
+- Jalankan `supabase/schema_komunitas.sql` (setelah semua schema sebelumnya). Menambah kolom `quota`, `contact_wa`, `organizer`, `is_community`; status `pending`/`rejected`; tabel `event_submissions`; fungsi `submit_event`, `withdraw_event`, `admin_review_event`; izin unggah poster per pengguna (folder `<user-id>/`, maks. 2 MB, JPG/PNG/WebP).
+- Publik (harus login) membuka `/id/ajukan` atau `/en/ajukan`: konser/festival, pameran, atau open trip gunung. Status awal selalu `pending`; tidak bisa terbit sendiri. Batas: 5 pengajuan menunggu, 8 per 24 jam.
+- Admin: menu baru **Persetujuan** di `/admin` (Setujui / Tolak dengan alasan). Pengaju melihat status dan alasan penolakan di bagian *Pengajuan saya*, bisa menarik atau mengajukan ulang.
+- Open trip memakai kategori `naikgunung` yang sudah ada, jadi otomatis tampil di halaman Gunung, kalender (.ics), pencarian, dan ajakan barengan. Daftar gunung ada di `js/gunung-data.js` (146 gunung populer & gunung api utama; nama lain bisa diketik sendiri).
+- Tombol bagikan (`js/share.js`): kartu grid & daftar, rincian event, tiap ajakan barengan, bilah atas, dan pengajuan saya. Tautan langsung ke event: `?e=<slug>` (dialog rincian terbuka otomatis).
+- Setelah mengubah teks di `tools/strings.py` atau `src/*.html`, jalankan `python3 tools/build.py`.

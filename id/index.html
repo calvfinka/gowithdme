@@ -41,9 +41,10 @@
   <symbol id="w-fog" viewBox="0 0 48 48"><path d="M13 27h22a8 8 0 0 0 1-15.9A11.5 11.5 0 0 0 14.2 13 7 7 0 0 0 13 27z" style="fill:var(--cloud)"/><g stroke="var(--cloud)" stroke-width="2.6" stroke-linecap="round"><path d="M10 33h28M14 39h20"/></g></symbol>
   <symbol id="bars" viewBox="0 0 100 100"><g fill="currentColor"><rect x="2" y="55" width="6" height="45"/><rect x="12" y="75" width="6" height="25"/><rect x="22" y="30" width="6" height="70"/><rect x="32" y="62" width="6" height="38"/><rect x="42" y="45" width="6" height="55"/><rect x="52" y="80" width="6" height="20"/><rect x="62" y="38" width="6" height="62"/><rect x="72" y="58" width="6" height="42"/><rect x="82" y="15" width="6" height="85"/><rect x="92" y="50" width="6" height="50"/></g></symbol>
   <symbol id="ridge" viewBox="0 0 100 100"><path fill="currentColor" d="M0 100V62l18-26 14 18 20-34 22 36 12-14 14 20v40z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
 </svg>
 <header class="topbar"><a class="logo" href="./" aria-label="GWM"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="mk-bg" width="32" height="32" rx="9"/><path class="mk-pin" d="M16 5.2c-4.8 0-8.4 3.6-8.4 8.2 0 5.8 6.6 11.4 7.8 12.4a1 1 0 0 0 1.2 0c1.2-1 7.8-6.6 7.8-12.4 0-4.6-3.6-8.2-8.4-8.2z"/><circle cx="12.9" cy="13.4" r="2.6" fill="#E4501A"/><circle cx="19.1" cy="13.4" r="2.6" fill="#F5B416"/></svg><span class="w">GWM</span></a><label class="search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Cari nama event, lokasi, atau gunung" autocomplete="off" aria-label="Cari event"></label>
-<div class="right"><button class="ico-btn" id="theme" type="button" aria-label="Ganti tema terang atau gelap"><svg class="i t-moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="i t-sun" aria-hidden="true"><use href="#i-sun"/></svg></button><a class="lang" href="../en/" data-sw="en" hreflang="en" lang="en" aria-label="Ganti bahasa">EN</a><a class="btn pri" id="login" href="login">Masuk</a></div></header>
+<div class="right"><button class="ico-btn sh" id="pgShare" type="button" aria-label="Bagikan halaman ini"><svg class="i" aria-hidden="true"><use href="#i-share"/></svg></button><button class="ico-btn" id="theme" type="button" aria-label="Ganti tema terang atau gelap"><svg class="i t-moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="i t-sun" aria-hidden="true"><use href="#i-sun"/></svg></button><a class="lang" href="../en/" data-sw="en" hreflang="en" lang="en" aria-label="Ganti bahasa">EN</a><a class="btn pri" id="login" href="login">Masuk</a></div></header>
 
 <div class="shell">
 <aside class="side" aria-label="Navigasi"><h4>Jelajahi</h4><div class="nav" id="navCat"></div><h4>Kota</h4><div class="nav" id="navCity"></div><h4>Milikmu</h4><div class="nav" id="navMine"></div></aside>
@@ -75,6 +76,6 @@
 <dialog id="dlg"><div id="dBody"></div></dialog>
 <div id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="../js/i18n.js"></script><script src="../js/config.js"></script><script src="../js/supa.js"></script><script src="../js/regions.js"></script>
-<script>window.IB_MODE="home"</script><script src="../js/ajakan.js"></script><script src="../js/now.js"></script><script src="../js/app.js"></script>
+<script>window.IB_MODE="home"</script><script src="../js/share.js"></script><script src="../js/ajakan.js"></script><script src="../js/now.js"></script><script src="../js/app.js"></script>
 </body>
 </html>

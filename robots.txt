@@ -4,4 +4,7 @@ Disallow: /gowithdme/admin
 Disallow: /gowithdme/login
 Disallow: /gowithdme/id/login
 Disallow: /gowithdme/en/login
+Disallow: /gowithdme/ajukan
+Disallow: /gowithdme/id/ajukan
+Disallow: /gowithdme/en/ajukan
 Sitemap: https://calvfinka.github.io/gowithdme/sitemap.xml
