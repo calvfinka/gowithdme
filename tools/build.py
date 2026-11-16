@@ -1,12 +1,13 @@
 # Bangun situs dua bahasa: src/*.html + tools/strings.py  ->  id/*.html, en/*.html, js/i18n.js, dan pengalih bahasa di root.
 # Jalankan: python3 tools/build.py
-import os,re,json,sys
+import os,re,json,sys,time
 sys.path.insert(0,os.path.dirname(__file__))
 from strings import S,J,PROV_EN
 ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Alamat situs untuk canonical, hreflang, dan sitemap. Saat ini situs hidup di GitHub Pages.
 # Setelah domain .com aktif:  GWM_SITE=https://gowithdme.com python3 tools/build.py
 BASE=os.environ.get("GWM_SITE","https://calvfinka.github.io/gowithdme").rstrip("/")
+VER=time.strftime("%Y%m%d%H%M")
 LANGS=["id","en"]; IDX={"id":0,"en":1}
 PAGES=["index","event","gunung","login","privacy","terms","ajukan","komunitas","profil","bantuan","pesan"]
 NOINDEX=("login","ajukan","profil","pesan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
@@ -81,6 +82,7 @@ for l in LANGS:
         assert "{{" not in h,(l,p)
         need=[x for x in ("i18n","config","regions","gunung-data","search-index","search","navauth") if f"../js/{x}.js" not in h]
         h=h.replace("</body>","".join(f'<script src="../js/{x}.js"></script>' for x in need)+"\n</body>",1)
+        h=re.sub(r'(\.\./(?:js|css)/[\w.-]+\.(?:js|css))"',r'\1?v='+VER+'"',h)
         open(f"{ROOT}/{l}/{p}.html","w",encoding="utf-8").write(h)
 # ---- pengalih di root (tautan lama /event, /gunung, /login tetap jalan) ----
 for p in PAGES:

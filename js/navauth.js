@@ -4,10 +4,11 @@ var a=document.getElementById("login");if(!a)return;
 var tok=null;try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);
   if(/^sb-.+-auth-token$/.test(k)){var v=JSON.parse(localStorage.getItem(k)||"null");if(v&&(v.refresh_token||v.access_token))tok=v}}}catch(e){}
 if(!tok)return;
-var T=window.IB_T||function(k){return k};
+var EN=document.documentElement.lang==="en",F={nav_profile:EN?"Profile":"Profil",msg_nav:EN?"Messages":"Pesan"};
+var T=function(k){var s=window.IB_T?window.IB_T(k):k;return s&&s!==k?s:F[k]};
 a.textContent=T("nav_profile");a.setAttribute("href","profil");a.classList.remove("pri");a.classList.add("line");
 var m=document.createElement("a");m.className="ico-btn ms-ico";m.href="pesan";m.setAttribute("aria-label",T("msg_nav"));
-m.innerHTML='<span aria-hidden="true">✉</span><b class="nb" hidden></b>';a.parentNode.insertBefore(m,a);
+m.innerHTML='<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><b class="nb" hidden></b>';a.parentNode.insertBefore(m,a);
 var C=window.IB_CONFIG||{};
 if(tok.access_token&&(!tok.expires_at||tok.expires_at*1000>Date.now())&&C.SUPABASE_URL)
  fetch(C.SUPABASE_URL+"/rest/v1/rpc/chat_unread",{method:"POST",headers:{apikey:C.SUPABASE_ANON_KEY,Authorization:"Bearer "+tok.access_token,"Content-Type":"application/json"},body:"{}"})
