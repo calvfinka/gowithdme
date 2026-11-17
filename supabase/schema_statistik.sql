@@ -99,7 +99,7 @@ begin
     'with_city',(select count(*) from profiles where city_id is not null),
     'daily',(select coalesce(jsonb_agg(jsonb_build_object('d',g.d,'n',coalesce(s.c,0)) order by g.d),'[]'::jsonb)
              from (select generate_series(d0::timestamp,d1::timestamp,interval '1 day')::date d) g
-             left join (select (created_at at time zone 'Asia/Jakarta')::date day,count(*) c from profiles
+             left join (select (created_at at time zone 'Asia/Jakarta')::date as day,count(*) c from profiles
                         where (created_at at time zone 'Asia/Jakarta')::date between d0 and d1 group by 1) s on s.day=g.d),
     'cities',(select coalesce(jsonb_agg(jsonb_build_object('k',name,'n',c)),'[]'::jsonb) from (
               select ct.name,count(*) c from profiles p join cities ct on ct.id=p.city_id group by ct.name order by c desc limit 8) t));
