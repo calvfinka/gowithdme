@@ -23,6 +23,24 @@ $("bGoogle").onclick=function(){msg(tr("a_gredir"));setAfter();
   sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:"select_account"}}}).then(function(r){if(r.error)msg(tr("a_goff"),"err")})};
 $("lForgot").onclick=function(){var em=$("lEmail").value.trim();if(!em)return msg(tr("a_needmail"),"err");
   sb.auth.resetPasswordForEmail(em,{redirectTo:location.href}).then(function(r){msg(r.error?r.error.message:tr("a_resetsent"),r.error?"err":"ok")})};
+/* Login tanpa password: link sekali pakai ke email. Hanya untuk email yang sudah terdaftar (shouldCreateUser:false), supaya akun tidak terbuat tanpa nama panggilan dan persetujuan. */
+$("lMagic").onclick=function(){var em=$("lEmail").value.trim();if(!em)return msg(tr("a_needmail"),"err");
+  msg(tr("processing"));setAfter();var b=this;b.disabled=true;
+  sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.href,shouldCreateUser:false}}).then(function(r){
+    b.disabled=false;
+    if(r.error){takeAfter();return msg(/signups? not allowed|not found/i.test(r.error.message||"")?tr("a_magic_none"):r.error.message,"err")}
+    msg(tr("a_magic_sent"),"ok")})};
+/* Ganti email: Supabase mengirim email konfirmasi; email baru berlaku setelah tombol di email diketuk. */
+$("fMail").onsubmit=function(e){e.preventDefault();var ne=$("nEmail").value.trim(),btn=this.querySelector('[type="submit"]');
+  getMe().then(function(m){
+    if(!m)return;
+    if(ne.toLowerCase()===String(m.user.email||"").toLowerCase())return msg(tr("ce_same"),"err");
+    btn.disabled=true;msg(tr("processing"));
+    return sb.auth.updateUser({email:ne},{emailRedirectTo:location.href}).then(function(r){
+      btn.disabled=false;
+      if(r.error)return msg(r.error.message,"err");
+      $("nEmail").value="";msg(tr("ce_sent"),"ok")})})};
+if(/type=email_change/.test(location.hash))setTimeout(function(){msg(tr("ce_done"),"ok")},600);
 $("bOut").onclick=function(){sb.auth.signOut().then(function(){location.href="./"},function(){location.href="./"})};
 // Placeholder deteksi lokasi: GPS browser. Pencatatan ke login_logs lewat Edge Function "log-login" (tahap 3).
 function logLocation(done){

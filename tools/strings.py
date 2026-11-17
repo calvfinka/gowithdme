@@ -593,3 +593,21 @@ S.update({
 "nv_blog": ("Blog", "Blog"), "f_blog": ("Blog", "Blog"),
 })
 S.update({"f1_w": ("Terkurasi", "Curated"), "f2_w": ("Aman", "Safe"), "f3_w": ("Gratis", "Free")})
+
+# --- Login tanpa password (magic link) dan ganti email di profil ---
+ML = {
+"ml_btn": ("Kirim link masuk ke email", "Email me a login link"),
+"ml_hint": ("Tanpa password: kami kirim link sekali pakai ke emailmu.", "No password: we email you a one-time link."),
+"ce_h": ("Ganti email", "Change email"),
+"ce_new": ("Email baru", "New email"),
+"ce_btn": ("Kirim konfirmasi", "Send confirmation"),
+"ce_note": ("Email berubah setelah kamu mengetuk tombol konfirmasi di email. Kamu mungkin diminta konfirmasi dari email lama dan baru.", "Your email changes after you tap the confirm button in the email. You may be asked to confirm from both the old and new address."),
+}
+S.update(ML)
+J.update({
+"a_magic_sent": ("Link masuk dikirim. Buka emailmu lalu ketuk tombol Masuk ke GWM.", "Login link sent. Open your email and tap the button."),
+"a_magic_none": ("Email ini belum terdaftar. Daftar dulu lewat tab Daftar.", "This email is not registered yet. Sign up first using the Sign up tab."),
+"ce_same": ("Email baru sama dengan email sekarang.", "The new email is the same as your current one."),
+"ce_sent": ("Konfirmasi dikirim. Cek email baru (dan email lama bila diminta) lalu ketuk tombol konfirmasi.", "Confirmation sent. Check your new email (and the old one if asked) and tap the confirm button."),
+"ce_done": ("Konfirmasi diterima. Jika diminta, konfirmasi juga dari email satunya.", "Confirmation received. If asked, confirm from the other email too."),
+})
