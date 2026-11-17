@@ -35,13 +35,13 @@ main:focus,.page:focus{outline:none}
 .r{content-visibility:auto;contain-intrinsic-size:auto 62px}
 
 /* ---- HP & tablet: tanpa tab bawah; chip bisa digeser dengan snap ---- */
-@media (max-width:1000px){
+@media (max-width:900px){
   .mfilters,.kchips{scroll-snap-type:x proximity}
   .mfilters>*,.kchips>*{scroll-snap-align:start}
 }
 
 /* ---- PC: menu utama di bilah atas, ruang lebih lega ---- */
-@media (min-width:1001px){
+@media (min-width:901px){
   .topbar{grid-template-columns:200px auto minmax(180px,1fr) auto}
   .right{grid-column:4}
   .search{justify-self:stretch;max-width:560px;margin-inline:auto}

@@ -65,7 +65,7 @@ body.nv-in .mm-login{display:none}body.nv-in .mm-me{display:flex}
 }
 
 /* ================= HEADER: responsif ================= */
-@media (max-width:1000px){
+@media (max-width:900px){
   :root{--svc:0px;--bh:56px}
   .tb-main{gap:10px;padding-inline:14px}
   .search.nvs{height:40px;max-width:none}
