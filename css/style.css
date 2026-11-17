@@ -238,7 +238,7 @@ input[type=number],input[type=search],select{font-family:var(--f)}
 .tick .tk i.soon{background:var(--soon-bg);color:var(--soon)}
 @keyframes tickmove{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.tick .vp{overflow-x:auto}.tick .dup{display:none}}
-@media (max-width:1000px){
+@media (max-width:900px){
   .topbar{grid-template-columns:auto minmax(0,1fr) auto;gap:10px}
   .shell{grid-template-columns:1fr}
   .side{display:none}

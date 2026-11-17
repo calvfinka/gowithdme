@@ -11,7 +11,7 @@
   try{mode=localStorage.getItem(K)||"auto"}catch(e){}
   if(mode!=="low"&&mode!=="mid"&&mode!=="high")mode="auto";
   function mq(q){try{return !!(window.matchMedia&&matchMedia(q).matches)}catch(e){return false}}
-  function dev(){var w=window.innerWidth||screen.width||1024;return w<=640?"phone":(w<=1000?"tablet":"desktop")}
+  function dev(){var w=window.innerWidth||screen.width||1024;return w<=640?"phone":(w<=900?"tablet":"desktop")}
   function softGPU(){
     try{var c=d.createElement("canvas"),g=c.getContext("webgl")||c.getContext("experimental-webgl");if(!g)return false;
       var x=g.getExtension("WEBGL_debug_renderer_info");if(!x)return false;
@@ -37,8 +37,9 @@
   /* Mode "situs desktop" di HP: browser merender halaman selebar PC (≥700px) lalu memperkecilnya ke layar kecil.
      Layar fisik kecil (sisi pendek ≤600) + lebar halaman ≥700 = mode itu (PC/tablet asli tidak pernah memenuhi).
      Isi halaman diperbesar (zoom) sampai selebar layar asli (320-480px), dan css/dsk.css memakai tata letak HP. */
-  function zoomF(){var iw=window.innerWidth||0,sm=Math.min(screen.width||9999,screen.height||9999);
-    return(iw>=700&&sm<=600)?Math.max(1.2,Math.min(4,iw/Math.max(320,Math.min(480,sm)))):1}
+  /* Mode "situs desktop" di HP: sekarang DIHORMATI. Tidak ada lagi pemaksaan tata letak HP (zoom) di situ;
+     Chrome merender lebar ~980px, dan breakpoint desktop sudah 900px, jadi hasilnya tata letak desktop yang konsisten. */
+  function zoomF(){return 1}
   function paint(){var z=zoomF();r.setAttribute("data-tier",tier);r.setAttribute("data-dev",z>1?"phone":dev());r.setAttribute("data-motion",reduce?"reduce":"full");
     window.GWM_Z=z;if(z>1){r.setAttribute("data-dsk","1");r.style.setProperty("--dz",z.toFixed(3));r.style.setProperty("--vw","calc(1vw / "+z.toFixed(3)+")");r.style.setProperty("--vh","calc(1vh / "+z.toFixed(3)+")")}
     else{r.removeAttribute("data-dsk");r.style.removeProperty("--dz");r.style.removeProperty("--vw");r.style.removeProperty("--vh")}}

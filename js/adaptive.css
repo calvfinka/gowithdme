@@ -1,0 +1,169 @@
+/* GWM — lapisan adaptif di atas style.css.
+   Tata letak mengikuti lebar layar (HP / tablet / PC). Efek visual mengikuti <html data-tier="low|mid|high"> dari js/adaptive.js:
+   low  = hemat: tanpa animasi, blur, atau bayangan berat (HP lama, hemat data, GPU software)
+   mid  = seimbang: transisi ringan
+   high = penuh: kaca buram, latar bergerak, animasi masuk saat scroll, kilau kartu, transisi antar-halaman */
+:root{--tbh:58px;--tb:rgba(255,255,255,.82);--ease:cubic-bezier(.2,.7,.2,1)}
+:root[data-theme="dark"]{--tb:rgba(22,22,24,.8)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--tb:rgba(22,22,24,.8)}}
+
+/* ---- aksesibilitas dasar ---- */
+.skip{position:fixed;left:12px;top:-64px;z-index:100;background:var(--brand);color:var(--brand-ink);padding:9px 14px;border-radius:9px;font-weight:600}
+.skip:focus{top:calc(8px + var(--sat))}
+main:focus,.page:focus{outline:none}
+
+/* ---- bilah atas ---- */
+.topbar.scrolled{box-shadow:0 1px 0 var(--line),0 8px 20px -14px rgba(0,0,0,.4)}
+.pnav{display:none}
+.right .btn{white-space:nowrap}
+
+/* ---- footer: pilihan kualitas ---- */
+.qsw{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.qsw>span{font-size:12px;color:var(--faint)}
+.qsw .seg{display:inline-flex;background:var(--field);border-radius:8px;padding:2px}
+.qsw button{border:0;background:transparent;height:26px;padding:0 10px;border-radius:6px;font-size:12px;font-weight:600;color:var(--mute);cursor:pointer}
+.qsw button[aria-pressed="true"]{background:var(--bg);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.18)}
+
+/* ---- tombol ke atas ---- */
+.totop{position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:27;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);
+  background:var(--bg);color:var(--ink);display:grid;place-items:center;cursor:pointer;opacity:0;pointer-events:none;transform:translateY(8px);
+  transition:opacity .2s,transform .2s;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:0}
+.totop.on{opacity:1;pointer-events:auto;transform:none}
+
+/* ---- poster lebih menonjol: rasio potret ---- */
+.thumb,.sk{aspect-ratio:4/5}
+.r{content-visibility:auto;contain-intrinsic-size:auto 62px}
+
+/* ---- HP & tablet: tanpa tab bawah; chip bisa digeser dengan snap ---- */
+@media (max-width:900px){
+  .mfilters,.kchips{scroll-snap-type:x proximity}
+  .mfilters>*,.kchips>*{scroll-snap-align:start}
+}
+
+/* ---- PC: menu utama di bilah atas, ruang lebih lega ---- */
+@media (min-width:901px){
+  .topbar{grid-template-columns:200px auto minmax(180px,1fr) auto}
+  .right{grid-column:4}
+  .search{justify-self:stretch;max-width:560px;margin-inline:auto}
+  .pnav{display:flex;gap:2px;align-items:center}
+  .pnav a{padding:7px 12px;border-radius:8px;font-weight:600;font-size:13.5px;color:var(--mute);white-space:nowrap}
+  .pnav a:hover{background:var(--hover);color:var(--ink)}
+  .pnav a[aria-current="page"]{color:var(--brand);background:var(--sel)}
+  .nav [aria-current="true"],.nav [aria-pressed="true"]{box-shadow:inset 3px 0 0 var(--brand)}
+}
+.main{max-width:1760px;width:100%;margin-inline:auto}
+@media (min-width:641px){.tiles{grid-template-columns:repeat(auto-fill,minmax(clamp(160px,calc(13.5*var(--vw)),236px),1fr))}}
+@media (min-width:1500px){
+  .shell{grid-template-columns:256px minmax(0,1fr)}
+  .main{padding:26px 40px 52px}
+  .topbar{padding-inline:24px}
+  .head h1,.head h2{font-size:30px}
+  .khero h1{font-size:38px}
+}
+@media (min-width:1700px){body{font-size:15px}.tt{font-size:14px}.tm{font-size:13px}}
+@media (min-width:2200px){body{font-size:16px}.main{padding-inline:56px}}
+
+/* ---- HP: ringkas, poster di depan, rincian jadi lembar bawah ---- */
+@media (max-width:640px){
+  .now{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .now>div{padding:10px 0}
+  .now>div+div{padding-left:14px;border-left:1px solid var(--line);border-top:0}
+  .now>div:nth-child(3){grid-column:1/-1;padding-left:0;border-left:0;border-top:1px solid var(--line)}
+  .clock{grid-template-columns:1fr;row-gap:0}
+  .clock .day,.clock .dt{grid-column:1}
+  .clock .tm{grid-column:1;grid-row:auto;font-size:24px}
+  .deg{font-size:26px}.wi{width:36px;height:36px}.wx{gap:8px}
+  .fc{gap:2px}.fd{padding:4px 0}.fd svg.wi{width:26px;height:26px}
+  .tiles{gap:16px 12px}
+  #pgShare{display:none}
+  .khero{gap:10px}.khero h1{font-size:24px}
+  dialog,dialog.shr,dialog.aqd{width:100%!important;max-width:100%;margin:auto 0 0;border-radius:18px 18px 0 0;max-height:calc(92*var(--vh));border-bottom:0}
+  .db{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+  .dp{height:min(calc(46*var(--vh)),300px)}
+}
+@media (pointer:coarse){
+  .btn{min-height:38px}.btn.sm{min-height:34px}
+  .sel{height:38px}
+  .ico-btn{width:38px;height:38px}
+  .search input{height:38px}
+  .nav a,.nav button{padding:10px}
+  .fav{width:32px;height:32px}
+  .rf{width:38px;height:38px}
+}
+
+/* ====================== TINGKAT HEMAT (low) ====================== */
+html[data-tier="low"] *,html[data-tier="low"] *::before,html[data-tier="low"] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html[data-tier="low"] .sk{background:var(--hover)}
+html[data-tier="low"] .tick .vp{overflow-x:auto}
+html[data-tier="low"] .tick .dup{display:none}
+html[data-tier="low"] .thumb svg.deco,html[data-tier="low"] .dp svg.deco{display:none}
+html[data-tier="low"] dialog,html[data-tier="low"] .sxp,html[data-tier="low"] .totop{box-shadow:none}
+html[data-tier="low"] dialog::backdrop{background:rgba(0,0,0,.65)}
+html[data-tier="low"] .tile{content-visibility:auto;contain-intrinsic-size:auto 250px}
+html[data-tier="low"] .topbar.scrolled{box-shadow:0 1px 0 var(--line)}
+
+/* ====================== TINGKAT SEIMBANG & PENUH ====================== */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes dlgIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+  @keyframes sheetIn{from{transform:translateY(100%)}to{transform:none}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes drift{from{transform:translate3d(-4%,-2%,0) rotate(0)}to{transform:translate3d(6%,4%,0) rotate(10deg)}}
+
+  html[data-tier="mid"] .tile{animation:rise .35s var(--ease) both}
+  html[data-tier="high"] .tile{animation:rise .55s var(--ease) both}
+  html[data-tier="mid"] .tile:nth-child(2),html[data-tier="high"] .tile:nth-child(2){animation-delay:.04s}
+  html[data-tier="mid"] .tile:nth-child(3),html[data-tier="high"] .tile:nth-child(3){animation-delay:.08s}
+  html[data-tier="mid"] .tile:nth-child(4),html[data-tier="high"] .tile:nth-child(4){animation-delay:.12s}
+  html[data-tier="mid"] .tile:nth-child(5),html[data-tier="high"] .tile:nth-child(5){animation-delay:.16s}
+  html[data-tier="mid"] .tile:nth-child(6),html[data-tier="high"] .tile:nth-child(6){animation-delay:.2s}
+  html[data-tier="mid"] .tile:nth-child(n+7),html[data-tier="high"] .tile:nth-child(n+7){animation-delay:.24s}
+  @supports (animation-timeline:view()){
+    html[data-tier="high"] .tile{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 45%;animation-delay:0s!important}
+  }
+  html:not([data-tier="low"]) dialog[open]{animation:dlgIn .24s var(--ease)}
+  html:not([data-tier="low"]) dialog[open]::backdrop{animation:fadeIn .24s}
+  @media (max-width:640px){html:not([data-tier="low"]) dialog[open]{animation:sheetIn .3s var(--ease)}}
+  html:not([data-tier="low"]) .totop,html:not([data-tier="low"]) .topbar{transition:box-shadow .2s,opacity .2s,transform .2s}
+}
+
+/* hero berkartu */
+html[data-tier="mid"] .khero,html[data-tier="high"] .khero{position:relative;overflow:hidden;padding:22px;margin-bottom:4px;border:1px solid var(--line);border-radius:18px;
+  background:linear-gradient(135deg,var(--sel),transparent 62%),var(--bg)}
+html[data-tier="mid"] .khero>*,html[data-tier="high"] .khero>*{position:relative;z-index:1}
+@media (max-width:640px){html[data-tier="mid"] .khero,html[data-tier="high"] .khero{padding:16px;border-radius:16px}}
+html[data-tier="mid"] .now,html[data-tier="mid"] .stats,html[data-tier="high"] .now,html[data-tier="high"] .stats{border:1px solid var(--line);border-radius:14px;margin-top:14px;padding-inline:16px;background:var(--bg)}
+html[data-tier="mid"] .now>div:first-child,html[data-tier="high"] .now>div:first-child{padding-left:0}
+html[data-tier="mid"] .group h2,html[data-tier="high"] .group h2{font-size:14px;color:var(--ink)}
+html[data-tier="mid"] .info,html[data-tier="high"] .info{border-radius:14px}
+
+/* interaksi kursor (PC/laptop) */
+@media (hover:hover) and (pointer:fine){
+  html[data-tier="mid"] .tile,html[data-tier="high"] .tile{transition:transform .18s var(--ease),background-color .18s}
+  html[data-tier="mid"] .tile:hover,html[data-tier="high"] .tile:hover{transform:translateY(-3px)}
+  html[data-tier="mid"] .btn,html[data-tier="high"] .btn{transition:filter .15s,background-color .15s,transform .15s}
+  html[data-tier="mid"] .btn:active,html[data-tier="high"] .btn:active{transform:scale(.97)}
+}
+
+/* ====================== TINGKAT PENUH (high) ====================== */
+html[data-tier="high"] .khero::before{content:"";position:absolute;inset:-40%;z-index:0;pointer-events:none;
+  background:radial-gradient(38% 38% at 24% 30%,color-mix(in srgb,var(--brand) 28%,transparent),transparent 70%),
+             radial-gradient(34% 34% at 76% 66%,color-mix(in srgb,var(--accent) 24%,transparent),transparent 70%)}
+@media (prefers-reduced-motion:no-preference){html[data-tier="high"] .khero::before{animation:drift 20s ease-in-out infinite alternate;will-change:transform}}
+@supports (backdrop-filter:blur(1px)){
+  html[data-tier="high"] .topbar{background:var(--tb);-webkit-backdrop-filter:saturate(1.6) blur(16px);backdrop-filter:saturate(1.6) blur(16px)}
+    html[data-tier="high"] dialog::backdrop{-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+}
+html[data-tier="high"] .khero h1{background:linear-gradient(100deg,var(--ink) 40%,var(--brand));-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-tier="high"] .thumb{transition:box-shadow .25s}
+@media (hover:hover) and (pointer:fine){
+  html[data-tier="high"] .tile:hover .thumb{box-shadow:0 18px 34px -14px rgba(0,0,0,.5)}
+  html[data-tier="high"][data-dev="desktop"] .thumb::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s;
+    background:radial-gradient(180px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.3),transparent 60%)}
+  html[data-tier="high"][data-dev="desktop"] .tile:hover .thumb::after{opacity:1}
+}
+/* PC resolusi tinggi: kartu lebih besar dan panel info berdampingan */
+@media (min-width:1500px){
+  html[data-tier="high"] .tiles{gap:26px 20px}
+  html[data-tier="high"] .tick{border-radius:14px}
+}

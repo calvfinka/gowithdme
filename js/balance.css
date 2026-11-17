@@ -1,0 +1,108 @@
+/* GWM — keseimbangan tampilan: skala font (clamp), tinggi kontrol, jarak, sudut, dan poster.
+   Dimuat PALING AKHIR (setelah naver.css). Nilai di layar PC (>1000px) sengaja dibuat sama dengan sebelumnya;
+   yang berubah terutama di HP dan layar menengah.
+   Mode "situs desktop" di HP: css/dsk.css (dibuat otomatis oleh tools/gen_dsk.py dari file css ini dan lainnya). */
+
+:root{
+  /* skala font — satu tangga untuk semua halaman */
+  --fs-xs:clamp(11.5px,calc(10.9px + .2*var(--vw)),12.5px);   /* lencana, keterangan kecil */
+  --fs-s:clamp(12.5px,calc(11.9px + .2*var(--vw)),13.5px);    /* chip, label ikon, tombol kecil */
+  --fs-m:14px;                                                /* isi, tombol */
+  --fs-l:clamp(15px,calc(14px + .25*var(--vw)),16px);         /* judul kartu, lead */
+  --fs-xl:clamp(18px,calc(14px + 1*var(--vw)),22px);          /* judul bagian (h2) */
+  --fs-h1:clamp(21px,calc(13px + 2.4*var(--vw)),34px);        /* judul hero beranda */
+  --fs-pg:clamp(22px,calc(15px + 1.8*var(--vw)),26px);        /* judul halaman */
+  --fs-bn:clamp(19px,calc(9px + 1.9*var(--vw)),34px);         /* judul banner */
+  /* kontrol: tombol, chip, ikon (HP/layar sentuh sedikit lebih besar) */
+  --ctl:34px;--ctl-sm:30px;--ctl-lg:44px;--chip:var(--ctl);--ico:34px;
+  /* jarak & sudut */
+  --gx:clamp(14px,calc(6px + 2.4*var(--vw)),28px);            /* tepi kiri-kanan halaman */
+  --gap:clamp(14px,calc(10px + 1*var(--vw)),20px);            /* jarak antarbagian */
+  --r-card:16px;--r-ctl:10px;--r-poster:12px}
+@media (pointer:coarse){:root{--ctl:38px;--ctl-sm:34px;--ctl-lg:46px;--ico:38px}}
+
+/* ---------- font ---------- */
+.nv-hero h1{font-size:var(--fs-h1)}
+.nv-hero p{font-size:clamp(14px,calc(13px + .35*var(--vw)),16px);line-height:1.5}
+.head h1,.head h2{font-size:var(--fs-pg)}
+.khero h1{font-size:clamp(24px,calc(16px + 2*var(--vw)),32px)}
+.khero p{font-size:var(--fs-m)}
+.nv-feed .head h2{font-size:var(--fs-xl)}
+.db h2{font-size:clamp(20px,calc(15px + 1.2*var(--vw)),22px)}
+.nv-sl h3{font-size:var(--fs-bn)}
+.nv-sl p{font-size:clamp(12.5px,calc(11.5px + .3*var(--vw)),14px)}
+.app,.ap-t{font-size:var(--fs-s)}
+.nv-tr-h,.nv-roll a,.nv-tr-list a{font-size:var(--fs-s)}
+.nv-roll a small,.nv-tr-list a small{font-size:var(--fs-xs)}
+.nv-cat button{font-size:clamp(14px,calc(13px + .3*var(--vw)),15px)}
+.nv-flt button,.mfilters a,.mfilters button,.kchip,.sxc button,.sxtry button{font-size:var(--fs-s)}
+.tt{font-size:var(--fs-s)}.tm{font-size:var(--fs-xs)}
+.badge,.cmty,.kk{font-size:var(--fs-xs)}
+.btn,.nvc-login .sub{font-size:var(--fs-s)}
+.btn{font-size:clamp(13px,calc(12.5px + .15*var(--vw)),13.5px)}
+.nvc h3{font-size:var(--fs-s)}.nvc-login b{font-size:var(--fs-l)}.nvc-login p{font-size:var(--fs-s)}
+.meta,.note,.res,.msg,.ksafe{font-size:var(--fs-s)}
+.group h2{font-size:var(--fs-s)}
+@media (min-width:1500px){.head h1,.head h2{font-size:30px}.khero h1{font-size:38px}}
+
+/* ---------- tinggi tombol, chip, ikon: seragam ---------- */
+.btn{height:var(--ctl);min-height:0}
+.btn.sm{height:var(--ctl-sm);min-height:0}
+.ico-btn{width:var(--ico);height:var(--ico)}
+.tb-main .right .btn{height:var(--ctl);padding:0 14px}
+.nv-sl .btn{height:var(--ctl);padding:0 16px}
+.nvc-login .btn,.nv-more .btn{height:var(--ctl-lg)}
+.nv-flt button,.mfilters a,.mfilters button,.kchip,.sxc button,.sxtry button{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:var(--chip);padding:0 14px;line-height:1}
+.nv-flt{padding:10px 0 8px}
+.mfilters{padding:12px 0 2px}
+.nv-cat button{padding:12px 16px 11px}
+.sel{height:var(--ctl)}
+.search input{height:var(--ctl)}
+.search.nvs{height:44px}
+.nv-hero .search.nvs{height:56px}
+.search.nvs .sxgo{width:36px;height:36px}
+.nv-hero .search.nvs .sxgo{width:44px;height:44px}
+:root{--ic:clamp(44px,calc(38px + .9*var(--vw)),52px)}
+.ap-ic{width:var(--ic);height:var(--ic);border-radius:calc(var(--ic)*.33)}
+.ap-ic .i{width:calc(var(--ic)*.5);height:calc(var(--ic)*.5)}
+.nv-apps-in{gap:4px}.app{gap:7px;padding:8px 2px;line-height:1.25}
+
+/* ---------- jarak & sudut seragam ---------- */
+.nv-apps,.nvc,.nv-ban{border-radius:var(--r-card)}
+html[data-tier] .now,html[data-tier] .stats,html[data-tier] .info,html[data-tier] .khero{border-radius:var(--r-card)}
+.info,.rows,.empty{border-radius:var(--r-card)}
+.thumb,.rd,.nvc-recent .th{border-radius:var(--r-poster)}
+.rd{border-radius:calc(var(--r-poster) - 2px)}
+.nvc-recent .th{border-radius:10px}
+.nv-hero{gap:var(--gap);padding-top:clamp(20px,calc(8px + 3*var(--vw)),34px)}
+.nv-apps,.nv-cols{margin-top:var(--gap)}
+.nv-cols{gap:var(--gap) 22px}
+.nv-rail{gap:var(--gap)}
+.nvc{padding:16px}
+.group{margin-top:clamp(18px,calc(12px + 1*var(--vw)),24px)}
+.tiles{gap:clamp(14px,calc(10px + 1*var(--vw)),20px) 14px}
+@media (max-width:900px){.main{padding-inline:var(--gx)}}
+@media (max-width:640px){.nv-home .main{padding-inline:var(--gx)}.tiles{gap:16px 12px}.nv-hero .search.nvs{height:52px}.nv-hero .search.nvs .sxgo{width:40px;height:40px}}
+
+/* ---------- poster: seragam, utuh, dan setinggi blok teks di sebelahnya ---------- */
+.thumb,.sk{aspect-ratio:4/5}
+.nv-sl{--ctlgap:46px;--ph:calc(var(--sh) - var(--pad)*2 - var(--ctlgap));--pwmax:min(300px,calc(34*var(--vw)))}
+.nv-sl[data-o="land"]{--pwmax:min(400px,calc(44*var(--vw)))}
+.nv-sl[data-o="tall"]{--pwmax:min(210px,calc(24*var(--vw)))}
+.nv-sl-in{grid-template-columns:minmax(0,1fr) auto;align-items:start;padding:var(--pad) clamp(16px,calc(8px + 2.4*var(--vw)),40px) var(--pad) clamp(18px,calc(8px + 3*var(--vw)),44px);gap:clamp(14px,calc(6px + 2*var(--vw)),28px)}
+.nv-sl-tx{min-height:var(--ph);padding-bottom:0;align-content:center;align-self:start}
+.nv-sl-po,.nv-sl[data-o] .nv-sl-po{height:auto;max-width:none;width:min(var(--pwmax),calc(var(--ph)*var(--ar,.8)));aspect-ratio:var(--ar,.8);
+  align-self:start;margin-block:calc((var(--ph) - min(var(--ph),var(--pwmax)/var(--ar,.8)))/2);border-radius:var(--r-poster)}
+div.nv-sl-po{aspect-ratio:4/5;--ar:.8}
+.nv-sl[data-o="none"] .nv-sl-in{grid-template-columns:minmax(0,1fr)}
+.nv-ban-ctl{left:clamp(16px,calc(8px + 3*var(--vw)),44px);bottom:14px}
+.nv-sl-tx .btn{margin-top:4px}
+@media (max-width:640px){
+  .nv-sl{--sh:256px;--pad:16px;--ctlgap:44px;--pwmax:min(150px,calc(34*var(--vw)))}
+  .nv-sl[data-o="land"]{--pwmax:min(190px,calc(44*var(--vw)))}
+  .nv-sl[data-o="tall"]{--pwmax:min(110px,calc(26*var(--vw)))}
+  .nv-sl-in{padding:var(--pad) 16px var(--pad) 18px;gap:14px}
+  .nv-sl-tx{gap:8px}
+  .nv-sl-po,.nv-sl[data-o] .nv-sl-po{border-radius:var(--r-poster)}
+}
+.dp.pf{height:clamp(210px,calc(48*var(--vh)),360px)}
