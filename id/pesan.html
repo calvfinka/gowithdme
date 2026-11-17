@@ -9,9 +9,8 @@
 <link rel="stylesheet" href="../css/style.css?v=202611171212">
 <link rel="stylesheet" href="../css/adaptive.css?v=202611171212">
 <link rel="stylesheet" href="../css/naver.css?v=202611171212">
-<link rel="stylesheet" href="../css/dsk.css?v=202611171212">
 <link rel="stylesheet" href="../css/balance.css?v=202611171212">
-<link rel="stylesheet" href="../css/dsk-b.css?v=202611171212">
+<link rel="stylesheet" href="../css/menu.css?v=202611171212">
 <script src="../js/theme.js?v=202611171212"></script>
 <script src="../js/adaptive.js?v=202611171212"></script>
 <title>Pesan — GWM</title><meta name="description" content="Kirim pesan, gambar, dan voice note antar pengguna. Semua pesan hilang dalam 10 menit.">
@@ -71,16 +70,26 @@
 </div>
 </header>
 <div class="mm" id="mm" hidden><div class="mm-bg" data-mmx="1"></div>
-<div class="mm-in" role="dialog" aria-modal="true" aria-labelledby="mmT">
+<div class="mm-in" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="mmT">
   <div class="mm-h"><b id="mmT">Layanan GWM</b><button class="ico-btn" type="button" data-mmx="1" aria-label="Tutup"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+  <a class="mm-acct mm-login" href="login"><span><b>Masuk atau daftar</b><small>Masuk untuk menyimpan event dan ikut ajakan</small></span><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
+  <a class="mm-acct mm-me" href="profil"><span><b>Profilku</b></span><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
+  <div class="mm-sc">
+    <a href="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg><span>Semua event</span></a>
+    <a href="event?kat=konser"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg><span>Konser & festival</span></a>
+    <a href="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg><span>Naik gunung</span></a>
+    <a href="event?kat=pameran"><svg class="i" aria-hidden="true"><use href="#i-bag"/></svg><span>Pameran</span></a>
+    <a href="event?kat=tersimpan"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><span>Tersimpan</span></a>
+    <a href="event?kat=selesai"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg><span>Event selesai</span></a>
+  </div>
+  <section class="mm-city" id="mmCityBox" data-all="Semua event di {p}" data-ev="{n} event" hidden>
+    <h3>Kota</h3>
+    <label class="mm-s"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input type="search" id="mmCityQ" placeholder="Cari kota atau provinsi" autocomplete="off" enterkeyhint="search"></label>
+    <div class="mm-pop" id="mmPop" hidden></div>
+    <div id="mmCity"></div>
+    <p class="mm-none" id="mmNone" hidden>Kota tidak ditemukan</p>
+  </section>
   <div class="mm-g">
-    <section><h3>Jelajahi</h3>
-      <a href="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>Semua event</a>
-      <a href="event?kat=konser"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg>Konser & festival</a>
-      <a href="event?kat=pameran"><svg class="i" aria-hidden="true"><use href="#i-bag"/></svg>Pameran</a>
-      <a href="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg>Naik gunung</a>
-      <a href="event?kat=tersimpan"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg>Tersimpan</a>
-      <a href="event?kat=selesai"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg>Event selesai</a></section>
     <section><h3>Bareng & komunitas</h3>
       <a href="event?ajakan=1"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>Ajakan barengan</a>
       <a href="komunitas"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>Komunitas kota</a>
@@ -89,10 +98,7 @@
       <a href="ajukan"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Ajukan event atau open trip</a></section>
     <section><h3>Alat naik gunung</h3>
       <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-pack"/></svg>Checklist packing</a>
-      <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-calc"/></svg>Kalkulator patungan</a>
-    <h3>Akunku</h3>
-      <a href="profil" class="mm-me"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg>Profilku</a>
-      <a href="login" class="mm-login"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg>Masuk atau daftar</a></section>
+      <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-calc"/></svg>Kalkulator patungan</a></section>
     <section><h3>Info & bantuan</h3>
       <a href="bantuan"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Bantuan & FAQ</a>
       <a href="bantuan#kontak"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Kontak</a>

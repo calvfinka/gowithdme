@@ -9,9 +9,8 @@
 <link rel="stylesheet" href="../css/style.css?v=202611171212">
 <link rel="stylesheet" href="../css/adaptive.css?v=202611171212">
 <link rel="stylesheet" href="../css/naver.css?v=202611171212">
-<link rel="stylesheet" href="../css/dsk.css?v=202611171212">
 <link rel="stylesheet" href="../css/balance.css?v=202611171212">
-<link rel="stylesheet" href="../css/dsk-b.css?v=202611171212">
+<link rel="stylesheet" href="../css/menu.css?v=202611171212">
 <script src="../js/theme.js?v=202611171212"></script>
 <script src="../js/adaptive.js?v=202611171212"></script>
 <title>Terms & Conditions — GWM</title><meta name="description" content="GWM Terms & Conditions by Jurkon Studio.">
@@ -70,16 +69,26 @@
 </div>
 </header>
 <div class="mm" id="mm" hidden><div class="mm-bg" data-mmx="1"></div>
-<div class="mm-in" role="dialog" aria-modal="true" aria-labelledby="mmT">
+<div class="mm-in" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="mmT">
   <div class="mm-h"><b id="mmT">GWM services</b><button class="ico-btn" type="button" data-mmx="1" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+  <a class="mm-acct mm-login" href="login"><span><b>Log in or sign up</b><small>Log in to save events and join invites</small></span><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
+  <a class="mm-acct mm-me" href="profil"><span><b>My profile</b></span><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
+  <div class="mm-sc">
+    <a href="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg><span>All events</span></a>
+    <a href="event?kat=konser"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg><span>Concerts & festivals</span></a>
+    <a href="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg><span>Hiking</span></a>
+    <a href="event?kat=pameran"><svg class="i" aria-hidden="true"><use href="#i-bag"/></svg><span>Expos</span></a>
+    <a href="event?kat=tersimpan"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><span>Saved</span></a>
+    <a href="event?kat=selesai"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg><span>Ended events</span></a>
+  </div>
+  <section class="mm-city" id="mmCityBox" data-all="All events in {p}" data-ev="{n} events" hidden>
+    <h3>Cities</h3>
+    <label class="mm-s"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input type="search" id="mmCityQ" placeholder="Search city or province" autocomplete="off" enterkeyhint="search"></label>
+    <div class="mm-pop" id="mmPop" hidden></div>
+    <div id="mmCity"></div>
+    <p class="mm-none" id="mmNone" hidden>No matching city</p>
+  </section>
   <div class="mm-g">
-    <section><h3>Explore</h3>
-      <a href="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>All events</a>
-      <a href="event?kat=konser"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg>Concerts & festivals</a>
-      <a href="event?kat=pameran"><svg class="i" aria-hidden="true"><use href="#i-bag"/></svg>Expos</a>
-      <a href="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg>Hiking</a>
-      <a href="event?kat=tersimpan"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg>Saved</a>
-      <a href="event?kat=selesai"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg>Ended events</a></section>
     <section><h3>Together & community</h3>
       <a href="event?ajakan=1"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>Meet-up invites</a>
       <a href="komunitas"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>City communities</a>
@@ -88,10 +97,7 @@
       <a href="ajukan"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Submit an event or open trip</a></section>
     <section><h3>Hiking tools</h3>
       <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-pack"/></svg>Packing checklist</a>
-      <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-calc"/></svg>Cost splitter</a>
-    <h3>My account</h3>
-      <a href="profil" class="mm-me"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg>My profile</a>
-      <a href="login" class="mm-login"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg>Log in or sign up</a></section>
+      <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-calc"/></svg>Cost splitter</a></section>
     <section><h3>Info & help</h3>
       <a href="bantuan"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Help & FAQ</a>
       <a href="bantuan#kontak"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Contact</a>
