@@ -77,7 +77,7 @@ for l in LANGS:
         hl="" if p in NOINDEX else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
             +"".join(f'<link rel="alternate" hreflang="{x}" href="{BASE}/{x}/{path(p)}">' for x in LANGS)
             +f'<link rel="alternate" hreflang="x-default" href="{BASE}/id/{path(p)}">')
-        h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl)
+        h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl).replace("{{og_img}}",f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png")
         h=re.sub(r"\{\{(\w+)\}\}",lambda m:S[m.group(1)][IDX[l]],h)
         assert "{{" not in h,(l,p)
         need=[x for x in ("i18n","config","regions","gunung-data","search-index","search","navauth") if f"../js/{x}.js" not in h]
