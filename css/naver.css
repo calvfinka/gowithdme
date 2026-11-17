@@ -178,7 +178,7 @@ div.nv-sl-po{aspect-ratio:4/5}
   .nv-sl{--sh:236px;--pad:18px}
   .nv-sl-in{grid-template-columns:minmax(0,1fr) auto;gap:14px;padding:var(--pad) 16px var(--pad) 18px;align-items:center}
   .nv-sl-tx{align-self:start;padding-bottom:34px}
-  .nv-sl-po{height:auto;width:min(112px,calc(30*var(--vw)));max-width:none;align-self:center;border-radius:10px}
+  .nv-sl-po{height:auto;width:min(minmax(168px, auto),calc(30*var(--vw)));max-width:none;align-self:center;border-radius:10px}
   .nv-sl[data-o="land"] .nv-sl-po{height:auto;width:min(172px,calc(40*var(--vw)))}
   .nv-sl[data-o="tall"] .nv-sl-po{width:min(96px,calc(26*var(--vw)))}
   .nv-sl h3{font-size:20px}.nv-sl p{font-size:12.5px}
