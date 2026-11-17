@@ -96,7 +96,9 @@ def card(p,x):
 def listing(p,cur,posts,BASE):
     name=CATNAME.get(cur,"Blog"); desc=next((d for k,n,d in CATS if k==cur),"Tulisan seputar konser, festival, event, dan naik gunung dari GWM.")
     canon=f"{BASE}/blog/"+(cur+"/" if cur else "")
-    body="".join(card(p,x) for x in posts) or '<p class="bl-empty">Belum ada tulisan di sini.</p>'
+    if cur=="" and posts:
+        body="".join(f'<section class="bl-sec"><p class="bl-sh"><a href="{p}blog/{k}/">{esc(n)}</a><span>{len(l)}</span></p>'+"".join(card(p,x) for x in l[:3])+(f'<a class="bl-more" href="{p}blog/{k}/">Lihat semua {esc(n)} →</a>' if len(l)>3 else "")+'</section>' for k,n,_ in CATS for l in [[x for x in posts if x["category"]==k]] if l)
+    else: body="".join(card(p,x) for x in posts) or '<p class="bl-empty">Belum ada tulisan di sini.</p>'
     ld=ldj({"@context":"https://schema.org","@type":"CollectionPage","name":f"{name} – Blog GWM","url":canon,"inLanguage":"id"})
     return head(p,f"{name} – Blog GWM",desc,canon,BASE,ld)+top(p,cur)+f'<main class="wrap bl-main"><h1>{esc(name)}</h1><p class="bl-sub">{esc(desc)}</p><div class="bl-list">{body}</div></main>'+FOOT.format(p=p)
 def article(p,x,others,BASE):

@@ -110,6 +110,8 @@ html:where([data-dsk]) .nv-home .main{padding-inline:14px}
 html:where([data-dsk]) .nv-hero{padding-top:20px}
 html:where([data-dsk]) .nv-hero .search.nvs{height:52px}
 html:where([data-dsk]) .nv-tr-list{grid-template-columns:1fr}
+/* naver.css @768 */
+html:where([data-dsk]) .tb-svc{display:none}
 /* panel.css @820 */
 html:where([data-dsk]) .adm{grid-template-columns:1fr}
 /* panel.css @900 */

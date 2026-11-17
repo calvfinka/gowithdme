@@ -587,3 +587,9 @@ NEWCAT = {
 "cat_meetup": ("Meetup", "Meetups"), "cat_lainnya": ("Lainnya", "Other"), "n_blog": ("Blog", "Blog"),
 }
 S.update(NEWCAT); J.update(NEWCAT)
+
+# --- Blog menggantikan kontrol kualitas di footer; bottom nav HP ---
+S.update({
+"nv_blog": ("Blog", "Blog"), "f_blog": ("Blog", "Blog"),
+})
+S.update({"f1_w": ("Terkurasi", "Curated"), "f2_w": ("Aman", "Safe"), "f3_w": ("Gratis", "Free")})

@@ -264,3 +264,15 @@ img.nv-sl-po{background:rgba(255,255,255,.06)}
 .pfo{position:absolute;inset:0;background:var(--po) center/contain no-repeat}
 html[data-tier="low"] .pf::before{filter:brightness(.6)}
 .dp.pf{height:clamp(210px,calc(48*var(--vh)),360px)}
+
+/* ===== PERMUKAAN BERBEDA: HP = aplikasi (bottom nav), Desktop = portal (strip layanan + panel kanan) ===== */
+:root{-webkit-text-size-adjust:100%}
+.mm-q{padding:10px 16px;border-top:1px solid var(--line)}
+
+@media (max-width:768px){
+ .tb-svc{display:none}
+
+}
+@media (min-width:1024px){.nvc:hover{box-shadow:0 6px 22px rgba(0,0,0,.08)}.nv-rail{position:sticky;top:calc(var(--bh) + 12px);align-self:start}}
+@supports (-webkit-touch-callout:none){input,select,textarea{font-size:16px!important}}
+.infow{display:flex;flex-wrap:wrap;gap:6px 18px;margin:22px 0 0;font-size:13px;font-weight:600;color:var(--faint)}
