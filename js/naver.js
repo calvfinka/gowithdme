@@ -61,6 +61,13 @@ if(mm){
   if(th&&t0)th.addEventListener("click",function(){t0.click()});
 }
 
+/* ---- HP: kotak cari header berupa ikon; ketukan pertama membuka dan memfokuskan kotak, bukan mengirim pencarian kosong ---- */
+d.addEventListener("click",function(e){
+  var g=e.target.closest&&e.target.closest(".tb-main .search .sxgo");if(!g)return;
+  var i=g.parentNode.querySelector("input");
+  if(i&&i.getBoundingClientRect().width<8){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();i.focus()}
+},true);
+
 /* ---- beranda: kotak cari header tersembunyi selama kotak besar terlihat ---- */
 var hero=d.getElementById("sxHero");
 if(hero&&B.classList.contains("nv-home")&&"IntersectionObserver" in window){

@@ -293,3 +293,21 @@ html .now .clock{display:grid;grid-template-columns:auto auto;justify-content:st
 :root[data-theme="dark"] .cal .s{color:#FF7A6B}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cal .s{color:#FF7A6B}}
 @media (max-width:330px){html .now .clock{grid-template-columns:1fr;row-gap:10px}}
+
+/* ================= HP: header rapi (hamburger + logo di kiri), cari jadi ikon yang melebar saat diketuk ================= */
+@media (max-width:640px){
+  .tb-main{position:relative}
+  .tb-main .search.nvs{grid-column:2;justify-self:end;width:var(--ctl,40px);max-width:var(--ctl,40px);height:var(--ctl,40px);margin:0;padding:0;border:0;background:transparent;box-shadow:none}
+  .tb-main .search.nvs input{flex:none;width:0;min-width:0;padding:0;opacity:0;pointer-events:none}
+  .tb-main .search.nvs .sxk{display:none}
+  .tb-main .search.nvs .sxgo{width:var(--ctl,40px);height:var(--ctl,40px);border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--mute)}
+  .tb-main .search.nvs:focus-within{position:absolute;z-index:6;left:14px;right:14px;top:50%;transform:translateY(-50%);width:auto;max-width:none;height:44px;padding:0 4px 0 16px;border:2.5px solid var(--brand);background:var(--bg);box-shadow:0 0 0 4px color-mix(in srgb,var(--brand) 18%,transparent)}
+  .tb-main .search.nvs:focus-within input{flex:1;width:auto;opacity:1;pointer-events:auto}
+  .tb-main .search.nvs:focus-within .sxgo{width:36px;height:36px;border:0;border-radius:50%;background:var(--brand);color:var(--brand-ink)}
+  .tb-main:has(.search.nvs:focus-within) :is(.tb-l,.right){visibility:hidden}
+  /* kartu tanggal dan cuaca: jam + kalender satu baris penuh, tidak lagi bertumpuk */
+  .now{grid-template-columns:minmax(0,1fr)}
+  .now>div+div,.now>div:nth-child(3){padding-left:0;border-left:0;border-top:1px solid var(--line)}
+  html .now .clock{max-width:none;grid-template-columns:minmax(0,1fr) auto;justify-content:space-between}
+}
+@media (max-width:340px){html .now .clock{grid-template-columns:1fr;row-gap:10px}}
