@@ -81,7 +81,7 @@ html[data-tier] .now,html[data-tier] .stats,html[data-tier] .info,html[data-tier
 .nvc{padding:16px}
 .group{margin-top:clamp(18px,calc(12px + 1*var(--vw)),24px)}
 .tiles{gap:clamp(14px,calc(10px + 1*var(--vw)),20px) 14px}
-@media (max-width:899px){.main{padding-inline:var(--gx)}}
+@media (max-width:1000px){.main{padding-inline:var(--gx)}}
 @media (max-width:640px){.nv-home .main{padding-inline:var(--gx)}.tiles{gap:16px 12px}.nv-hero .search.nvs{height:52px}.nv-hero .search.nvs .sxgo{width:40px;height:40px}}
 
 /* ---------- poster: seragam, utuh, dan setinggi blok teks di sebelahnya ---------- */

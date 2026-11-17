@@ -8,7 +8,20 @@ var city=null,cache={},seq=0;
 var fDay=new Intl.DateTimeFormat(LOC,{timeZone:"Asia/Jakarta",weekday:"long"}),
     fDate=new Intl.DateTimeFormat(LOC,{timeZone:"Asia/Jakarta",day:"numeric",month:"long",year:"numeric"}),
     fTime=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Jakarta",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
-function tick(){var n=new Date();$("nDay").textContent=fDay.format(n);$("nDate").textContent=fDate.format(n);$("nTime").textContent=fTime.format(n)}
+var fYmd=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta",year:"numeric",month:"2-digit",day:"2-digit"}),
+    fWd=new Intl.DateTimeFormat(LOC,{timeZone:"UTC",weekday:"short"}),fMon=new Intl.DateTimeFormat(LOC,{timeZone:"Asia/Jakarta",month:"long",year:"numeric"}),calKey="";
+/* kalender mini bulan ini (minggu mulai Minggu, hari ini dilingkari) */
+function cal(y,m,d,n){
+  var el=$("nCal");if(!el)return;var k=y+"-"+m+"-"+d;if(k===calKey)return;calKey=k;
+  var first=new Date(Date.UTC(y,m-1,1)).getUTCDay(),dim=new Date(Date.UTC(y,m,0)).getUTCDate(),pd=new Date(Date.UTC(y,m-1,0)).getUTCDate(),
+      rows=Math.ceil((first+dim)/7),h="",i,v,c;
+  for(i=0;i<7;i++)h+='<span class="h'+(i?"":" s")+'">'+fWd.format(new Date(Date.UTC(2021,0,3+i)))+"</span>";
+  for(i=0;i<rows*7;i++){v=i-first+1;c=i%7?"":"s";
+    if(v<1){v+=pd;c+=" o"}else if(v>dim){v-=dim;c+=" o"}else if(v===d)c+=" t";
+    h+='<span class="'+c+'"'+(c.indexOf("t")>-1&&v===d?' aria-current="date"':"")+">"+v+"</span>"}
+  el.innerHTML=h;el.setAttribute("role","group");el.setAttribute("aria-label",fMon.format(n))}
+function tick(){var n=new Date(),p=fYmd.format(n).split("-"),b=$("nBig");$("nDay").textContent=fDay.format(n);$("nDate").textContent=fDate.format(n);$("nTime").textContent=fTime.format(n);
+  if(b)b.textContent=p[1]+"."+p[2];cal(+p[0],+p[1],+p[2],n)}
 tick();setInterval(tick,1000);
 /* cuaca */
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}

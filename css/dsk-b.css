@@ -1,5 +1,5 @@
 /* Dibuat oleh tools/gen_dsk.py. Jangan edit tangan. Tata letak HP untuk mode "situs desktop" (html[data-dsk]). */
-/* balance.css @899 */
+/* balance.css @1000 */
 html:where([data-dsk]) .main{padding-inline:var(--gx)}
 /* balance.css @640 */
 html:where([data-dsk]) .nv-home .main{padding-inline:var(--gx)}

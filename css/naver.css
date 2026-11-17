@@ -1,29 +1,17 @@
 /* GWM — gaya portal (terinspirasi Naver): strip layanan + Green Window, mega menu "Semua layanan",
    beranda portal (pencarian besar, ticker, pintasan, banner berputar, tab topik, panel kanan).
    Dimuat setelah adaptive.css. Semua warna lewat variabel tema sehingga terang/gelap ikut otomatis. */
-:root{--bh:60px;--svc:38px;
+:root{--bh:60px;--svc:0px;
   --c1:#0E5A46;--c2:#E4501A;--c3:#B97A00;--c4:#2F6FDE;--c5:#7A4DD8;--c6:#D6336C}
 :root[data-theme="dark"]{--c1:#4FC9A4;--c2:#FF7A45;--c3:#F5B416;--c4:#6AA2FF;--c5:#A98BFF;--c6:#FF7FA8}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c1:#4FC9A4;--c2:#FF7A45;--c3:#F5B416;--c4:#6AA2FF;--c5:#A98BFF;--c6:#FF7FA8}}
 
 /* ================= HEADER: strip layanan + baris utama ================= */
 .topbar{display:block;height:auto;padding:0;top:calc(-1*var(--svc));border-bottom:1px solid var(--line)}
-.tb-svc{height:var(--svc);background:var(--side);border-bottom:1px solid var(--line)}
-.tb-in{height:100%;display:flex;align-items:center;gap:10px;padding:0 24px;max-width:1760px;margin-inline:auto}
-.svc-all{display:inline-flex;align-items:center;gap:7px;height:26px;padding:0 10px 0 8px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);font:600 12.5px var(--f);cursor:pointer;white-space:nowrap}
-.svc-all:hover{background:var(--hover)}
-.svc-all .i{width:16px;height:16px}
-.tb-svc .pnav{display:flex;gap:2px;align-items:center;min-width:0;overflow:hidden}
-.tb-svc .pnav a{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:7px;font-weight:600;font-size:13px;color:var(--mute);white-space:nowrap}
-.tb-svc .pnav a .i{width:15px;height:15px}
-.tb-svc .pnav a:hover{background:var(--hover);color:var(--ink)}
-.tb-svc .pnav a[aria-current="page"]{color:var(--brand);background:var(--sel)}
-.svc-r{margin-left:auto;display:flex;gap:14px;font-size:12.5px;color:var(--mute);font-weight:500}
-.svc-r a:hover{color:var(--ink)}
 .tb-main{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:20px;height:calc(var(--bh) + var(--sat));padding:var(--sat) 24px 0;max-width:1760px;margin-inline:auto}
 .tb-main .right{grid-column:3;gap:6px}
 .tb-main .logo{font-size:18px;letter-spacing:-.02em;gap:8px}
-.mm-ico{display:grid}
+.tb-main .right .mm-ico{display:grid;order:99}
 html .topbar{background:var(--bg)}
 html[data-tier="high"] .topbar{background:var(--tb)}
 
@@ -75,9 +63,8 @@ body.nv-in .mm-login{display:none}body.nv-in .mm-me{display:flex}
 }
 
 /* ================= HEADER: responsif ================= */
-@media (max-width:899px){
+@media (max-width:1000px){
   :root{--svc:0px;--bh:56px}
-  .tb-svc{display:none}
   .tb-main{gap:10px;padding-inline:14px}
   .search.nvs{height:40px;max-width:none}
 }
@@ -270,9 +257,37 @@ html[data-tier="low"] .pf::before{filter:brightness(.6)}
 .mm-q{padding:10px 16px;border-top:1px solid var(--line)}
 
 @media (max-width:768px){
- .tb-svc{display:none}
 
 }
 @media (min-width:1024px){.nvc:hover{box-shadow:0 6px 22px rgba(0,0,0,.08)}.nv-rail{position:sticky;top:calc(var(--bh) + 12px);align-self:start}}
 @supports (-webkit-touch-callout:none){input,select,textarea{font-size:16px!important}}
 .infow{display:flex;flex-wrap:wrap;gap:6px 18px;margin:22px 0 0;font-size:13px;font-weight:600;color:var(--faint)}
+
+/* ================= FOOTER ala Naver: tautan tengah berpemisah + logo abu ================= */
+.foot.nf{display:grid;grid-template-columns:minmax(0,1fr);justify-content:stretch;justify-items:center;gap:8px;text-align:center;margin-top:40px;padding:26px 12px 10px;border-top:1px solid var(--line);font-size:12.5px;color:var(--faint)}
+.page .foot.nf{margin-top:40px}
+.nf .nf-r{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 0}
+.nf .nf-r>*{position:relative;padding:0 11px;font:500 12.5px/1.6 var(--f);color:var(--mute);background:none;border:0;cursor:pointer}
+.nf .nf-r>*+*::before{content:"";position:absolute;left:0;top:50%;width:1px;height:10px;margin-top:-5px;background:var(--line)}
+.nf .nf-r a:hover,.nf .nf-b:hover{color:var(--ink)}
+.nf .nf-r b{font-weight:800;color:var(--ink)}
+.nf .nf-me{display:none}.nv-in .nf .nf-me{display:inline}.nv-in .nf .nf-login{display:none}
+.nf-brand{margin-top:6px;font:800 24px var(--f);letter-spacing:.16em;color:var(--faint);opacity:.55}
+.nf-c{font-size:11.5px;max-width:560px}
+
+/* ================= JAM + KALENDER ala widget Naver ================= */
+html .now .clock{display:flex;flex-direction:column;gap:10px;grid-template-columns:none;row-gap:10px;align-content:center}
+.clock .cw{display:grid;grid-template-columns:auto 1fr;align-items:end;gap:0 12px}
+.clock .big{display:flex;align-items:baseline;gap:8px;min-width:0}
+.clock .big b{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--ink)}
+.clock .cw .tm{grid-column:2;grid-row:1;justify-self:end;font-size:20px}
+.clock .cw .dt{grid-column:1/-1;grid-row:2;margin-top:2px;color:var(--mute);font-size:12.5px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px 0;text-align:center;font-size:12.5px;font-variant-numeric:tabular-nums}
+.cal span{display:grid;place-items:center;height:28px;color:var(--ink)}
+.cal .h{height:24px;font-size:11.5px;font-weight:700;color:var(--mute)}
+.cal .s{color:#D93025}
+.cal .o{color:var(--faint);opacity:.6}
+.cal .t{width:28px;justify-self:center;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:700;opacity:1}
+:root[data-theme="dark"] .cal .s{color:#FF7A6B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cal .s{color:#FF7A6B}}
+@media (max-width:480px){.nf .nf-r>*{padding:0 7px;font-size:12px}}
