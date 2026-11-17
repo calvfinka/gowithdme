@@ -57,8 +57,7 @@ if(mm){
       cl.innerHTML=m.slice(0,40).map(link).join("");none.hidden=m.length>0})}
   }
   window.GWM_MM={counts:function(c){cc=c||{};if(cbuilt){cbuilt=false;d.getElementById("mmCity").innerHTML="";buildCity()}}};
-  var th=d.getElementById("mmTheme"),t0=d.getElementById("theme");
-  if(th&&t0)th.addEventListener("click",function(){t0.click()});
+  [].forEach.call(mm.querySelectorAll(".yr"),function(y){y.textContent=new Date().getFullYear()});
 }
 
 /* ---- HP: kotak cari header berupa ikon; ketukan pertama membuka dan memfokuskan kotak, bukan mengirim pencarian kosong ---- */

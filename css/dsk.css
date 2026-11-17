@@ -1,6 +1,6 @@
 /* Dibuat oleh tools/gen_dsk.py. Jangan edit tangan. Tata letak HP untuk mode "situs desktop" (html[data-dsk]). */
 html[data-dsk] body{zoom:var(--dz)}
-/* style.css @1000 */
+/* style.css @900 */
 html:where([data-dsk]) .topbar{grid-template-columns:auto minmax(0,1fr) auto;gap:10px}
 html:where([data-dsk]) .shell{grid-template-columns:1fr}
 html:where([data-dsk]) .side{display:none}
@@ -40,7 +40,7 @@ html:where([data-dsk]) .logo .w{display:none}
 html:where([data-dsk]) .khero h1{font-size:26px}
 /* style.css @640 */
 html:where([data-dsk]) .sxp{left:8px;right:8px;width:auto;transform:none;border-radius:12px}
-/* adaptive.css @1000 */
+/* adaptive.css @900 */
 html:where([data-dsk]) .mfilters,html:where([data-dsk]) .kchips{scroll-snap-type:x proximity}
 html:where([data-dsk]) .mfilters>*,html:where([data-dsk]) .kchips>*{scroll-snap-align:start}
 /* adaptive.css @640 */
@@ -67,19 +67,9 @@ html:where([data-dsk]) .dp{height:min(calc(46*var(--vh)),300px)}
 /* adaptive.css @640 */
 html:where([data-dsk])[data-tier="mid"] .khero,html:where([data-dsk])[data-tier="high"] .khero{padding:16px;border-radius:16px}
 /* naver.css @900 */
-html:where([data-dsk]) .mm-g{grid-template-columns:repeat(2,minmax(0,1fr))}
-/* naver.css @640 */
-html:where([data-dsk]) .mm-in{inset:0;top:0;left:0;transform:none;width:100%;max-height:none;height:100%;border-radius:0;border:0;padding:0 16px calc(16px + env(safe-area-inset-bottom,0px))}
-html:where([data-dsk]) .mm-h{position:sticky;top:0;background:var(--bg);padding-top:calc(12px + var(--sat));z-index:1}
-html:where([data-dsk]) .mm-g{grid-template-columns:1fr}
-/* naver.css @1000 */
 html:where([data-dsk]){--svc:0px;--bh:56px}
 html:where([data-dsk]) .tb-main{gap:10px;padding-inline:14px}
 html:where([data-dsk]) .search.nvs{height:40px;max-width:none}
-/* naver.css @640 */
-html:where([data-dsk]) .tb-main .right #theme{display:none}
-html:where([data-dsk]) .tb-main .right .lang{display:none}
-html:where([data-dsk]) .tb-main .right .btn{height:34px;padding:0 12px}
 /* naver.css @1100 */
 html:where([data-dsk]) .nv-apps-in{grid-template-columns:repeat(6,minmax(0,1fr))}
 /* naver.css @640 */
@@ -120,7 +110,7 @@ html:where([data-dsk]) .tb-main .search.nvs .sxgo{width:var(--ctl,40px);height:v
 html:where([data-dsk]) .tb-main .search.nvs:focus-within{position:absolute;z-index:6;left:14px;right:14px;top:50%;transform:translateY(-50%);width:auto;max-width:none;height:44px;padding:0 4px 0 16px;border:2.5px solid var(--brand);background:var(--bg);box-shadow:0 0 0 4px color-mix(in srgb,var(--brand) 18%,transparent)}
 html:where([data-dsk]) .tb-main .search.nvs:focus-within input{flex:1;width:auto;opacity:1;pointer-events:auto}
 html:where([data-dsk]) .tb-main .search.nvs:focus-within .sxgo{width:36px;height:36px;border:0;border-radius:50%;background:var(--brand);color:var(--brand-ink)}
-html:where([data-dsk]) .tb-main:has(.search.nvs:focus-within) :is(.tb-l,.right){visibility:hidden}
+html:where([data-dsk]) .tb-main:has(.search.nvs:focus-within) .tb-l{visibility:hidden}
 html:where([data-dsk]) .now{grid-template-columns:minmax(0,1fr)}
 html:where([data-dsk]) .now>div+div,html:where([data-dsk]) .now>div:nth-child(3){padding-left:0;border-left:0;border-top:1px solid var(--line)}
 html:where([data-dsk]) .now .clock{max-width:none;grid-template-columns:minmax(0,1fr) auto;justify-content:space-between}

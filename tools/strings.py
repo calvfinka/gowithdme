@@ -555,6 +555,7 @@ NV = {
 "nv_pack": ("Checklist packing", "Packing checklist"), "nv_split": ("Kalkulator patungan", "Cost splitter"),
 "nv_profile": ("Profilku", "My profile"), "nv_login": ("Masuk atau daftar", "Log in or sign up"),
 "nv_help": ("Bantuan & FAQ", "Help & FAQ"), "nv_contact": ("Kontak", "Contact"),
+"mm_copy": ("© <span class=\"yr\"></span> GWM · Jurkon Studio", "© <span class=\"yr\"></span> GWM · Jurkon Studio"),
 "nv_theme": ("Ganti tema terang/gelap", "Switch light/dark theme"), "nv_lang": ("Bahasa", "Language"),
 "nv_trend_h": ("Segera hadir", "Coming up"), "nv_trend_open": ("Buka daftar segera hadir", "Open the coming-up list"),
 "nv_trend_empty": ("Belum ada event aktif", "No active events yet"), "nv_live": ("LIVE", "LIVE"),
