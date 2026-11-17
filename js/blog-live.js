@@ -1,5 +1,4 @@
 (function(){
-  if(!window.sb)return;
   var CATS={"panduan-konser":"Panduan Konser","tips-gunung":"Tips Gunung","review":"Review","berita":"Berita","komunitas":"Komunitas"};
   var MON=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;"}[c]})}
@@ -47,72 +46,85 @@
     window.scrollTo(0,0);
   }
 
-  sb.from("blog_posts").select("id,title,slug,category,body,is_html,status,published_at").eq("status","published").order("published_at",{ascending:false}).limit(200).then(function(r){
-    if(r.error||!r.data)return;
-    var posts=r.data;
-    var q=new URLSearchParams(location.search);
-    var qCat=q.get("cat"),qSlug=q.get("post");
-    if(qCat&&qSlug){
-      var hit=posts.filter(function(x){return x.category===qCat&&x.slug===qSlug})[0];
-      if(hit){openReader(hit);return}
-    }
-    var list=document.querySelector(".bl-list");
-    if(!list)return;
-    var filtered=curCat?posts.filter(function(x){return x.category===curCat}):posts;
-    var pubMap={};
-    filtered.forEach(function(p){pubMap[p.category+"/"+p.slug]=p});
-
-    // Sembunyikan artikel statis yang sudah dihapus/draft di Supabase
-    [].forEach.call(list.querySelectorAll("article.bl-card"),function(card){
-      var a=card.querySelector("h2 a");if(!a)return;
-      var href=a.getAttribute("href")||"";
-      var m=href.match(/([a-z0-9-]+)\/([a-z0-9-]+)(?:\.html)?$/);
-      if(m&&!pubMap[m[1]+"/"+m[2]])card.remove();
-    });
-
-    // Sisipkan artikel baru dari Supabase jika belum ada di HTML statis
-    filtered.slice().reverse().forEach(function(p){
-      var key=p.category+"/"+p.slug;
-      var exists=[].some.call(list.querySelectorAll("article.bl-card h2 a"),function(a){
-        return (a.getAttribute("href")||"").indexOf(key)>-1;
-      });
-      if(exists)return;
-      var liveUrl=basePrefix+"blog/?cat="+encodeURIComponent(p.category)+"&post="+encodeURIComponent(p.slug);
-      var art=document.createElement("article");
-      art.className="bl-card";
-      art.innerHTML='<h2><a href="'+liveUrl+'">'+esc(p.title)+'</a></h2>'+
-        '<p class="bl-meta"><span>'+esc(CATS[p.category]||p.category)+'</span> · <time>'+fd(p.published_at)+'</time></p>'+
-        '<p>'+esc(snippet(p.body,p.is_html))+'</p>';
-      art.querySelector("a").addEventListener("click",function(e){
-        e.preventDefault();
-        history.pushState(null,"",liveUrl);
-        openReader(p);
-      });
-
-      if(curCat){
-        list.insertBefore(art,list.firstChild);
-      }else{
-        var sec=[].filter.call(list.querySelectorAll("section.bl-sec"),function(s){
-          var sh=s.querySelector(".bl-sh a");
-          return sh&&(sh.getAttribute("href")||"").indexOf("/"+p.category+"/")>-1;
-        })[0];
-        if(!sec){
-          sec=document.createElement("section");
-          sec.className="bl-sec";
-          sec.innerHTML='<p class="bl-sh"><a href="'+basePrefix+'blog/'+esc(p.category)+'/">'+esc(CATS[p.category]||p.category)+'</a><span>0</span></p>';
-          list.insertBefore(sec,list.firstChild);
-        }
-        var sh=sec.querySelector(".bl-sh");
-        sec.insertBefore(art,sh?sh.nextSibling:sec.firstChild);
+  function run(){
+    if(!window.sb)return;
+    window.sb.from("blog_posts").select("id,title,slug,category,body,is_html,status,published_at").eq("status","published").order("published_at",{ascending:false}).limit(200).then(function(r){
+      if(r.error||!r.data)return;
+      var posts=r.data;
+      var q=new URLSearchParams(location.search);
+      var qCat=q.get("cat"),qSlug=q.get("post");
+      if(qCat&&qSlug){
+        var hit=posts.filter(function(x){return x.category===qCat&&x.slug===qSlug})[0];
+        if(hit){openReader(hit);return}
       }
-    });
+      var list=document.querySelector(".bl-list");
+      if(!list)return;
+      var filtered=curCat?posts.filter(function(x){return x.category===curCat}):posts;
+      var pubMap={};
+      filtered.forEach(function(p){pubMap[p.category+"/"+p.slug]=p});
 
-    // Perbarui angka jumlah artikel per kategori
-    [].forEach.call(list.querySelectorAll("section.bl-sec"),function(sec){
-      var cnt=sec.querySelectorAll("article.bl-card").length;
-      var sp=sec.querySelector(".bl-sh span");
-      if(sp)sp.textContent=cnt;
-      if(cnt===0)sec.style.display="none";
+      [].forEach.call(list.querySelectorAll("article.bl-card"),function(card){
+        var a=card.querySelector("h2 a");if(!a)return;
+        var href=a.getAttribute("href")||"";
+        var m=href.match(/([a-z0-9-]+)\/([a-z0-9-]+)(?:\.html)?$/);
+        if(m&&!pubMap[m[1]+"/"+m[2]])card.remove();
+      });
+
+      filtered.slice().reverse().forEach(function(p){
+        var key=p.category+"/"+p.slug;
+        var exists=[].some.call(list.querySelectorAll("article.bl-card h2 a"),function(a){
+          return (a.getAttribute("href")||"").indexOf(key)>-1;
+        });
+        if(exists)return;
+        var liveUrl=basePrefix+"blog/?cat="+encodeURIComponent(p.category)+"&post="+encodeURIComponent(p.slug);
+        var art=document.createElement("article");
+        art.className="bl-card";
+        art.innerHTML='<h2><a href="'+liveUrl+'">'+esc(p.title)+'</a></h2>'+
+          '<p class="bl-meta"><span>'+esc(CATS[p.category]||p.category)+'</span> · <time>'+fd(p.published_at)+'</time></p>'+
+          '<p>'+esc(snippet(p.body,p.is_html))+'</p>';
+        art.querySelector("a").addEventListener("click",function(e){
+          e.preventDefault();
+          history.pushState(null,"",liveUrl);
+          openReader(p);
+        });
+
+        if(curCat){
+          list.insertBefore(art,list.firstChild);
+        }else{
+          var sec=[].filter.call(list.querySelectorAll("section.bl-sec"),function(s){
+            var sh=s.querySelector(".bl-sh a");
+            return sh&&(sh.getAttribute("href")||"").indexOf("/"+p.category+"/")>-1;
+          })[0];
+          if(!sec){
+            sec=document.createElement("section");
+            sec.className="bl-sec";
+            sec.innerHTML='<p class="bl-sh"><a href="'+basePrefix+'blog/'+esc(p.category)+'/">'+esc(CATS[p.category]||p.category)+'</a><span>0</span></p>';
+            list.insertBefore(sec,list.firstChild);
+          }
+          var sh=sec.querySelector(".bl-sh");
+          sec.insertBefore(art,sh?sh.nextSibling:sec.firstChild);
+        }
+      });
+
+      [].forEach.call(list.querySelectorAll("section.bl-sec"),function(sec){
+        var cnt=sec.querySelectorAll("article.bl-card").length;
+        var sp=sec.querySelector(".bl-sh span");
+        if(sp)sp.textContent=cnt;
+        if(cnt===0)sec.style.display="none";
+      });
     });
-  });
+  }
+
+  if(window.sb){run()}
+  else if(window.GWM_CFG){
+    var s=document.createElement("script");
+    s.src="https://jsdelivr.net";
+    s.onload=function(){
+      if(window.supabase&&window.GWM_CFG.url&&window.GWM_CFG.key){
+        window.sb=window.supabase.createClient(window.GWM_CFG.url,window.GWM_CFG.key);
+        run();
+      }
+    };
+    document.head.appendChild(s);
+  }
 })();

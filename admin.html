@@ -50,7 +50,7 @@
 
 <section id="v_blog" hidden>
   <div class="seg" data-g="konten"><button data-v="list" type="button">Event &amp; pendakian</button><button class="on" data-v="blog" type="button">Blog</button></div>
-  <h2>Blog</h2><p class="meta">Tulisan teks tanpa foto, maksimal 4000 karakter. Halaman publik dibuat di folder <code>blog/&lt;kategori&gt;/</code> saat sinkron.</p>
+  <h2>Blog</h2><p class="meta">Tulisan teks tanpa foto, maksimal 15000 karakter. Halaman publik dibuat di folder <code>blog/&lt;kategori&gt;/</code> saat sinkron.</p>
   <div class="bar"><button class="btn" id="bgNew" type="button">➕ Tulisan baru</button></div>
   <div id="bgList"></div>
   <form id="bgForm" hidden onsubmit="return false">
@@ -61,7 +61,7 @@
       <label class="f">Alamat halaman<input id="bgSlug" type="text" maxlength="80" placeholder="otomatis dari judul"></label>
     </div>
     <div class="seg" id="bgMode"><button type="button" data-m="text" class="on">Teks</button><button type="button" data-m="html">HTML</button></div>
-    <label class="f">Isi tulisan <i class="cc" id="bgCc">0/4000</i><textarea id="bgBody" rows="14" maxlength="4000" style="min-height:260px" placeholder="Tulis di sini…"></textarea></label>
+    <label class="f">Isi tulisan <i class="cc" id="bgCc">0/15000</i><textarea id="bgBody" rows="14" maxlength="15000" style="min-height:260px" placeholder="Tulis di sini…"></textarea></label>
     <p class="meta" id="bgHelp"></p>
     <h3>Pratinjau</h3><div class="card" id="bgPv" style="line-height:1.7"></div>
     <div class="sticky"><button class="btn ghost" id="bgSaveD" type="button">Simpan draft</button><button class="btn" id="bgSaveP" type="button">Terbitkan</button></div>
