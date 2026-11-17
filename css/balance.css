@@ -106,3 +106,30 @@ div.nv-sl-po{aspect-ratio:4/5;--ar:.8}
   .nv-sl-po,.nv-sl[data-o] .nv-sl-po{border-radius:var(--r-poster)}
 }
 .dp.pf{height:clamp(210px,calc(48*var(--vh)),360px)}
+
+@media (min-width: 768px) and (max-width: 1100px) {
+  .nv-rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+  .nv-rail .nvc-login,
+  .nv-rail .nvc-recent {
+    display: none;
+  }
+}
+@media (min-width: 768px) {
+  .nv-rail .now {
+    grid-template-columns: auto 1fr;
+    gap: 12px 16px;
+    align-items: center;
+  }
+  .nv-rail .now > div:nth-child(3) {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding-left: 0;
+    padding-top: 12px;
+  }
+}
