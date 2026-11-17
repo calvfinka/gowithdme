@@ -190,3 +190,17 @@ div.nv-sl-po{aspect-ratio:4/5;--ar:.8}
     grid-template-columns: minmax(165px, auto) auto minmax(0, 1fr) !important;
   }
 }
+
+/* Di kolom samping (.nv-rail) kartu cuaca/jam HARUS satu kolom: dua kolom + !important di atas membuat teks cuaca
+   terdorong keluar kartu dan melebarkan halaman (HP maupun desktop). Ditaruh setelah aturan di atas. */
+.nv-rail .now,
+html[data-tier] .nv-rail .now{grid-template-columns:minmax(0,1fr) !important;column-gap:0 !important}
+.nv-rail .now>div{min-width:0}
+.nv-rail .now .wx{flex-wrap:wrap;row-gap:6px}
+.nv-rail .now .wd{min-width:0;flex:1 1 120px;overflow-wrap:anywhere}
+.nv-rail .now .wmsg{overflow-wrap:anywhere}
+.nv-rail .now .clock{max-width:100%}
+.nv-rail,.nv-rail>*{min-width:0}
+/* Pesan cuaca/jam di halaman lain (mis. Event, Gunung) juga tidak boleh melebihi kartunya */
+.now>div,.now .wx{min-width:0}
+.now .wmsg,.now .wd{overflow-wrap:anywhere}
