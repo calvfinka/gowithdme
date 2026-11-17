@@ -28,24 +28,21 @@
     var txt=(tmp.textContent||"").replace(/\s+/g," ").trim();
     return txt.length>155?txt.slice(0,155)+"…":txt;
   }
-
   var path=location.pathname.replace(/\/+$/,"");
   var parts=path.split("/");
   var bi=parts.indexOf("blog");
   var curCat=(bi>-1&&parts[bi+1]&&CATS[parts[bi+1]])?parts[bi+1]:"";
   var basePrefix=curCat?"../../":"../";
-
   function openReader(p){
     var main=document.querySelector("main.bl-main");
     if(!main)return;
     document.title=p.title+" – Blog GWM";
-    main.innerHTML='<p><a href="'+basePrefix+'blog/'+(curCat?curCat+"/":"")+'" id="blBack">← Kembali ke daftar blog</a></p>'+
+    main.innerHTML='<p><a href="'+basePrefix+'blog/'+(curCat?curCat+"/":"")+'">← Kembali ke daftar blog</a></p>'+
       '<article class="bl-art"><h1>'+esc(p.title)+'</h1>'+
       '<p class="bl-meta"><span>'+esc(CATS[p.category]||p.category)+'</span> · <time>'+fd(p.published_at)+'</time></p>'+
       '<div class="bl-body">'+renderBody(p.body,p.is_html)+'</div></article>';
     window.scrollTo(0,0);
   }
-
   function start(){
     if(!window.sb)return;
     window.sb.from("blog_posts").select("id,title,slug,category,body,is_html,status,published_at").eq("status","published").order("published_at",{ascending:false}).limit(200).then(function(r){
@@ -69,17 +66,14 @@
         main.appendChild(list);
       }
       if(!list)return;
-
       var pubMap={};
       filtered.forEach(function(p){pubMap[p.category+"/"+p.slug]=p});
-
       [].forEach.call(list.querySelectorAll("article.bl-card"),function(card){
         var a=card.querySelector("h2 a");if(!a)return;
         var href=a.getAttribute("href")||"";
         var m=href.match(/([a-z0-9-]+)\/([a-z0-9-]+)(?:\.html)?$/);
         if(m&&!pubMap[m[1]+"/"+m[2]])card.remove();
       });
-
       filtered.slice().reverse().forEach(function(p){
         var key=p.category+"/"+p.slug;
         var exists=[].some.call(list.querySelectorAll("article.bl-card h2 a"),function(a){
@@ -97,7 +91,6 @@
           history.pushState(null,"",liveUrl);
           openReader(p);
         });
-
         if(curCat){
           list.insertBefore(art,list.firstChild);
         }else{
@@ -115,7 +108,6 @@
           sec.insertBefore(art,sh?sh.nextSibling:sec.firstChild);
         }
       });
-
       [].forEach.call(list.querySelectorAll("section.bl-sec"),function(sec){
         var cnt=sec.querySelectorAll("article.bl-card").length;
         var sp=sec.querySelector(".bl-sh span");
@@ -124,7 +116,6 @@
       });
     });
   }
-
   if(window.sb){start()}
   else{
     var cdn=document.createElement("script");
