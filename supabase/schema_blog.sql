@@ -1,4 +1,4 @@
--- GWM: Blog (tulisan teks tanpa foto, maks 4000 karakter). Jalankan di Supabase > SQL Editor.
+-- GWM: Blog (tulisan teks tanpa foto, maks 15000 karakter). Jalankan di Supabase > SQL Editor.
 -- Prasyarat: schema_tahap2.sql (fungsi is_admin()) sudah dijalankan. Aman dijalankan ulang.
 -- Kategori = nama folder di repositori: blog/<kategori>/<alamat>.html (daftar kategori juga ada di tools/blog.py dan js/admin-blog.js).
 create table if not exists blog_posts(
@@ -6,7 +6,7 @@ create table if not exists blog_posts(
   title text not null check (char_length(title) between 3 and 120),
   slug text not null check (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and char_length(slug)<=80),
   category text not null check (category in ('panduan-konser','tips-gunung','review','berita','komunitas')),
-  body text not null check (char_length(body) between 1 and 4000),
+  body text not null check (char_length(body) between 1 and 15000),
   is_html boolean not null default false,
   status text not null default 'draft' check (status in ('draft','published')),
   published_at timestamptz,

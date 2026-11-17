@@ -1,8 +1,8 @@
-/* Blog di /admin: tulisan teks (tanpa foto), maks 4000 karakter, mode Teks atau HTML. Tabel blog_posts (supabase/schema_blog.sql).
+/* Blog di /admin: tulisan teks (tanpa foto), maks 15000 karakter, mode Teks atau HTML. Tabel blog_posts (supabase/schema_blog.sql).
    Aturan mode Teks dan penyaring HTML HARUS sama dengan tools/blog.py. */
 (function(){
 if(!window.sb)return;
-var $=function(i){return document.getElementById(i)},MAX=4000;
+var $=function(i){return document.getElementById(i)},MAX=15000;
 var CATS=[["panduan-konser","Panduan Konser"],["tips-gunung","Tips Gunung"],["review","Review"],["berita","Berita"],["komunitas","Komunitas"]];
 var CN={};CATS.forEach(function(c){CN[c[0]]=c[1]});
 var MON=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
@@ -44,7 +44,7 @@ function draw(){
     '<div class="bar"><button class="btn ghost" data-bg="edit" data-id="'+p.id+'" type="button">Edit</button><button class="btn ghost" data-bg="tog" data-id="'+p.id+'" type="button">'+(pub?"Jadikan draft":"Terbitkan")+'</button><button class="btn ghost" data-bg="del" data-id="'+p.id+'" type="button">Hapus</button>'+(pub?'<a class="btn ghost" href="blog/'+esc(p.category)+"/"+esc(p.slug)+'" target="_blank" rel="noopener">Lihat</a>':"")+"</div></div></div>"}).join(""):'<div class="empty">Belum ada tulisan. Ketuk "Tulisan baru".</div>'}
 /* ---- form ---- */
 function setMode(m){mode=m;[].forEach.call(document.querySelectorAll("#bgMode button"),function(b){b.classList.toggle("on",b.dataset.m===m)});
-  $("bgHelp").innerHTML=m==="html"?"Mode HTML. Tag yang diizinkan: p, br, h2-h4, ul, ol, li, strong, b, em, i, u, a (href), blockquote, code, pre, hr, table. Tag lain dibuang saat tayang. Tag HTML ikut dihitung dalam batas 4000 karakter.":
+  $("bgHelp").innerHTML=m==="html"?"Mode HTML. Tag yang diizinkan: p, br, h2-h4, ul, ol, li, strong, b, em, i, u, a (href), blockquote, code, pre, hr, table. Tag lain dibuang saat tayang. Tag HTML ikut dihitung dalam batas 15000 karakter.":
     "Mode Teks: <code>## Judul bagian</code>, <code>### Sub</code>, <code>- daftar</code>, <code>**tebal**</code>, <code>[teks](https://alamat)</code>. Baris kosong = paragraf baru.";
   prev()}
 function cc(){var n=$("bgBody").value.length;$("bgCc").textContent=n+"/"+MAX;$("bgCc").style.color=n>MAX?"var(--err)":""}
