@@ -1,6 +1,11 @@
 (function(){
-  var CATS={"panduan-konser":"Panduan Konser","tips-gunung":"Tips Gunung","review":"Review","berita":"Berita","komunitas":"Komunitas"};
-  var MON=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+  var C = window.IB_CONFIG || {};
+  var URL = (C.SUPABASE_URL || "").replace(/\/+$/, "");
+  var KEY = C.SUPABASE_ANON_KEY || "";
+  if (!URL || !KEY) return;
+
+  var CATS = {"panduan-konser":"Panduan Konser","tips-gunung":"Tips Gunung","review":"Review","berita":"Berita","komunitas":"Komunitas"};
+  var MON = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;"}[c]})}
   function fd(s){if(!s)return"";var d=new Date(s);return isNaN(d)?"":d.getDate()+" "+MON[d.getMonth()]+" "+d.getFullYear()}
   function inl(t){return t.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" rel="noopener nofollow">$1</a>')}
@@ -29,115 +34,101 @@
     return txt.length>155?txt.slice(0,155)+"…":txt;
   }
 
-  var path=location.pathname.replace(/\/+$/,"");
-  var parts=path.split("/");
-  var bi=parts.indexOf("blog");
-  var curCat=(bi>-1&&parts[bi+1]&&CATS[parts[bi+1]])?parts[bi+1]:"";
-  var basePrefix=curCat?"../../":"../";
-
-  function getCfg(){
-    var keys=Object.keys(window);
-    for(var i=0;i<keys.length;i++){
-      var v=window[keys[i]];
-      if(v&&typeof v==="object"&&typeof v.url==="string"&&v.url.indexOf("supabase.co")>-1){
-        var k=v.key||v.anonKey||v.anon||"";
-        if(k)return{url:v.url.replace(/\/+$/,""),key:k};
-      }
-    }
-    return null;
-  }
+  var path = location.pathname.replace(/\/+$/, "");
+  var parts = path.split("/");
+  var bi = parts.indexOf("blog");
+  var curCat = (bi > -1 && parts[bi + 1] && CATS[parts[bi + 1]]) ? parts[bi + 1] : "";
+  var basePrefix = curCat ? "../../" : "../";
 
   function openReader(p){
-    var main=document.querySelector("main.bl-main");
-    if(!main)return;
-    document.title=p.title+" – Blog GWM";
-    main.innerHTML='<p><a href="'+basePrefix+'blog/'+(curCat?curCat+"/":"")+'">← Kembali ke daftar blog</a></p>'+
-      '<article class="bl-art"><h1>'+esc(p.title)+'</h1>'+
-      '<p class="bl-meta"><span>'+esc(CATS[p.category]||p.category)+'</span> · <time>'+fd(p.published_at)+'</time></p>'+
-      '<div class="bl-body">'+renderBody(p.body,p.is_html)+'</div></article>';
-    window.scrollTo(0,0);
+    var main = document.querySelector("main.bl-main");
+    if (!main) return;
+    document.title = p.title + " – Blog GWM";
+    main.innerHTML = '<p><a href="' + basePrefix + 'blog/' + (curCat ? curCat + "/" : "") + '">← Kembali ke daftar blog</a></p>' +
+      '<article class="bl-art"><h1>' + esc(p.title) + '</h1>' +
+      '<p class="bl-meta"><span>' + esc(CATS[p.category] || p.category) + '</span> · <time>' + fd(p.published_at) + '</time></p>' +
+      '<div class="bl-body">' + renderBody(p.body, p.is_html) + '</div></article>';
+    window.scrollTo(0, 0);
   }
 
   function renderPosts(posts){
-    var q=new URLSearchParams(location.search);
-    var qCat=q.get("cat"),qSlug=q.get("post");
-    if(qCat&&qSlug){
-      var hit=posts.filter(function(x){return x.category===qCat&&x.slug===qSlug});
-      if(hit.length){openReader(hit);return}
+    var q = new URLSearchParams(location.search);
+    var qCat = q.get("cat"), qSlug = q.get("post");
+    if (qCat && qSlug) {
+      var hit = posts.filter(function(x){ return x.category === qCat && x.slug === qSlug; });
+      if (hit.length) { openReader(hit); return; }
     }
-    var main=document.querySelector("main.bl-main");
-    if(!main)return;
-    var list=main.querySelector(".bl-list");
-    var filtered=curCat?posts.filter(function(x){return x.category===curCat}):posts;
-    if(!list&&filtered.length){
-      var emp=main.querySelector(".empty");
-      if(emp)emp.remove();
-      list=document.createElement("div");
-      list.className="bl-list";
+    var main = document.querySelector("main.bl-main");
+    if (!main) return;
+    var list = main.querySelector(".bl-list");
+    var filtered = curCat ? posts.filter(function(x){ return x.category === curCat; }) : posts;
+    if (!list && filtered.length) {
+      var emp = main.querySelector(".empty");
+      if (emp) emp.remove();
+      list = document.createElement("div");
+      list.className = "bl-list";
       main.appendChild(list);
     }
-    if(!list)return;
+    if (!list) return;
 
-    var pubMap={};
-    filtered.forEach(function(p){pubMap[p.category+"/"+p.slug]=p});
+    var pubMap = {};
+    filtered.forEach(function(p){ pubMap[p.category + "/" + p.slug] = p; });
 
-    [].forEach.call(list.querySelectorAll("article.bl-card"),function(card){
-      var a=card.querySelector("h2 a");if(!a)return;
-      var href=a.getAttribute("href")||"";
-      var m=href.match(/([a-z0-9-]+)\/([a-z0-9-]+)(?:\.html)?$/);
-      if(m&&!pubMap[m+"/"+m])card.remove();
+    [].forEach.call(list.querySelectorAll("article.bl-card"), function(card){
+      var a = card.querySelector("h2 a"); if (!a) return;
+      var href = a.getAttribute("href") || "";
+      var m = href.match(/([a-z0-9-]+)\/([a-z0-9-]+)(?:\.html)?$/);
+      if (m && !pubMap[m + "/" + m]) card.remove();
     });
 
     filtered.slice().reverse().forEach(function(p){
-      var key=p.category+"/"+p.slug;
-      var exists=[].some.call(list.querySelectorAll("article.bl-card h2 a"),function(a){
-        return (a.getAttribute("href")||"").indexOf(key)>-1;
+      var key = p.category + "/" + p.slug;
+      var exists = [].some.call(list.querySelectorAll("article.bl-card h2 a"), function(a){
+        return (a.getAttribute("href") || "").indexOf(key) > -1;
       });
-      if(exists)return;
-      var liveUrl=basePrefix+"blog/?cat="+encodeURIComponent(p.category)+"&post="+encodeURIComponent(p.slug);
-      var art=document.createElement("article");
-      art.className="bl-card";
-      art.innerHTML='<h2><a href="'+liveUrl+'">'+esc(p.title)+'</a></h2>'+
-        '<p class="bl-meta"><span>'+esc(CATS[p.category]||p.category)+'</span> · <time>'+fd(p.published_at)+'</time></p>'+
-        '<p>'+esc(snippet(p.body,p.is_html))+'</p>';
-      art.querySelector("a").addEventListener("click",function(e){
+      if (exists) return;
+      var liveUrl = basePrefix + "blog/?cat=" + encodeURIComponent(p.category) + "&post=" + encodeURIComponent(p.slug);
+      var art = document.createElement("article");
+      art.className = "bl-card";
+      art.innerHTML = '<h2><a href="' + liveUrl + '">' + esc(p.title) + '</a></h2>' +
+        '<p class="bl-meta"><span>' + esc(CATS[p.category] || p.category) + '</span> · <time>' + fd(p.published_at) + '</time></p>' +
+        '<p>' + esc(snippet(p.body, p.is_html)) + '</p>';
+      art.querySelector("a").addEventListener("click", function(e){
         e.preventDefault();
-        history.pushState(null,"",liveUrl);
+        history.pushState(null, "", liveUrl);
         openReader(p);
       });
 
-      if(curCat){
-        list.insertBefore(art,list.firstChild);
-      }else{
-        var secs=[].filter.call(list.querySelectorAll("section.bl-sec"),function(s){
-          var sh=s.querySelector(".bl-sh a");
-          return sh&&(sh.getAttribute("href")||"").indexOf("/"+p.category+"/")>-1;
+      if (curCat) {
+        list.insertBefore(art, list.firstChild);
+      } else {
+        var secs = [].filter.call(list.querySelectorAll("section.bl-sec"), function(s){
+          var sh = s.querySelector(".bl-sh a");
+          return sh && (sh.getAttribute("href") || "").indexOf("/" + p.category + "/") > -1;
         });
-        var sec=secs.length?secs:null;
-        if(!sec){
-          sec=document.createElement("section");
-          sec.className="bl-sec";
-          sec.innerHTML='<p class="bl-sh"><a href="'+basePrefix+'blog/'+esc(p.category)+'/">'+esc(CATS[p.category]||p.category)+'</a><span>0</span></p>';
-          list.insertBefore(sec,list.firstChild);
+        var sec = secs.length ? secs : null;
+        if (!sec) {
+          sec = document.createElement("section");
+          sec.className = "bl-sec";
+          sec.innerHTML = '<p class="bl-sh"><a href="' + basePrefix + 'blog/' + esc(p.category) + '/">' + esc(CATS[p.category] || p.category) + '</a><span>0</span></p>';
+          list.insertBefore(sec, list.firstChild);
         }
-        var sh=sec.querySelector(".bl-sh");
-        sec.insertBefore(art,sh?sh.nextSibling:sec.firstChild);
+        var sh = sec.querySelector(".bl-sh");
+        sec.insertBefore(art, sh ? sh.nextSibling : sec.firstChild);
       }
     });
 
-    [].forEach.call(list.querySelectorAll("section.bl-sec"),function(sec){
-      var cnt=sec.querySelectorAll("article.bl-card").length;
-      var sp=sec.querySelector(".bl-sh span");
-      if(sp)sp.textContent=cnt;
-      if(cnt===0)sec.style.display="none";
+    [].forEach.call(list.querySelectorAll("section.bl-sec"), function(sec){
+      var cnt = sec.querySelectorAll("article.bl-card").length;
+      var sp = sec.querySelector(".bl-sh span");
+      if (sp) sp.textContent = cnt;
+      if (cnt === 0) sec.style.display = "none";
     });
   }
 
-  var cfg=getCfg();
-  if(!cfg)return;
-  fetch(cfg.url+"/rest/v1/blog_posts?select=id,title,slug,category,body,is_html,status,published_at&status=eq.published&order=published_at.desc&limit=200",{
-    headers:{"apikey":cfg.key,"Authorization":"Bearer "+cfg.key}
-  }).then(function(r){return r.ok?r.json():[]}).then(function(data){
-    if(Array.isArray(data))renderPosts(data);
+  fetch(URL + "/rest/v1/blog_posts?select=id,title,slug,category,body,is_html,status,published_at&status=eq.published&order=published_at.desc&limit=200", {
+    headers: { "apikey": KEY, "Authorization": "Bearer " + KEY }
+  }).then(function(r){ return r.ok ? r.json() : []; }).then(function(data){
+    if (Array.isArray(data)) renderPosts(data);
   }).catch(function(){});
 })();
