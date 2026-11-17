@@ -39,12 +39,19 @@
 .mm-g{grid-template-columns:minmax(0,1fr)!important;gap:0}
 .mm-g section{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;margin-top:8px;padding:2px 0 10px;border-top:1px solid var(--line)}
 .mm-g section h3{grid-column:1/-1}
-/* PC dan "situs desktop" di HP (≥900px): kartu di bawah tombol tiga garis, tidak menutup layar */
+.mm-ps{width:100%;height:38px;margin:8px 0 6px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
+.mm-ps[hidden]{display:none}
+#mmCity .mm-cl{padding:0 0 4px}
+.mm-h{position:sticky;top:0;z-index:2;background:var(--bg)}
+/* PC dan "situs desktop" di HP (≥900px): satu kartu ringkas di bawah tombol "Semua layanan", isi di-scroll di dalamnya,
+   tanpa layar digelapkan (seperti Naver). Tombol tiga garis kedua di kanan disembunyikan. */
 @media (min-width:900px){
-  .mm-bg{background:rgba(0,0,0,.16)}
-  .mm-in{left:var(--mml,16px);transform:none;width:400px;padding:4px 16px 14px;border-radius:14px}
+  .tb-main .mm-ico{display:none}
+  .mm-bg{background:transparent}
+  .mm-in{left:var(--mml,16px);transform:none;width:380px;max-height:min(560px,calc(100*var(--vh) - var(--mmt,64px) - 16px));padding:0 16px 14px;border-radius:14px;box-shadow:0 12px 36px rgba(0,0,0,.2)}
   @keyframes mmDrop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
   html:not([data-tier="low"]) .mm:not([hidden]) .mm-in{animation:mmDrop .18s var(--ease)}
+  body.mm-open{overflow:auto}
 }
 /* tablet kecil: kartu di tengah */
 @media (min-width:641px) and (max-width:899px){
