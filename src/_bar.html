@@ -1,4 +1,4 @@
-<header class="topbar" id="top">
+<header class="topbar" id="top" data-skip="{{skip}}" data-top="{{totop}}">
 <div class="tb-svc"><div class="tb-in">
 <button class="svc-all js-mm" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="mm"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg><span>{{nv_all}}</span></button>
 <nav class="pnav" aria-label="{{nav_primary}}"><a href="./" data-k="home"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>{{nav_home}}</a><a href="event" data-k="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>{{nav_events}}</a><a href="gunung" data-k="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg>{{nav_mountain}}</a><a href="komunitas" data-k="komunitas"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>{{tab_comm}}</a><a href="bantuan" data-k="bantuan"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>{{f_help}}</a></nav>
@@ -9,4 +9,3 @@
 </div>
 </header>
 {{>menu}}
-<nav class="tabbar" aria-label="{{nav_primary}}" data-skip="{{skip}}" data-top="{{totop}}"><a href="./" data-k="home"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg><span>{{nav_home}}</span></a><a href="event" data-k="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg><span>{{nav_events}}</span></a><a href="gunung" data-k="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg><span>{{nav_mountain}}</span></a><a href="komunitas" data-k="komunitas"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg><span>{{tab_comm}}</span></a><a id="tabMe" href="profil" data-k="profil"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg><span>{{tab_me}}</span></a></nav>

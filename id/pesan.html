@@ -6,13 +6,13 @@
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="icon" href="../assets/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="../assets/apple-touch-icon.png"><link rel="manifest" href="../manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css?v=202611170521">
-<link rel="stylesheet" href="../css/adaptive.css?v=202611170521">
-<link rel="stylesheet" href="../css/naver.css?v=202611170521">
-<script src="../js/theme.js?v=202611170521"></script>
-<script src="../js/adaptive.js?v=202611170521"></script>
+<link rel="stylesheet" href="../css/style.css?v=202611170533">
+<link rel="stylesheet" href="../css/adaptive.css?v=202611170533">
+<link rel="stylesheet" href="../css/naver.css?v=202611170533">
+<script src="../js/theme.js?v=202611170533"></script>
+<script src="../js/adaptive.js?v=202611170533"></script>
 <title>Pesan — GWM</title><meta name="description" content="Kirim pesan, gambar, dan voice note antar pengguna. Semua pesan hilang dalam 10 menit.">
-<link rel="stylesheet" href="../css/panel.css?v=202611170521">
+<link rel="stylesheet" href="../css/panel.css?v=202611170533">
 </head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></symbol>
@@ -61,7 +61,7 @@
   <symbol id="i-all" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.6"/><rect x="14" y="4" width="6" height="6" rx="1.6"/><rect x="4" y="14" width="6" height="6" rx="1.6"/><rect x="14" y="14" width="6" height="6" rx="1.6"/></symbol>
   <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7.5 8.5 6 8.5-6"/></symbol>
 </svg>
-<header class="topbar" id="top">
+<header class="topbar" id="top" data-skip="Lewati ke konten" data-top="Kembali ke atas">
 <div class="tb-svc"><div class="tb-in">
 <button class="svc-all js-mm" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="mm"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg><span>Semua layanan</span></button>
 <nav class="pnav" aria-label="Menu utama"><a href="./" data-k="home"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>Beranda</a><a href="event" data-k="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>Event</a><a href="gunung" data-k="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg>Gunung</a><a href="komunitas" data-k="komunitas"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>Komunitas</a><a href="bantuan" data-k="bantuan"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Bantuan</a></nav>
@@ -103,14 +103,13 @@
   <div class="mm-f"><button class="btn line sm" type="button" id="mmTheme"><svg class="i t-moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="i t-sun" aria-hidden="true"><use href="#i-sun"/></svg>Ganti tema terang/gelap</button><span class="mm-lang">Bahasa: <a class="lang" href="../en/pesan" data-sw="en" hreflang="en" lang="en" aria-label="Ganti bahasa">EN</a></span></div>
 </div></div>
 
-<nav class="tabbar" aria-label="Menu utama" data-skip="Lewati ke konten" data-top="Kembali ke atas"><a href="./" data-k="home"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg><span>Beranda</span></a><a href="event" data-k="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg><span>Event</span></a><a href="gunung" data-k="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg><span>Gunung</span></a><a href="komunitas" data-k="komunitas"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg><span>Komunitas</span></a><a id="tabMe" href="profil" data-k="profil"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg><span>Akun</span></a></nav>
 
 <main class="page sub ms">
 <div id="msg" class="msg" hidden></div>
 <div id="pRoot"></div>
 </main>
 <div id="toast" role="status"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="../js/i18n.js?v=202611170521"></script><script src="../js/config.js?v=202611170521"></script><script src="../js/supa.js?v=202611170521"></script><script src="../js/regions.js?v=202611170521"></script>
-<script src="../js/pesan.js?v=202611170521"></script>
-<script src="../js/gunung-data.js?v=202611170521"></script><script src="../js/search-index.js?v=202611170521"></script><script src="../js/search.js?v=202611170521"></script><script src="../js/navauth.js?v=202611170521"></script><script src="../js/naver.js?v=202611170521"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="../js/i18n.js?v=202611170533"></script><script src="../js/config.js?v=202611170533"></script><script src="../js/supa.js?v=202611170533"></script><script src="../js/regions.js?v=202611170533"></script>
+<script src="../js/pesan.js?v=202611170533"></script>
+<script src="../js/gunung-data.js?v=202611170533"></script><script src="../js/search-index.js?v=202611170533"></script><script src="../js/search.js?v=202611170533"></script><script src="../js/navauth.js?v=202611170533"></script><script src="../js/naver.js?v=202611170533"></script>
 </body></html>

@@ -176,13 +176,23 @@ function hl(t,toks){t=String(t||"");var ts=toks.filter(function(x){return x.leng
   var re=new RegExp(ts.map(rx).join("|"),"ig"),out="",last=0,m;
   while((m=re.exec(t))){if(!m[0]){re.lastIndex++;continue}out+=esc(t.slice(last,m.index))+"<mark>"+esc(m[0])+"</mark>";last=m.index+m[0].length}
   return out+esc(t.slice(last))}
-function fit(){var tb=document.querySelector(".topbar"),an=inp.closest("[data-sxanchor]"),ar=an&&an.getBoundingClientRect(),
-  top=(an?ar.bottom:(tb?tb.getBoundingClientRect().bottom:52))+6,vv=window.visualViewport,h=(vv?vv.height:window.innerHeight);
-  panel.style.top=top+"px";scrim.style.top=(an?0:top-6)+"px";panel.style.maxHeight=Math.max(220,h-top-12)+"px";
-  if(an&&window.innerWidth>640){panel.style.left=ar.left+"px";panel.style.width=Math.max(ar.width,360)+"px";panel.style.transform="none"}
+/* Panel menempel pada kotak cari yang TERLIHAT: kotak besar di beranda bila utuh di bawah header, kalau tidak, tepat di bawah header.
+   Dihitung ulang saat gulir/ubah ukuran, karena browser bisa menggulir halaman setelah kotak difokuskan (header lengket menutupi kotak). */
+function topEdge(){var tb=document.querySelector(".topbar");return tb?Math.max(0,tb.getBoundingClientRect().bottom):0}
+function fit(){var tbB=topEdge(),vv=window.visualViewport,vh=vv?vv.height:window.innerHeight,vw=document.documentElement.clientWidth||window.innerWidth,
+  box=inp.closest("[data-sxanchor]"),r=box&&box.getBoundingClientRect(),
+  shown=!!(r&&r.height>0&&r.top>=tbB-1&&r.bottom<=vh),top,ar;
+  if(shown){ar=r;top=r.bottom+6;scrim.style.top="0px"}
+  else{var hs=document.querySelector(".tb-main .search"),hr=hs&&hs.getBoundingClientRect();
+    var hsOn=hs&&hr.width>0&&getComputedStyle(hs).visibility!=="hidden";ar=hsOn?hr:(r&&r.width>0?r:(hr&&hr.width>0?hr:null));top=(tbB||52)+6;scrim.style.top=(tbB||52)+"px"}
+  top=Math.min(top,Math.max(8,vh-220));
+  panel.style.top=top+"px";panel.style.maxHeight=Math.max(220,vh-top-12)+"px";
+  if(ar&&vw>640){var w=Math.min(Math.max(ar.width,360),vw-16),l=Math.min(Math.max(8,ar.left),vw-w-8);
+    panel.style.left=l+"px";panel.style.width=w+"px";panel.style.transform="none"}
   else{panel.style.left=panel.style.width=panel.style.transform=""}}
+var fitRaf=0;function fitSoon(){if(!open||fitRaf)return;fitRaf=requestAnimationFrame(function(){fitRaf=0;if(open)fit()})}
 function setOpen(v){if(open===v)return;open=v;panel.hidden=scrim.hidden=!v;inp.setAttribute("aria-expanded",v?"true":"false");
-  if(v){fit();loadData();run()}else{active=-1;inp.removeAttribute("aria-activedescendant")}}
+  if(v){fit();loadData();run();fitSoon();setTimeout(fitSoon,120);setTimeout(fitSoon,350)}else{active=-1;inp.removeAttribute("aria-activedescendant")}}
 
 function itemHtml(r,toks,i){var d=r.d,meta="";
   if(d.type==="event")meta='<span class="sxm'+(d.st.k==="live"?" on":"")+'">'+esc(d.dm)+'<small>'+esc(d.st.k==="live"?d.st.l:d.st.k==="soon"?d.st.l:"")+'</small></span>';
@@ -260,7 +270,7 @@ function bind(el,extra){if(extra)EXTRA.push(el);
   var go=el.parentNode&&el.parentNode.querySelector(".sxgo");if(go)go.addEventListener("click",function(){use(el);submit()})}
 bind(inp0,false);
 var hero=document.getElementById("gq2");if(hero){hero.setAttribute("aria-controls","sxList");bind(hero,true)}
-function visible(el){var r=el.getBoundingClientRect();return r.height>0&&r.bottom>0&&r.top<window.innerHeight}
+function visible(el){var r=el.getBoundingClientRect();return r.height>0&&r.top>=topEdge()-1&&r.bottom<=window.innerHeight}
 document.addEventListener("keydown",function(e){
   var t=e.target,typing=t&&(/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)||t.isContentEditable);
   if((e.key==="/"&&!typing&&!e.ctrlKey&&!e.metaKey&&!e.altKey)||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k")){e.preventDefault();var f=hero&&visible(hero)?hero:inp0;f.focus();f.select()}});
@@ -268,7 +278,10 @@ panel.addEventListener("mousedown",function(e){e.preventDefault()});
 scrim.addEventListener("click",function(){setOpen(false)});
 document.addEventListener("focusin",function(e){if(open&&e.target!==inp&&!panel.contains(e.target))setOpen(false)});
 window.addEventListener("resize",function(){if(open)fit()});
-if(window.visualViewport)window.visualViewport.addEventListener("resize",function(){if(open)fit()});
+var scT;window.addEventListener("scroll",function(){fitSoon();clearTimeout(scT);scT=setTimeout(fitSoon,160)},{passive:true});
+/* kotak cari di header baru muncul/hilang setelah IntersectionObserver jalan (class nv-hv): hitung ulang saat itu terjadi */
+try{new MutationObserver(fitSoon).observe(document.body,{attributes:true,attributeFilter:["class"]})}catch(e){}
+if(window.visualViewport){window.visualViewport.addEventListener("resize",function(){if(open)fit()});window.visualViewport.addEventListener("scroll",fitSoon)}
 window.addEventListener("pageshow",function(e){if(e.persisted)setOpen(false)});
 panel.addEventListener("click",function(e){
   var c=e.target.closest("[data-clr]");if(c){e.preventDefault();write("gwm_recent_q",[]);run();return}

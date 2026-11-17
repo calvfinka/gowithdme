@@ -37,3 +37,10 @@ Diuji di Chromium headless (meniru GitHub Pages di subfolder `/gowithdme/`, URL 
 1. DNS domain ke GitHub Pages, lalu buat file `CNAME` berisi `gowithdme.com`.
 2. `GWM_SITE=https://gowithdme.com python3 tools/build.py`, lalu commit dan push.
 3. Perbarui Redirect URL Supabase dan origin Google OAuth ke domain baru.
+
+## Perubahan 17 November 2026
+| Bagian | Perubahan |
+|--------|-----------|
+| Poster | Kartu event, detail, dan banner kini menampilkan poster **utuh** (tidak dipotong) di atas latar buram dari poster yang sama. Banner mengukur rasio asli gambar (potret / persegi / tinggi / lanskap) dan menyesuaikan kotaknya; gambar yang gagal dimuat disembunyikan. Kode: `posterStyle`/`deco` di `js/app.js`, `orient()` di `js/home.js`, kelas `.pf`/`.pfo` di `css/naver.css` |
+| Pencarian PC | Panel kini selalu menempel pada kotak cari yang terlihat: dihitung ulang saat gulir, ubah ukuran, dan setelah browser menggulir halaman karena fokus; bila kotak besar tertutup header, panel menempel di bawah kotak cari header. Posisi dijaga tetap di dalam layar. `js/search.js` (`fit`, `fitSoon`) |
+| Navigasi bawah | Tab bar bawah dihapus (`src/_bar.html`, `css/adaptive.css`, `js/adaptive.js`). Menu tetap ada lewat tombol menu di bilah atas |

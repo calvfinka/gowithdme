@@ -3,7 +3,7 @@
       <html data-tier="low|mid|high" data-dev="phone|tablet|desktop" data-motion="full|reduce">.
    2) Setelah halaman tampil, mengukur frame-rate singkat; kalau patah-patah, tingkat diturunkan satu level (satu sesi).
    3) Pengguna bisa memilih manual di footer: Otomatis / Hemat / Seimbang / Penuh (disimpan di perangkat).
-   4) Perilaku UI: menu aktif, tab bawah, tombol ke atas, bayangan bilah atas, lewati ke konten, warna bilah browser.
+   4) Perilaku UI: menu aktif, tombol ke atas, bayangan bilah atas, lewati ke konten, warna bilah browser.
    Dimuat di <head> (sinkron) supaya atribut terpasang sebelum halaman digambar, jadi tidak berkedip. */
 (function(){
   var d=document,r=d.documentElement,K="gwm-quality",P="gwm-qprobe",ORDER=["low","mid","high"];
@@ -74,15 +74,11 @@
   function hasSession(){try{for(var i=0;i<localStorage.length;i++){if(/^sb-.+-auth-token$/.test(localStorage.key(i)))return true}}catch(e){}return false}
 
   d.addEventListener("DOMContentLoaded",function(){
-    var tb=d.querySelector(".tabbar"),top=d.querySelector(".topbar"),T=tb?tb.dataset:{};
+    var top=d.querySelector(".topbar"),T=top?top.dataset:{};
     var seg=(location.pathname.replace(/\/+$/,"").split("/").pop()||"").replace(/\.html$/,"");
     var key=seg===""||seg==="index"||seg==="id"||seg==="en"?"home":seg;
     // menu aktif
-    [].forEach.call(d.querySelectorAll(".pnav a[data-k],.tabbar a[data-k]"),function(a){if(a.getAttribute("data-k")===key)a.setAttribute("aria-current","page")});
-    // halaman yang punya bilah bawah sendiri
-    if(key==="pesan"||key==="login")d.body.classList.add("nobar");
-    // tab Akun: ke Profil kalau sudah masuk, ke Masuk kalau belum
-    var me=d.getElementById("tabMe");if(me&&!hasSession())me.setAttribute("href","login");
+    [].forEach.call(d.querySelectorAll(".pnav a[data-k]"),function(a){if(a.getAttribute("data-k")===key)a.setAttribute("aria-current","page")});
     // lewati ke konten
     var main=d.querySelector("main.main")||d.querySelector(".page")||d.querySelector("main");
     if(main){if(!main.id)main.id="main";main.setAttribute("tabindex","-1");

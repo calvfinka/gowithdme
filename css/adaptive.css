@@ -34,24 +34,8 @@ main:focus,.page:focus{outline:none}
 .thumb,.sk{aspect-ratio:4/5}
 .r{content-visibility:auto;contain-intrinsic-size:auto 62px}
 
-/* ---- tab bawah (HP & tablet) ---- */
-.tabbar{display:none}
+/* ---- HP & tablet: tanpa tab bawah; chip bisa digeser dengan snap ---- */
 @media (max-width:1000px){
-  body{padding-bottom:calc(var(--tbh) + env(safe-area-inset-bottom,0px))}
-  .tabbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:28;
-    height:calc(var(--tbh) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:var(--bg);border-top:1px solid var(--line)}
-  .tabbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--mute);position:relative;
-    -webkit-tap-highlight-color:transparent;min-width:0}
-  .tabbar a span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
-  .tabbar a svg.i{width:22px;height:22px}
-  .tabbar a[aria-current="page"]{color:var(--brand)}
-  .tabbar a[aria-current="page"]::before{content:"";position:absolute;top:0;width:28px;height:3px;border-radius:0 0 4px 4px;background:var(--brand)}
-  .tabbar a:active{background:var(--hover)}
-  #toast{bottom:calc(var(--tbh) + 14px + env(safe-area-inset-bottom,0px))}
-  .totop{bottom:calc(var(--tbh) + 14px + env(safe-area-inset-bottom,0px))}
-  body.nobar{padding-bottom:0}
-  body.nobar .tabbar{display:none}
-  body.nobar .totop{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
   .mfilters,.kchips{scroll-snap-type:x proximity}
   .mfilters>*,.kchips>*{scroll-snap-align:start}
 }
@@ -168,8 +152,7 @@ html[data-tier="high"] .khero::before{content:"";position:absolute;inset:-40%;z-
 @media (prefers-reduced-motion:no-preference){html[data-tier="high"] .khero::before{animation:drift 20s ease-in-out infinite alternate;will-change:transform}}
 @supports (backdrop-filter:blur(1px)){
   html[data-tier="high"] .topbar{background:var(--tb);-webkit-backdrop-filter:saturate(1.6) blur(16px);backdrop-filter:saturate(1.6) blur(16px)}
-  html[data-tier="high"] .tabbar{background:var(--tb);-webkit-backdrop-filter:saturate(1.6) blur(16px);backdrop-filter:saturate(1.6) blur(16px)}
-  html[data-tier="high"] dialog::backdrop{-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+    html[data-tier="high"] dialog::backdrop{-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 }
 html[data-tier="high"] .khero h1{background:linear-gradient(100deg,var(--ink) 40%,var(--brand));-webkit-background-clip:text;background-clip:text;color:transparent}
 html[data-tier="high"] .thumb{transition:box-shadow .25s}
