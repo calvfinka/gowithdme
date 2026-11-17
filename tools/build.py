@@ -3,12 +3,13 @@
 import os,re,json,sys,time
 sys.path.insert(0,os.path.dirname(__file__))
 from strings import S,J,PROV_EN
+import blog as BL
 import gen_dsk  # css/dsk.css dan css/dsk-b.css (mode "situs desktop" di HP) dibuat dari css lain
 ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Alamat situs untuk canonical, hreflang, dan sitemap. Saat ini situs hidup di GitHub Pages.
 # Setelah domain .com aktif:  GWM_SITE=https://gowithdme.com python3 tools/build.py
 BASE=os.environ.get("GWM_SITE","https://calvfinka.github.io/gowithdme").rstrip("/")
-VER=time.strftime("%Y%m%d%H%M")
+VER=os.environ.get("GWM_VER") or time.strftime("%Y%m%d%H%M")  # GWM_VER tetap -> build ulang tidak mengubah file (dipakai workflow)
 LANGS=["id","en"]; IDX={"id":0,"en":1}
 PAGES=["index","event","gunung","login","privacy","terms","ajukan","komunitas","profil","bantuan","pesan"]
 NOINDEX=("login","ajukan","profil","pesan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
@@ -170,10 +171,13 @@ for l in LANGS:
     for p in pub:
         alt="".join(f'<xhtml:link rel="alternate" hreflang="{x}" href="{url(x,p)}"/>' for x in LANGS)
         rows.append(f"<url><loc>{url(l,p)}</loc>{alt}</url>")
+# ---- blog statis (data/posts.json dari tools/gen_blog.py) -> blog/<kategori>/<alamat>.html ----
+POSTS=json.load(open(ROOT+"/data/posts.json",encoding="utf-8")) if os.path.exists(ROOT+"/data/posts.json") else []
+for u,lm in BL.build(ROOT,BASE,POSTS): rows.append(f"<url><loc>{u}</loc>"+(f"<lastmod>{lm[:10]}</lastmod>" if lm else "")+"</url>")
 for e in EV:
     alt="".join(f'<xhtml:link rel="alternate" hreflang="{x}" href="{BASE}/{x}/e/{e["slug"]}"/>' for x in LANGS)
     for l in LANGS: rows.append(f"<url><loc>{BASE}/{l}/e/{e['slug']}</loc><lastmod>{(e.get('created_at') or e['event_date'])[:10]}</lastmod>{alt}</url>")
 open(ROOT+"/sitemap.xml","w",encoding="utf-8").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+"".join(rows)+"</urlset>\n")
 pre=urlparse(BASE).path.rstrip("/")
 open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login","ajukan","id/ajukan","en/ajukan","profil","id/profil","en/profil","pesan","id/pesan","en/pesan"))+f"Sitemap: {BASE}/sitemap.xml\n")
-print("selesai ->",BASE,"|",len(EV),"event statis")
+print("selesai ->",BASE,"|",len(EV),"event statis,",len(POSTS),"tulisan blog")

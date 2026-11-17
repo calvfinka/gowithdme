@@ -1,0 +1,29 @@
+/* Halaman blog statis (dibuat tools/blog.py). Memakai variabel warna dari style.css agar ikut tema terang/gelap. */
+body.bl{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 var(--f);-webkit-text-size-adjust:100%}
+.bl a{color:var(--brand)}
+.bl-top{border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+.bl-top .wrap{display:flex;align-items:center;gap:16px;height:52px}.bl-top .sp{flex:1}
+.bl-top .logo{color:var(--ink);text-decoration:none}.bl-l{font-size:14px;font-weight:600;text-decoration:none;color:var(--mute)}.bl-l:hover{color:var(--brand)}
+.bl-cats{display:flex;gap:8px;overflow-x:auto;padding-top:12px;padding-bottom:4px;scrollbar-width:none}.bl-cats::-webkit-scrollbar{display:none}
+.bl-cats a{flex:none;font-size:13px;font-weight:600;text-decoration:none;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:6px 14px}
+.bl-cats a[aria-current]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.bl-main{max-width:760px;padding-top:20px;padding-bottom:48px}
+.bl-main h1{font-size:clamp(1.6rem,4.5vw,2.1rem);line-height:1.25;margin:8px 0 6px;letter-spacing:-.01em}
+.bl-sub{color:var(--mute);margin:0 0 20px}
+.bl-meta{font-size:13px;color:var(--mute);margin:0 0 16px}.bl-meta span{color:var(--brand);font-weight:600}
+.bl-list{display:grid;gap:14px}
+.bl-card{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--bg)}
+.bl-card h2{font-size:1.1rem;line-height:1.35;margin:0 0 4px}.bl-card h2 a{color:var(--ink);text-decoration:none}.bl-card h2 a:hover{color:var(--brand)}
+.bl-card .bl-meta{margin-bottom:8px}.bl-card p:last-child{margin:0;color:var(--mute);font-size:15px}
+.bl-empty{color:var(--mute);padding:24px 0}
+.bl-bc{font-size:13px;color:var(--mute)}.bl-bc a{text-decoration:none}
+.bl-body{font-size:17px}.bl-body h2{font-size:1.35rem;margin:28px 0 8px}.bl-body h3{font-size:1.12rem;margin:22px 0 6px}.bl-body h4{margin:18px 0 4px}
+.bl-body p,.bl-body ul,.bl-body ol,.bl-body blockquote,.bl-body pre,.bl-body table{margin:0 0 16px}
+.bl-body ul,.bl-body ol{padding-left:22px}.bl-body li{margin:4px 0}
+.bl-body blockquote{border-left:3px solid var(--brand);padding:2px 14px;color:var(--mute)}
+.bl-body code,.bl-body pre{background:var(--field);border-radius:6px;font-size:.92em}.bl-body code{padding:1px 5px}.bl-body pre{padding:12px;overflow-x:auto}
+.bl-body table{border-collapse:collapse;width:100%;display:block;overflow-x:auto}.bl-body th,.bl-body td{border:1px solid var(--line);padding:6px 10px;text-align:left}
+.bl-body hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+.bl-cta{margin:28px 0}.bl-more{margin-top:36px}.bl-more>h2{font-size:1.1rem}
+.bl-foot{display:flex;flex-wrap:wrap;gap:6px 16px;padding-top:16px;padding-bottom:28px;border-top:1px solid var(--line);font-size:13px;color:var(--mute)}.bl-foot a{text-decoration:none}
+.bl a.btn{color:var(--accent-ink);text-decoration:none}

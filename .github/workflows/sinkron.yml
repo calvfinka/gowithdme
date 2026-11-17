@@ -1,0 +1,32 @@
+# Sinkron otomatis: ambil event dan blog terbit dari Supabase, bangun ulang situs, commit bila ada perubahan.
+# Jalan tiap 3 jam, atau manual: tab Actions > "Sinkron konten" > Run workflow.
+name: Sinkron konten
+on:
+  schedule: [{cron: "0 */3 * * *"}]
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+jobs:
+  sinkron:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Ambil data dan bangun
+        run: |
+          python3 tools/gen_events.py
+          python3 tools/gen_blog.py
+          export GWM_VER=$(git log -1 --format=%cd --date=format:%Y%m%d%H%M -- css js src tools assets)
+          python3 tools/build.py
+      - name: Commit jika berubah
+        id: commit
+        run: |
+          git config user.name "gwm-bot"; git config user.email "gwm-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "changed=false" >> $GITHUB_OUTPUT; else git commit -m "Sinkron konten"; git push; echo "changed=true" >> $GITHUB_OUTPUT; fi
+      - name: Minta GitHub Pages membangun ulang
+        if: steps.commit.outputs.changed == 'true'
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: gh api -X POST "/repos/${{ github.repository }}/pages/builds" || true

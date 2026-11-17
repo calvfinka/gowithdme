@@ -584,6 +584,6 @@ S.update(NV); J.update(NV)
 
 NEWCAT = {
 "cat_festival": ("Festival", "Festivals"), "cat_komedi": ("Komedi", "Comedy"), "cat_seminar": ("Seminar & konferensi", "Seminars & conferences"),
-"cat_meetup": ("Meetup", "Meetups"), "cat_lainnya": ("Lainnya", "Other"),
+"cat_meetup": ("Meetup", "Meetups"), "cat_lainnya": ("Lainnya", "Other"), "n_blog": ("Blog", "Blog"),
 }
 S.update(NEWCAT); J.update(NEWCAT)
