@@ -154,3 +154,28 @@ div.nv-sl-po{aspect-ratio:4/5;--ar:.8}
     gap: 16px 14px;
   }
 }
+
+/* Perbaikan kotak Tanggal, Jam, Kalender, dan Cuaca di halaman Event/Gunung mode desktop agar tidak tumpang tindih */
+@media (min-width: 768px) and (max-width: 1150px) {
+  .dsk-main .now {
+    display: grid;
+    grid-template-columns: minmax(145px, auto) minmax(210px, 1fr);
+    gap: 14px 20px;
+    align-items: center;
+  }
+  .dsk-main .now > div:first-child {
+    min-width: 0;
+  }
+  .dsk-main .now > div:nth-child(2) {
+    min-width: 0;
+    overflow-x: auto;
+  }
+  .dsk-main .now > div:nth-child(3) {
+    grid-column: 1 / -1;
+    border-left: 0 !important;
+    border-top: 1px solid var(--line);
+    padding-left: 0 !important;
+    padding-top: 12px;
+    justify-content: space-between;
+  }
+}
