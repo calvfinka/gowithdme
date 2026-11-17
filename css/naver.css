@@ -263,31 +263,31 @@ html[data-tier="low"] .pf::before{filter:brightness(.6)}
 @supports (-webkit-touch-callout:none){input,select,textarea{font-size:16px!important}}
 .infow{display:flex;flex-wrap:wrap;gap:6px 18px;margin:22px 0 0;font-size:13px;font-weight:600;color:var(--faint)}
 
-/* ================= FOOTER ala Naver: tautan tengah berpemisah + logo abu ================= */
-.foot.nf{display:grid;grid-template-columns:minmax(0,1fr);justify-content:stretch;justify-items:center;gap:8px;text-align:center;margin-top:40px;padding:26px 12px 10px;border-top:1px solid var(--line);font-size:12.5px;color:var(--faint)}
-.page .foot.nf{margin-top:40px}
-.nf .nf-r{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 0}
-.nf .nf-r>*{position:relative;padding:0 11px;font:500 12.5px/1.6 var(--f);color:var(--mute);background:none;border:0;cursor:pointer}
-.nf .nf-r>*+*::before{content:"";position:absolute;left:0;top:50%;width:1px;height:10px;margin-top:-5px;background:var(--line)}
-.nf .nf-r a:hover,.nf .nf-b:hover{color:var(--ink)}
-.nf .nf-r b{font-weight:800;color:var(--ink)}
-.nf .nf-me{display:none}.nv-in .nf .nf-me{display:inline}.nv-in .nf .nf-login{display:none}
-.nf-brand{margin-top:6px;font:800 24px var(--f);letter-spacing:.16em;color:var(--faint);opacity:.55}
-.nf-c{font-size:11.5px;max-width:560px}
+/* ================= FOOTER ala Naver di dasar panel menu hamburger ================= */
+.mm-foot{display:grid;justify-items:center;gap:6px;margin-top:8px;padding:14px 0 8px;border-top:1px solid var(--line);text-align:center}
+.mm-foot nav{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 0}
+.mm-foot nav>*{position:relative;padding:0 9px;font:500 12px/1.7 var(--f);color:var(--mute)}
+.mm-foot nav>*+*::before{content:"";position:absolute;left:0;top:50%;width:1px;height:9px;margin-top:-4.5px;background:var(--line)}
+.mm-foot a:hover{color:var(--ink)}
+.mm-foot b{font-weight:800;color:var(--ink)}
+.mm-foot .nf-acc{display:inline-flex;padding:0}
+.mm-foot .nf-acc a{padding:0 9px}
+.mm-foot .nf-me{display:none}.nv-in .mm-foot .nf-me{display:inline}.nv-in .mm-foot .nf-login{display:none}
+.mm-brand{margin-top:4px;font:800 20px var(--f);letter-spacing:.16em;color:var(--faint);opacity:.55}
 
-/* ================= JAM + KALENDER ala widget Naver ================= */
-html .now .clock{display:flex;flex-direction:column;gap:10px;grid-template-columns:none;row-gap:10px;align-content:center}
-.clock .cw{display:grid;grid-template-columns:auto 1fr;align-items:end;gap:0 12px}
-.clock .big{display:flex;align-items:baseline;gap:8px;min-width:0}
-.clock .big b{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--ink)}
-.clock .cw .tm{grid-column:2;grid-row:1;justify-self:end;font-size:20px}
-.clock .cw .dt{grid-column:1/-1;grid-row:2;margin-top:2px;color:var(--mute);font-size:12.5px}
-.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px 0;text-align:center;font-size:12.5px;font-variant-numeric:tabular-nums}
-.cal span{display:grid;place-items:center;height:28px;color:var(--ink)}
-.cal .h{height:24px;font-size:11.5px;font-weight:700;color:var(--mute)}
+/* ================= JAM + KALENDER: kotak mini ala widget naver.com ================= */
+html .now .clock{display:grid;grid-template-columns:auto auto;justify-content:start;align-items:center;gap:0 16px;max-width:340px}
+.clock .cw{display:grid;gap:2px;align-content:center;min-width:0}
+.clock .big{display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.clock .big b{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--ink)}
+.clock .cw .tm{grid-column:auto;grid-row:auto;justify-self:start;margin-top:6px;font-size:15px}
+.clock .cw .dt{grid-column:auto;grid-row:auto;margin-top:0;color:var(--mute);font-size:11.5px}
+.cal{width:154px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px 0;text-align:center;font-size:10.5px;font-variant-numeric:tabular-nums}
+.cal span{display:grid;place-items:center;height:21px;color:var(--ink)}
+.cal .h{height:20px;font-size:9.5px;font-weight:700;color:var(--mute)}
 .cal .s{color:#D93025}
 .cal .o{color:var(--faint);opacity:.6}
-.cal .t{width:28px;justify-self:center;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:700;opacity:1}
+.cal .t{width:21px;justify-self:center;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:700;opacity:1}
 :root[data-theme="dark"] .cal .s{color:#FF7A6B}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cal .s{color:#FF7A6B}}
-@media (max-width:480px){.nf .nf-r>*{padding:0 7px;font-size:12px}}
+@media (max-width:330px){html .now .clock{grid-template-columns:1fr;row-gap:10px}}
