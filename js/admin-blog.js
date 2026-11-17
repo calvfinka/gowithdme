@@ -64,7 +64,7 @@ function save(status){
   if(status==="published"&&!(cur&&cur.published_at))d.published_at=new Date().toISOString();
   var q;if(editing)q=sb.from("blog_posts").update(d).eq("id",editing);else{d.slug=slug;q=sb.from("blog_posts").insert(d)}
   q.then(function(r){if(r.error)return msg(/duplicate|unique/i.test(r.error.message)?"Alamat ini sudah dipakai di kategori yang sama.":hint(r.error),"err");
-    load().then(function(){show(false);msg(status==="published"?"Tersimpan dan terbit di database. Halaman publik dibuat saat sinkron (otomatis tiap 3 jam, atau jalankan: python3 tools/gen_blog.py && python3 tools/build.py).":"Tersimpan sebagai draft.","ok")})})}
+    load().then(function(){show(false);msg(status==="published"?"Tersimpan dan terbit. Sudah bisa dibuka lewat tombol Lihat; halaman permanennya dibuat saat sinkron (otomatis tiap 3 jam).":"Tersimpan sebagai draft.","ok")})})}
 function bind(){
   var o=$("bgNew");if(!o)return;
   o.onclick=function(){msg("");openForm(null)};
@@ -86,7 +86,7 @@ document.addEventListener("click",function(ev){
     if(b.dataset.bg==="edit")openForm(p);
     if(b.dataset.bg==="del")delPost(p);
     if(b.dataset.bg==="tog"){var pub=p.status==="published",d={status:pub?"draft":"published"};if(!pub&&!p.published_at)d.published_at=new Date().toISOString();
-      sb.from("blog_posts").update(d).eq("id",p.id).then(function(r){if(r.error)return msg(hint(r.error),"err");load().then(function(){msg(pub?"Dijadikan draft.":"Terbit di database. Halaman publik dibuat saat sinkron.","ok")})})}}
+      sb.from("blog_posts").update(d).eq("id",p.id).then(function(r){if(r.error)return msg(hint(r.error),"err");load().then(function(){msg(pub?"Dijadikan draft.":"Terbit. Sudah bisa dibuka lewat tombol Lihat; halaman permanennya dibuat saat sinkron.","ok")})})}}
 });
 bind();
 })();
