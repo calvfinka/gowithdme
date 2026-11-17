@@ -18,6 +18,7 @@ if(mm){
       var pn=mm.querySelector(".mm-in");if(pn){pn.scrollTop=0;pn.focus({preventScroll:true})}}
     else if(last&&last.focus){last.focus()}}
   btns.forEach(function(b){b.addEventListener("click",function(){anc=b;setOpen(mm.hidden)})});
+  var mi=mm.querySelector(".mm-in");if(mi)mi.addEventListener("scroll",function(){mi.classList.toggle("sc",mi.scrollTop>4)},{passive:true});
   mm.addEventListener("click",function(e){if(e.target.closest("[data-mmx]")){setOpen(false);return}
     var a=e.target.closest("a");if(a){var h=a.getAttribute("href")||"",pg=location.pathname.split("/").pop()||"";if(h.indexOf("#")>-1&&h.split("#")[0]===pg)setOpen(false)}});
   d.addEventListener("keydown",function(e){

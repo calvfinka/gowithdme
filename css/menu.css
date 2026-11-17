@@ -56,3 +56,85 @@
 @media (min-width:641px) and (max-width:899px){
   .mm-in{width:min(560px,calc(100*var(--vw) - 24px))}
 }
+
+/* ================= PENYEMPURNAAN TAMPILAN (v2) ================= */
+/* header panel: judul tegas, garis tipis muncul saat isi digulir */
+.mm-h{padding:14px 0 12px;border-bottom:1px solid transparent;transition:border-color .15s,box-shadow .15s}
+.mm-h b{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.mm-in.sc .mm-h{border-bottom-color:var(--line);box-shadow:0 8px 14px -12px rgba(0,0,0,.35)}
+.mm-in{scrollbar-width:thin}
+.mm-in :where(a,button,select,input):focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+/* kartu akun: ikon di kiri, tinta merek tipis */
+.mm-acct{gap:12px;margin:10px 0 8px;padding:12px 14px;background:color-mix(in srgb,var(--brand) 7%,var(--bg));border-color:color-mix(in srgb,var(--brand) 22%,var(--line));transition:border-color .15s,background .15s}
+.mm-acct>.mm-ai{width:40px;height:40px;padding:9px;border-radius:12px;background:var(--brand);color:var(--brand-ink);flex:none}
+.mm-acct>span{flex:1;min-width:0}
+.mm-acct b{font-size:15px;font-weight:700}
+.mm-acct small{font-size:12px;line-height:1.35}
+.mm-acct>.i:last-child{color:var(--mute)}
+.mm-acct:hover{background:color-mix(in srgb,var(--brand) 11%,var(--bg))}
+
+/* pintasan: tile seragam, label dua baris rata */
+.mm-sc{gap:6px 4px;margin:8px 0 6px}
+.mm-sc a{align-content:start;gap:7px;padding:10px 4px 8px;line-height:1.25;transition:background .15s,transform .1s}
+.mm-sc a .i{width:44px;height:44px;padding:11px;border-radius:14px;background:color-mix(in srgb,var(--brand) 9%,var(--side))}
+.mm-sc a span{min-height:2.5em;display:flex;align-items:flex-start;justify-content:center}
+.mm-sc a:active,.mm-g a:active{transform:scale(.97)}
+
+/* kota: satu kotak cari bersih (tanpa bingkai ganda), pilihan provinsi, hitungan berupa lencana */
+.mm-city{margin-top:6px;padding-bottom:4px}
+.mm-city h3,.mm-g h3,.mm-ph{font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin:16px 0 8px}
+.mm-s{height:42px;padding:0 12px;border-radius:12px;background:var(--side);border:1px solid transparent;transition:border-color .15s,background .15s}
+.mm-s:focus-within{border-color:var(--brand);background:var(--bg)}
+.mm-s .i{width:17px;height:17px}
+.mm-in .mm-s input[type=search]{-webkit-appearance:none;appearance:none;height:100%;width:auto;padding:0;border:0;border-radius:0;background:transparent!important;box-shadow:none;outline:0;font-size:14.5px}
+.mm-in .mm-s input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
+.mm-ps{height:42px;margin:10px 0 6px;padding:0 12px;border-radius:12px;font-weight:600;cursor:pointer}
+.mm-ps:focus{border-color:var(--brand);outline:0}
+.mm-cl{gap:2px 6px}
+.mm-cl a{align-items:center;padding:9px 10px;font-weight:600}
+.mm-cl a small{min-width:24px;padding:1px 7px;border-radius:999px;background:var(--sel);color:var(--brand);font-size:11.5px;text-align:center}
+.mm-cl a.all{padding:10px;margin-bottom:2px;border-radius:10px;background:var(--sel)}
+
+/* layanan lain: ikon konsisten, tautan terakhir yang ganjil melebar penuh */
+.mm-g section{gap:2px 6px;margin-top:6px;padding-bottom:8px}
+.mm-g a{padding:8px 8px;font-weight:600;line-height:1.3;transition:background .15s,transform .1s}
+.mm-g a .i{width:34px;height:34px;padding:8px;border-radius:10px}
+.mm-g section a:last-child:nth-child(even){grid-column:1/-1}
+
+/* preferensi: kualitas tampilan satu baris penuh, tema dan bahasa satu baris */
+.mm-ph{margin:10px 0 2px;padding-top:14px;border-top:1px solid var(--line)}
+.mm-q{padding:8px 0 4px;border-top:0}
+.mm-q .qsw{display:grid;gap:7px;width:100%}
+.mm-q .qsw>span{font-size:12.5px;font-weight:600;color:var(--mute)}
+.mm-q .qsw .seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;padding:3px;border-radius:11px;background:var(--side)}
+.mm-q .qsw button{height:34px;padding:0 4px;border-radius:9px;font-size:13px;white-space:nowrap}
+.mm-q .qsw button[aria-pressed="true"]{box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.mm-f{margin-top:10px;padding-top:0;border-top:0;flex-wrap:nowrap}
+.mm-f .btn{flex:1;min-width:0;justify-content:center;height:42px;border-radius:12px;font-weight:600}
+.mm-lang{flex:none;font-size:13px;font-weight:500}
+.mm-lang .lang{display:inline-grid;place-items:center;min-width:44px;height:42px;padding:0 12px;border-radius:12px;font-weight:700}
+
+/* footer info */
+.mm-foot{margin-top:14px;padding:16px 0 8px}
+.mm-foot nav>*{font-size:12.5px}
+.mm-brand{font-size:18px;margin-top:6px}
+
+/* HP: panel naik dari bawah (kecuali mode hemat), area aman bawah */
+@media (max-width:640px){
+  .mm-in{padding:0 16px calc(24px + env(safe-area-inset-bottom,0px))}
+  .mm-h{padding-top:calc(14px + var(--sat))}
+  html:not([data-tier="low"]) .mm:not([hidden]) .mm-in{animation:mmUp .22s var(--ease)}
+  @keyframes mmUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+}
+@media (min-width:900px){
+  .mm-in{width:400px;padding:0 14px 12px}
+  .mm-sc a .i{width:42px;height:42px}
+}
+@media (prefers-reduced-motion:reduce){.mm-in,.mm-sc a,.mm-g a{animation:none!important;transition:none!important}}
+.mm-cl a:last-child:nth-child(even){grid-column:1/-1}
+.mm-sc a span{min-height:2.4em}
+.mm-foot nav{gap:4px 16px}
+.mm-foot nav>*{padding:0}
+.mm-foot nav>*+*::before{display:none}
+.mm-foot .nf-acc a{padding:0}
