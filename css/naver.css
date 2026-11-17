@@ -11,7 +11,9 @@
 .tb-main{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:20px;height:calc(var(--bh) + var(--sat));padding:var(--sat) 24px 0;max-width:1760px;margin-inline:auto}
 .tb-main .right{grid-column:3;gap:6px}
 .tb-main .logo{font-size:18px;letter-spacing:-.02em;gap:8px}
-.tb-main .right .mm-ico{display:grid;order:99}
+/* tombol tiga garis: paling kiri, di sebelah logo (HP dan PC) */
+.tb-main .tb-l{display:flex;align-items:center;gap:8px;min-width:0}
+.tb-main .tb-l .mm-ico{display:grid;flex:none}
 html .topbar{background:var(--bg)}
 html[data-tier="high"] .topbar{background:var(--tb)}
 

@@ -44,9 +44,8 @@
 #mmCity .mm-cl{padding:0 0 4px}
 .mm-h{position:sticky;top:0;z-index:2;background:var(--bg)}
 /* PC dan "situs desktop" di HP (≥900px): satu kartu ringkas di bawah tombol "Semua layanan", isi di-scroll di dalamnya,
-   tanpa layar digelapkan (seperti Naver). Tombol tiga garis kedua di kanan disembunyikan. */
+   tanpa layar digelapkan (seperti Naver). Tombol tiga garis ada di kiri, di sebelah logo. */
 @media (min-width:900px){
-  .tb-main .mm-ico{display:none}
   .mm-bg{background:transparent}
   .mm-in{left:var(--mml,16px);transform:none;width:380px;max-height:min(560px,calc(100*var(--vh) - var(--mmt,64px) - 16px));padding:0 16px 14px;border-radius:14px;box-shadow:0 12px 36px rgba(0,0,0,.2)}
   @keyframes mmDrop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
