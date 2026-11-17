@@ -1,0 +1,52 @@
+/* GWM — panel "Semua layanan" gaya Naver: kartu di bawah tombol tiga garis (PC dan "situs desktop" di HP),
+   isi: akun, pintasan, kota per provinsi (bisa dicari), layanan lain, lalu info di bagian bawah. HP: layar penuh. */
+.mm-in:focus{outline:none}
+.mm-acct{align-items:center;justify-content:space-between;gap:10px;margin:8px 0 6px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--side);font-size:14px}
+.mm-acct b{display:block;font-size:15px}
+.mm-acct small{display:block;margin-top:2px;color:var(--mute);font-size:12px;font-weight:500}
+.mm-acct .i{width:18px;height:18px;color:var(--faint);flex:none}
+.mm-acct:hover{border-color:var(--brand)}
+.mm-sc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:6px 0 4px}
+.mm-sc a{display:grid;justify-items:center;gap:6px;padding:10px 4px;border-radius:12px;font-size:12.5px;font-weight:600;text-align:center}
+.mm-sc a .i{width:40px;height:40px;padding:10px;border-radius:12px;background:var(--side);color:var(--brand)}
+.mm-sc a:hover,.mm-sc a:focus-visible{background:var(--sel);color:var(--brand)}
+.mm-city{border-top:1px solid var(--line);margin-top:8px;padding-bottom:6px}
+.mm-city[hidden]{display:none}
+.mm-city h3{font-size:12px;font-weight:700;color:var(--faint);margin:14px 0 8px;letter-spacing:.02em}
+.mm-s{display:flex;align-items:center;gap:8px;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.mm-s:focus-within{border-color:var(--brand)}
+.mm-s .i{width:16px;height:16px;color:var(--faint);flex:none}
+.mm-s input{flex:1;min-width:0;border:0;outline:0;background:none;color:var(--ink);font:inherit;font-size:14px}
+.mm-pop{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.mm-pop a{border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:13px;font-weight:600}
+.mm-pop a small{margin-left:4px;color:var(--brand);font-weight:700}
+.mm-pop a:hover{background:var(--sel);color:var(--brand);border-color:var(--brand)}
+#mmCity{margin-top:8px}
+.mm-pv{border-top:1px solid var(--line)}
+.mm-pv summary{display:flex;align-items:center;gap:8px;padding:11px 4px;cursor:pointer;font-weight:600;font-size:14px;list-style:none}
+.mm-pv summary::-webkit-details-marker{display:none}
+.mm-pv summary small{margin-left:auto;color:var(--mute);font-weight:500;font-size:12px}
+.mm-pv summary .i{width:16px;height:16px;color:var(--faint);flex:none;transition:transform .15s}
+.mm-pv[open] summary .i{transform:rotate(180deg)}
+.mm-cl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;padding:0 0 10px}
+.mm-cl a{display:flex;justify-content:space-between;gap:6px;padding:7px 8px;border-radius:8px;font-size:13.5px;font-weight:500}
+.mm-cl a small{color:var(--brand);font-weight:700}
+.mm-cl a:hover,.mm-cl a:focus-visible{background:var(--sel);color:var(--brand)}
+.mm-cl a.all{grid-column:1/-1;color:var(--brand);font-weight:600}
+.mm-cl a[hidden],.mm-pv[hidden],.mm-pop[hidden],.mm-none[hidden]{display:none}
+.mm-none{margin:6px 4px;color:var(--mute);font-size:13px}
+/* layanan lain: ditumpuk satu kolom, tiap bagian 2 kolom tautan */
+.mm-g{grid-template-columns:minmax(0,1fr)!important;gap:0}
+.mm-g section{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;margin-top:8px;padding:2px 0 10px;border-top:1px solid var(--line)}
+.mm-g section h3{grid-column:1/-1}
+/* PC dan "situs desktop" di HP (≥900px): kartu di bawah tombol tiga garis, tidak menutup layar */
+@media (min-width:900px){
+  .mm-bg{background:rgba(0,0,0,.16)}
+  .mm-in{left:var(--mml,16px);transform:none;width:400px;padding:4px 16px 14px;border-radius:14px}
+  @keyframes mmDrop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  html:not([data-tier="low"]) .mm:not([hidden]) .mm-in{animation:mmDrop .18s var(--ease)}
+}
+/* tablet kecil: kartu di tengah */
+@media (min-width:641px) and (max-width:899px){
+  .mm-in{width:min(560px,calc(100*var(--vw) - 24px))}
+}

@@ -1,14 +1,24 @@
 <div class="mm" id="mm" hidden><div class="mm-bg" data-mmx="1"></div>
-<div class="mm-in" role="dialog" aria-modal="true" aria-labelledby="mmT">
+<div class="mm-in" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="mmT">
   <div class="mm-h"><b id="mmT">{{nv_svc}}</b><button class="ico-btn" type="button" data-mmx="1" aria-label="{{nv_close}}"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+  <a class="mm-acct mm-login" href="login"><span><b>{{nv_login}}</b><small>{{nv_acct_hint}}</small></span><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
+  <a class="mm-acct mm-me" href="profil"><span><b>{{nv_profile}}</b></span><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
+  <div class="mm-sc">
+    <a href="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg><span>{{nv_events}}</span></a>
+    <a href="event?kat=konser"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg><span>{{nv_concert}}</span></a>
+    <a href="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg><span>{{nv_hike}}</span></a>
+    <a href="event?kat=pameran"><svg class="i" aria-hidden="true"><use href="#i-bag"/></svg><span>{{nv_expo}}</span></a>
+    <a href="event?kat=tersimpan"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><span>{{nv_saved}}</span></a>
+    <a href="event?kat=selesai"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg><span>{{nv_done}}</span></a>
+  </div>
+  <section class="mm-city" id="mmCityBox" data-all="{{nv_allprov}}" data-ev="{{nv_evn}}" hidden>
+    <h3>{{nv_g_cities}}</h3>
+    <label class="mm-s"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input type="search" id="mmCityQ" placeholder="{{nv_cityq}}" autocomplete="off" enterkeyhint="search"></label>
+    <div class="mm-pop" id="mmPop" hidden></div>
+    <div id="mmCity"></div>
+    <p class="mm-none" id="mmNone" hidden>{{nv_noc}}</p>
+  </section>
   <div class="mm-g">
-    <section><h3>{{nv_g_explore}}</h3>
-      <a href="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>{{nv_events}}</a>
-      <a href="event?kat=konser"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg>{{nv_concert}}</a>
-      <a href="event?kat=pameran"><svg class="i" aria-hidden="true"><use href="#i-bag"/></svg>{{nv_expo}}</a>
-      <a href="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg>{{nv_hike}}</a>
-      <a href="event?kat=tersimpan"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg>{{nv_saved}}</a>
-      <a href="event?kat=selesai"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg>{{nv_done}}</a></section>
     <section><h3>{{nv_g_together}}</h3>
       <a href="event?ajakan=1"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>{{nv_invites}}</a>
       <a href="komunitas"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>{{nv_comm}}</a>
@@ -17,10 +27,7 @@
       <a href="ajukan"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>{{nv_submit}}</a></section>
     <section><h3>{{nv_g_tools}}</h3>
       <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-pack"/></svg>{{nv_pack}}</a>
-      <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-calc"/></svg>{{nv_split}}</a>
-    <h3>{{nv_g_me}}</h3>
-      <a href="profil" class="mm-me"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg>{{nv_profile}}</a>
-      <a href="login" class="mm-login"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg>{{nv_login}}</a></section>
+      <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-calc"/></svg>{{nv_split}}</a></section>
     <section><h3>{{nv_g_info}}</h3>
       <a href="bantuan"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>{{nv_help}}</a>
       <a href="bantuan#kontak"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>{{nv_contact}}</a>

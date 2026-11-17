@@ -129,6 +129,7 @@ function nav(){
   $("navMine").innerHTML=MINE.map(function(c){return item(c,c[0]==="tersimpan"?nSaved:nDone)}).join("");
   $("mCat").innerHTML=NAVS.concat(MINE).map(function(c){return item(c,null,true)}).join("");
   var cnt={},all=state.events.filter(isActive);all.forEach(function(e){if(e.city)cnt[e.city]=(cnt[e.city]||0)+1});
+  try{localStorage.setItem("gwm-cc",JSON.stringify({t:Date.now(),c:cnt}))}catch(e){}if(window.GWM_MM&&GWM_MM.counts)GWM_MM.counts(cnt);
   var names=Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a]||a.localeCompare(b)}).slice(0,10);
   if(state.city!=="semua"&&names.indexOf(state.city)<0)names.push(state.city);
   $("navCity").innerHTML=[["semua",tr("n_allcity"),all.length]].concat(names.map(function(c){return[c,c,cnt[c]||0]})).map(function(c){

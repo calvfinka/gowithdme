@@ -1,6 +1,6 @@
 /* Dibuat oleh tools/gen_dsk.py. Jangan edit tangan. Tata letak HP untuk mode "situs desktop" (html[data-dsk]). */
 html[data-dsk] body{zoom:var(--dz)}
-/* style.css @1000 */
+/* style.css @899 */
 html:where([data-dsk]) .topbar{grid-template-columns:auto minmax(0,1fr) auto;gap:10px}
 html:where([data-dsk]) .shell{grid-template-columns:1fr}
 html:where([data-dsk]) .side{display:none}
@@ -40,7 +40,7 @@ html:where([data-dsk]) .logo .w{display:none}
 html:where([data-dsk]) .khero h1{font-size:26px}
 /* style.css @640 */
 html:where([data-dsk]) .sxp{left:8px;right:8px;width:auto;transform:none;border-radius:12px}
-/* adaptive.css @1000 */
+/* adaptive.css @899 */
 html:where([data-dsk]) .mfilters,html:where([data-dsk]) .kchips{scroll-snap-type:x proximity}
 html:where([data-dsk]) .mfilters>*,html:where([data-dsk]) .kchips>*{scroll-snap-align:start}
 /* adaptive.css @640 */
@@ -72,7 +72,7 @@ html:where([data-dsk]) .mm-g{grid-template-columns:repeat(2,minmax(0,1fr))}
 html:where([data-dsk]) .mm-in{inset:0;top:0;left:0;transform:none;width:100%;max-height:none;height:100%;border-radius:0;border:0;padding:0 16px calc(16px + env(safe-area-inset-bottom,0px))}
 html:where([data-dsk]) .mm-h{position:sticky;top:0;background:var(--bg);padding-top:calc(12px + var(--sat));z-index:1}
 html:where([data-dsk]) .mm-g{grid-template-columns:1fr}
-/* naver.css @1000 */
+/* naver.css @899 */
 html:where([data-dsk]){--svc:0px;--bh:56px}
 html:where([data-dsk]) .tb-svc{display:none}
 html:where([data-dsk]) .tb-main{gap:10px;padding-inline:14px}

@@ -6,6 +6,7 @@
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="icon" href="../assets/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="../assets/apple-touch-icon.png"><link rel="manifest" href="../manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<<<<<<< HEAD
 <link rel="stylesheet" href="../css/style.css?v=202611171120">
 <link rel="stylesheet" href="../css/adaptive.css?v=202611171120">
 <link rel="stylesheet" href="../css/naver.css?v=202611171120">
@@ -14,6 +15,15 @@
 <link rel="stylesheet" href="../css/dsk-b.css?v=202611171120">
 <script src="../js/theme.js?v=202611171120"></script>
 <script src="../js/adaptive.js?v=202611171120"></script>
+=======
+<link rel="stylesheet" href="../css/style.css?v=202611171149">
+<link rel="stylesheet" href="../css/adaptive.css?v=202611171149">
+<link rel="stylesheet" href="../css/naver.css?v=202611171149">
+<link rel="stylesheet" href="../css/balance.css?v=202611171149">
+<link rel="stylesheet" href="../css/menu.css?v=202611171149">
+<script src="../js/theme.js?v=202611171149"></script>
+<script src="../js/adaptive.js?v=202611171149"></script>
+>>>>>>> f88f7d7 (desktop mode, menu kota)
 <title>Privacy Policy — GWM</title><meta name="description" content="GWM Privacy Policy by Jurkon Studio.">
 <link rel="canonical" href="https://calvfinka.github.io/gowithdme/en/privacy"><link rel="alternate" hreflang="id" href="https://calvfinka.github.io/gowithdme/id/privacy"><link rel="alternate" hreflang="en" href="https://calvfinka.github.io/gowithdme/en/privacy"><link rel="alternate" hreflang="x-default" href="https://calvfinka.github.io/gowithdme/id/privacy"></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -75,16 +85,26 @@
 </div>
 </header>
 <div class="mm" id="mm" hidden><div class="mm-bg" data-mmx="1"></div>
-<div class="mm-in" role="dialog" aria-modal="true" aria-labelledby="mmT">
+<div class="mm-in" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="mmT">
   <div class="mm-h"><b id="mmT">GWM services</b><button class="ico-btn" type="button" data-mmx="1" aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+  <a class="mm-acct mm-login" href="login"><span><b>Log in or sign up</b><small>Log in to save events and join invites</small></span><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
+  <a class="mm-acct mm-me" href="profil"><span><b>My profile</b></span><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
+  <div class="mm-sc">
+    <a href="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg><span>All events</span></a>
+    <a href="event?kat=konser"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg><span>Concerts & festivals</span></a>
+    <a href="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg><span>Hiking</span></a>
+    <a href="event?kat=pameran"><svg class="i" aria-hidden="true"><use href="#i-bag"/></svg><span>Expos</span></a>
+    <a href="event?kat=tersimpan"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><span>Saved</span></a>
+    <a href="event?kat=selesai"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg><span>Ended events</span></a>
+  </div>
+  <section class="mm-city" id="mmCityBox" data-all="All events in {p}" data-ev="{n} events" hidden>
+    <h3>Cities</h3>
+    <label class="mm-s"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input type="search" id="mmCityQ" placeholder="Search city or province" autocomplete="off" enterkeyhint="search"></label>
+    <div class="mm-pop" id="mmPop" hidden></div>
+    <div id="mmCity"></div>
+    <p class="mm-none" id="mmNone" hidden>No matching city</p>
+  </section>
   <div class="mm-g">
-    <section><h3>Explore</h3>
-      <a href="event"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>All events</a>
-      <a href="event?kat=konser"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg>Concerts & festivals</a>
-      <a href="event?kat=pameran"><svg class="i" aria-hidden="true"><use href="#i-bag"/></svg>Expos</a>
-      <a href="gunung"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg>Hiking</a>
-      <a href="event?kat=tersimpan"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg>Saved</a>
-      <a href="event?kat=selesai"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg>Ended events</a></section>
     <section><h3>Together & community</h3>
       <a href="event?ajakan=1"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>Meet-up invites</a>
       <a href="komunitas"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>City communities</a>
@@ -93,10 +113,7 @@
       <a href="ajukan"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Submit an event or open trip</a></section>
     <section><h3>Hiking tools</h3>
       <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-pack"/></svg>Packing checklist</a>
-      <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-calc"/></svg>Cost splitter</a>
-    <h3>My account</h3>
-      <a href="profil" class="mm-me"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg>My profile</a>
-      <a href="login" class="mm-login"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg>Log in or sign up</a></section>
+      <a href="gunung#tools"><svg class="i" aria-hidden="true"><use href="#i-calc"/></svg>Cost splitter</a></section>
     <section><h3>Info & help</h3>
       <a href="bantuan"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Help & FAQ</a>
       <a href="bantuan#kontak"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Contact</a>
@@ -123,6 +140,11 @@
 
 <div class="page" style="padding-top:0"><div class="foot"><span>© <span id="year"></span> GWM · Jurkon Studio. Posters and copyrights belong to their organizers.</span><nav><a href="bantuan">Help</a><a href="../blog/">Blog</a><a href="terms">Terms &amp; Conditions</a><a href="privacy">Privacy Policy</a><a href="bantuan#kontak">Contact</a></nav></div>
 </div>
+<<<<<<< HEAD
 <script src="../js/i18n.js?v=202611171120"></script><script src="../js/config.js?v=202611171120"></script><script>document.getElementById("year").textContent=new Date().getFullYear();[].forEach.call(document.querySelectorAll("[data-mail]"),function(a){a.href="mailto:"+IB_CONFIG.CONTACT_EMAIL;if(a.hasAttribute("data-t"))a.textContent=IB_CONFIG.CONTACT_EMAIL})</script>
 <script src="../js/regions.js?v=202611171120"></script><script src="../js/gunung-data.js?v=202611171120"></script><script src="../js/search-index.js?v=202611171120"></script><script src="../js/search.js?v=202611171120"></script><script src="../js/navauth.js?v=202611171120"></script><script src="../js/naver.js?v=202611171120"></script><script src="../js/track.js?v=202611171120"></script>
+=======
+<script src="../js/i18n.js?v=202611171149"></script><script src="../js/config.js?v=202611171149"></script><script>document.getElementById("year").textContent=new Date().getFullYear();[].forEach.call(document.querySelectorAll("[data-mail]"),function(a){a.href="mailto:"+IB_CONFIG.CONTACT_EMAIL;if(a.hasAttribute("data-t"))a.textContent=IB_CONFIG.CONTACT_EMAIL})</script>
+<script src="../js/regions.js?v=202611171149"></script><script src="../js/gunung-data.js?v=202611171149"></script><script src="../js/search-index.js?v=202611171149"></script><script src="../js/search.js?v=202611171149"></script><script src="../js/navauth.js?v=202611171149"></script><script src="../js/naver.js?v=202611171149"></script><script src="../js/track.js?v=202611171149"></script>
+>>>>>>> f88f7d7 (desktop mode, menu kota)
 </body></html>

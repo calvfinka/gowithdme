@@ -546,6 +546,7 @@ S.update({
 NV = {
 "nv_all": ("Semua layanan", "All services"), "nv_menu": ("Menu", "Menu"), "nv_close": ("Tutup", "Close"), "nv_go": ("Cari", "Search"),
 "nv_svc": ("Layanan GWM", "GWM services"),
+"nv_g_cities": ("Kota", "Cities"), "nv_cityq": ("Cari kota atau provinsi", "Search city or province"), "nv_allprov": ("Semua event di {p}", "All events in {p}"), "nv_noc": ("Kota tidak ditemukan", "No matching city"), "nv_evn": ("{n} event", "{n} events"), "nv_acct_hint": ("Masuk untuk menyimpan event dan ikut ajakan", "Log in to save events and join invites"), "nv_pop": ("Populer", "Popular"),
 "nv_g_explore": ("Jelajahi", "Explore"), "nv_g_together": ("Bareng & komunitas", "Together & community"),
 "nv_g_tools": ("Alat naik gunung", "Hiking tools"), "nv_g_me": ("Akunku", "My account"), "nv_g_info": ("Info & bantuan", "Info & help"),
 "nv_events": ("Semua event", "All events"), "nv_concert": ("Konser & festival", "Concerts & festivals"), "nv_expo": ("Pameran", "Expos"),

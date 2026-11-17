@@ -1,0 +1,2 @@
+UPDATE 3: mode desktop di HP = tampilan PC + menu tiga garis gaya Naver (kota) + perbaikan menu HP
+unzip -o gwm-update-3.zip && python3 tools/build.py && git add -A && git commit -m "desktop mode, menu kota" && git push
