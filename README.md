@@ -99,3 +99,9 @@ Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (
 - Hasil membuka: rincian event (dialog bila sudah di Beranda/Event/Gunung), `event?kota=`, `event?prov=`, `gunung?q=`, `komunitas?kota=`, atau `bantuan#faq-N`. Halaman Event/Gunung kini menerima `?q=`, `?kota=`, `?prov=` dan menampilkan chip "Hasil untuk ..." dengan tombol Hapus filter.
 - Kode: `js/search.js` (mesin + panel), `js/search-index.js` (halaman & FAQ, dibuat otomatis oleh `tools/build.py`), gaya di akhir `css/style.css`, teks `sx_*` di `tools/strings.py`. Menambah halaman ke pencarian: tambah baris di `SX_PAGES` dalam `tools/build.py`.
 - Event dan kota komunitas dibaca dari Supabase saat panel pertama dibuka (tanpa tabel baru). Pencarian terakhir (6 terbaru) disimpan di browser (`gwm_recent_q`) dan disebut di Kebijakan Privasi.
+
+## Tampilan adaptif (css/adaptive.css + js/adaptive.js)
+- `js/adaptive.js` memasang `<html data-tier="low|mid|high" data-dev="phone|tablet|desktop">` dari RAM, inti CPU, hemat data, GPU software, dan uji frame-rate singkat (otomatis turun satu tingkat bila patah-patah).
+- Pengguna bisa memilih manual di footer: Otomatis / Hemat / Seimbang / Penuh (disimpan di `localStorage` kunci `gwm-quality`).
+- `css/adaptive.css`: HP = tab bawah + lembar bawah untuk rincian event; PC = menu utama di bilah atas; tingkat hemat = tanpa animasi/blur; penuh = kaca buram, latar bergerak, animasi masuk saat scroll, kilau kartu, transisi antar-halaman.
+- Teks baru ada di akhir `tools/strings.py` (`nav_primary`, `tab_comm`, `tab_me`, `skip`, `totop`, `q_*`). Setelah ubah: `python3 tools/build.py`.

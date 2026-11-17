@@ -530,3 +530,14 @@ J.update({
 "ms_login": ("Masuk", "Log in"), "ms_back": ("Kembali", "Back"), "ms_send": ("Kirim pesan", "Send message"), "ms_send_btn": ("Kirim", "Send"),
 "ms_sql": ("Fitur pesan belum aktif: jalankan supabase/schema_pesan.sql di Supabase.", "Messaging is not enabled yet: run supabase/schema_pesan.sql in Supabase."),
 })
+
+# --- Tata letak adaptif: navigasi utama, tab bawah (HP), pilihan kualitas tampilan ---
+S.update({
+"nav_primary": ("Menu utama", "Main menu"),
+"tab_comm": ("Komunitas", "Community"),
+"tab_me": ("Akun", "Account"),
+"skip": ("Lewati ke konten", "Skip to content"),
+"totop": ("Kembali ke atas", "Back to top"),
+"q_label": ("Kualitas tampilan", "Visual quality"),
+"q_auto": ("Otomatis", "Auto"), "q_low": ("Hemat", "Saver"), "q_mid": ("Seimbang", "Balanced"), "q_high": ("Penuh", "Full"),
+})
