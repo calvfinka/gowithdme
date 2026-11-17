@@ -118,3 +118,48 @@ details.fq p{margin:0 0 14px;color:var(--mute);max-width:62ch}
 .ms-bar textarea{flex:1;resize:none;max-height:120px;border:1px solid var(--line);background:var(--s1);color:var(--ink);border-radius:14px;padding:10px 12px;font:inherit}
 .ms-bar .rec{background:#e11d2e;color:#fff;animation:rec 1s infinite}@keyframes rec{50%{opacity:.6}}@media(prefers-reduced-motion:reduce){.ms-bar .rec{animation:none}}
 .ms-bar button:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---- admin: menu, beranda, statistik ---- */
+.bnav button span{font-size:11px;font-weight:600}
+#bPend,#bFrep{display:none!important}
+.seg small{opacity:.7;margin-left:4px}
+.sh{font-size:13px;color:var(--mute);margin:18px 0 6px;font-weight:600}
+.card.ok{border-color:var(--ok)}.card.ok h3{color:var(--ok)}
+.kps{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:8px 0 12px}
+.kp{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:grid;gap:2px;align-content:start}
+.kp small{font-size:12px;color:var(--mute)}.kp b{font:700 26px var(--f);color:var(--ink);line-height:1.15}
+.kp .tr,.tr{font-style:normal;font-size:11.5px;color:var(--mute)}.tr.up{color:var(--ok)}.tr.down{color:var(--err)}
+.kp .kn{font-size:11px;color:var(--mute);opacity:.8}
+.sc{margin-bottom:12px}.sc h3{margin-bottom:2px}
+.g2s{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}.g2s .sc{margin-bottom:0}.g2s{margin-bottom:12px}
+.ch svg{width:100%;height:auto;display:block;font:10px var(--f);fill:var(--mute)}
+.ch .gl{stroke:var(--line);stroke-width:1}.ch .b1{fill:var(--sun);opacity:.45}.ch .b2{fill:var(--ember)}
+.lg{font-size:12px;color:var(--mute);margin:4px 0 0}.lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 4px 0 0;vertical-align:-1px}
+.lg i.b1{background:var(--sun);opacity:.45}.lg i.b2{background:var(--ember)}
+.hb{display:grid;gap:7px;margin-top:8px}
+.hr{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:13px}
+.hr .hl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hr .hv{height:8px;background:var(--s2);border-radius:99px;overflow:hidden}.hr .hv i{display:block;height:100%;background:var(--ember);border-radius:99px}
+.hr b{font-weight:700;text-align:right;white-space:nowrap}.hr small{color:var(--mute);font-weight:500}
+.hr.ev{grid-template-columns:minmax(0,1fr) auto}.hr.ev .hl{white-space:normal}.hr.ev .hl small{display:block;font-size:12px}
+.hrs{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;height:70px;align-items:end;margin-top:8px}
+.hrs span{display:flex;align-items:flex-end;height:100%}.hrs i{display:block;width:100%;background:var(--sun);opacity:.5;border-radius:3px 3px 0 0}.hrs i.top{background:var(--ember);opacity:1}
+.hrl{display:flex;justify-content:space-between;font-size:10px;color:var(--mute);margin-top:3px}
+.us{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}.us:first-child{border-top:0}
+.ua{flex:0 0 36px;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--ember),var(--sun));color:#12302a;display:grid;place-items:center;font:700 14px var(--f)}
+.ub{min-width:0}.ub b{font-size:14px}.ub .meta{margin-top:1px;font-size:12px;overflow-wrap:anywhere}
+.msg code,.card code{background:var(--s2);padding:1px 5px;border-radius:5px;font-size:12px}
+@media (min-width:900px){
+  .bnav{top:calc(var(--bh) + var(--sat));bottom:0;right:auto;width:196px;flex-direction:column;justify-content:flex-start;gap:2px;padding:14px 10px;border-top:0;border-right:1px solid var(--line)}
+  .bnav button{flex:none;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;justify-content:flex-start;font-size:14px}
+  .bnav button span{font-size:14px}.bnav button:hover{background:var(--s2)}.bnav button.on{background:var(--s2);color:var(--ink)}
+  .bnav button i{font-size:17px}.bnav .dot{position:static;margin-left:auto}
+  main.pg{margin:0 auto 0 212px;max-width:980px;padding:20px 24px 40px}
+  .sticky{bottom:0}
+}
+.qa{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.top .logo{flex:none}.top .logo .badge{flex:none;width:auto}
+.badge.adm{display:inline-block;width:auto}
+main.pg{padding-left:16px;padding-right:16px}
+.hr.ev b{white-space:normal}
+@media (min-width:900px){main.pg{padding-left:24px;padding-right:24px}}

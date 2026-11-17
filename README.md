@@ -113,3 +113,12 @@ Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (
 - `js/app.js` mengekspor `window.IB_Api` (hanya baca + atur filter) dan event `ib:ready`, `ib:render`, `ib:open`.
 - "Terakhir dilihat" disimpan hanya di perangkat (`gwm_viewed`), sudah disebut di Kebijakan Privasi.
 - Setelah mengubah `tools/strings.py` atau `src/*.html`: `python3 tools/build.py`.
+
+## Statistik admin
+- Panel Admin punya menu baru: **Beranda** (yang perlu dikerjakan + ringkasan), **Tinjau** (Pengajuan event | Laporan komunitas), **Postingan** (Event | Blog), **Statistik**, **Buat baru**. Di layar lebar menu menjadi bilah samping.
+- **Statistik** punya 3 tab: *Pengunjung* (tayangan, pengunjung unik/baru, grafik harian, halaman dan event terpopuler, sumber, jam ramai, perangkat, bahasa), *Pengguna* (pendaftar, aktif, kota, daftar pengguna dengan email disamarkan), *Konten* (status postingan, kategori, kota, aktivitas komunitas).
+- Pasang sekali: jalankan `supabase/schema_statistik.sql` di Supabase SQL Editor. Tanpa itu, tab Statistik menampilkan petunjuknya.
+- Pencatat kunjungan: `js/track.js` (disisipkan otomatis oleh `tools/build.py` ke semua halaman publik). Tanpa cookie dan tanpa IP; hanya halaman, bahasa, jenis perangkat, situs asal, dan kode acak di localStorage. Do Not Track / Global Privacy Control dihormati. Data dihapus setelah 400 hari. Dijelaskan di Kebijakan Privasi.
+- Kunjunganmu sendiri bisa dikecualikan lewat tombol "Jangan hitung kunjungan perangkat ini" di Statistik > Pengunjung (per browser).
+- Pengunjung unik adalah perkiraan per browser, bukan per orang.
+

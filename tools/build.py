@@ -87,7 +87,7 @@ for l in LANGS:
         h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl).replace("{{og_img}}",f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png")
         h=re.sub(r"\{\{(\w+)\}\}",lambda m:S[m.group(1)][IDX[l]],h)
         assert "{{" not in h,(l,p)
-        need=[x for x in ("i18n","config","regions","gunung-data","search-index","search","navauth","naver") if f"../js/{x}.js" not in h]
+        need=[x for x in ("i18n","config","regions","gunung-data","search-index","search","navauth","naver","track") if f"../js/{x}.js" not in h]
         h=h.replace("</body>","".join(f'<script src="../js/{x}.js"></script>' for x in need)+"\n</body>",1)
         h=re.sub(r'(\.\./(?:js|css)/[\w.-]+\.(?:js|css))"',r'\1?v='+VER+'"',h)
         open(f"{ROOT}/{l}/{p}.html","w",encoding="utf-8").write(h)

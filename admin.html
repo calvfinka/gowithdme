@@ -13,26 +13,35 @@
 <div id="panel" hidden>
 
 <section id="v_dash">
-  <h2>Dashboard</h2><p class="meta">Ringkasan semua postingan dan jalan pintas.</p>
-  <div class="st5"><div><b id="nAll">0</b>Total</div><div><b id="nPub">0</b>Terbit</div><div><b id="nDr">0</b>Draft</div><div><b id="nKon">0</b>Konser</div><div><b id="nGun">0</b>Naik Gunung</div><div><b id="nPend">0</b>Menunggu</div></div>
+  <h2>Beranda</h2><p class="meta">Yang perlu kamu kerjakan lebih dulu, lalu ringkasan situs.</p>
+  <div class="card ok" id="allClear" hidden><h3>Semua beres 🎉</h3><p>Tidak ada pengajuan atau laporan yang menunggu.</p></div>
   <div class="card" id="pendCta" hidden><h3>Pengajuan menunggu persetujuan</h3><p>Ada <b id="nPend2">0</b> pengajuan dari publik yang belum diperiksa.</p><button class="btn" data-v="review" type="button">Periksa sekarang</button></div>
   <div class="card" id="fCta" hidden><h3>Laporan komunitas menunggu</h3><p>Ada <b id="nFrep">0</b> kiriman atau balasan forum yang dilaporkan dan belum diperiksa.</p><button class="btn" data-v="forum" type="button">Periksa sekarang</button></div>
+  <h3 class="sh">Situs sekarang</h3>
+  <div class="kps" id="kpiDash"></div>
+  <p class="meta"><button class="lnk" data-v="stats" type="button">Lihat statistik lengkap →</button></p>
+  <h3 class="sh">Buat sesuatu</h3>
   <div class="qa"><button data-new="konser" type="button">🎤 Buat konser</button><button data-new="naikgunung" type="button">⛰️ Buat pendakian</button><button data-v="blog" type="button">📝 Tulis blog</button></div>
   <div class="card"><h3>Event terdekat</h3><p>Lima event terbit berikutnya.</p><div id="soon"></div></div>
+  <h3 class="sh">Isi konten</h3>
+  <div class="st5"><div><b id="nAll">0</b>Total</div><div><b id="nPub">0</b>Terbit</div><div><b id="nDr">0</b>Draft</div><div><b id="nKon">0</b>Konser</div><div><b id="nGun">0</b>Naik Gunung</div><div><b id="nPend">0</b>Menunggu</div></div>
 </section>
 
 <section id="v_review" hidden>
+  <div class="seg" data-g="tinjau"><button class="on" data-v="review" type="button">Pengajuan event <small id="tgRev">0</small></button><button data-v="forum" type="button">Laporan komunitas <small id="tgFor">0</small></button></div>
   <h2>Persetujuan</h2><p class="meta">Pengajuan event dan open trip dari publik. Periksa judul, tanggal, kontak, dan poster sebelum menyetujui. Yang ditolak bisa diberi alasan agar pengaju dapat memperbaiki.</p>
   <div id="rev"></div>
 </section>
 
 <section id="v_forum" hidden>
+  <div class="seg" data-g="tinjau"><button data-v="review" type="button">Pengajuan event <small class="tgR">0</small></button><button class="on" data-v="forum" type="button">Laporan komunitas <small class="tgF">0</small></button></div>
   <h2>Moderasi komunitas</h2><p class="meta">Kiriman dan balasan forum kota, plus pengelolaan grup dan kota. Tiga laporan dari orang berbeda menyembunyikan kiriman otomatis; di sini kamu memutuskan: abaikan laporan, biarkan tersembunyi, atau hapus. Yang disembunyikan bisa dipulihkan, yang dihapus tidak.</p>
   <div class="bar" id="fmTabs"><button class="tab on" data-ft="rep" type="button">Dilaporkan <small id="fmNRep">0</small></button><button class="tab" data-ft="new" type="button">Terbaru</button><button class="tab" data-ft="off" type="button">Disembunyikan / dihapus</button><button class="tab" data-ft="ban" type="button">Diblokir</button><button class="tab" data-ft="cfg" type="button">Grup &amp; kota</button></div>
   <div id="fmList"></div>
 </section>
 
 <section id="v_list" hidden>
+  <div class="seg" data-g="konten"><button class="on" data-v="list" type="button">Event &amp; pendakian</button><button data-v="blog" type="button">Blog</button></div>
   <h2>Postingan</h2>
   <div class="bar" id="flKind"><button class="tab on" data-k="" type="button">Semua</button><button class="tab" data-k="konser" type="button">🎤 Konser</button><button class="tab" data-k="naikgunung" type="button">⛰️ Naik Gunung</button></div>
   <div class="flt"><select id="flStatus" aria-label="Status"><option value="">Semua status</option><option value="published">Terbit</option><option value="pending">Menunggu</option><option value="rejected">Ditolak</option><option value="draft">Draft</option></select><select id="flCity" aria-label="Kota"></select><input id="flQ" type="search" placeholder="Cari judul…"></div>
@@ -40,6 +49,7 @@
 </section>
 
 <section id="v_blog" hidden>
+  <div class="seg" data-g="konten"><button data-v="list" type="button">Event &amp; pendakian</button><button class="on" data-v="blog" type="button">Blog</button></div>
   <h2>Blog</h2><p class="meta">Tulisan teks tanpa foto, maksimal 4000 karakter. Halaman publik dibuat di folder <code>blog/&lt;kategori&gt;/</code> saat sinkron.</p>
   <div class="bar"><button class="btn" id="bgNew" type="button">➕ Tulisan baru</button></div>
   <div id="bgList"></div>
@@ -57,6 +67,13 @@
     <div class="sticky"><button class="btn ghost" id="bgSaveD" type="button">Simpan draft</button><button class="btn" id="bgSaveP" type="button">Terbitkan</button></div>
     <p style="text-align:center"><button class="lnk" id="bgCancel" type="button">Kembali</button> · <button class="lnk" id="bgDel" type="button" hidden>Hapus</button></p>
   </form>
+</section>
+
+<section id="v_stats" hidden>
+  <h2>Statistik</h2><p class="meta">Pengunjung situs, pengguna terdaftar, dan isi konten. Semua tanggal menurut WIB.</p>
+  <div class="bar" id="stRange"><button class="tab" data-d="7" type="button">7 hari</button><button class="tab on" data-d="30" type="button">30 hari</button><button class="tab" data-d="90" type="button">90 hari</button></div>
+  <div class="seg" id="stTabs"><button class="on tab" data-t="visit" type="button">Pengunjung</button><button class="tab" data-t="users" type="button">Pengguna</button><button class="tab" data-t="content" type="button">Konten</button></div>
+  <div id="stBody"><p class="meta">Memuat…</p></div>
 </section>
 
 <section id="v_form" hidden>
@@ -109,14 +126,13 @@
 </section>
 </div>
 </main>
-<nav class="bnav" id="bnav" hidden>
-  <button data-v="dash" class="on" type="button"><i>🏠</i>Dashboard</button>
-  <button data-v="review" type="button"><i>✅</i>Persetujuan<b class="dot" id="bPend" hidden></b></button>
-  <button data-v="forum" type="button"><i>💬</i>Komunitas<b class="dot" id="bFrep" hidden></b></button>
-  <button data-v="list" type="button"><i>📋</i>Postingan</button>
-  <button data-v="blog" type="button"><i>📝</i>Blog</button>
-  <button data-v="form" type="button"><i>➕</i>Buat baru</button>
+<nav class="bnav" id="bnav" hidden aria-label="Menu admin">
+  <button data-v="dash" class="on" type="button"><i>🏠</i><span>Beranda</span></button>
+  <button data-v="review" data-g="review,forum" type="button"><i>✅</i><span>Tinjau</span><b class="dot" id="bTinjau" hidden></b><b class="dot" id="bPend" hidden></b><b class="dot" id="bFrep" hidden></b></button>
+  <button data-v="list" data-g="list,blog" type="button"><i>📋</i><span>Postingan</span></button>
+  <button data-v="stats" type="button"><i>📊</i><span>Statistik</span></button>
+  <button data-v="form" type="button"><i>➕</i><span>Buat baru</span></button>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script><script src="js/admin-blog.js"></script>
+<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script><script src="js/admin-blog.js"></script><script src="js/admin-stats.js"></script>
 </body></html>
