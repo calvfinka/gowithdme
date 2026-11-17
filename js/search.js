@@ -38,8 +38,8 @@ var PFX={event:"event",events:"event",acara:"event",kota:"place",wilayah:"place"
  gunung:"mtn",gn:"mtn",mountain:"mtn",mt:"mtn",halaman:"page",page:"page",pages:"page",bantuan:"faq",help:"faq",faq:"faq"};
 var MID=["januari","februari","maret","april","mei","juni","juli","agustus","september","oktober","november","desember"],
     MEN=["january","february","march","april","may","june","july","august","september","october","november","december"];
-var CATKW={konser:"konser musik festival gig live concert music",naikgunung:"naik gunung pendakian hiking open trip trekking camping mountain",pameran:"pameran expo exhibition seni art"};
-var CATIC={konser:"mic",naikgunung:"mtn",pameran:"bag"};
+var CATKW={konser:"konser musik festival gig live concert music",naikgunung:"naik gunung pendakian hiking open trip trekking camping mountain",pameran:"pameran expo exhibition seni art",festival:"festival musik seni fest",komedi:"komedi stand up comedy open mic lawak",seminar:"seminar konferensi talkshow workshop conference talk",meetup:"meetup komunitas trivia nobar mahjong gathering",lainnya:"teater pertunjukan pameran properti lainnya other"};
+var CATIC={konser:"mic",naikgunung:"mtn",pameran:"bag",festival:"ticket",komedi:"chat",seminar:"note",meetup:"users",lainnya:"cal"};
 var PGIC={home:"home",events:"cal",hike:"mtn",invite:"users",comm:"users",submit:"plus",help:"help",contact:"help",terms:"note",privacy:"note",login:"users",profile:"users",saved:"heart",done:"clock",concert:"mic",expo:"bag",hiking:"mtn"};
 var TYPES=["event","place","mtn","page","faq"],CAP=4,CAP_OTHER=3;
 
@@ -179,11 +179,12 @@ function hl(t,toks){t=String(t||"");var ts=toks.filter(function(x){return x.leng
 /* Panel menempel pada kotak cari yang TERLIHAT: kotak besar di beranda bila utuh di bawah header, kalau tidak, tepat di bawah header.
    Dihitung ulang saat gulir/ubah ukuran, karena browser bisa menggulir halaman setelah kotak difokuskan (header lengket menutupi kotak). */
 function topEdge(){var tb=document.querySelector(".topbar");return tb?Math.max(0,tb.getBoundingClientRect().bottom):0}
-function fit(){var tbB=topEdge(),vv=window.visualViewport,vh=vv?vv.height:window.innerHeight,vw=document.documentElement.clientWidth||window.innerWidth,
-  box=inp.closest("[data-sxanchor]"),r=box&&box.getBoundingClientRect(),
+function sr(r,Z){return r&&{top:r.top/Z,bottom:r.bottom/Z,left:r.left/Z,width:r.width/Z,height:r.height/Z}}
+function fit(){var Z=window.GWM_Z||1,tbB=topEdge()/Z,vv=window.visualViewport,vh=(vv?vv.height:window.innerHeight)/Z,vw=(document.documentElement.clientWidth||window.innerWidth)/Z,
+  box=inp.closest("[data-sxanchor]"),r=box&&sr(box.getBoundingClientRect(),Z),
   shown=!!(r&&r.height>0&&r.top>=tbB-1&&r.bottom<=vh),top,ar;
   if(shown){ar=r;top=r.bottom+6;scrim.style.top="0px"}
-  else{var hs=document.querySelector(".tb-main .search"),hr=hs&&hs.getBoundingClientRect();
+  else{var hs=document.querySelector(".tb-main .search"),hr=hs&&sr(hs.getBoundingClientRect(),Z);
     var hsOn=hs&&hr.width>0&&getComputedStyle(hs).visibility!=="hidden";ar=hsOn?hr:(r&&r.width>0?r:(hr&&hr.width>0?hr:null));top=(tbB||52)+6;scrim.style.top=(tbB||52)+"px"}
   top=Math.min(top,Math.max(8,vh-220));
   panel.style.top=top+"px";panel.style.maxHeight=Math.max(220,vh-top-12)+"px";

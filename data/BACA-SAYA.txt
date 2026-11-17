@@ -1,0 +1,3 @@
+Folder ini diisi oleh:  python3 tools/gen_events.py   (mengambil event published dari Supabase -> events.json)
+Lalu jalankan:          python3 tools/build.py        (membuat id/e/*.html, en/e/*.html, dan sitemap)
+Ulangi tiap kali menambah event, lalu git add -A && git commit && git push.

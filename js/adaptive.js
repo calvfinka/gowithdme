@@ -34,7 +34,14 @@
   if(mode!=="auto")tier=mode;
   else{try{var p=sessionStorage.getItem(P);if(p&&ORDER.indexOf(p)>-1)tier=lower(tier,p)}catch(e){}}
   var reduce=mq("(prefers-reduced-motion: reduce)");
-  function paint(){r.setAttribute("data-tier",tier);r.setAttribute("data-dev",dev());r.setAttribute("data-motion",reduce?"reduce":"full")}
+  /* Mode "situs desktop" di HP: browser merender halaman selebar PC (≥700px) lalu memperkecilnya ke layar kecil.
+     Layar fisik kecil (sisi pendek ≤600) + lebar halaman ≥700 = mode itu (PC/tablet asli tidak pernah memenuhi).
+     Isi halaman diperbesar (zoom) sampai selebar ±400px, dan css/dsk.css memakai tata letak HP. */
+  function zoomF(){var iw=window.innerWidth||0,sm=Math.min(screen.width||9999,screen.height||9999);
+    return(iw>=700&&sm<=600)?Math.max(1.2,Math.min(4,iw/400)):1}
+  function paint(){var z=zoomF();r.setAttribute("data-tier",tier);r.setAttribute("data-dev",z>1?"phone":dev());r.setAttribute("data-motion",reduce?"reduce":"full");
+    window.GWM_Z=z;if(z>1){r.setAttribute("data-dsk","1");r.style.setProperty("--dz",z.toFixed(3));r.style.setProperty("--vw","calc(1vw / "+z.toFixed(3)+")");r.style.setProperty("--vh","calc(1vh / "+z.toFixed(3)+")")}
+    else{r.removeAttribute("data-dsk");r.style.removeProperty("--dz");r.style.removeProperty("--vw");r.style.removeProperty("--vh")}}
   paint();
   // transisi halus antar-halaman (Chrome/Edge/Safari baru): hanya di tingkat sedang/tinggi
   if(tier!=="low"&&!reduce){try{var st=d.createElement("style");st.textContent="@view-transition{navigation:auto}::view-transition-old(root),::view-transition-new(root){animation-duration:.16s}";d.head.appendChild(st)}catch(e){}}

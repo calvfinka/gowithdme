@@ -1,0 +1,15 @@
+/* Dibuat oleh tools/gen_dsk.py. Jangan edit tangan. Tata letak HP untuk mode "situs desktop" (html[data-dsk]). */
+/* balance.css @1000 */
+html:where([data-dsk]) .main{padding-inline:var(--gx)}
+/* balance.css @640 */
+html:where([data-dsk]) .nv-home .main{padding-inline:var(--gx)}
+html:where([data-dsk]) .tiles{gap:16px 12px}
+html:where([data-dsk]) .nv-hero .search.nvs{height:52px}
+html:where([data-dsk]) .nv-hero .search.nvs .sxgo{width:40px;height:40px}
+/* balance.css @640 */
+html:where([data-dsk]) .nv-sl{--sh:256px;--pad:16px;--ctlgap:44px;--pwmax:min(150px,calc(34*var(--vw)))}
+html:where([data-dsk]) .nv-sl[data-o="land"]{--pwmax:min(190px,calc(44*var(--vw)))}
+html:where([data-dsk]) .nv-sl[data-o="tall"]{--pwmax:min(110px,calc(26*var(--vw)))}
+html:where([data-dsk]) .nv-sl-in{padding:var(--pad) 16px var(--pad) 18px;gap:14px}
+html:where([data-dsk]) .nv-sl-tx{gap:8px}
+html:where([data-dsk]) .nv-sl-po,html:where([data-dsk]) .nv-sl[data-o] .nv-sl-po{border-radius:var(--r-poster)}

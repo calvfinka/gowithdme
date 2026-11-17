@@ -80,7 +80,7 @@ select,input[type=search],input[type=number]{background:var(--field);color:var(-
 .chip[aria-pressed="true"],.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}span.chip{cursor:default}
 .pfh{display:flex;gap:14px;align-items:center;margin-bottom:10px}.pfh h1{font-size:20px;margin:0 0 2px;overflow-wrap:anywhere}
 .pavb{flex:0 0 64px;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--ember),var(--sun));color:#12302a;display:grid;place-items:center;font:700 26px var(--f)}
-.pf .card{margin-bottom:12px}.pf .row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+.prof .card{margin-bottom:12px}.prof .row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
 .pvl{display:grid;gap:6px;margin:6px 0 10px}
 .pv{display:flex;gap:10px;align-items:center;padding:6px 8px;border:1px solid var(--line);border-radius:10px;background:var(--s1);color:inherit;text-decoration:none}
 .pv b{display:block;font-size:14px}.pv small{display:block;font-size:12px;color:var(--mute)}
@@ -109,7 +109,7 @@ details.fq p{margin:0 0 14px;color:var(--mute);max-width:62ch}
 .ms-ico{position:relative;text-decoration:none}.ms-ico .nb{position:absolute;top:-4px;right:-4px}
 .ms-h{display:flex;align-items:center;gap:10px}.ms-who{flex:1;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);min-width:0}.ms-who b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ms-req{background:var(--s2);border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px}
-.ms-list{display:flex;flex-direction:column;gap:8px;min-height:40vh;max-height:58vh;overflow:auto;padding:12px;margin:10px 0;border:1px solid var(--line);border-radius:16px;background:var(--s1)}
+.ms-list{display:flex;flex-direction:column;gap:8px;min-height:calc(40*var(--vh));max-height:calc(58*var(--vh));overflow:auto;padding:12px;margin:10px 0;border:1px solid var(--line);border-radius:16px;background:var(--s1)}
 .ms-b{max-width:82%;padding:8px 12px;border-radius:16px 16px 16px 4px;background:var(--s2);align-self:flex-start;overflow-wrap:anywhere}
 .ms-b.me{align-self:flex-end;border-radius:16px 16px 4px 16px;background:var(--accent);color:var(--accent-ink)}
 .ms-m{display:block;font-size:11px;opacity:.75;margin-top:3px}.ms-img{display:block;max-width:100%;max-height:260px;border-radius:10px}.ms-b audio{max-width:100%;height:36px}

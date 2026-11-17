@@ -1,7 +1,7 @@
 (function(){
 if(!sb){$("lock").hidden=false;$("lockT").textContent=(!window.supabase?"Pustaka Supabase gagal dimuat dari CDN. Cek koneksi/pemblokir iklan lalu muat ulang.":!(window.IB_CONFIG&&IB_CONFIG.SUPABASE_URL)?"File js/config.js tidak terbaca atau kosong. Buka alamat /js/config.js untuk mengeceknya.":"Supabase belum siap. Muat ulang halaman.");return}
 var KEYS=["title","city_id","event_date","end_date","price_label","venue","genre","lineup","mountain","altitude_mdpl","difficulty","duration","quota","organizer","contact_wa","description","poster_url","ticket_url","source_ig"];
-var CAT={konser:"🎤 Konser",naikgunung:"⛰️ Naik Gunung",pameran:"🛍 Pameran"},DIF={pemula:"Pemula",menengah:"Menengah",sulit:"Sulit"};
+var CAT={konser:"🎤 Konser",naikgunung:"⛰️ Naik Gunung",pameran:"🛍 Pameran",festival:"🎪 Festival",komedi:"🎭 Komedi",seminar:"🎓 Seminar",meetup:"👥 Meetup",lainnya:"📌 Lainnya"},DIF={pemula:"Pemula",menengah:"Menengah",sulit:"Sulit"};
 var MON=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
 var ST={published:"Terbit",draft:"Draft",pending:"Menunggu",rejected:"Ditolak"};
 var rows=[],editing=null,editStatus="draft",kind="konser",fk="",view="dash";
@@ -13,13 +13,13 @@ function pv(u){var p=$("pv");p.style.backgroundImage=u?"url('"+u.replace(/'/g,"%
 function go(v){view=v;["dash","review","forum","list","form"].forEach(function(x){$("v_"+x).hidden=x!==v});
   [].forEach.call(document.querySelectorAll("#bnav button"),function(b){b.classList.toggle("on",b.dataset.v===v)});scrollTo(0,0);msg("")}
 function setKind(k){kind=k;[].forEach.call(document.querySelectorAll(".kind button"),function(b){b.classList.toggle("on",b.dataset.kind===k)});
-  [].forEach.call(document.querySelectorAll("[data-for]"),function(f){f.hidden=f.dataset.for!==k});
+  [].forEach.call(document.querySelectorAll("[data-for]"),function(f){f.hidden=f.dataset.for==="konser"?(k==="naikgunung"||k==="pameran"):f.dataset.for!==k});
   $("lVenue").firstChild.textContent=k==="naikgunung"?"Basecamp / titik kumpul":"Lokasi / venue"}
-function newPost(k){editing=null;editStatus="draft";$("fEv").reset();pv("");$("fTitle").textContent=k==="konser"?"Konser baru":k==="pameran"?"Pameran baru":"Pendakian baru";setKind(k);go("form")}
+function newPost(k){editing=null;editStatus="draft";$("fEv").reset();pv("");$("fTitle").textContent=k==="naikgunung"?"Pendakian baru":"Event baru: "+(CAT[k]||k);setKind(k);go("form")}
 function fill(e,asCopy){editing=asCopy?null:e.id;editStatus=asCopy?"draft":e.status;setKind(e.category);$("fTitle").textContent=asCopy?"Duplikat postingan":"Edit postingan";
   KEYS.forEach(function(k){$("f_"+k).value=e[k]==null?"":e[k]});if(asCopy)$("f_title").value=e.title+" (salinan)";pv(e.poster_url);go("form")}
 function badge(e){return'<span class="badge '+(e.status==="published"?"pub":e.status==="pending"?"adm":"")+'">'+(ST[e.status]||e.status)+'</span>'+(e.is_community?' <span class="badge">Komunitas</span>':'')+((e.end_date||e.event_date)<tdy()?' <span class="badge">Selesai</span>':'')}
-function detail(e){return e.category==="konser"?(e.genre||""):[e.mountain,e.altitude_mdpl?e.altitude_mdpl+" mdpl":"",DIF[e.difficulty],e.quota?"kuota "+e.quota:"",e.organizer,e.contact_wa?"WA "+e.contact_wa:""].filter(Boolean).join(" · ")}
+function detail(e){return e.category!=="naikgunung"?(e.genre||""):[e.mountain,e.altitude_mdpl?e.altitude_mdpl+" mdpl":"",DIF[e.difficulty],e.quota?"kuota "+e.quota:"",e.organizer,e.contact_wa?"WA "+e.contact_wa:""].filter(Boolean).join(" · ")}
 function reason(e){var s=e.event_submissions;s=Array.isArray(s)?s[0]:s;return s&&s.reject_reason||""}
 function who(e){var s=e.event_submissions;s=Array.isArray(s)?s[0]:s;return s&&s.profiles&&s.profiles.nickname?s.profiles.nickname:""}
 function item(e){return'<div class="it"><div class="th" style="'+(e.poster_url?"background-image:url('"+esc(e.poster_url).replace(/'/g,"%27")+"')":"")+'"></div><div class="ib"><b>'+esc(e.title)+'</b><div class="meta">'+CAT[e.category]+' · '+esc(e.cities&&e.cities.name)+' · '+fd(e.event_date)+' '+badge(e)+'</div>'+(detail(e)?'<div class="meta">'+esc(detail(e))+'</div>':'')+(who(e)?'<div class="meta">Diajukan oleh '+esc(who(e))+'</div>':'')+(e.status==="rejected"&&reason(e)?'<div class="meta" style="color:var(--err)">Alasan: '+esc(reason(e))+'</div>':'')
@@ -66,7 +66,7 @@ $("fEv").onsubmit=function(e){e.preventDefault();var d={};saveAs=(e.submitter&&e
   d.source_ig=d.source_ig&&d.source_ig.replace(/^@/,"");d.city_id=+d.city_id;d.altitude_mdpl=d.altitude_mdpl?+d.altitude_mdpl:null;d.quota=d.quota?+d.quota:null;
   if(d.contact_wa){var w=d.contact_wa.replace(/\D/g,"");if(w.charAt(0)==="0")w="62"+w.slice(1);if(!/^62\d{8,13}$/.test(w))return msg("Nomor WhatsApp tidak valid.","err");d.contact_wa=w}
   if(d.end_date&&d.end_date<d.event_date)return msg("Tanggal selesai tidak boleh sebelum tanggal mulai.","err");
-  if(kind!=="konser"){d.genre=d.lineup=null}if(kind!=="naikgunung"){d.mountain=d.altitude_mdpl=d.difficulty=d.duration=d.quota=d.organizer=d.contact_wa=null}
+  if(kind==="naikgunung"||kind==="pameran"){d.genre=d.lineup=null}if(kind!=="naikgunung"){d.mountain=d.altitude_mdpl=d.difficulty=d.duration=d.quota=d.organizer=d.contact_wa=null}
   d.category=kind;d.status=saveAs;
   /* Anti-duplikat: kota + tanggal mulai + 10 huruf/angka pertama judul yang sama dengan postingan lain */
   var nk=function(t){return String(t||"").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,10)};

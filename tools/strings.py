@@ -581,3 +581,9 @@ NV = {
 "nv_hero_aria": ("Cari di GWM", "Search GWM"),
 }
 S.update(NV); J.update(NV)
+
+NEWCAT = {
+"cat_festival": ("Festival", "Festivals"), "cat_komedi": ("Komedi", "Comedy"), "cat_seminar": ("Seminar & konferensi", "Seminars & conferences"),
+"cat_meetup": ("Meetup", "Meetups"), "cat_lainnya": ("Lainnya", "Other"),
+}
+S.update(NEWCAT); J.update(NEWCAT)

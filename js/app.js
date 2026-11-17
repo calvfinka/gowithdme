@@ -2,12 +2,14 @@ if(/\.html$/.test(location.pathname))history.replaceState(null,"",location.pathn
 (function(){
 var C=window.IB_CONFIG,DUM=document.createElement("div"),MODE=window.IB_MODE||"all",$=function(i){return document.getElementById(i)||DUM};
 var tr=window.IB_T||function(k){return k},LOC=tr("locale"),MON=tr("mon").split(",");
-var CAT={konser:tr("cat_konser"),naikgunung:tr("cat_naikgunung"),pameran:tr("cat_pameran")};
+var CAT={konser:tr("cat_konser"),naikgunung:tr("cat_naikgunung"),pameran:tr("cat_pameran"),festival:tr("cat_festival"),komedi:tr("cat_komedi"),seminar:tr("cat_seminar"),meetup:tr("cat_meetup"),lainnya:tr("cat_lainnya")};
+var GRAD={konser:["#3b1a78","#ff3d81"],pameran:["#b45309","#e11d48"],festival:["#7c2d12","#f59e0b"],komedi:["#0f766e","#facc15"],seminar:["#1e3a8a","#38bdf8"],meetup:["#6d28d9","#ec4899"],lainnya:["#334155","#64748b"]};
+var CICON={naikgunung:"mtn",pameran:"bag",festival:"ticket",komedi:"chat",seminar:"note",meetup:"users",lainnya:"cal"};
 var DIF={pemula:tr("dif_pemula"),menengah:tr("dif_menengah"),sulit:tr("dif_sulit")};
 var SOC={},state={inv:false,cat:"semua",city:"semua",when:"semua",price:"semua",sort:"date",q:"",prov:"",view:"grid",events:[],limit:12};
 var saved=read("ib_saved",[]);
 var kp=new URLSearchParams(location.search).get("kat");
-if(MODE==="all"&&/^(konser|naikgunung|pameran|tersimpan|selesai)$/.test(kp||""))state.cat=kp;
+if(MODE==="all"&&/^(konser|naikgunung|pameran|festival|komedi|seminar|meetup|lainnya|tersimpan|selesai)$/.test(kp||""))state.cat=kp;
 if(MODE==="home")state.when="live";if(MODE==="gunung")state.cat="naikgunung";
 /* tautan dari panel pencarian: ?q=kata  ?kota=Bandung  ?prov=Jawa Barat (hanya Event dan Gunung) */
 var QP=new URLSearchParams(location.search);
@@ -39,14 +41,14 @@ function purl(u){u=String(u||"");return/^(https?:|data:|\/\/)/.test(u)?u:"../"+u
 function waDigits(n){n=String(n||"").replace(/\D/g,"");return/^62\d{8,13}$/.test(n)?n:""}
 function safeUrl(u){u=String(u||"").trim();return/^https?:\/\//i.test(u)?u:""}
 function igHandle(s){var h=String(s||"").trim().replace(/^https?:\/\/(www\.)?instagram\.com\//i,"").replace(/^@/,"").replace(/[\/?#].*$/,"");return/^[A-Za-z0-9._]{1,30}$/.test(h)?h:""}
-function posterStyle(e,fit){var g=e.g||(e.category==="konser"?["#3b1a78","#ff3d81"]:e.category==="pameran"?["#b45309","#e11d48"]:["#14532d","#ff5a1f"]),bg="linear-gradient(160deg,"+g[0]+","+g[1]+")";
+function posterStyle(e,fit){var g=e.g||GRAD[e.category]||["#14532d","#ff5a1f"],bg="linear-gradient(160deg,"+g[0]+","+g[1]+")";
   if(!e.poster_url)return"background:"+bg;
   var u="url('"+esc(purl(e.poster_url)).replace(/'/g,"%27")+"')";
   /* --po dipakai CSS .pf (latar buram) dan .pfo (poster utuh). fit=true: poster tidak dipotong, rasio apa pun muat. */
   return"--po:"+u+";background:"+(fit?"":u+" center/cover,")+bg}
 function deco(e){return e.poster_url?'<span class="pfo" aria-hidden="true"></span>':'<svg class="deco" aria-hidden="true"><use href="#'+(e.category==="naikgunung"?"ridge":"bars")+'"/></svg>'}
 /* info tambahan per kategori (teks polos, belum di-escape) */
-function info(e){return e.category==="konser"?[e.genre]:e.category==="naikgunung"?[e.mountain,e.altitude_mdpl?e.altitude_mdpl+" "+tr("mdpl"):"",DIF[e.difficulty]||"",e.duration]:[]}
+function info(e){return e.category==="naikgunung"?[e.mountain,e.altitude_mdpl?e.altitude_mdpl+" "+tr("mdpl"):"",DIF[e.difficulty]||"",e.duration]:e.category==="pameran"?[]:[e.genre]}
 function kind(e){return[CAT[e.category]||e.category].concat(info(e)).filter(Boolean).join(" · ")}
 function ttl(e){return window.IB_LANG==="en"&&e.title_en?e.title_en:e.title}
 function dsc(e){return window.IB_LANG==="en"&&e.description_en?e.description_en:e.description}
@@ -115,7 +117,7 @@ function group(l){var G=[["live",tr("g_live")],["soon",tr("g_soon")],["next",tr(
   if(state.cat==="selesai"||state.sort!=="date")return sec("",l);
   return G.map(function(g){return sec(g[1],l.filter(function(e){return status(e).k===g[0]}))}).join("")}
 /* ---- Sidebar & chip kategori ---- */
-var NAVS=[["home","n_home","home","./"],["semua","n_all","cal","event"],["konser","cat_konser","mic","event?kat=konser"],["naikgunung","cat_naikgunung","mtn","gunung"],["pameran","cat_pameran","bag","event?kat=pameran"],["komunitas","n_forum","users","komunitas"],["ajukan","n_submit","plus","ajukan"],["bantuan","n_help","help","bantuan"]],
+var NAVS=[["home","n_home","home","./"],["semua","n_all","cal","event"],["konser","cat_konser","mic","event?kat=konser"],["naikgunung","cat_naikgunung","mtn","gunung"],["pameran","cat_pameran","bag","event?kat=pameran"],["festival","cat_festival","ticket","event?kat=festival"],["komedi","cat_komedi","chat","event?kat=komedi"],["seminar","cat_seminar","note","event?kat=seminar"],["meetup","cat_meetup","users","event?kat=meetup"],["lainnya","cat_lainnya","cal","event?kat=lainnya"],["komunitas","n_forum","users","komunitas"],["ajukan","n_submit","plus","ajukan"],["bantuan","n_help","help","bantuan"]],
     MINE=[["tersimpan","tab_saved","heart","event?kat=tersimpan"],["selesai","tab_done","clock","event?kat=selesai"]];
 function curKey(){return MODE==="home"?"home":MODE==="gunung"?"naikgunung":state.cat}
 function item(c,n,chip){var cur=curKey()===c[0],inpage=MODE==="all"&&c[0]!=="home"&&c[0]!=="naikgunung"&&c[0]!=="ajukan"&&c[0]!=="komunitas"&&c[0]!=="bantuan";
@@ -191,7 +193,7 @@ function openEv(id){
    '<li>'+ic("cal")+'<span>'+p.full+(multi?esc(tr("to"))+dparts(e.end_date).full:'')+'</span></li>'+
    '<li>'+ic("pin")+'<span>'+esc(e.venue||e.city)+(e.city&&e.venue!==e.city?', '+esc(e.city):'')+'</span></li>'+
    '<li>'+ic("tag")+'<span>'+esc(e.price_label||tr("price_tbd"))+'</span></li>'+
-   '<li>'+ic(e.category==="naikgunung"?"mtn":e.category==="pameran"?"bag":"mic")+'<span>'+esc(CAT[e.category]||e.category)+(inf?' · '+esc(inf):'')+'</span></li>'+
+   '<li>'+ic(CICON[e.category]||"mic")+'<span>'+esc(CAT[e.category]||e.category)+(inf?' · '+esc(inf):'')+'</span></li>'+
    (e.organizer||e.quota?'<li>'+ic("note")+'<span>'+(e.organizer?esc(tr("organizer"))+': '+esc(e.organizer):'')+(e.organizer&&e.quota?' · ':'')+(e.quota?esc(tr("quota"))+': '+esc(e.quota)+' '+esc(tr("aj_people")):'')+'</span></li>':'')+
    '</ul>'+(e.is_community?'<p class="meta"><span class="cmty">'+esc(tr("community"))+'</span> '+esc(tr("community_note"))+'</p>':'')+
    (e.lineup?'<p><b>'+tr("lineup")+'</b> '+esc(e.lineup)+'</p>':'')+'<p>'+esc(dsc(e)||tr("nodesc"))+'</p><div class="row">'

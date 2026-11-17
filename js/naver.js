@@ -8,13 +8,13 @@ if(loggedIn())B.classList.add("nv-in");
 /* ---- mega menu ---- */
 if(mm){
   var btns=[].slice.call(d.querySelectorAll(".js-mm")),last=null;
-  function top(){var t=d.querySelector(".topbar");return t?Math.max(0,Math.round(t.getBoundingClientRect().bottom))+8:64}
+  function top(){var t=d.querySelector(".topbar");return t?Math.max(0,Math.round(t.getBoundingClientRect().bottom/(window.GWM_Z||1)))+8:64}
   function setOpen(v){
     if(v===!mm.hidden)return;
     mm.hidden=!v;B.classList.toggle("mm-open",v);
     btns.forEach(function(b){b.setAttribute("aria-expanded",v?"true":"false")});
     if(v){last=d.activeElement;mm.style.setProperty("--mmt",top()+"px");
-      var f=mm.querySelector(".mm-g a");if(f&&window.innerWidth>640)f.focus();else{var c=mm.querySelector("[data-mmx].ico-btn");if(c)c.focus()}}
+      var f=mm.querySelector(".mm-g a");if(f&&window.innerWidth/(window.GWM_Z||1)>640)f.focus();else{var c=mm.querySelector("[data-mmx].ico-btn");if(c)c.focus()}}
     else if(last&&last.focus){last.focus()}}
   btns.forEach(function(b){b.addEventListener("click",function(){setOpen(mm.hidden)})});
   mm.addEventListener("click",function(e){if(e.target.closest("[data-mmx]")){setOpen(false);return}
