@@ -105,3 +105,11 @@ Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (
 - Pengguna bisa memilih manual di footer: Otomatis / Hemat / Seimbang / Penuh (disimpan di `localStorage` kunci `gwm-quality`).
 - `css/adaptive.css`: HP = tab bawah + lembar bawah untuk rincian event; PC = menu utama di bilah atas; tingkat hemat = tanpa animasi/blur; penuh = kaca buram, latar bergerak, animasi masuk saat scroll, kilau kartu, transisi antar-halaman.
 - Teks baru ada di akhir `tools/strings.py` (`nav_primary`, `tab_comm`, `tab_me`, `skip`, `totop`, `q_*`). Setelah ubah: `python3 tools/build.py`.
+
+## Gaya portal ala Naver (css/naver.css, js/naver.js, js/home.js)
+- **Header**: strip layanan di atas (Semua layanan + menu utama, hilang saat scroll) dan baris utama dengan "Green Window" (kotak cari hijau, tombol cari, Enter tanpa hasil = buka daftar `event?q=`). Tombol ☰ membuka mega menu "Semua layanan" (Esc menutup, fokus terkunci).
+- **Beranda**: kotak cari besar di tengah (kotak header muncul saat digulir), ticker bergulir "Segera hadir" (klik panah = daftar 10), 12 pintasan ikon berlencana jumlah (geser di HP), banner berputar (panah, 1/6, jeda, geser), tab topik + filter cepat, tombol "Lihat N event lagi", panel kanan (kartu masuk, tanggal & cuaca, statistik, terakhir dilihat).
+- **Pencarian**: kondisi kosong memuat daftar "Segera hadir" bernomor. `js/search.js` kini mendukung beberapa kotak (`#gq` header + `#gq2` beranda).
+- `js/app.js` mengekspor `window.IB_Api` (hanya baca + atur filter) dan event `ib:ready`, `ib:render`, `ib:open`.
+- "Terakhir dilihat" disimpan hanya di perangkat (`gwm_viewed`), sudah disebut di Kebijakan Privasi.
+- Setelah mengubah `tools/strings.py` atau `src/*.html`: `python3 tools/build.py`.
