@@ -59,7 +59,7 @@ S = {
 # --- event / gunung ---
 "ev_h": ("Semua event", "All events"),
 "ev_p": ("Saring menurut kategori, kota, waktu, dan harga.", "Filter by category, city, time, and price."),
-"search_ph": ("Cari event, kota, gunung, atau bantuan", "Search events, places, mountains, or help"),
+"search_ph": ("Cari event, kota, atau gunung", "Search events, cities, or mountains"),
 "search_aria": ("Cari di seluruh GWM", "Search all of GWM"),
 "aria_city": ("Kota", "City"), "aria_when": ("Waktu", "Time"), "aria_price": ("Harga", "Price"), "aria_sort": ("Urutan", "Sort"),
 "w_all": ("Semua waktu", "Any time"), "w_live": ("Berlangsung sekarang", "Happening now"), "w_30": ("30 hari ke depan", "Next 30 days"),
