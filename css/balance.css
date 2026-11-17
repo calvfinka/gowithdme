@@ -107,22 +107,39 @@ div.nv-sl-po{aspect-ratio:4/5;--ar:.8}
 }
 .dp.pf{height:clamp(210px,calc(48*var(--vh)),360px)}
 
-@media (min-width: 768px) and (max-width: 1100px) {
-  .nv-rail {
+/* Susunan Desktop (768px+): Happening Now (.nv-feed) di kiri sejajar dengan Date & Weather + Today on GWM (.nv-rail) di kanan */
+@media (min-width: 768px) {
+  .nv-cols {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    grid-template-areas:
+      "ban ban"
+      "feed rail";
+    gap: 20px;
     align-items: start;
+  }
+  .nv-ban {
+    grid-area: ban;
+  }
+  .nv-feed {
+    grid-area: feed;
+    min-width: 0;
+  }
+  .nv-rail {
+    grid-area: rail;
+    position: sticky;
+    top: calc(var(--tbh, 58px) + 16px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
   }
   .nv-rail .nvc-login,
   .nv-rail .nvc-recent {
     display: none;
   }
-}
-@media (min-width: 768px) {
   .nv-rail .now {
     grid-template-columns: auto 1fr;
-    gap: 12px 16px;
+    gap: 10px 14px;
     align-items: center;
   }
   .nv-rail .now > div:nth-child(3) {
@@ -130,6 +147,10 @@ div.nv-sl-po{aspect-ratio:4/5;--ar:.8}
     border-left: 0;
     border-top: 1px solid var(--line);
     padding-left: 0;
-    padding-top: 12px;
+    padding-top: 10px;
+  }
+  .nv-feed .tiles {
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 16px 14px;
   }
 }
