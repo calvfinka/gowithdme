@@ -72,7 +72,7 @@ begin
     end if;
     if random()<0.02 then delete from profile_visits where visited_at<now()-interval '90 days'; end if;
   end if;
-  res:=jsonb_build_object('id',pr.id,'nickname',pr.nickname,'avatar_url',pr.avatar_url,'verified',coalesce(pr.verified,false),'joined',pr.created_at,'mine',mine,'is_public',pub);
+  res:=jsonb_build_object('id',pr.id,'nickname',pr.nickname,'avatar_url',pr.avatar_url,'verified',coalesce(pr.verified,false),'role',pr.role,'joined',pr.created_at,'mine',mine,'is_public',pub);
   if mine or pub then
     res:=res||jsonb_build_object(
       'city',(select c.name from cities c where c.id=pr.city_id),'bio',ex.bio,'interests',to_jsonb(coalesce(ex.interests,'{}'::text[])),'level',ex.hike_level,

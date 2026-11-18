@@ -73,6 +73,10 @@ $("fSub").onsubmit=function(ev){ev.preventDefault();if(busy)return;
   }
   if(kind==="konser"){p.genre=v("genre");p.lineup=v("lineup")}
   if(kind==="naikgunung"){p.mountain=v("mountain");p.altitude_mdpl=v("alt");p.difficulty=v("dif");p.duration=v("dur");p.quota=v("quota");p.organizer=v("org");p.contact_wa=v("wa")}
+  if(window.IB_WordFilter){
+    var wf=IB_WordFilter.enforce([p.title,p.venue,p.description,p.lineup,p.mountain,p.organizer],{userId:me&&me.user&&me.user.id,userLabel:(me&&me.profile&&me.profile.nickname)||(me&&me.user&&me.user.email)||"Pengaju",context:"event_submit"});
+    if(!wf.ok)return msg(wf.message,"err");
+  }
   busy=true;$("a_send").disabled=true;msg(tr("sj_sending"));
   sb.rpc("submit_event",{p:p}).then(function(r){busy=false;$("a_send").disabled=false;
     if(r.error)return msg(r.error.message,"err");
@@ -94,7 +98,14 @@ function loadMine(){return sb.from("event_submissions").select("reject_reason,cr
   mine=r.data||[];$("mine").innerHTML=mine.length?mine.map(itemHtml).join(""):'<div class="empty">'+esc(tr("sj_none"))+'</div>'})}
 $("mine").onclick=function(ev){var b=ev.target.closest("[data-a]");if(!b)return;var id=b.dataset.id,s=mine.filter(function(x){return x.events&&x.events.id===id})[0];if(!s)return;
   if(b.dataset.a==="share"&&window.IB_Share){var e=s.events;return IB_Share.open({title:e.title,text:tr("share_text2",{t:e.title}),url:dirUrl(e.category,e.slug)})}
-  if(b.dataset.a==="del"){if(!confirm(tr("sj_sure")))return;return sb.rpc("withdraw_event",{p_id:id}).then(function(r){if(r.error)return msg(r.error.message,"err");toast(tr("sj_withdrawn"));loadMine()})}
+  if(b.dataset.a==="del"){
+    var dlg=document.createElement("dialog");dlg.className="aqd";
+    dlg.innerHTML='<form method="dialog" class="aqf"><h3>'+esc(tr("sj_withdraw"))+'</h3><p>'+esc(tr("sj_sure"))+'</p><div class="row"><button class="btn ghost sm" value="no" formnovalidate>'+esc(tr("k_cancel")||"Batal")+'</button><button class="btn pri sm" value="ok">'+esc(tr("k_yes")||"Ya")+'</button></div></form>';
+    document.body.appendChild(dlg);
+    dlg.addEventListener("close",function(){var ok=dlg.returnValue==="ok";dlg.remove();if(!ok)return;sb.rpc("withdraw_event",{p_id:id}).then(function(r){if(r.error)return msg(r.error.message,"err");toast(tr("sj_withdrawn"));loadMine()})});
+    dlg.showModal();
+    return;
+  }
   if(b.dataset.a==="reuse")sb.from("events").select("*").eq("id",id).single().then(function(r){var e=r.data;if(!e)return;
     setKind(e.category);var m={title:"title",city_id:"city",price_label:"price",event_date:"start",end_date:"end",venue:"venue",genre:"genre",lineup:"lineup",mountain:"mountain",altitude_mdpl:"alt",difficulty:"dif",duration:"dur",quota:"quota",organizer:"org",description:"desc",ticket_url:"ticket"};
     Object.keys(m).forEach(function(k){$("a_"+m[k]).value=e[k]==null?"":e[k]});

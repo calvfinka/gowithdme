@@ -3,46 +3,136 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Panel Admin — GWM</title><meta name="robots" content="noindex"><meta name="author" content="Jurkon Studio">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="icon" href="assets/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><script src="js/theme.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="js/theme.js"></script>
 <link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/panel.css"><link rel="stylesheet" href="css/arsip.css">
-</head><body>
-<div class="top"><div class="wrap"><a class="logo" href="./"><img src="assets/favicon.svg" alt="">GWM <span class="badge adm">Admin</span></a><span class="sp"></span><span class="meta" id="who"></span><a class="btn ghost sm" href="./" target="_blank" rel="noopener">Lihat situs</a> <a class="btn ghost sm" href="login">Profil</a></div></div>
-<main class="wrap pg">
-<div id="msg" class="msg" hidden></div>
-<div class="card narrow" id="lock" hidden><h3>Akses dibatasi</h3><p id="lockT"></p><a class="btn" href="login">Ke halaman masuk</a></div>
-<div id="panel" hidden>
+</head><body class="adm-body">
+<header class="top adm-top"><div class="wrap adm-top-in">
+  <a class="logo" href="./"><img src="assets/favicon.svg" alt=""><span>GWM</span> <span class="badge adm">Admin</span></a>
+  <span class="adm-crumb" id="admSection">Beranda</span>
+  <span class="sp"></span>
+  <span class="meta adm-who" id="who"></span>
+  <button class="btn pri sm adm-quick-new" data-v="form" type="button">+ Buat event</button>
+  <button class="ico-btn" id="theme" type="button" aria-label="Ganti tema terang atau gelap">
+    <svg class="i t-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    <svg class="i t-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+  <a class="btn ghost sm" href="./" target="_blank" rel="noopener">Lihat situs</a>
+  <a class="btn ghost sm" href="profil">Profil</a>
+</div></header>
 
+<div class="adm-frame">
+<div class="wrap" style="padding-top:14px">
+  <div id="msg" class="msg" hidden></div>
+  <div class="card narrow" id="lock" hidden><h3>Akses dibatasi</h3><p id="lockT" class="meta"></p><div class="row" style="margin-top:12px"><a class="btn pri" href="login">Ke halaman masuk</a><a class="btn ghost" href="./">Kembali ke beranda</a></div></div>
+</div>
+
+<div id="panel" class="adm-shell" hidden>
+<aside class="adm-side" id="admSide" aria-label="Navigasi Admin">
+  <div class="adm-sgrp">
+    <div class="adm-slbl">Ringkasan</div>
+    <button data-v="dash" class="on" type="button"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Beranda</span></button>
+    <button data-v="stats" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 3 5-6"/></svg><span>Statistik</span></button>
+  </div>
+  <div class="adm-sgrp">
+    <div class="adm-slbl">Moderasi &amp; Keamanan</div>
+    <button data-v="review" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Pengajuan Event</span><b class="sdot" id="sPend" hidden>0</b></button>
+    <button data-v="forum" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Komunitas &amp; Grup</span><b class="sdot" id="sFrep" hidden>0</b></button>
+    <button data-v="words" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9.5 9.5l5 5M14.5 9.5l-5 5"/></svg><span>Filter Kata (ID)</span><b class="sdot" id="sWords" hidden>0</b></button>
+  </div>
+  <div class="adm-sgrp">
+    <div class="adm-slbl">Konten &amp; Publikasi</div>
+    <button data-v="list" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span>Event &amp; Pendakian</span></button>
+    <button data-v="form" type="button"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Buat Event Baru</span></button>
+    <button data-v="blog" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><span>Artikel Blog</span></button>
+    <button data-v="arsip" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1zM10 12h4"/></svg><span>Arsip Blog</span></button>
+  </div>
+</aside>
+
+<main class="adm-main">
 <section id="v_dash">
-  <h2>Beranda</h2><p class="meta">Yang perlu kamu kerjakan lebih dulu, lalu ringkasan situs.</p>
-  <div class="card ok" id="allClear" hidden><h3>Semua beres 🎉</h3><p>Tidak ada pengajuan atau laporan yang menunggu.</p></div>
-  <div class="card" id="pendCta" hidden><h3>Pengajuan menunggu persetujuan</h3><p>Ada <b id="nPend2">0</b> pengajuan dari publik yang belum diperiksa.</p><button class="btn" data-v="review" type="button">Periksa sekarang</button></div>
-  <div class="card" id="fCta" hidden><h3>Laporan komunitas menunggu</h3><p>Ada <b id="nFrep">0</b> kiriman atau balasan forum yang dilaporkan dan belum diperiksa.</p><button class="btn" data-v="forum" type="button">Periksa sekarang</button></div>
-  <h3 class="sh">Situs sekarang</h3>
+  <div class="adm-hd"><div><h2>Beranda Admin</h2><p class="meta">Prioritas moderasi, keamanan kata terlarang Indonesia, dan ringkasan performa situs.</p></div></div>
+  <div class="card ok" id="allClear" hidden><h3>Semua antrean moderasi bersih</h3><p class="meta">Tidak ada pengajuan event atau laporan komunitas yang menunggu pemeriksaan.</p></div>
+  <div class="adm-alerts">
+    <div class="card adm-alert" id="pendCta" hidden><div><h3>Pengajuan event menunggu</h3><p class="meta">Ada <b id="nPend2">0</b> pengajuan publik yang perlu diperiksa.</p></div><button class="btn pri sm" data-v="review" type="button">Periksa sekarang</button></div>
+    <div class="card adm-alert" id="fCta" hidden><div><h3>Laporan komunitas menunggu</h3><p class="meta">Ada <b id="nFrep">0</b> kiriman atau balasan forum yang dilaporkan.</p></div><button class="btn pri sm" data-v="forum" type="button">Moderasi forum</button></div>
+    <div class="card adm-alert" id="wCta" hidden><div><h3>Deteksi Filter Kata (ID)</h3><p class="meta">Tercatat <b id="nWordV">0</b> percobaan kata terlarang dengan User ID.</p></div><button class="btn ghost sm" data-v="words" type="button">Lihat log kata</button></div>
+  </div>
+  <h3 class="sh">Performa situs terkini</h3>
   <div class="kps" id="kpiDash"></div>
   <p class="meta"><button class="lnk" data-v="stats" type="button">Lihat statistik lengkap →</button></p>
-  <h3 class="sh">Buat sesuatu</h3>
-  <div class="qa"><button data-new="konser" type="button">🎤 Buat konser</button><button data-new="naikgunung" type="button">⛰️ Buat pendakian</button><button data-v="blog" type="button">📝 Tulis blog</button></div>
-  <div class="card"><h3>Event terdekat</h3><p>Lima event terbit berikutnya.</p><div id="soon"></div></div>
-  <h3 class="sh">Isi konten</h3>
+  <h3 class="sh">Aksi cepat</h3>
+  <div class="qa">
+    <button data-new="konser" type="button"><span class="qa-ic">🎤</span><span>Buat konser baru</span></button>
+    <button data-new="naikgunung" type="button"><span class="qa-ic">⛰️</span><span>Buat pendakian</span></button>
+    <button data-v="blog" type="button"><span class="qa-ic">📝</span><span>Tulis artikel blog</span></button>
+    <button data-v="words" type="button"><span class="qa-ic">🛡️</span><span>Filter kata Indonesia</span></button>
+  </div>
+  <div class="card"><h3>Event terdekat</h3><p class="meta">Lima event terbit berikutnya.</p><div id="soon"></div></div>
+  <h3 class="sh">Ringkasan inventaris konten</h3>
   <div class="st5"><div><b id="nAll">0</b>Total</div><div><b id="nPub">0</b>Terbit</div><div><b id="nDr">0</b>Draft</div><div><b id="nKon">0</b>Konser</div><div><b id="nGun">0</b>Naik Gunung</div><div><b id="nPend">0</b>Menunggu</div></div>
 </section>
 
 <section id="v_review" hidden>
-  <div class="seg" data-g="tinjau"><button class="on" data-v="review" type="button">Pengajuan event <small id="tgRev">0</small></button><button data-v="forum" type="button">Laporan komunitas <small id="tgFor">0</small></button></div>
-  <h2>Persetujuan</h2><p class="meta">Pengajuan event dan open trip dari publik. Periksa judul, tanggal, kontak, dan poster sebelum menyetujui. Yang ditolak bisa diberi alasan agar pengaju dapat memperbaiki.</p>
+  <div class="seg" data-g="tinjau"><button class="on" data-v="review" type="button">Pengajuan event <small id="tgRev">0</small></button><button data-v="forum" type="button">Laporan komunitas <small id="tgFor">0</small></button><button data-v="words" type="button">Filter kata ID</button></div>
+  <div class="adm-hd"><div><h2>Persetujuan Event</h2><p class="meta">Periksa judul, tanggal, lokasi, kontak, dan poster sebelum menayangkan pengajuan publik.</p></div></div>
   <div id="rev"></div>
 </section>
 
 <section id="v_forum" hidden>
-  <div class="seg" data-g="tinjau"><button data-v="review" type="button">Pengajuan event <small class="tgR">0</small></button><button class="on" data-v="forum" type="button">Laporan komunitas <small class="tgF">0</small></button></div>
-  <h2>Moderasi komunitas</h2><p class="meta">Kiriman dan balasan forum kota, plus pengelolaan grup dan kota. Tiga laporan dari orang berbeda menyembunyikan kiriman otomatis; di sini kamu memutuskan: abaikan laporan, biarkan tersembunyi, atau hapus. Yang disembunyikan bisa dipulihkan, yang dihapus tidak.</p>
+  <div class="seg" data-g="tinjau"><button data-v="review" type="button">Pengajuan event <small class="tgR">0</small></button><button class="on" data-v="forum" type="button">Laporan komunitas <small class="tgF">0</small></button><button data-v="words" type="button">Filter kata ID</button></div>
+  <div class="adm-hd"><div><h2>Moderasi Komunitas &amp; Kota</h2><p class="meta">Kelola kiriman forum yang dilaporkan, blokir penulis bermasalah, serta buka atau atur grup kota.</p></div></div>
   <div class="bar" id="fmTabs"><button class="tab on" data-ft="rep" type="button">Dilaporkan <small id="fmNRep">0</small></button><button class="tab" data-ft="new" type="button">Terbaru</button><button class="tab" data-ft="off" type="button">Disembunyikan / dihapus</button><button class="tab" data-ft="ban" type="button">Diblokir</button><button class="tab" data-ft="cfg" type="button">Grup &amp; kota</button></div>
   <div id="fmList"></div>
 </section>
 
+<section id="v_words" hidden>
+  <div class="seg" data-g="tinjau"><button data-v="review" type="button">Pengajuan event <small class="tgR">0</small></button><button data-v="forum" type="button">Laporan komunitas <small class="tgF">0</small></button><button class="on" data-v="words" type="button">Filter kata ID</button></div>
+  <div class="adm-hd"><div><h2>Filter Kata Terlarang (Wilayah Indonesia)</h2><p class="meta">Memblokir otomatis kata kasar, judi online, SARA, pornografi, dan penipuan pada seluruh formulir pengguna yang login sekaligus mencatat User ID.</p></div></div>
+  <div class="kps" id="wfKpi"></div>
+  <div class="g2s">
+    <div class="card sc">
+      <h3>Uji Deteksi Langsung</h3>
+      <p class="meta">Uji kalimat termasuk variasi leetspeak (<code>@nj1ng</code>, <code>sl0t g4c0r</code>) atau tanda baca tersamar.</p>
+      <label class="f" style="margin-top:8px"><input id="wfTestInput" type="search" placeholder="Ketik kalimat untuk diuji…"></label>
+      <div id="wfTestOut"></div>
+    </div>
+    <div class="card sc">
+      <h3>Tambah Kata / Frasa Terlarang</h3>
+      <p class="meta">Aturan tambahan langsung aktif di browser dan disinkronkan ke Supabase bila skema filter terpasang.</p>
+      <form id="wfAddForm" style="margin-top:8px">
+        <div class="g2">
+          <label class="f">Kata atau frasa<input id="wfNewWord" type="text" maxlength="60" placeholder="contoh: slot gacor" required></label>
+          <label class="f">Kategori<select id="wfNewCat"><option value="custom">Aturan Khusus Admin</option><option value="judol">Judi Online &amp; Slot</option><option value="profanity">Kata Kasar</option><option value="sara">SARA &amp; Kebencian</option><option value="porn">Pornografi</option><option value="scam">Penipuan &amp; Spam</option></select></label>
+        </div>
+        <button class="btn pri sm" type="submit">Tambahkan ke Daftar Blokir</button>
+      </form>
+    </div>
+  </div>
+  <div class="card sc">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <div><h3>Log Percobaan Kata Terlarang (User ID)</h3><p class="meta">Setiap pengguna yang sudah login akan tercatat User ID dan cuplikannya saat mencoba mengirim kata terlarang.</p></div>
+      <button class="btn ghost sm" id="wfClearLogs" type="button">Bersihkan Log Lokal</button>
+    </div>
+    <div id="wfLogList"></div>
+  </div>
+  <div class="card sc">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <div><h3>Kamus Kata Terlarang Aktif</h3><p class="meta">Aturan khusus admin tampil otomatis; pilih kategori atau cari kata untuk melihat daftar bawaan.</p></div>
+      <button class="btn ghost sm" id="wfToggleAll" type="button">Lihat semua kata</button>
+    </div>
+    <div class="bar" style="margin-top:8px">
+      <div id="wfCatTabs" class="bar" style="margin-bottom:0"></div>
+      <input id="wfSearch" type="search" placeholder="Cari kata di kamus…">
+    </div>
+    <div id="wfWordList"></div>
+  </div>
+</section>
+
 <section id="v_list" hidden>
   <div class="seg" data-g="konten"><button class="on" data-v="list" type="button">Event &amp; pendakian</button><button data-v="blog" type="button">Blog</button><button data-v="arsip" type="button">Arsip</button></div>
-  <h2>Postingan</h2>
+  <div class="adm-hd"><div><h2>Kelola Postingan</h2><p class="meta">Filter berdasarkan kategori, status tayang, kota, atau kata kunci judul.</p></div><button class="btn pri sm" data-v="form" type="button">+ Event baru</button></div>
   <div class="bar" id="flKind"><button class="tab on" data-k="" type="button">Semua</button><button class="tab" data-k="konser" type="button">🎤 Konser</button><button class="tab" data-k="naikgunung" type="button">⛰️ Naik Gunung</button></div>
   <div class="flt"><select id="flStatus" aria-label="Status"><option value="">Semua status</option><option value="published">Terbit</option><option value="pending">Menunggu</option><option value="rejected">Ditolak</option><option value="draft">Draft</option></select><select id="flCity" aria-label="Kota"></select><input id="flQ" type="search" placeholder="Cari judul…"></div>
   <div id="items"></div>
@@ -50,8 +140,7 @@
 
 <section id="v_blog" hidden>
   <div class="seg" data-g="konten"><button data-v="list" type="button">Event &amp; pendakian</button><button class="on" data-v="blog" type="button">Blog</button><button data-v="arsip" type="button">Arsip</button></div>
-  <h2>Blog</h2><p class="meta">Tulisan teks tanpa foto. Halaman publik dibuat di folder <code>blog/&lt;kategori&gt;/</code> saat sinkron.</p>
-  <div class="bar"><button class="btn" id="bgNew" type="button">➕ Tulisan baru</button></div>
+  <div class="adm-hd"><div><h2>Artikel Blog</h2><p class="meta">Tulisan editorial untuk folder <code>blog/&lt;kategori&gt;/</code>.</p></div><button class="btn pri sm" id="bgNew" type="button">+ Tulisan baru</button></div>
   <div id="bgList"></div>
   <form id="bgForm" hidden onsubmit="return false">
     <h3 id="bgTitleH">Tulisan baru</h3>
@@ -64,14 +153,14 @@
     <label class="f">Isi tulisan <i class="cc" id="bgCc">0 karakter</i><textarea id="bgBody" rows="14" style="min-height:260px" placeholder="Tulis di sini…"></textarea></label>
     <p class="meta" id="bgHelp"></p>
     <h3>Pratinjau</h3><div class="card" id="bgPv" style="line-height:1.7"></div>
-    <div class="sticky"><button class="btn ghost" id="bgSaveD" type="button">Simpan draft</button><button class="btn" id="bgSaveP" type="button">Terbitkan</button></div>
+    <div class="sticky"><button class="btn ghost" id="bgSaveD" type="button">Simpan draft</button><button class="btn pri" id="bgSaveP" type="button">Terbitkan</button></div>
     <p style="text-align:center"><button class="lnk" id="bgCancel" type="button">Kembali</button> · <button class="lnk" id="bgDel" type="button" hidden>Hapus</button></p>
   </form>
 </section>
 
 <section id="v_arsip" hidden>
   <div class="seg" data-g="konten"><button data-v="list" type="button">Event &amp; pendakian</button><button data-v="blog" type="button">Blog</button><button class="on" data-v="arsip" type="button">Arsip</button></div>
-  <h2>Arsip Blog</h2><p class="meta">Pindahkan atau pulihkan blog Blogger/Blogspot. Unggah berkas cadangan (<code>.xml</code>/<code>.atom</code> dari Blogger, atau <code>.zip</code> Google Takeout), maksimal tidak dibatasi; berkas dibaca bertahap di browser dan masuk langsung ke Supabase. Hasilnya tampil terpisah di halaman <a href="arsip" target="_blank" rel="noopener">/arsip</a>, tidak bercampur dengan Blog GWM.</p>
+  <div class="adm-hd"><div><h2>Arsip Blog</h2><p class="meta">Impor cadangan Blogger/Blogspot (.xml / .atom / .zip Takeout) langsung ke Supabase untuk tampil di <a class="lnk" href="arsip" target="_blank" rel="noopener">/arsip</a>.</p></div></div>
   <div class="card">
     <h3>Unggah cadangan Blogger</h3>
     <label class="ar-drop" for="arFile"><b>Pilih berkas cadangan (.xml / .atom / .zip)</b><span id="arFileInfo">Ketuk untuk memilih. Ukuran 200 MB pun aman.</span></label>
@@ -82,12 +171,12 @@
       <label><input type="checkbox" id="arHal" checked> Sertakan halaman statis (About, Kontak, dst.)</label>
       <label><input type="checkbox" id="arKom" checked> Sertakan komentar</label>
     </div>
-    <div class="bar"><button class="btn" id="arGo" type="button">⬆️ Mulai impor</button><button class="btn ghost" id="arStop" type="button" hidden>⏹ Hentikan</button></div>
+    <div class="bar"><button class="btn pri" id="arGo" type="button">Mulai impor</button><button class="btn ghost" id="arStop" type="button" hidden>Hentikan</button></div>
     <div id="arProg" hidden>
       <div class="ar-row"><span id="arStat"></span><span id="arPct">0%</span></div>
       <div class="ar-track"><div class="ar-fill" id="arBar"></div></div>
       <div class="ar-log" id="arLog"></div>
-      <p class="meta">Jangan tutup tab selama impor berjalan. Jika terputus, unggah berkas yang sama lagi: data yang sudah masuk tidak dobel.</p>
+      <p class="meta">Jangan tutup tab selama impor berjalan. Data yang sudah masuk tidak akan ganda.</p>
     </div>
   </div>
   <h3 class="sh">Koleksi tersimpan</h3>
@@ -95,14 +184,14 @@
 </section>
 
 <section id="v_stats" hidden>
-  <h2>Statistik</h2><p class="meta">Pengunjung situs, pengguna terdaftar, dan isi konten. Semua tanggal menurut WIB.</p>
+  <div class="adm-hd"><div><h2>Statistik Situs</h2><p class="meta">Pengunjung situs, pengguna terdaftar (OAuth &amp; email), serta sebaran konten. Tanggal menurut WIB.</p></div></div>
   <div class="bar" id="stRange"><button class="tab" data-d="7" type="button">7 hari</button><button class="tab on" data-d="30" type="button">30 hari</button><button class="tab" data-d="90" type="button">90 hari</button></div>
   <div class="seg" id="stTabs"><button class="on tab" data-t="visit" type="button">Pengunjung</button><button class="tab" data-t="users" type="button">Pengguna</button><button class="tab" data-t="content" type="button">Konten</button></div>
   <div id="stBody"><p class="meta">Memuat…</p></div>
 </section>
 
 <section id="v_form" hidden>
-  <h2 id="fTitle">Postingan baru</h2>
+  <div class="adm-hd"><div><h2 id="fTitle">Postingan baru</h2><p class="meta">Lengkapi detail di sebelah kiri dan cek pratinjau langsung di sebelah kanan.</p></div></div>
   <div class="msg" id="rest" hidden>Ada isian yang belum disimpan. <button class="lnk" id="bRest" type="button">Pulihkan</button> · <button class="lnk" id="bDrop" type="button">Buang</button></div>
   <form id="fEv"><div class="fgrid"><div>
     <div class="kind"><button type="button" data-kind="konser">🎤 Konser</button><button type="button" data-kind="naikgunung">⛰️ Pendakian</button><button type="button" data-kind="pameran">🛍 Pameran</button><button type="button" data-kind="festival">🎪 Festival</button><button type="button" data-kind="komedi">🎭 Komedi</button><button type="button" data-kind="seminar">🎓 Seminar</button><button type="button" data-kind="meetup">👥 Meetup</button><button type="button" data-kind="lainnya">📌 Lainnya</button></div>
@@ -143,25 +232,27 @@
       <label class="f">Link tiket / pendaftaran<input id="f_ticket_url" type="url" placeholder="https://…"></label>
       <label class="f">Label sponsor (opsional)<input id="f_sponsor_label" type="text" placeholder="Partner resmi / Disponsori" maxlength="40"></label>
       <label class="f">Featured sampai<input id="f_featured_until" type="date"></label>
-      <label class="f" style="display:flex;align-items:center;gap:8px"><input id="f_is_featured" type="checkbox"> Tampilkan sebagai Featured / Disorot</label>
+      <label class="f" style="display:flex;align-items:center;gap:8px"><input id="f_is_featured" type="checkbox" style="width:auto"> Tampilkan sebagai Featured / Disorot</label>
       <label class="f">Boost score (0–100)<input id="f_boost_score" type="number" min="0" max="100" value="0"></label>
       <label class="f">Akun IG sumber<input id="f_source_ig" type="text" placeholder="@akunresmi"></label>
     </fieldset>
   </div>
   <aside class="prev"><h3>Pratinjau di situs</h3><div id="pvCard"></div><h3 style="margin-top:14px">Kelengkapan <span id="pvPct"></span></h3><ul class="ck" id="ck"></ul></aside></div>
-  <div class="sticky"><button class="btn ghost" data-save="draft" type="submit">Simpan draft</button><button class="btn" data-save="published" type="submit">Terbitkan</button></div>
+  <div class="sticky"><button class="btn ghost" data-save="draft" type="submit">Simpan draft</button><button class="btn pri" data-save="published" type="submit">Terbitkan</button></div>
   <p style="text-align:center"><button class="lnk" id="bCancel" type="button">Batal</button></p>
   </form>
 </section>
-</div>
 </main>
+</div>
+</div>
+
 <nav class="bnav" id="bnav" hidden aria-label="Menu admin">
   <button data-v="dash" class="on" type="button"><i>🏠</i><span>Beranda</span></button>
-  <button data-v="review" data-g="review,forum" type="button"><i>✅</i><span>Tinjau</span><b class="dot" id="bTinjau" hidden></b><b class="dot" id="bPend" hidden></b><b class="dot" id="bFrep" hidden></b></button>
-  <button data-v="list" data-g="list,blog,arsip" type="button"><i>📋</i><span>Postingan</span></button>
+  <button data-v="review" data-g="review,forum,words" type="button"><i>🛡️</i><span>Tinjau</span><b class="dot" id="bTinjau" hidden></b><b class="dot" id="bPend" hidden></b><b class="dot" id="bFrep" hidden></b></button>
+  <button data-v="list" data-g="list,blog,arsip" type="button"><i>📋</i><span>Konten</span></button>
   <button data-v="stats" type="button"><i>📊</i><span>Statistik</span></button>
-  <button data-v="form" type="button"><i>➕</i><span>Buat baru</span></button>
+  <button data-v="form" type="button"><i>➕</i><span>Buat</span></button>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script><script src="js/admin-blog.js"></script><script src="js/arsip-san.js"></script><script src="js/admin-arsip.js"></script><script src="js/admin-stats.js"></script>
+<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/word-filter.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script><script src="js/admin-blog.js"></script><script src="js/arsip-san.js"></script><script src="js/admin-arsip.js"></script><script src="js/admin-stats.js"></script><script src="js/admin-words.js"></script>
 </body></html>

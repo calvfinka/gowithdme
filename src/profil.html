@@ -4,10 +4,16 @@
 <link rel="stylesheet" href="../css/panel.css">
 {{hreflang}}</head><body>
 {{>icons}}{{>bar}}
-<main class="page narrow prof">
+<main class="page prof prof-shell">
 <div id="msg" class="msg" hidden></div>
-<div id="pfBox"><p class="meta">…</p></div>
+<div id="pfBox">
+  <div class="card pf-skel"><div class="sk" style="height:170px"></div></div>
+  <div class="pf-dash-grid" style="margin-top:16px">
+    <div class="card pf-skel"><div class="sk" style="height:240px"></div></div>
+    <div class="card pf-skel"><div class="sk" style="height:240px"></div></div>
+  </div>
+</div>
 </main>
 <div id="toast" role="status"></div>
-{{>libs}}<script src="../js/profil.js"></script>
+{{>libs}}<script src="../js/profil-core.js"></script><script src="../js/profil.js"></script>
 </body></html>

@@ -90,7 +90,9 @@ function drawPost(p,R){
     if(x==="del-post")return ask({title:tr("k_delete"),text:tr("k_sure_del")}).then(function(v){if(v)run(sb.rpc("forum_delete",{p_post:id,p_reply:null}),tr("k_deleted"),function(){$("dlg").close();loadPosts(st.city)})});
     if(x==="del-reply")return ask({title:tr("k_delete"),text:tr("k_sure_del")}).then(function(v){if(v)run(sb.rpc("forum_delete",{p_post:null,p_reply:id}),tr("k_deleted"),again)});
     if(x==="rep-post"||x==="rep-reply")return ask({title:tr("k_report_h"),input:{ph:tr("k_report_ph"),min:3},ok:tr("k_send")}).then(function(v){if(v)run(sb.rpc("forum_report",{p_post:x==="rep-post"?id:null,p_reply:x==="rep-reply"?id:null,p_reason:v}),tr("k_reported"))})};
-  var f=$("kRep");if(f)f.onsubmit=function(ev){ev.preventDefault();var btn=f.querySelector('[type="submit"]');if(btn.disabled)return;btn.disabled=true;
+  var f=$("kRep");if(f)f.onsubmit=function(ev){ev.preventDefault();var btn=f.querySelector('[type="submit"]');if(btn.disabled)return;
+    if(window.IB_WordFilter){var wf=IB_WordFilter.enforce(f.elements.b.value,{userId:st.me&&st.me.id,userLabel:(st.me&&(st.me.user_metadata&&st.me.user_metadata.full_name||st.me.email))||"Anggota",context:"forum_reply"});if(!wf.ok){return toast(wf.message)}}
+    btn.disabled=true;
     run(sb.rpc("forum_reply",{p_post:p.id,p_body:f.elements.b.value}),tr("k_replied"),again).then(function(ok){if(!ok)btn.disabled=false})}}
 
 /* ---------- Kiriman baru ---------- */
@@ -108,7 +110,9 @@ function openForm(pre){
      '<div class="row"><button class="btn ghost sm" type="button" data-x="close">'+esc(tr("k_cancel"))+'</button><button class="btn" type="submit">'+esc(tr("k_f_submit"))+'</button></div></form>';
     $("dBody").onclick=function(ev){var c=ev.target.closest("[data-x]");if(c&&c.dataset.x==="close")return $("dlg").close();
       var k=ev.target.closest("#kfKind [data-k]");if(k){kind=k.dataset.k;[].forEach.call($("kfKind").children,function(b){b.classList.toggle("on",b===k)})}};
-    var f=$("kForm");f.onsubmit=function(ev){ev.preventDefault();var btn=f.querySelector('[type="submit"]');if(btn.disabled)return;btn.disabled=true;
+    var f=$("kForm");f.onsubmit=function(ev){ev.preventDefault();var btn=f.querySelector('[type="submit"]');if(btn.disabled)return;
+      if(window.IB_WordFilter){var wf=IB_WordFilter.enforce([f.elements.t.value,f.elements.b.value],{userId:st.me&&st.me.id,userLabel:(st.me&&(st.me.user_metadata&&st.me.user_metadata.full_name||st.me.email))||"Anggota",context:"forum_post"});if(!wf.ok){return toast(wf.message)}}
+      btn.disabled=true;
       run(sb.rpc("forum_post",{p_city:st.city,p_kind:kind,p_event:f.elements.e.value||null,p_title:f.elements.t.value,p_body:f.elements.b.value}),tr("k_posted"),function(){$("dlg").close();st.kind="semua";tabs();loadPosts(st.city)}).then(function(ok){if(!ok)btn.disabled=false})};
     $("dlg").showModal()})}
 

@@ -14,8 +14,11 @@
   <div class="tb-c">{{search}}</div>
   <div class="tb-r">
     <button class="tb-loc" id="tbLocBtn" type="button" aria-haspopup="dialog" aria-label="{{loc_title}}"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span id="tbLocLbl">{{loc_all_id}}</span></button>
+    <a class="ico-btn tb-msg" id="tbMsgBtn" href="pesan" aria-label="{{nav_inbox_aria}}" hidden><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg><b class="nb" id="tbMsgBadge" hidden>0</b></a>
+    <a class="tb-acc" id="tbAccBtn" href="login" aria-label="{{login_btn}}"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg><span>{{login_btn}}</span></a>
     <a class="btn pri sm tb-cta" href="ajukan"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg><span>{{pnav_submit}}</span></a>
   </div>
 </div>
 </header>
 {{>menu}}
+{{>locdlg}}

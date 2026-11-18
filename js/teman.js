@@ -153,7 +153,9 @@ function openForm(){
     if(x.checked&&!f.n.value)f.n.value=x.dataset.p};
   d.addEventListener("click",function(ev){if(ev.target===d||ev.target.closest('[data-x="close"]'))d.close()});
   d.addEventListener("close",function(){d.remove()});
-  fm.onsubmit=function(ev){ev.preventDefault();var btn=fm.querySelector('[type="submit"]');if(btn.disabled)return;btn.disabled=true;
+  fm.onsubmit=function(ev){ev.preventDefault();var btn=fm.querySelector('[type="submit"]');if(btn.disabled)return;
+    if(window.IB_WordFilter){var wf=IB_WordFilter.enforce([f.t.value,f.o.value,f.m.value,f.p.value],{userId:st.me&&st.me.id,userLabel:(st.me&&(st.me.user_metadata&&st.me.user_metadata.full_name||st.me.email))||"Anggota",context:"teman_create"});if(!wf.ok)return toast(wf.message)}
+    btn.disabled=true;
     var tags=[].filter.call(fm.querySelectorAll('input[name="tg"]'),function(c){return c.checked}).map(function(c){return c.value});
     run(sb.rpc("create_invitation_open",{p_title:f.t.value,p_note:f.o.value,p_meet:f.m.value,p_cost:f.p.value,p_cap:+f.k.value,p_wa:f.w.value,
       p_niche:f.n.value,p_tags:tags,p_reach:f.r.value,p_city:f.r.value==="online"?null:f.c.value,p_date:f.d.value}),tr("aj_posted"),function(){d.close();reload()})
@@ -177,7 +179,9 @@ function bind(){
     var again=function(){reload();if(window.IB_AjakanBadge)window.IB_AjakanBadge()};
     if(x==="share"){var ij=st.rows.filter(function(z){return z.id===i})[0];
       if(ij&&window.IB_Share){var u=new URL(location.href);u.search="";u.searchParams.set("i",i);IB_Share.open({title:ij.title,text:tr("aj_share_text",{t:ij.title,e:ij.event_title||nlabel(ij.niche)||"GWM"}),url:u.toString()})}return}
-    if(x==="join")return ask({title:tr("aj_msg_h"),input:{ph:tr("aj_msg_ph"),max:200},ok:tr("aj_send")}).then(function(v){if(v===null)return;run(sb.rpc("request_join",{p_inv:i,p_msg:v}),tr("aj_sent"),again)});
+    if(x==="join")return ask({title:tr("aj_msg_h"),input:{ph:tr("aj_msg_ph"),max:200},ok:tr("aj_send")}).then(function(v){if(v===null)return;
+      if(window.IB_WordFilter&&v){var wf=IB_WordFilter.enforce(v,{userId:st.me&&st.me.id,userLabel:(st.me&&(st.me.user_metadata&&st.me.user_metadata.full_name||st.me.email))||"Anggota",context:"teman_join"});if(!wf.ok)return toast(wf.message)}
+      run(sb.rpc("request_join",{p_inv:i,p_msg:v}),tr("aj_sent"),again)});
     if(x==="ok"||x==="no")return run(sb.rpc("decide_member",{p_inv:i,p_user:b.dataset.u,p_ok:x==="ok"}),null,again);
     if(x==="cancel")return ask({title:tr("aj_cancel"),text:tr("aj_sure_cancel")}).then(function(v){if(v)run(sb.rpc("leave_or_cancel",{p_inv:i}),tr("aj_cancelled"),again)});
     if(x==="leave")return ask({title:tr("aj_leave"),text:tr("aj_sure_leave")}).then(function(v){if(v)run(sb.rpc("leave_or_cancel",{p_inv:i}),tr("aj_left"),again)});

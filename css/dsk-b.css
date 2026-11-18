@@ -4,7 +4,9 @@ html:where([data-dsk]) .tb-nav{display:none}
 /* portal-pro.css @640 */
 html:where([data-dsk]) .tb-main{grid-template-columns:auto minmax(0,1fr) auto;gap:8px;padding-inline:12px}
 html:where([data-dsk]) .tb-c{justify-content:flex-end}
-html:where([data-dsk]) .tb-loc{max-width:138px;padding:0 9px;height:34px;font-size:12px}
+html:where([data-dsk]) .tb-loc{max-width:98px;padding:0 8px;height:34px;font-size:12px}
+html:where([data-dsk]) .tb-acc{width:34px;padding:0;justify-content:center}
+html:where([data-dsk]) .tb-acc span{display:none}
 html:where([data-dsk]) .tb-cta span{display:none}
 html:where([data-dsk]) .tb-cta{width:34px;padding:0;justify-content:center}
 /* portal-pro.css @740 */
@@ -15,8 +17,19 @@ html:where([data-dsk]) .promo-wrap{grid-template-columns:1fr}
 /* portal-pro.css @900 */
 html:where([data-dsk]) .nv-tabs{position:static}
 /* portal-pro.css @740 */
-html:where([data-dsk]) .locd-body{grid-template-columns:1fr;overflow-y:auto}
-html:where([data-dsk]) .locd-col{border-right:0;border-bottom:1px solid var(--line);overflow-y:visible}
+html:where([data-dsk]) .locd-h{padding:14px 16px}
+html:where([data-dsk]) .locd-h h2{font-size:17px}
+html:where([data-dsk]) .locd-s{padding:10px 16px}
+html:where([data-dsk]) .locd-rad{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+html:where([data-dsk]) .locd-rad::-webkit-scrollbar{display:none}
+html:where([data-dsk]) .locd-body{display:flex;flex-direction:column;overflow-y:auto;min-height:0}
+html:where([data-dsk]) .locd-col{flex:none;border-right:0;border-bottom:1px solid var(--line);overflow-y:visible;padding:10px 16px}
+html:where([data-dsk]) .locd-col:last-child{border-bottom:0;padding-bottom:14px}
+html:where([data-dsk]) .locd-col:not(:last-child) .locd-list{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;scrollbar-width:none;padding-bottom:2px}
+html:where([data-dsk]) .locd-col:not(:last-child) .locd-list::-webkit-scrollbar{display:none}
+html:where([data-dsk]) .locd-col:not(:last-child) .locd-list button{flex:none;width:auto;white-space:nowrap;border:1px solid var(--line);background:var(--bg);padding:6px 10px;font-size:12.5px}
+html:where([data-dsk]) .locd-col:not(:last-child) .locd-list button.on{border-color:var(--brand)}
+html:where([data-dsk]) .locd-f{padding:10px 16px}
 html:where([data-dsk]) .est-grid{grid-template-columns:1fr}
 /* balance.css @900 */
 html:where([data-dsk]) .main{padding-inline:var(--gx)}

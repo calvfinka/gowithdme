@@ -4,7 +4,8 @@
   --bg:#FFFFFF;--side:#F5F5F7;--ink:#1D1D1F;--mute:#6E6E73;--faint:#A1A1A6;--line:#E5E5EA;
   --hover:#EDEDF0;--sel:#E3EFE9;--brand:#0E5A46;--brand-ink:#FFFFFF;--accent:#E4501A;--accent-ink:#FFFFFF;
   --live:#D32F2F;--soon:#8A5A00;--soon-bg:#FFF1CC;--field:#EDEDF0;--cloud:#AEB9C4;--ok:#1A8F5F;--err:#C62828;
-  --f:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',system-ui,sans-serif;
+  --f:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
   --bh:52px;--sat:env(safe-area-inset-top,0px);--vw:1vw;--vh:1vh;--dz:1;
   /* alias untuk panel.css dan komponen lama */
   --s1:var(--bg);--s2:var(--field);--ember:var(--accent);--sun:#F5B416;--r:9px;color-scheme:light}

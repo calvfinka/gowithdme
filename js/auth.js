@@ -1,7 +1,8 @@
-(function(){var tr=window.IB_T||function(k){return k};
+(function(){var tr=window.IB_T||function(k){return k},WF=window.IB_WordFilter;
 if(!sb){msg((!window.supabase?tr("a_lib"):!(window.IB_CONFIG&&IB_CONFIG.SUPABASE_URL)?tr("a_cfg"):tr("a_notready")),"err");return}
 var mode="login",holding=false,AFTER="gwm_after";
-/* Arah setelah masuk: ?next=... atau beranda. Disimpan di sessionStorage supaya tetap jalan setelah Google/email membawa pengguna kembali. */
+var OAUTH_NAMES={google:"Google",facebook:"Facebook",discord:"Discord",github:"GitHub"};
+/* Arah setelah masuk: ?next=... atau beranda. Disimpan di sessionStorage supaya tetap jalan setelah OAuth/email membawa pengguna kembali. */
 function setAfter(){try{sessionStorage.setItem(AFTER,JSON.stringify({to:safeNext("./"),t:Date.now()}))}catch(e){}}
 function takeAfter(){try{var v=JSON.parse(sessionStorage.getItem(AFTER)||"null");sessionStorage.removeItem(AFTER);return v&&Date.now()-v.t<6e5?v.to:null}catch(e){return null}}
 function goAfter(){var to=takeAfter();if(!to)return false;msg(tr("a_redirect"),"ok");setTimeout(function(){location.href=to},350);return true}
@@ -13,24 +14,39 @@ $("fLogin").onsubmit=function(e){e.preventDefault();msg(tr("processing"));holdin
     msg(tr("a_redirect"),"ok");logLocation(function(){holding=false;goAfter()})})};
 $("fReg").onsubmit=function(e){e.preventDefault();
   if(!$("rConsent").checked)return msg(tr("a_consent"),"err");
+  var nick=$("rNick").value.trim();
+  if(WF){var ck=WF.enforce(nick,{userId:"signup",userLabel:nick,context:"signup_nickname",lang:window.IB_LANG});if(!ck.ok)return msg(ck.message,"err")}
   msg(tr("processing"));setAfter();
-  sb.auth.signUp({email:$("rEmail").value.trim(),password:$("rPass").value,options:{data:{nickname:$("rNick").value.trim()},emailRedirectTo:location.href}}).then(function(r){
+  sb.auth.signUp({email:$("rEmail").value.trim(),password:$("rPass").value,options:{data:{nickname:nick},emailRedirectTo:location.href}}).then(function(r){
     if(r.error){takeAfter();return msg(friendlyErr(r.error),"err")}
     var us=r.data&&r.data.user;if(us&&us.identities&&us.identities.length===0){takeAfter();return msg(tr("a_exists"),"err")}
     if(!r.data.session)takeAfter();
     msg(r.data.session?tr("a_created"):tr("a_created_mail"),"ok")})};
-$("bGoogle").onclick=function(){msg(tr("a_gredir"));setAfter();
-  sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:"select_account"}}}).then(function(r){if(r.error)msg(tr("a_goff"),"err")})};
+
+/* Login OAuth: Google, Facebook, Discord, GitHub */
+[].forEach.call(document.querySelectorAll("[data-oauth]"),function(btn){
+  btn.onclick=function(){
+    var p=btn.dataset.oauth,label=OAUTH_NAMES[p]||p;
+    msg(tr("a_oauth_redir",{p:label}));
+    setAfter();
+    var opts={redirectTo:location.origin+location.pathname};
+    if(p==="google")opts.queryParams={prompt:"select_account"};
+    sb.auth.signInWithOAuth({provider:p,options:opts}).then(function(r){
+      if(r.error){takeAfter();msg(tr("a_oauth_off",{p:label}),"err")}
+    },function(){takeAfter();msg(tr("a_oauth_off",{p:label}),"err")});
+  };
+});
+
 $("lForgot").onclick=function(){var em=$("lEmail").value.trim();if(!em)return msg(tr("a_needmail"),"err");
   sb.auth.resetPasswordForEmail(em,{redirectTo:location.href}).then(function(r){msg(r.error?friendlyErr(r.error):tr("a_resetsent"),r.error?"err":"ok")})};
-/* Login tanpa password: link sekali pakai ke email. Hanya untuk email yang sudah terdaftar (shouldCreateUser:false), supaya akun tidak terbuat tanpa nama panggilan dan persetujuan. */
+/* Login tanpa password: link sekali pakai ke email. */
 $("lMagic").onclick=function(){var em=$("lEmail").value.trim();if(!em)return msg(tr("a_needmail"),"err");
   msg(tr("processing"));setAfter();var b=this;b.disabled=true;
   sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.href,shouldCreateUser:false}}).then(function(r){
     b.disabled=false;
     if(r.error){takeAfter();return msg(/signups? not allowed|not found/i.test(r.error.message||"")?tr("a_magic_none"):r.error.message,"err")}
     msg(tr("a_magic_sent"),"ok")})};
-/* Ganti email: Supabase mengirim email konfirmasi; email baru berlaku setelah tombol di email diketuk. */
+/* Ganti email */
 $("fMail").onsubmit=function(e){e.preventDefault();var ne=$("nEmail").value.trim(),btn=this.querySelector('[type="submit"]');
   getMe().then(function(m){
     if(!m)return;
@@ -42,7 +58,6 @@ $("fMail").onsubmit=function(e){e.preventDefault();var ne=$("nEmail").value.trim
       $("nEmail").value="";msg(tr("ce_sent"),"ok")})})};
 if(/type=email_change/.test(location.hash))setTimeout(function(){msg(tr("ce_done"),"ok")},600);
 $("bOut").onclick=function(){sb.auth.signOut().then(function(){location.href="./"},function(){location.href="./"})};
-// Placeholder deteksi lokasi: GPS browser. Pencatatan ke login_logs lewat Edge Function "log-login" (tahap 3).
 function logLocation(done){
   var fin=false,end=function(){if(!fin){fin=true;if(done)done()}},t=setTimeout(end,7000);
   if(!navigator.geolocation){$("locSt").textContent=tr("a_nogps");clearTimeout(t);return end()}
@@ -58,11 +73,12 @@ function show(){if(recovering||holding)return;getMe().then(function(m){
   $("guest").hidden=!!m;$("me").hidden=!m;if(!m)return;
   var p=m.profile,n=p.nickname||m.user.email.split("@")[0];
   $("av").textContent=p.avatar_url?"":n.charAt(0).toUpperCase();$("av").style.background=p.avatar_url?"center/cover url('"+p.avatar_url.replace(/'/g,"%27")+"')":"";$("nm").textContent=n;$("em").textContent=m.user.email;
+  if($("meUid"))$("meUid").textContent=WF?WF.shortUid(m.user.id):("ID-"+String(m.user.id||"").slice(0,8).toUpperCase());
   $("bv").hidden=!p.verified;$("ba").hidden=p.role!=="admin";$("lAdmin").hidden=p.role!=="admin";
   $("pNick").value=p.nickname||"";loadCities($("pCity"),true).then(function(){$("pCity").value=p.city_id||""});
   loadExtra(m.user.id);
 })}
-/* ---- profil diperluas: bio, minat, level, privasi, statistik (supabase/schema_profil.sql) ---- */
+/* ---- profil diperluas: bio, minat, level, privasi, statistik ---- */
 var INT=["konser","festival","pameran","naikgunung","camping","pop","rock","indie","edm","jazz","hiphop","dangdut","kpop"],LV=["pemula","menengah","sulit"],sel=[];
 function drawInt(){$("pInt").innerHTML=INT.map(function(k){return'<button type="button" class="chip" data-k="'+k+'" aria-pressed="'+(sel.indexOf(k)>-1)+'">'+esc(tr("it_"+k))+'</button>'}).join("")}
 $("pInt").onclick=function(ev){var b=ev.target.closest("[data-k]");if(!b)return;var k=b.dataset.k,i=sel.indexOf(k);
@@ -77,15 +93,22 @@ function loadExtra(id){
     $("pBio").value=d.bio||"";$("pBioN").textContent=($("pBio").value||"").length;sel=(d.interests||[]).slice();drawInt();$("pLevel").value=d.level||"";
     $("pPublic").checked=d.is_public!==false;$("pShowV").checked=d.show_visitors!==false;$("pLog").checked=!(x[1].data&&x[1].data.log_visits===false)})}
 $("fExtra").hidden=true;
-/* Satu tombol Simpan untuk semua isian. Berhasil -> halaman profil (atau ?next=...). Batal -> tujuan yang sama tanpa menyimpan. */
 $("pCancel").href=safeNext("profil");
-$("fAll").onsubmit=function(e){e.preventDefault();var btn=this.querySelector('[type="submit"]'),nick=$("pNick").value.trim();
+$("fAll").onsubmit=function(e){e.preventDefault();var btn=this.querySelector('[type="submit"]'),nick=$("pNick").value.trim(),bio=$("pBio").value.trim();
   if(!nick)return msg(tr("pe_nick_need"),"err");
   btn.disabled=true;msg(tr("processing"));
-  getMe().then(function(m){return sb.from("profiles").update({nickname:nick,city_id:$("pCity").value||null}).eq("id",m.user.id)}).then(function(r){
+  getMe().then(function(m){
+    if(WF){
+      var ck=WF.enforce([nick,bio],{userId:m.user.id,userLabel:nick,context:"profile_edit",lang:window.IB_LANG});
+      if(!ck.ok){btn.disabled=false;msg(ck.message,"err");return null}
+    }
+    return sb.from("profiles").update({nickname:nick,city_id:$("pCity").value||null}).eq("id",m.user.id);
+  }).then(function(r){
+    if(r===null)return;
     if(r.error)throw r.error;
     return $("fExtra").hidden?null:sb.rpc("profile_save",{p_bio:$("pBio").value,p_interests:sel,p_level:$("pLevel").value||null,p_public:$("pPublic").checked,p_show_visitors:$("pShowV").checked,p_log_visits:$("pLog").checked})
   }).then(function(r){
+    if(r===undefined)return;
     if(r&&r.error)throw r.error;
     msg(tr("pe_saved_go"),"ok");var to=safeNext("profil");if(to==="profil")to="profil?saved=1";
     setTimeout(function(){location.href=to},700)

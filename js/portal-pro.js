@@ -114,10 +114,10 @@
     if(!draft.prov&&visProvs.length)draft.prov=visProvs[0];
     if(draft.prov&&visProvs.indexOf(draft.prov)<0&&visProvs.length)draft.prov=visProvs[0];
 
-    $("locProvs").innerHTML=visProvs.map(function(p){
+    $("locProvs").innerHTML=visProvs.length?visProvs.map(function(p){
       var pTotal=(REG[p]||[]).reduce(function(s,c){return s+(cnt[c]||0)},0);
       return'<button type="button" data-lp="'+esc(p)+'" class="'+(draft.prov===p?"on":"")+'"><span>'+esc(pv(p))+'</span>'+(pTotal?'<small>'+pTotal+'</small>':'')+'</button>';
-    }).join("");
+    }).join(""):'<p class="meta">—</p>';
 
     /* Cities column */
     var visCities=[];
@@ -133,10 +133,10 @@
       visCities=REG[draft.prov].map(function(c){return{c:c,p:draft.prov}});
     }
     $("locCityH").textContent=q?(tr("loc_city_h")+" ("+visCities.length+")"):(draft.prov?pv(draft.prov):tr("loc_city_h"));
-    $("locCities").innerHTML=visCities.map(function(it){
+    $("locCities").innerHTML=visCities.length?visCities.map(function(it){
       var on=draft.city===it.c&&draft.mode==="city";
       return'<button type="button" data-lc="'+esc(it.c)+'" data-lcp="'+esc(it.p)+'" class="'+(on?"on":"")+'"><span>'+esc(it.c)+'</span>'+(cnt[it.c]?'<small>'+cnt[it.c]+'</small>':'')+'</button>';
-    }).join("");
+    }).join(""):'<p class="meta">—</p>';
 
     /* Radius buttons */
     var radVal=draft.mode==="prov"?"prov":draft.mode==="macro"?"macro":String(draft.radiusKm||0);
