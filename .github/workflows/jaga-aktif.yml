@@ -1,0 +1,53 @@
+# Penjaga aktif: cegah proyek Supabase (paket gratis) dijeda otomatis setelah 7 hari tanpa aktivitas,
+# dan cegah GitHub mematikan workflow terjadwal setelah 60 hari repo sepi.
+# Jalan tiap hari 09:23 WIB, atau manual: tab Actions > "Jaga aktif" > Run workflow.
+# Gagal = Supabase tidak menjawab (kemungkinan dijeda) -> email dari GitHub + issue peringatan otomatis.
+name: Jaga aktif
+on:
+  schedule: [{cron: "23 2 * * *"}]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: write      # menyalakan ulang workflow terjadwal
+  issues: write       # membuka issue peringatan
+concurrency: {group: jaga-aktif, cancel-in-progress: false}
+jobs:
+  jaga:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            js/config.js
+            tools/jaga_aktif.py
+          sparse-checkout-cone-mode: false
+      - name: Ping Supabase
+        id: ping
+        run: python3 tools/jaga_aktif.py
+
+      # GitHub mematikan workflow terjadwal di repo yang 60 hari tanpa aktivitas. Menyalakan ulang lewat API
+      # mereset hitungan itu. Tetap jalan walau ping gagal, agar sinkron.yml dan jaga-aktif.yml tidak ikut mati.
+      - name: Nyalakan ulang workflow terjadwal
+        if: always()
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          for f in sinkron.yml jaga-aktif.yml; do
+            gh api -X PUT "/repos/${{ github.repository }}/actions/workflows/$f/enable" && echo "aktif: $f" || echo "lewati: $f"
+          done
+
+      - name: Buka issue peringatan
+        if: failure() && steps.ping.outcome == 'failure'
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          T="Supabase tidak menjawab (kemungkinan proyek dijeda)"
+          if [ -z "$(gh issue list --state open --search 'in:title "Supabase tidak menjawab"' --json number --jq '.[0].number')" ]; then
+            gh issue create --title "$T" --body "Penjaga aktif gagal menghubungi Supabase pada $(date -u '+%Y-%m-%d %H:%M UTC').
+
+          1. Buka https://supabase.com/dashboard, pilih proyek GWM, lalu klik **Restore project** bila statusnya Paused.
+          2. Di Actions, jalankan ulang **Jaga aktif** untuk memastikan sudah pulih.
+
+          Sementara itu situs tetap menampilkan event dari \`data/events.json\`. Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          else
+            echo "Issue peringatan sudah terbuka, tidak dibuat ulang."
+          fi

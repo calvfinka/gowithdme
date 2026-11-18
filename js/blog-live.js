@@ -56,7 +56,7 @@
     var qCat = q.get("cat"), qSlug = q.get("post");
     if (qCat && qSlug) {
       var hit = posts.filter(function(x){ return x.category === qCat && x.slug === qSlug; });
-      if (hit.length) { openReader(hit); return; }
+      if (hit.length) { openReader(hit[0]); return; }
     }
     var main = document.querySelector("main.bl-main");
     if (!main) return;
@@ -78,7 +78,7 @@
       var a = card.querySelector("h2 a"); if (!a) return;
       var href = a.getAttribute("href") || "";
       var m = href.match(/([a-z0-9-]+)\/([a-z0-9-]+)(?:\.html)?$/);
-      if (m && !pubMap[m + "/" + m]) card.remove();
+      if (m && !pubMap[m[1] + "/" + m[2]]) card.remove();
     });
 
     filtered.slice().reverse().forEach(function(p){
@@ -126,9 +126,30 @@
     });
   }
 
-  fetch(URL + "/rest/v1/blog_posts?select=id,title,slug,category,body,is_html,status,published_at&status=eq.published&order=published_at.desc&limit=200", {
-    headers: { "apikey": KEY, "Authorization": "Bearer " + KEY }
-  }).then(function(r){ return r.ok ? r.json() : []; }).then(function(data){
-    if (Array.isArray(data)) renderPosts(data);
+  /* Hemat egress: daftar ringan dulu (tanpa isi tulisan), lalu isi hanya untuk tulisan yang belum punya kartu statis
+     (hasil build) atau yang sedang dibuka lewat ?cat=&post=. Dulu: isi 200 tulisan diunduh di setiap kunjungan. */
+  var H = { "apikey": KEY, "Authorization": "Bearer " + KEY },
+      BASE = URL + "/rest/v1/blog_posts?status=eq.published";
+  function jget(u){ return fetch(u, { headers: H }).then(function(r){ return r.ok ? r.json() : []; }); }
+  jget(BASE + "&select=id,title,slug,category,is_html,published_at&order=published_at.desc&limit=200").then(function(meta){
+    if (!Array.isArray(meta)) return;
+    var q = new URLSearchParams(location.search), qCat = q.get("cat"), qSlug = q.get("post"),
+        hrefs = [].map.call(document.querySelectorAll("main.bl-main article.bl-card h2 a"), function(a){ return a.getAttribute("href") || ""; });
+    var need = meta.filter(function(p){
+      if (qCat && qSlug && p.category === qCat && p.slug === qSlug) return true;
+      if (curCat && p.category !== curCat) return false;
+      var key = p.category + "/" + p.slug;
+      return !hrefs.some(function(h){ return h.indexOf(key) > -1; });
+    });
+    var bodies = {};
+    var done = function(){
+      meta.forEach(function(p){ p.body = bodies[p.id] ? bodies[p.id].body : ""; });
+      renderPosts(meta);
+    };
+    if (!need.length) return done();
+    jget(BASE + "&select=id,body&id=in.(" + need.map(function(p){ return p.id; }).join(",") + ")").then(function(rows){
+      (rows || []).forEach(function(r){ bodies[r.id] = r; });
+      done();
+    });
   }).catch(function(){});
 })();

@@ -57,7 +57,7 @@ $("bCancel").onclick=function(){go("list")};
 $("f_poster_url").oninput=function(){pv(this.value)};
 $("f_file").onchange=function(){var f=this.files[0];if(!f)return;if(f.size>2*1024*1024)return msg("Poster maksimal 2 MB.","err");
   msg("Mengunggah poster…");var path=Date.now()+"-"+f.name.replace(/[^a-zA-Z0-9.]+/g,"-");
-  sb.storage.from("posters").upload(path,f).then(function(r){if(r.error)return msg(r.error.message,"err");
+  sb.storage.from("posters").upload(path,f,{cacheControl:"31536000"}).then(function(r){if(r.error)return msg(r.error.message,"err");
     var u=sb.storage.from("posters").getPublicUrl(path).data.publicUrl;$("f_poster_url").value=u;pv(u);msg("Poster terunggah.","ok")})};
 var saveAs="draft";
 /* Enter di kolom isian tidak boleh menyimpan diam-diam (browser menekan tombol "Simpan draft" yang pertama, sehingga postingan terbit bisa jadi draft). Simpan hanya lewat tombol. */

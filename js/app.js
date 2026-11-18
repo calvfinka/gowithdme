@@ -60,10 +60,8 @@ function dedupe(rows){var m={},out=[];rows.forEach(function(r){var k=[r.city_id|
 /* ---- Data ---- */
 function load(){
   if(!C.SUPABASE_URL||!C.SUPABASE_ANON_KEY){state.events=IB_SAMPLE;return Promise.resolve()}
-  var u=C.SUPABASE_URL+"/rest/v1/events?select=*,cities(name)&status=eq.published&order=event_date.asc";
-  return fetch(u,{headers:{apikey:C.SUPABASE_ANON_KEY,Authorization:"Bearer "+C.SUPABASE_ANON_KEY}})
-   .then(function(r){if(!r.ok)throw 0;return r.json()})
-   .then(function(rows){state.events=dedupe(rows.map(function(r){r.city=r.cities&&r.cities.name;return r}))})
+  return IB_loadEvents()   /* js/events-src.js: satu unduhan bersama, kolom terpilih, cadangan data/events.json */
+   .then(function(rows){state.events=dedupe(rows)})
    .catch(function(){state.events=IB_SAMPLE;toast(tr("loadfail"))})
    .then(loadSocial);
 }

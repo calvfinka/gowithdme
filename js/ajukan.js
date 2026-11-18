@@ -34,7 +34,7 @@ function up(f){if(!f)return;if(!/^image\/(jpeg|png|webp)$/.test(f.type))return m
   msg(tr("sj_uploading"));
   shrink(f).then(function(g){if(g.size>2*1024*1024)return msg(tr("sj_poster_big"),"err");
     var path=me.user.id+"/"+Date.now()+"-"+g.name.replace(/[^a-zA-Z0-9.]+/g,"-");
-    sb.storage.from("posters").upload(path,g,{contentType:g.type}).then(function(r){if(r.error)return msg(r.error.message,"err");
+    sb.storage.from("posters").upload(path,g,{contentType:g.type,cacheControl:"31536000"}).then(function(r){if(r.error)return msg(r.error.message,"err");
       posterUrl=sb.storage.from("posters").getPublicUrl(path).data.publicUrl;pv(posterUrl);msg(tr("sj_uploaded"),"ok")})})}
 $("a_file").onchange=function(){up(this.files[0])};
 var dz=$("pv");["dragenter","dragover"].forEach(function(n){dz.addEventListener(n,function(e){e.preventDefault();dz.classList.add("over")})});

@@ -112,9 +112,8 @@ function loadData(){if(STATE!=="idle")return;STATE="loading";
   var pending=2,fin=function(){if(--pending===0){STATE="ready"}if(open)run()};
   if(!C.SUPABASE_URL||!C.SUPABASE_ANON_KEY){EVENTS=window.IB_SAMPLE||[];buildEvents(EVENTS);STATE="ready";return}
   var h={apikey:C.SUPABASE_ANON_KEY,Authorization:"Bearer "+C.SUPABASE_ANON_KEY};
-  fetch(C.SUPABASE_URL+"/rest/v1/events?select=*,cities(name)&status=eq.published&order=event_date.asc",{headers:h})
-   .then(function(r){if(!r.ok)throw 0;return r.json()})
-   .then(function(rows){EVENTS=dedupe(rows.map(function(r){r.city=r.cities&&r.cities.name;return r}))})
+  IB_loadEvents()   /* berbagi unduhan dengan app.js (js/events-src.js) */
+   .then(function(rows){EVENTS=dedupe(rows)})
    .catch(function(){EVENTS=window.IB_SAMPLE||[]})
    .then(function(){buildEvents(EVENTS);fin()});
   fetch(C.SUPABASE_URL+"/rest/v1/forum_city_stats?select=city,active,sort&order=sort",{headers:h})

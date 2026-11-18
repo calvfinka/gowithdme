@@ -24,7 +24,7 @@ function shrink(f){return new Promise(function(res){if(f.size<250*1024||!/^image
 function up(f){if(!f)return;if(!/^image\//.test(f.type))return msg("File harus berupa gambar.","err");
   msg("Memproses poster…");shrink(f).then(function(g){if(g.size>2*1024*1024)return msg("Poster masih di atas 2 MB. Pilih gambar lain.","err");
     var p=Date.now()+"-"+g.name.replace(/[^a-zA-Z0-9.]+/g,"-");
-    sb.storage.from("posters").upload(p,g).then(function(r){if(r.error)return msg(r.error.message,"err");
+    sb.storage.from("posters").upload(p,g,{cacheControl:"31536000"}).then(function(r){if(r.error)return msg(r.error.message,"err");
       var u=sb.storage.from("posters").getPublicUrl(p).data.publicUrl;$("f_poster_url").value=u;$("f_poster_url").dispatchEvent(new Event("input",{bubbles:true}));msg("Poster terunggah ("+Math.round(g.size/1024)+" KB).","ok")})})}
 $("f_file").onchange=function(){up(this.files[0])};
 var dz=$("pv");["dragenter","dragover"].forEach(function(n){dz.addEventListener(n,function(e){e.preventDefault();dz.classList.add("over")})});
