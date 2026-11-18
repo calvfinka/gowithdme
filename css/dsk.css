@@ -85,9 +85,9 @@ html:where([data-dsk]) .nv-rail{position:static;grid-template-columns:minmax(0,1
 html:where([data-dsk]) .nv-rail .nvc-login,html:where([data-dsk]) .nv-rail .nvc-recent{display:none}
 /* naver.css @640 */
 html:where([data-dsk]) .nv-ban{border-radius:16px}
-html:where([data-dsk]) .nv-sl{--sh:236px;--pad:18px}
-html:where([data-dsk]) .nv-sl-in{grid-template-columns:minmax(0,1fr) auto;gap:14px;padding:var(--pad) 16px var(--pad) 18px;align-items:center}
-html:where([data-dsk]) .nv-sl-tx{align-self:start;padding-bottom:34px}
+html:where([data-dsk]) .nv-sl{--sh:276px;--pad:16px;--cz:52px}
+html:where([data-dsk]) .nv-sl-in{grid-template-columns:minmax(0,1fr) auto;gap:14px;padding:var(--pad) 16px calc(var(--cz) + 4px) 18px;align-items:center}
+html:where([data-dsk]) .nv-sl-tx{align-self:center}
 html:where([data-dsk]) .nv-sl-po{height:auto;width:min(minmax(168px, auto),calc(30*var(--vw)));max-width:none;align-self:center;border-radius:10px}
 html:where([data-dsk]) .nv-sl[data-o="land"] .nv-sl-po{height:auto;width:min(172px,calc(40*var(--vw)))}
 html:where([data-dsk]) .nv-sl[data-o="tall"] .nv-sl-po{width:min(96px,calc(26*var(--vw)))}

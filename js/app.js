@@ -10,7 +10,7 @@ var SOC={},state={inv:false,cat:"semua",city:"semua",when:"semua",price:"semua",
 var saved=read("ib_saved",[]);
 var kp=new URLSearchParams(location.search).get("kat");
 if(MODE==="all"&&/^(konser|naikgunung|pameran|festival|komedi|seminar|meetup|lainnya|tersimpan|selesai)$/.test(kp||""))state.cat=kp;
-if(MODE==="home")state.when="live";if(MODE==="gunung")state.cat="naikgunung";
+if(MODE==="home")state.when="week";if(MODE==="gunung")state.cat="naikgunung";
 /* tautan dari panel pencarian: ?q=kata  ?kota=Bandung  ?prov=Jawa Barat (hanya Event dan Gunung) */
 var QP=new URLSearchParams(location.search);
 if(MODE!=="home"){if(QP.get("q"))state.q=QP.get("q").slice(0,80);var qk=QP.get("kota");if(qk&&window.IB_REGIONS){for(var pp in IB_REGIONS)if(IB_REGIONS[pp].indexOf(qk)>-1)state.city=qk}var qp=QP.get("prov");if(qp&&window.IB_REGIONS&&IB_REGIONS[qp])state.prov=qp}
@@ -156,8 +156,13 @@ function render(){
   if(MODE==="home")l=l.slice(0,state.limit);
   if(MODE==="all")$("evTitle").textContent=state.cat==="selesai"?tr("h_archive"):state.cat==="tersimpan"?tr("h_saved"):(state.city==="semua"?tr("h_active"):tr("h_active_city",{c:state.city}));
   var live=act.filter(function(e){return status(e).k==="live"}),up=act.filter(function(e){return status(e).k!=="live"});
-  $("sEv").textContent=act.length;$("sInv").textContent=act.reduce(function(t,e){return t+invN(e)},0);
-  $("sInt").textContent=act.reduce(function(t,e){return t+(SOC[e.id]?+SOC[e.id].interested||0:0)},0);
+  var vInv=act.reduce(function(t,e){return t+invN(e)},0),vInt=act.reduce(function(t,e){return t+(SOC[e.id]?+SOC[e.id].interested||0:0)},0);
+  $("sEv").textContent=act.length;$("sInv").textContent=vInv;$("sInt").textContent=vInt;
+  /* Belum ada ajakan: jangan pamerkan angka 0, ganti dengan ajakan menjadi yang pertama */
+  if($("sInv")!==DUM){var cI=$("sInv").parentNode,cT=$("sInt").parentNode,bx=cI.parentNode,cta=bx.querySelector(".stat.cta"),zero=!vInv&&!vInt;
+    cI.hidden=cT.hidden=zero;
+    if(zero&&!cta){cta=document.createElement("a");cta.className="stat cta";cta.href="event";cta.innerHTML="<b></b><span></span>";bx.appendChild(cta)}
+    if(cta){cta.hidden=!zero;cta.firstChild.textContent=tr("st_cta_h");cta.lastChild.textContent=tr("st_cta_p")}}
   $("sNext").textContent=live.length?tr("st_now"):up.length?(function(n){return tr(n===1?"st_day1":"st_days",{n:n})})(Math.min.apply(null,up.map(function(e){return status(e).n}))):"-";
   nav();$("city").value=state.city;$("cnt").textContent=tr("found",{n:l.length});
   $("vGrid").setAttribute("aria-pressed",state.view==="grid");$("vList").setAttribute("aria-pressed",state.view==="list");
@@ -254,7 +259,7 @@ window.IB_Api={ready:false,
   savedN:function(){return state.events.filter(function(e){return isActive(e)&&isSaved(e.id)}).length},
   purl:purl,status:status,dparts:dparts,ttl:ttl,rng:rng,kind:kind,posterStyle:posterStyle,deco:deco,isActive:isActive,byId:byId,open:openEv,
   today:today,days:days,where:where,esc:esc,gratis:gratis};
-load().then(function(){IB_Api.ready=true;buildCities();if(MODE==="home"&&!state.events.some(function(e){return isActive(e)&&status(e).k==="live"})){state.when="week";$("note").hidden=false}render();
+load().then(function(){IB_Api.ready=true;buildCities();if(MODE==="home"&&!state.events.some(function(e){return isActive(e)&&status(e).k==="live"})){$("note").hidden=false}render();
   document.dispatchEvent(new CustomEvent("ib:ready"));
   var want=new URLSearchParams(location.search).get("e");if(want){var w=state.events.filter(function(x){return String(x.slug)===want||String(x.id)===want})[0];if(w)openEv(w.id)}});
 })();

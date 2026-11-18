@@ -189,7 +189,7 @@ J = {
 "a_loc": ("Lokasi terdeteksi (akurasi sekitar {m} m). Pencatatan keamanan aktif di tahap 3.", "Location detected (accuracy about {m} m). Security logging goes live in stage 3."),
 "a_denied": ("Izin lokasi ditolak. Fitur barengan butuh lokasi aktif.", "Location permission denied. The meet-up feature needs location enabled."),
 "n_home": ("Beranda", "Home"), "n_all": ("Semua event", "All events"), "n_allcity": ("Semua kota", "All cities"),
-"st_days": ("{n} hari", "{n} days"), "st_now": ("Sekarang", "Now"),
+"st_days": ("{n} hari", "{n} days"), "st_cta_h": ("Jadi yang pertama", "Be the first"), "st_cta_p": ("Belum ada ajakan. Buka sebuah event lalu ajak orang berangkat bareng.", "No invites yet. Open an event and ask people to join you."), "st_now": ("Sekarang", "Now"),
 "h_saved": ("Tersimpan", "Saved"), "h_in30": ("Dalam 30 hari", "Within 30 days"), "h_later": ("Setelahnya", "Later"),
 "col_event": ("Event", "Event"), "col_place": ("Tempat", "Venue"), "col_status": ("Status", "Status"), "col_price": ("Harga", "Price"), "price_soon": ("Menyusul", "TBA"),
 "h_in_city": (" di {c}", " in {c}"),
@@ -339,8 +339,8 @@ J.update({
 })
 S.update({
 "home_cta": ("Buka komunitas", "Open community"), "home_cta2": ("Lihat ajakan terbuka", "See open invites"),
-"home_now_h": ("Sedang berlangsung", "Happening now"),
-"home_now_p": ("Event yang aktif hari ini. Klik kartu untuk detail, tiket, dan ajakan barengan.", "Events active today. Tap a card for details, tickets, and meet-up invites."),
+"home_now_h": ("Dalam 7 hari ke depan", "In the next 7 days"),
+"home_now_p": ("Klik kartu untuk detail, tiket, dan ajakan barengan.", "Tap a card for details, tickets, and meet-up invites."),
 "home_chips_aria": ("Komunitas per kota", "Communities by city"),
 })
 J.update({

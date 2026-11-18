@@ -79,7 +79,7 @@ function bannerBind(){var box=$("nvBan");if(!box)return;
 /* ---------- pintasan: lencana jumlah + titik halaman (HP) ---------- */
 function badges(){
   var m={semua:A.countAll("semua"),konser:A.countAll("konser"),pameran:A.countAll("pameran"),naikgunung:A.countAll("naikgunung"),inv:A.invites(),saved:A.savedN()};
-  [].forEach.call(d.querySelectorAll("#nvApps .ap-n"),function(i){var n=m[i.dataset.n]||0;i.hidden=!n;i.textContent=n>99?"99+":n})}
+  [].forEach.call(d.querySelectorAll("#nvApps .ap-n"),function(i){var n=m[i.dataset.n]||0;i.hidden=!n;i.textContent=n>999?"999+":n})}
 function dots(){var box=$("nvApps"),dt=$("nvDots");if(!box||!dt)return;
   var pages=Math.ceil(box.children.length/8);dt.innerHTML=new Array(pages+1).join("<i></i>");
   function mark(){var p=Math.round(box.scrollLeft/Math.max(1,box.clientWidth));[].forEach.call(dt.children,function(x,k){x.classList.toggle("on",k===p)})}
