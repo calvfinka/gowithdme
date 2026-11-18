@@ -4,7 +4,7 @@
   var KEY = C.SUPABASE_ANON_KEY || "";
   if (!URL || !KEY) return;
 
-  var CATS = {"panduan-konser":"Panduan Konser","tips-gunung":"Tips Gunung","review":"Review","berita":"Berita","komunitas":"Komunitas"};
+  var CATS = {"berita":"Berita","opini":"Opini & Cerita","gaya-hidup":"Gaya Hidup","hiburan":"Hiburan","wisata":"Wisata","teknologi":"Teknologi","tips":"Tips & Panduan","panduan-konser":"Panduan Konser","tips-gunung":"Tips Gunung","review":"Review","komunitas":"Komunitas"};
   var MON = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;"}[c]})}
   function fd(s){if(!s)return"";var d=new Date(s);return isNaN(d)?"":d.getDate()+" "+MON[d.getMonth()]+" "+d.getFullYear()}

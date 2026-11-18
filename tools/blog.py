@@ -3,10 +3,16 @@
 import os,re,json,html as _h
 from html.parser import HTMLParser
 from datetime import datetime,timezone,timedelta
-CATS=[("panduan-konser","Panduan Konser","Panduan dan tips menonton konser dan festival."),
+CATS=[("berita","Berita","Kabar dan sorotan terkini dari berbagai bidang."),
+      ("opini","Opini & Cerita","Pendapat, catatan pribadi, dan cerita dari berbagai sudut pandang."),
+      ("gaya-hidup","Gaya Hidup","Kebiasaan, tren, dan inspirasi untuk keseharian."),
+      ("hiburan","Hiburan","Musik, film, budaya pop, dan segala yang seru."),
+      ("wisata","Wisata","Destinasi, rute, dan cerita jalan-jalan."),
+      ("teknologi","Teknologi","Gawai, aplikasi, internet, dan dunia digital."),
+      ("tips","Tips & Panduan","Panduan praktis yang berguna sehari-hari."),
+      ("panduan-konser","Panduan Konser","Panduan dan tips menonton konser dan festival."),
       ("tips-gunung","Tips Gunung","Persiapan, keselamatan, dan tips naik gunung."),
-      ("review","Review","Ulasan konser, festival, dan pengalaman."),
-      ("berita","Berita","Kabar terbaru dunia event dan musik."),
+      ("review","Review","Ulasan konser, festival, produk, tempat, dan pengalaman."),
       ("komunitas","Komunitas","Cerita dan info dari komunitas GWM.")]
 CATNAME={c[0]:c[1] for c in CATS}
 WIB=timezone(timedelta(hours=7))
@@ -94,7 +100,7 @@ def card(p,x):
             f'<p class="bl-meta"><span>{esc(CATNAME[x["category"]])}</span> · <time datetime="{esc((x.get("published_at") or "")[:10])}">{fdate(x.get("published_at"))}</time></p>'
             f'<p>{esc(x["_ex"])}</p></article>')
 def listing(p,cur,posts,BASE):
-    name=CATNAME.get(cur,"Blog"); desc=next((d for k,n,d in CATS if k==cur),"Tulisan seputar konser, festival, event, dan naik gunung dari GWM.")
+    name=CATNAME.get(cur,"Blog"); desc=next((d for k,n,d in CATS if k==cur),"Cerita, kabar, dan tips seputar hiburan, wisata, petualangan, gaya hidup, teknologi, dan banyak lagi.")
     canon=f"{BASE}/blog/"+(cur+"/" if cur else "")
     if cur=="" and posts:
         body="".join(f'<section class="bl-sec"><p class="bl-sh"><a href="{p}blog/{k}/">{esc(n)}</a><span>{len(l)}</span></p>'+"".join(card(p,x) for x in l[:3])+(f'<a class="bl-more" href="{p}blog/{k}/">Lihat semua {esc(n)} →</a>' if len(l)>3 else "")+'</section>' for k,n,_ in CATS for l in [[x for x in posts if x["category"]==k]] if l)

@@ -3,7 +3,7 @@
 (function(){
 if(!window.sb)return;
 var $=function(i){return document.getElementById(i)},MAX=1e9;
-var CATS=[["panduan-konser","Panduan Konser"],["tips-gunung","Tips Gunung"],["review","Review"],["berita","Berita"],["komunitas","Komunitas"]];
+var CATS=[["berita","Berita"],["opini","Opini & Cerita"],["gaya-hidup","Gaya Hidup"],["hiburan","Hiburan"],["wisata","Wisata"],["teknologi","Teknologi"],["tips","Tips & Panduan"],["panduan-konser","Panduan Konser"],["tips-gunung","Tips Gunung"],["review","Review"],["komunitas","Komunitas"]];
 var CN={};CATS.forEach(function(c){CN[c[0]]=c[1]});
 var MON=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
 var posts=[],editing=null,mode="text",slugDirty=false,loaded=false,cur=null;
