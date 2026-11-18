@@ -114,7 +114,7 @@ $("fEv").onsubmit=function(e){e.preventDefault();var d={};saveAs=(e.submitter&&e
   if(d.end_date&&d.end_date<d.event_date)return msg("Tanggal selesai tidak boleh sebelum tanggal mulai.","err");
   if(kind==="naikgunung"||kind==="pameran"){d.genre=d.lineup=null}if(kind!=="naikgunung"){d.mountain=d.altitude_mdpl=d.difficulty=d.duration=d.quota=d.organizer=d.contact_wa=null}
   d.category=kind;d.status=saveAs;
-  if($("f_is_featured")&&$("f_is_featured")!==document.documentElement){d.is_featured=!!$("f_is_featured").checked;d.boost_score=+$((($("f_boost_score")||{}).value)||0)}
+  if($("f_is_featured")&&$("f_is_featured")!==document.documentElement){d.is_featured=!!$("f_is_featured").checked;d.boost_score=Math.max(0,Math.min(100,parseInt(($("f_boost_score")||{}).value,10)||0))}
   /* Anti-duplikat: kota + tanggal mulai + 10 huruf/angka pertama judul yang sama dengan postingan lain */
   var nk=function(t){return String(t||"").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,10)};
   var dup=rows.filter(function(x){return x.id!==editing&&x.city_id===d.city_id&&x.event_date===d.event_date&&nk(x.title)===nk(d.title)})[0];
