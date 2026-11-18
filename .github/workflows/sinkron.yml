@@ -1,12 +1,14 @@
 # Sinkron otomatis: ambil event dan blog terbit dari Supabase, bangun ulang situs, commit bila ada perubahan.
-# Jalan tiap 3 jam, atau manual: tab Actions > "Sinkron konten" > Run workflow.
+# Jalan tiap jam (cadangan), segera setelah event/blog terbit (supabase/auto_sinkron.sql), atau manual: tab Actions > "Sinkron konten" > Run workflow.
 name: Sinkron konten
 on:
-  schedule: [{cron: "0 */3 * * *"}]
+  schedule: [{cron: "7 * * * *"}]
   workflow_dispatch:
 permissions:
   contents: write
   pages: write
+# Satu sinkron berjalan, satu menunggu: banyak pemicu beruntun tidak menumpuk dan perubahan terakhir tetap terambil.
+concurrency: {group: sinkron, cancel-in-progress: false}
 jobs:
   sinkron:
     runs-on: ubuntu-latest

@@ -17,7 +17,7 @@ css/                 style.css (desain publik), panel.css, naver.css, adaptive.c
 supabase/            semua SQL (skema, patch, data event)
 data/                events.json dan posts.json (cadangan + bahan halaman statis)
 assets/              ikon, og-image, poster/ (poster yang disimpan di repo)
-.github/workflows/   sinkron.yml (tiap 3 jam), jaga-aktif.yml (harian)
+.github/workflows/   sinkron.yml (tiap jam + otomatis saat terbit), jaga-aktif.yml (harian)
 admin.html           Panel Admin (satu bahasa, /admin)
 ```
 File yang dibuat otomatis (jangan diedit): `id/`, `en/`, `js/i18n.js`, `js/search-index.js`, `css/dsk.css`, `css/dsk-b.css`, `sitemap.xml`, `robots.txt`, `blog/`.
@@ -37,7 +37,7 @@ Uji lokal: `bash jalankan.sh` (membangun lalu melayani di port 8000; buka `/id/`
 ## Pekerjaan sehari-hari
 | Tugas | Cara |
 |---|---|
-| Tambah/edit event | `/admin` > Buat baru atau Postingan. Event terbit tampil di situs langsung. Halaman statisnya menyusul saat sinkron berikutnya (maks 3 jam), atau jalankan **Actions > Sinkron konten > Run workflow** |
+| Tambah/edit event | `/admin` > Buat baru atau Postingan. Event terbit tampil di situs langsung. Halaman statisnya menyusul beberapa menit kemudian bila `supabase/auto_sinkron.sql` dipasang (cadangan: maks 1 jam), atau jalankan **Actions > Sinkron konten > Run workflow** |
 | Tulis blog | `/admin` > Postingan > Blog. Mode Teks atau HTML, **maks 15.000 karakter** (batas ada di `schema_blog.sql`). Pilih kategori, klik Terbitkan |
 | Ubah teks situs | `tools/strings.py` atau `src/*.html`, lalu `python3 tools/build.py` |
 | Tambah kota | `js/regions.js` (+ koordinat di `IB_GEO`) dan tabel `cities` (`schema_kota.sql`) |
@@ -49,13 +49,13 @@ Uji lokal: `bash jalankan.sh` (membangun lalu melayani di port 8000; buka `/id/`
 Format tulisan blog (mode Teks): `## Judul bagian`, `### Sub`, `- daftar`, `**tebal**`, `[teks](https://tautan)`. Tidak ada kolom tag: kata kunci ditulis di judul, isi, dan satu baris di akhir. Kategori: berita, opini, gaya-hidup, hiburan, wisata, teknologi, tips, panduan-konser, tips-gunung, review, komunitas (kategori selain lima pertama butuh `blog_kategori_luas.sql`).
 
 ## Otomasi (GitHub Actions)
-- **Sinkron konten** (`sinkron.yml`, tiap 3 jam): ambil event dan blog terbit dari Supabase, bangun ulang situs, commit bila berubah, minta Pages membangun ulang.
+- **Sinkron konten** (`sinkron.yml`): jalan tiap jam, segera setelah event/blog terbit (pemicu database, lihat `supabase/auto_sinkron.sql`), atau manual. Mengambil event dan blog terbit dari Supabase, bangun ulang situs, commit bila berubah, minta Pages membangun ulang.
 - **Jaga aktif** (`jaga-aktif.yml`, harian 09:23 WIB): ping kecil ke Supabase agar proyek gratis tidak dijeda setelah 7 hari sepi; menyalakan ulang workflow terjadwal (GitHub mematikannya setelah 60 hari repo sepi); membuka issue bila Supabase tidak menjawab.
 - Rincian dan cara pantau: [`HEMAT-SUPABASE.md`](HEMAT-SUPABASE.md).
 
 ## Hemat egress Supabase
 Daftar event dimuat satu kali (`js/events-src.js`) dan dibagi ke halaman dan pencarian, disimpan 5 menit di sessionStorage, dengan cadangan otomatis ke `data/events.json` bila Supabase gagal. Blog memuat daftar ringan dulu dan isi hanya untuk tulisan baru. Poster unggahan di-cache 1 tahun.
-Saklar di `js/config.js`: `EVENTS_SOURCE: "live"` (Supabase dulu, default) atau `"static"` (data/events.json dulu, 0 egress, data tertunda sampai 3 jam).
+Saklar di `js/config.js`: `EVENTS_SOURCE: "live"` (Supabase dulu, default) atau `"static"` (data/events.json dulu, 0 egress, data tertunda sampai 1 jam).
 
 ## Fitur
 - **Event:** konser, festival, pameran, open trip gunung; filter kota/kategori, kalender `.ics`, tombol bagikan, tautan `?e=<slug>`.

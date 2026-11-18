@@ -7,7 +7,7 @@ Batas gratis yang relevan: egress 5 GB/bulan, database 500 MB, proyek **dijeda s
 - Gagal (Supabase tidak menjawab, biasanya karena dijeda): GitHub mengirim email "workflow gagal" **dan** membuka issue "Supabase tidak menjawab". Pulihkan di dashboard Supabase > **Restore project**.
 - Menyalakan ulang `sinkron.yml` dan `jaga-aktif.yml` lewat API tiap hari. GitHub mematikan workflow terjadwal di repo yang 60 hari tanpa aktivitas; ini mencegahnya.
 - Uji sekarang: tab **Actions > Jaga aktif > Run workflow**. Ringkasan hasil muncul di halaman run.
-- Catatan: `sinkron.yml` (tiap 3 jam) sudah ikut menyentuh Supabase lewat `gen_events.py`. Penjaga ini sabuk pengaman kedua dan pemberi peringatan.
+- Catatan: `sinkron.yml` (tiap jam) sudah ikut menyentuh Supabase lewat `gen_events.py`. Penjaga ini sabuk pengaman kedua dan pemberi peringatan.
 
 ## 2. Hemat egress
 | Perubahan | Berkas | Efek |
@@ -23,7 +23,7 @@ Batas gratis yang relevan: egress 5 GB/bulan, database 500 MB, proyek **dijeda s
 Bug blog yang ikut dibereskan: `openReader(hit)` mengirim array (judul tulisan baru tampil "undefined") dan penghapusan kartu memakai kunci yang salah.
 
 ### Tombol "0 egress" untuk event
-Di `js/config.js`: `EVENTS_SOURCE: "static"` membuat halaman membaca `data/events.json` dulu (Supabase hanya cadangan). Konsekuensi: event baru tampil paling lama 3 jam kemudian (atau segera setelah Anda menjalankan **Actions > Sinkron konten**). Default `"live"`. Pertimbangkan `"static"` bila egress di dashboard sudah di atas ±70% (3,5 GB).
+Di `js/config.js`: `EVENTS_SOURCE: "static"` membuat halaman membaca `data/events.json` dulu (Supabase hanya cadangan). Konsekuensi: event baru tampil paling lama 1 jam kemudian (atau beberapa menit bila `supabase/auto_sinkron.sql` dipasang) (atau segera setelah Anda menjalankan **Actions > Sinkron konten**). Default `"live"`. Pertimbangkan `"static"` bila egress di dashboard sudah di atas ±70% (3,5 GB).
 
 ### Memindahkan poster dari Storage
 ```

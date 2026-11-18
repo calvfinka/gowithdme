@@ -4,7 +4,7 @@
    - Hanya kolom yang dipakai tampilan (bukan select=*). Tambah kolom baru di COLS bila tampilan memakainya.
    - Cadangan otomatis: bila satu sumber gagal (mis. Supabase dijeda), dipakai sumber lain.
    Pilihan sumber utama di js/config.js:  EVENTS_SOURCE: "live" (Supabase dulu, default) atau "static" (data/events.json dulu, 0 egress;
-   isinya diperbarui workflow "Sinkron konten" tiap 3 jam). */
+   isinya diperbarui workflow "Sinkron konten" tiap jam, atau segera setelah terbit bila supabase/auto_sinkron.sql dipasang). */
 (function(){
 var C=window.IB_CONFIG||{},KEY="gwm_events_v1",TTL=5*60*1000,STATIC="../data/events.json",P=null,
 COLS="id,title,title_en,slug,category,city_id,venue,event_date,end_date,price_label,description,description_en,poster_url,ticket_url,source_ig,created_at,genre,lineup,organizer,mountain,altitude_mdpl,difficulty,duration,is_community,quota,contact_wa,cities(name)";

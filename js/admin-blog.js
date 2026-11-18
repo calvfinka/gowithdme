@@ -64,7 +64,7 @@ function save(status){
   if(status==="published"&&!(cur&&cur.published_at))d.published_at=new Date().toISOString();
   var q;if(editing)q=sb.from("blog_posts").update(d).eq("id",editing);else{d.slug=slug;q=sb.from("blog_posts").insert(d)}
   q.then(function(r){if(r.error)return msg(/duplicate|unique/i.test(r.error.message)?"Alamat ini sudah dipakai di kategori yang sama.":hint(r.error),"err");
-    load().then(function(){show(false);msg(status==="published"?"Tersimpan dan terbit. Sudah bisa dibuka lewat tombol Lihat; halaman permanennya dibuat saat sinkron (otomatis tiap 3 jam).":"Tersimpan sebagai draft.","ok")})})}
+    load().then(function(){show(false);msg(status==="published"?"Tersimpan dan terbit. Sudah bisa dibuka lewat tombol Lihat; halaman permanennya dibuat saat sinkron (otomatis, paling lama 1 jam).":"Tersimpan sebagai draft.","ok")})})}
 function bind(){
   var o=$("bgNew");if(!o)return;
   o.onclick=function(){msg("");openForm(null)};
