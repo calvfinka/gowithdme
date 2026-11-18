@@ -1,124 +1,90 @@
-# GWM (Go With Me) — by Jurkon Studio
-Portal info konser & naik gunung (awal: Bandung, Jawa Barat). Situs statis untuk GitHub Pages + backend Supabase.
+# GWM (Go With Me) — oleh Jurkon Studio
 
-## Struktur
+Portal info konser, festival, dan naik gunung, plus cari teman jalan dan komunitas per kota. Situs statis di **GitHub Pages** dengan backend **Supabase** (paket gratis). Dua bahasa: Indonesia (`/id/`) dan Inggris (`/en/`).
+
+Alamat sekarang: `https://calvfinka.github.io/gowithdme`. Domain `gowithdme.com` belum aktif (lihat "Pindah domain").
+
+## Isi repo
 ```
-index.html        halaman utama
-css/style.css     tema & komponen
-js/config.js      kunci Supabase & kota default
-js/regions.js     provinsi/kota (pengganti provinsi.py) + data contoh
-js/app.js         daftar event, filter, detail
-js/tools.js       checklist packing & kalkulator patungan
-supabase/schema.sql  tabel + RLS
-assets/ CNAME .nojekyll robots.txt
+id/ en/              halaman publik (DIBUAT OTOMATIS oleh tools/build.py, jangan edit tangan)
+id/e/ en/e/          satu halaman statis per event (untuk Google)
+blog/<kategori>/     halaman blog statis (dibuat dari data/posts.json)
+src/                 sumber halaman: _*.html (potongan bersama), *.html, naskah privasi/syarat
+tools/               build.py, strings.py (semua teks), gen_events.py, gen_blog.py, jaga_aktif.py,
+                     pindah_poster.py, sql_run.sh, arsip_setup.sh
+js/                  skrip situs (app.js, search.js, events-src.js, blog-live.js, admin*.js, ...)
+css/                 style.css (desain publik), panel.css, naver.css, adaptive.css, dll
+supabase/            semua SQL (skema, patch, data event)
+data/                events.json dan posts.json (cadangan + bahan halaman statis)
+assets/              ikon, og-image, poster/ (poster yang disimpan di repo)
+.github/workflows/   sinkron.yml (tiap 3 jam), jaga-aktif.yml (harian)
+admin.html           Panel Admin (satu bahasa, /admin)
 ```
-## Deploy
-1. Ekstrak zip, ganti isi repo, commit & push.
-2. Settings > Pages > Deploy from branch (main, root). Domain: gowithdme.com (buat file `CNAME` berisi `gowithdme.com` hanya setelah DNS siap; lihat AUDIT.md).
-3. Supabase: buat proyek, jalankan `supabase/schema.sql`, isi `js/config.js`. Tambah event lewat Table Editor (status `published`).
-## Tambah daerah
-Tambah di `js/regions.js` dan baris di tabel `provinces`/`cities`.
-## Catatan keamanan & hukum
-- Hanya anon key di frontend; semua akses dijaga RLS. Jangan pernah taruh service role key di repo.
-- Log lokasi login diisi lewat Edge Function (tahap 2) dan butuh persetujuan eksplisit + kebijakan privasi (UU PDP).
-- Poster milik penyelenggara: minta izin dan cantumkan sumber.
+File yang dibuat otomatis (jangan diedit): `id/`, `en/`, `js/i18n.js`, `js/search-index.js`, `css/dsk.css`, `css/dsk-b.css`, `sitemap.xml`, `robots.txt`, `blog/`.
 
-## Tahap 2: Login, Profil, Panel Admin
-- `login.html` + `js/auth.js`: daftar, masuk, lupa password, profil, cek lokasi (placeholder).
-- `admin.html` + `js/admin.js`: tambah/edit/terbitkan/hapus event, unggah poster ke Storage.
-- `supabase/schema_tahap2.sql`: kolom `role`, fungsi `is_admin()`, policy admin, bucket `posters`.
-### Setup
-1. Jalankan `schema.sql` lalu `schema_tahap2.sql` di SQL Editor.
-2. Supabase > Authentication > URL Configuration: Site URL = domain situs, tambahkan Redirect URL `https://gowithdme.com/login.html`.
-3. Daftar akun di `/login.html`, lalu jalankan query `update profiles set role='admin' ...` (ada di akhir schema_tahap2.sql).
-4. Buka `/admin.html`. Penjagaan sebenarnya ada di RLS, bukan di JavaScript.
+## Pasang dari nol
+1. **Supabase:** buat proyek. Di SQL Editor jalankan berkas `supabase/` **berurutan** (semuanya aman diulang):
+   `schema.sql` → `schema_tahap2.sql` → `schema_google.sql` → `schema_admin.sql` → `schema_kota.sql` → `schema_ajakan.sql` → `schema_ajakan_fix.sql` → `schema_forum.sql` → `schema_komunitas.sql` → `schema_forum_admin.sql` → `schema_forum_admin2.sql` → `schema_forum_ban.sql` → `schema_profil.sql` → `schema_ajakan_luas.sql` → `schema_pesan.sql` → `schema_statistik.sql` → `schema_blog.sql` → `blog_kategori_luas.sql` → `schema_arsip.sql` → `patch_nickname.sql`.
+   Data event awal (opsional): `konser_per_kota.sql` dan berkas `events_*.sql`.
+2. **Kunci:** isi `js/config.js` (`SUPABASE_URL`, `SUPABASE_ANON_KEY`). Hanya kunci anon (publik) yang boleh ada di repo; semua akses dijaga RLS. **Jangan pernah** menaruh service role key di repo.
+3. **Login:** Supabase > Authentication > URL Configuration: Site URL = alamat situs, tambahkan Redirect URL `<alamat>/id/login` dan `<alamat>/en/login`. Login Google: aktifkan provider Google, lalu isi Client ID/Secret dan redirect URI `https://<proyek>.supabase.co/auth/v1/callback` di Google Cloud Console.
+4. **Admin pertama:** daftar di `/id/login`, lalu jalankan query `update profiles set role='admin' ...` (ada di akhir `schema_tahap2.sql`). Buka `/admin`.
+5. **GitHub Pages:** Settings > Pages > Deploy from branch (`main`, root). Settings > Actions > General > Workflow permissions: **Read and write**.
+6. **Bangun:** `python3 tools/gen_events.py && python3 tools/gen_blog.py && python3 tools/build.py`, lalu commit dan push.
 
-## Tahap 2b: Login Google & URL bersih
-- Jalankan `supabase/schema_google.sql`. Aktifkan provider Google di Supabase (Authentication > Providers).
-- Google Cloud Console > OAuth client (Web): Authorized redirect URI = `https://jhqkylnqvhrljpaknjcg.supabase.co/auth/v1/callback`, Authorized JavaScript origins = domain situs. Salin Client ID dan Secret ke Supabase.
-- Redirect URL Supabase: `https://gowithdme.com/login`.
-- GitHub Pages otomatis melayani `/login` dan `/admin` dari file `.html`.
+Uji lokal: `bash jalankan.sh` (membangun lalu melayani di port 8000; buka `/id/`). Perhatian: build lokal mengubah angka versi `?v=` di `id/` dan `en/`. Jangan di-commit; `git restore id en` bila perlu.
 
-## Panel admin v2
-Jalankan `supabase/schema_admin.sql`. Admin punya 3 menu: Dashboard, Postingan (filter kategori/status/kota), Buat baru (form khusus konser atau pendakian, simpan draft atau terbitkan).
+## Pekerjaan sehari-hari
+| Tugas | Cara |
+|---|---|
+| Tambah/edit event | `/admin` > Buat baru atau Postingan. Event terbit tampil di situs langsung. Halaman statisnya menyusul saat sinkron berikutnya (maks 3 jam), atau jalankan **Actions > Sinkron konten > Run workflow** |
+| Tulis blog | `/admin` > Postingan > Blog. Mode Teks atau HTML, **maks 15.000 karakter** (batas ada di `schema_blog.sql`). Pilih kategori, klik Terbitkan |
+| Ubah teks situs | `tools/strings.py` atau `src/*.html`, lalu `python3 tools/build.py` |
+| Tambah kota | `js/regions.js` (+ koordinat di `IB_GEO`) dan tabel `cities` (`schema_kota.sql`) |
+| Persetujuan pengajuan event/open trip | `/admin` > Tinjau |
+| Moderasi komunitas | `/admin` > Tinjau > Laporan komunitas; grup/kota di Komunitas |
+| Statistik pengunjung | `/admin` > Statistik |
+| Pindah poster Supabase Storage ke repo | `python3 tools/pindah_poster.py`, jalankan SQL yang dihasilkan |
 
-## Dua bahasa (/id dan /en) & kota baru
-- Halaman ada di `id/` dan `en/` (Beranda, Event, Gunung, Login, Privasi, Syarat). Alamat lama `/event`, `/gunung`, `/login` otomatis diarahkan sesuai bahasa pilihan atau bahasa browser. Panel admin tetap satu (Indonesia) di `/admin`.
-- Teks: ubah di `tools/strings.py`, lalu jalankan `python3 tools/build.py`. Naskah privasi dan syarat ada di `src/*.id.body.html` dan `src/*.en.body.html`. File di `id/`, `en/`, dan `js/i18n.js` dibuat otomatis, jangan diedit tangan.
-- Supabase > Authentication > URL Configuration: tambahkan Redirect URL `https://gowithdme.com/id/login` dan `https://gowithdme.com/en/login` (yang lama `/login` boleh dibiarkan).
-- Jalankan `supabase/schema_kota.sql`: menambah 35 kota di 20 provinsi, kategori Pameran, dan kolom `title_en` / `description_en` untuk teks event berbahasa Inggris (opsional; kosong = tampil teks Indonesia).
-- Kota baru: tambah di `js/regions.js` dan di tabel `cities`.
+Format tulisan blog (mode Teks): `## Judul bagian`, `### Sub`, `- daftar`, `**tebal**`, `[teks](https://tautan)`. Tidak ada kolom tag: kata kunci ditulis di judul, isi, dan satu baris di akhir. Kategori: berita, opini, gaya-hidup, hiburan, wisata, teknologi, tips, panduan-konser, tips-gunung, review, komunitas (kategori selain lima pertama butuh `blog_kategori_luas.sql`).
 
-## Desain GWM Compact
-- Satu tampilan untuk Beranda, Event, Gunung, Login, Privasi, dan Syarat: bilah atas tipis (logo, pencarian, tema terang/gelap, bahasa, masuk), sidebar kiri (jenis event, kota, tersimpan), area utama padat dengan tampilan kisi atau daftar.
-- `css/style.css` = seluruh desain publik. `css/panel.css` = tambahan untuk panel admin dan halaman login.
-- Potongan bersama ada di `src/_*.html` (ikon SVG, bilah atas, sidebar, jam & cuaca, statistik, kaki halaman). Ubah di sana lalu jalankan `python3 tools/build.py`.
-- `js/theme.js` tombol terang/gelap (pilihan disimpan di perangkat, awalnya mengikuti pengaturan perangkat).
-- `js/now.js` tanggal, jam WIB, dan cuaca asli dari Open-Meteo (gratis, tanpa kunci API) mengikuti kota yang dipilih. Koordinat kota ada di `IB_GEO` pada `js/regions.js`; kota baru perlu ditambah di sana juga.
-- Domain: gowithdme.com. Tambahkan Redirect URL Supabase `https://gowithdme.com/id/login` dan `https://gowithdme.com/en/login`, dan arahkan CNAME GitHub Pages ke domain baru.
+## Otomasi (GitHub Actions)
+- **Sinkron konten** (`sinkron.yml`, tiap 3 jam): ambil event dan blog terbit dari Supabase, bangun ulang situs, commit bila berubah, minta Pages membangun ulang.
+- **Jaga aktif** (`jaga-aktif.yml`, harian 09:23 WIB): ping kecil ke Supabase agar proyek gratis tidak dijeda setelah 7 hari sepi; menyalakan ulang workflow terjadwal (GitHub mematikannya setelah 60 hari repo sepi); membuka issue bila Supabase tidak menjawab.
+- Rincian dan cara pantau: [`HEMAT-SUPABASE.md`](HEMAT-SUPABASE.md).
 
-## Komunitas: pengajuan event & open trip, persetujuan admin, tombol bagikan
-- Jalankan `supabase/schema_komunitas.sql` (setelah semua schema sebelumnya). Menambah kolom `quota`, `contact_wa`, `organizer`, `is_community`; status `pending`/`rejected`; tabel `event_submissions`; fungsi `submit_event`, `withdraw_event`, `admin_review_event`; izin unggah poster per pengguna (folder `<user-id>/`, maks. 2 MB, JPG/PNG/WebP).
-- Publik (harus login) membuka `/id/ajukan` atau `/en/ajukan`: konser/festival, pameran, atau open trip gunung. Status awal selalu `pending`; tidak bisa terbit sendiri. Batas: 5 pengajuan menunggu, 8 per 24 jam.
-- Admin: menu baru **Persetujuan** di `/admin` (Setujui / Tolak dengan alasan). Pengaju melihat status dan alasan penolakan di bagian *Pengajuan saya*, bisa menarik atau mengajukan ulang.
-- Open trip memakai kategori `naikgunung` yang sudah ada, jadi otomatis tampil di halaman Gunung, kalender (.ics), pencarian, dan ajakan barengan. Daftar gunung ada di `js/gunung-data.js` (146 gunung populer & gunung api utama; nama lain bisa diketik sendiri).
-- Tombol bagikan (`js/share.js`): kartu grid & daftar, rincian event, tiap ajakan barengan, bilah atas, dan pengajuan saya. Tautan langsung ke event: `?e=<slug>` (dialog rincian terbuka otomatis).
-- Setelah mengubah teks di `tools/strings.py` atau `src/*.html`, jalankan `python3 tools/build.py`.
+## Hemat egress Supabase
+Daftar event dimuat satu kali (`js/events-src.js`) dan dibagi ke halaman dan pencarian, disimpan 5 menit di sessionStorage, dengan cadangan otomatis ke `data/events.json` bila Supabase gagal. Blog memuat daftar ringan dulu dan isi hanya untuk tulisan baru. Poster unggahan di-cache 1 tahun.
+Saklar di `js/config.js`: `EVENTS_SOURCE: "live"` (Supabase dulu, default) atau `"static"` (data/events.json dulu, 0 egress, data tertunda sampai 3 jam).
 
-## Daftar konser per kota tanpa duplikat (v3)
-- Jalankan `supabase/konser_per_kota.sql` di Supabase > SQL Editor (aman diulang). Isinya: kota baru (Sleman, Bantul, Lamongan), pembersihan duplikat lama, 34 konser baru di 16 kota lengkap dengan harga, poster, dan link tiket, penerbitan konser Bandung yang masih draft, serta indeks unik `events_no_dupe` sehingga database menolak duplikat (kota + tanggal + judul).
-- `js/app.js` membuang duplikat saat memuat, `js/admin.js` menolak simpan postingan yang sama. Daftar lengkap: `supabase/DAFTAR_KONSER_PER_KOTA.md`.
+## Fitur
+- **Event:** konser, festival, pameran, open trip gunung; filter kota/kategori, kalender `.ics`, tombol bagikan, tautan `?e=<slug>`.
+- **Pencarian:** satu kotak untuk event, wilayah, gunung (146), halaman, FAQ; awalan `event:` `kota:` `gunung:` `halaman:` `bantuan:`; tekan `/` atau Ctrl/Cmd+K.
+- **Komunitas per kota:** papan kiriman, grup WA/Telegram/Discord, daftar tunggu kota, moderasi admin, blokir penulis (manual + otomatis).
+- **Ajakan barengan (Cari teman):** ajakan per event atau mandiri, kontak WA hanya untuk anggota yang disetujui.
+- **Pesan antar pengguna:** teks, gambar, voice note (maks 5 MB, hilang 10 menit).
+- **Profil** dengan pengunjung terakhir dan saklar privasi.
+- **Pengajuan event dan open trip** oleh publik, disetujui admin.
+- **Blog** dan **Arsip Blog** (impor cadangan Blogger lewat admin).
+- **Panel Admin:** beranda tugas, tinjau, postingan, statistik, buat baru.
+- **Tampilan:** gaya portal ala Naver di beranda, terang/gelap, mode adaptif (Otomatis/Hemat/Seimbang/Penuh), HP dan PC, dua bahasa.
+- Alat bantu: kalkulator patungan dan checklist packing (`js/tools.js`), cuaca dan jam WIB (Open-Meteo, tanpa kunci).
 
-## Komunitas v2: diskusi di halaman event + moderasi admin
-- Jalankan `supabase/schema_forum_admin.sql` (setelah `schema_forum.sql`). Menambah kolom `forum_reports.handled_at`, indeks kiriman per event, dan fungsi `admin_forum_moderate` (hanya admin).
-- **Rincian event** (Beranda, Event, Gunung): bagian "Diskusi komunitas" menampilkan sampai 5 kiriman forum yang ditautkan ke event itu, tautan "Tulis kiriman soal event ini" (membuka formulir dengan event terpilih), dan "Semua kiriman di <kota>". Kota yang belum buka dan event tanpa kiriman tidak menampilkan apa-apa. Kode: `js/forum-event.js`; tautan `komunitas?kota=X&p=<id>` membuka kiriman, `komunitas?kota=X&event=<id>` membuka formulir.
-- **Admin > Komunitas** (`js/admin-forum.js`): tab *Dilaporkan* (antrean laporan belum ditangani, lengkap dengan alasan dan pelapor), *Terbaru* (kiriman dan balasan terakhir), *Disembunyikan / dihapus*. Tindakan: Abaikan laporan (laporan dihapus, kiriman tayang lagi), Sembunyikan, Hapus (permanen dari sisi panel), Pulihkan (hanya yang disembunyikan). Lencana merah di menu bawah dan kartu di Dashboard menunjukkan jumlah yang menunggu.
-- Menambah grup WhatsApp/Telegram/Discord dan membuka kota baru masih lewat Table Editor (`forum_groups`, `forum_cities`).
+## Keamanan, privasi, hukum
+- Semua tulis lewat fungsi RPC dan policy RLS; panel admin dijaga RLS, bukan JavaScript.
+- Pencatat kunjungan (`js/track.js`): tanpa cookie dan tanpa IP; Do Not Track dan Global Privacy Control dihormati; data dihapus setelah 400 hari. Dijelaskan di Kebijakan Privasi (`src/privacy.*.body.html`).
+- Log lokasi login butuh persetujuan eksplisit dan kebijakan privasi (UU PDP).
+- Poster milik penyelenggara: minta izin dan cantumkan sumber. Poster buatan GWM adalah pengganti sementara.
+- Aturan GitHub Pages melarang pemakaian untuk bisnis/transaksi komersial. Bila GWM mulai menghasilkan uang, pertimbangkan Cloudflare Pages atau Netlify dari repo yang sama.
 
-## Admin: grup & kota komunitas
-- Jalankan `supabase/schema_forum_admin2.sql` (fungsi `admin_forum_waitlist`, agar admin bisa melihat permintaan kota).
-- `/admin` > Komunitas > tab **Grup & kota**: buka/tutup kota dan atur urutan, lihat kota yang paling diminta lalu buka dengan satu tombol, tambah/edit/nonaktifkan/hapus grup WhatsApp, Telegram, Discord. Tautan diperiksa di browser dan di database (hanya https dari domain resmi). Kota tidak bisa dihapus dari panel (menghapus kota ikut menghapus semua kirimannya); pakai Tutup kota.
+## Batas paket gratis Supabase
+2 proyek, database 500 MB, penyimpanan 1 GB, egress 5 GB/bulan, 50.000 pengguna aktif bulanan. Proyek dijeda setelah 7 hari tanpa aktivitas (ditangani Jaga aktif). Pertimbangkan Pro (±US$25/bulan) saat database mendekati 400 MB atau egress rutin di atas 70%.
 
-## Blokir penulis (manual + otomatis)
-- Jalankan `supabase/schema_forum_ban.sql` (setelah `schema_forum.sql` dan `schema_forum_admin.sql`). Menambah tabel `forum_bans` dan `forum_strikes`, trigger pencatat pelanggaran, dan memperbarui `forum_post`, `forum_reply`, `admin_forum_moderate`; menambah `admin_forum_ban` dan `admin_forum_unban`.
-- **Otomatis:** satu pelanggaran = kiriman/balasan yang disembunyikan (3 laporan atau admin) atau dihapus admin. 3 pelanggaran dalam 30 hari = blokir menulis 3 hari, 5 = 14 hari, 8 = 90 hari. Admin tidak pernah diblokir otomatis. "Abaikan laporan" menghapus pelanggaran item itu.
-- **Manual:** tombol *Blokir penulis* di kartu moderasi (lama hari, 0 = permanen, plus alasan). Tab **Diblokir** menampilkan semua blokir (otomatis/manual) dengan tombol Cabut blokir, yang juga menghapus catatan pelanggaran.
-- Penulis yang diblokir tetap bisa membaca dan melapor, tetapi tidak bisa menulis kiriman atau balasan; pesan blokir (sampai kapan dan alasannya) muncul saat mencoba menulis.
-- Tambahan pengaman di `forum_post`/`forum_reply`: kiriman kembar dalam sehari ditolak, dan batas kecepatan (3 kiriman atau 8 balasan per 10 menit).
+## Pindah domain
+1. Arahkan DNS ke GitHub Pages, lalu buat file `CNAME` berisi `gowithdme.com` (hanya setelah DNS siap).
+2. `GWM_SITE=https://gowithdme.com python3 tools/build.py`, lalu commit dan push.
+3. Perbarui Redirect URL Supabase dan origin Google OAuth ke domain baru.
+4. Pindah sebelum situs dikenal Google; mengalihkan dari `github.io` belakangan bisa menurunkan peringkat untuk sementara.
 
-## Profil diperluas + pengunjung terakhir
-- Jalankan `supabase/schema_profil.sql` (setelah `schema_forum.sql` dan `schema_ajakan_fix.sql`). Menambah `profile_extra`, `profile_visits`, fungsi `profile_view/save/visitors/visitors_clear/log_visits`, dan kolom `author_ref`/`host_ref` pada view forum dan ajakan (berisi id hanya untuk pengguna yang sudah masuk, anonim mendapat null).
-- Halaman baru `/id/profil` dan `/en/profil` (`js/profil.js`, `?u=<id>`; tanpa `u` = profil sendiri). Hanya bisa dibuka pengguna yang sudah masuk; tidak diindeks Google. Nama penulis di forum dan host ajakan menaut ke profilnya.
-- Editor di `/login` (kartu profil): bio (tanpa tautan/nomor), minat, level pendakian, statistik asli (kiriman, ajakan diikuti, ajakan dibuat), dan tiga saklar privasi.
-- **Pengunjung terakhir:** membuka profil orang lain mencatat nama, foto, dan waktu selama 30 hari, tampil ke pengguna login. Aturan privasi: pemilik bisa mematikan profil, menyembunyikan daftar, atau menghapus daftar; pengunjung bisa mematikan pencatatan (riwayatnya ikut terhapus) langsung dari halaman profil; tidak ada jam terakhir online, lokasi, atau hitungan kunjungan per orang. Kebijakan privasi sudah ditambah butir "Profil dan pengunjung".
-
-## Pencarian autoscope (Sesi 2)
-- Satu kotak di bilah atas semua halaman (tombol `/` atau Ctrl/Cmd+K untuk fokus). Mencari lintas **event**, **wilayah** (kota, provinsi, kota komunitas), **gunung** (146 di `js/gunung-data.js`), **halaman situs**, dan **FAQ/Bantuan**. Hasil dikelompokkan, ada chip lingkup berisi jumlah, dan tiap kelompok bisa diperluas lewat "Lihat N lagi".
-- Semua kata harus cocok. Awalan kata, salah ketik ringan, dan singkatan umum (jkt, bdg, jogja, jabar, jatim, tangsel, dst. di `ALIAS` dalam `js/search.js`) dikenali. Kata kunci bulan, `gratis`/`free`, `minggu ini`, `besok`, dan nama kategori (konser, hiking, expo) ikut dihitung. Bila tak ada yang cocok semua kata, tampil hasil sebagian dengan keterangan.
-- Awalan opsional untuk menyempit: `event:` `kota:` `gunung:` `halaman:` `bantuan:` (juga `city:` `mountain:` `page:` `help:`).
-- Hasil membuka: rincian event (dialog bila sudah di Beranda/Event/Gunung), `event?kota=`, `event?prov=`, `gunung?q=`, `komunitas?kota=`, atau `bantuan#faq-N`. Halaman Event/Gunung kini menerima `?q=`, `?kota=`, `?prov=` dan menampilkan chip "Hasil untuk ..." dengan tombol Hapus filter.
-- Kode: `js/search.js` (mesin + panel), `js/search-index.js` (halaman & FAQ, dibuat otomatis oleh `tools/build.py`), gaya di akhir `css/style.css`, teks `sx_*` di `tools/strings.py`. Menambah halaman ke pencarian: tambah baris di `SX_PAGES` dalam `tools/build.py`.
-- Event dan kota komunitas dibaca dari Supabase saat panel pertama dibuka (tanpa tabel baru). Pencarian terakhir (6 terbaru) disimpan di browser (`gwm_recent_q`) dan disebut di Kebijakan Privasi.
-
-## Tampilan adaptif (css/adaptive.css + js/adaptive.js)
-- `js/adaptive.js` memasang `<html data-tier="low|mid|high" data-dev="phone|tablet|desktop">` dari RAM, inti CPU, hemat data, GPU software, dan uji frame-rate singkat (otomatis turun satu tingkat bila patah-patah).
-- Pengguna bisa memilih manual di footer: Otomatis / Hemat / Seimbang / Penuh (disimpan di `localStorage` kunci `gwm-quality`).
-- `css/adaptive.css`: HP = tab bawah + lembar bawah untuk rincian event; PC = menu utama di bilah atas; tingkat hemat = tanpa animasi/blur; penuh = kaca buram, latar bergerak, animasi masuk saat scroll, kilau kartu, transisi antar-halaman.
-- Teks baru ada di akhir `tools/strings.py` (`nav_primary`, `tab_comm`, `tab_me`, `skip`, `totop`, `q_*`). Setelah ubah: `python3 tools/build.py`.
-
-## Gaya portal ala Naver (css/naver.css, js/naver.js, js/home.js)
-- **Header**: strip layanan di atas (Semua layanan + menu utama, hilang saat scroll) dan baris utama dengan "Green Window" (kotak cari hijau, tombol cari, Enter tanpa hasil = buka daftar `event?q=`). Tombol ☰ membuka mega menu "Semua layanan" (Esc menutup, fokus terkunci).
-- **Beranda**: kotak cari besar di tengah (kotak header muncul saat digulir), ticker bergulir "Segera hadir" (klik panah = daftar 10), 12 pintasan ikon berlencana jumlah (geser di HP), banner berputar (panah, 1/6, jeda, geser), tab topik + filter cepat, tombol "Lihat N event lagi", panel kanan (kartu masuk, tanggal & cuaca, statistik, terakhir dilihat).
-- **Pencarian**: kondisi kosong memuat daftar "Segera hadir" bernomor. `js/search.js` kini mendukung beberapa kotak (`#gq` header + `#gq2` beranda).
-- `js/app.js` mengekspor `window.IB_Api` (hanya baca + atur filter) dan event `ib:ready`, `ib:render`, `ib:open`.
-- "Terakhir dilihat" disimpan hanya di perangkat (`gwm_viewed`), sudah disebut di Kebijakan Privasi.
-- Setelah mengubah `tools/strings.py` atau `src/*.html`: `python3 tools/build.py`.
-
-## Statistik admin
-- Panel Admin punya menu baru: **Beranda** (yang perlu dikerjakan + ringkasan), **Tinjau** (Pengajuan event | Laporan komunitas), **Postingan** (Event | Blog), **Statistik**, **Buat baru**. Di layar lebar menu menjadi bilah samping.
-- **Statistik** punya 3 tab: *Pengunjung* (tayangan, pengunjung unik/baru, grafik harian, halaman dan event terpopuler, sumber, jam ramai, perangkat, bahasa), *Pengguna* (pendaftar, aktif, kota, daftar pengguna dengan email disamarkan), *Konten* (status postingan, kategori, kota, aktivitas komunitas).
-- Pasang sekali: jalankan `supabase/schema_statistik.sql` di Supabase SQL Editor. Tanpa itu, tab Statistik menampilkan petunjuknya.
-- Pencatat kunjungan: `js/track.js` (disisipkan otomatis oleh `tools/build.py` ke semua halaman publik). Tanpa cookie dan tanpa IP; hanya halaman, bahasa, jenis perangkat, situs asal, dan kode acak di localStorage. Do Not Track / Global Privacy Control dihormati. Data dihapus setelah 400 hari. Dijelaskan di Kebijakan Privasi.
-- Kunjunganmu sendiri bisa dikecualikan lewat tombol "Jangan hitung kunjungan perangkat ini" di Statistik > Pengunjung (per browser).
-- Pengunjung unik adalah perkiraan per browser, bukan per orang.
-
+## Dokumen lain
+`AUDIT.md` (audit dan daftar perbaikan), `HEMAT-SUPABASE.md` (jaga aktif dan hemat egress), `supabase/DAFTAR_KONSER_PER_KOTA.md`, `BACA-SAYA.txt`, `data/BACA-SAYA.txt`.
