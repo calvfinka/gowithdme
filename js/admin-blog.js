@@ -76,8 +76,10 @@ function bind(){
   $("bgSaveD").onclick=function(){save("draft")};$("bgSaveP").onclick=function(){save("published")};
   $("bgDel").onclick=function(){delPost(cur)};
   var s=$("bgCat");s.innerHTML=CATS.map(function(c){return'<option value="'+c[0]+'">'+c[1]+"</option>"}).join("")}
-function delPost(p){if(!p||!confirm('Hapus "'+p.title+'"? Halaman publik hilang saat sinkron berikutnya.'))return;
-  sb.from("blog_posts").delete().eq("id",p.id).then(function(r){if(r.error)return msg(hint(r.error),"err");load().then(function(){show(false);msg("Tulisan dihapus.","ok")})})}
+function delPost(p){if(!p)return;
+  var goDel=function(){sb.from("blog_posts").delete().eq("id",p.id).then(function(r){if(r.error)return msg(hint(r.error),"err");load().then(function(){show(false);msg("Tulisan dihapus.","ok")})})};
+  if(typeof window.admAsk==="function"){admAsk({title:"Hapus tulisan blog",text:'Hapus "'+p.title+'"? Halaman publik hilang saat sinkron berikutnya.',ok:"Hapus"}).then(function(ok){if(ok)goDel()})}
+  else goDel()}
 document.addEventListener("click",function(ev){
   var b=ev.target.closest("button");if(!b)return;
   if(b.dataset.v==="blog"&&!loaded){load()}

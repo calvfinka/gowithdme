@@ -39,7 +39,8 @@ function fail(e){var m=e&&e.message||"";$("stBody").innerHTML='<div class="card"
   (/admin_stats|schema cache|does not exist|Could not find/i.test(m)?"Buka Supabase &gt; SQL Editor, jalankan isi file <code>supabase/schema_statistik.sql</code>, lalu muat ulang halaman ini.":esc(m||"Coba lagi sebentar lagi."))+'</p><button class="btn" id="stRetry" type="button">Coba lagi</button></div>'}
 
 /* ---- Pengunjung ---- */
-function visit(){var t=D.traffic,off=false;try{off=localStorage.getItem("gwm_notrack")==="1"}catch(e){}
+function visit(){var t=D.traffic||{},off=false;try{off=localStorage.getItem("gwm_notrack")==="1"}catch(e){}
+  t.devices=t.devices||[];t.langs=t.langs||[];t.daily=t.daily||[];t.pages=t.pages||[];t.events=t.events||[];t.refs=t.refs||[];t.hours=t.hours||[];
   var tot=t.devices.reduce(function(s,x){return s+x.n},0),ltot=t.langs.reduce(function(s,x){return s+x.n},0);
   var empty=!t.first_hit?'<div class="msg">Belum ada data kunjungan. Data mulai terkumpul setelah situs yang sudah berisi <code>js/track.js</code> dibuka pengunjung (kunjunganmu sendiri juga terhitung, kecuali kamu mematikannya di bawah).</div>':"";
   return empty+'<div class="kps">'+kpi("Tayangan halaman",t.views,trend(t.views,t.prev_views),"Jumlah halaman yang dibuka")+kpi("Pengunjung unik",t.visitors,trend(t.visitors,t.prev_visitors),"Perkiraan jumlah browser berbeda")+
@@ -54,16 +55,17 @@ function visit(){var t=D.traffic,off=false;try{off=localStorage.getItem("gwm_not
     '<div class="row"><button class="btn ghost sm" id="stNoTrack" type="button">'+(off?"Perangkat ini TIDAK dihitung. Hitung lagi":"Jangan hitung kunjungan perangkat ini")+"</button></div></div>"}
 
 /* ---- Pengguna ---- */
+function provName(p){return{google:"Google",facebook:"Facebook",discord:"Discord",github:"GitHub",email:"Email"}[String(p||"").toLowerCase()]||(p||"Email")}
 function ulist(){return UROWS.map(function(u){var nm=u.nickname||"(tanpa nama)";
   return'<div class="us"><span class="ua"'+(u.avatar_url?" style=\"background:center/cover url('"+esc(u.avatar_url).replace(/'/g,"%27")+"')\"":"")+">"+(u.avatar_url?"":esc(nm.charAt(0).toUpperCase()))+'</span><div class="ub"><b>'+esc(nm)+"</b>"+(u.role==="admin"?' <span class="badge adm">Admin</span>':"")+(u.verified?' <span class="badge pub">Terverifikasi</span>':"")+
-    '<div class="meta">'+[u.city,"gabung "+dm(u.joined.slice(0,10))+" "+u.joined.slice(0,4),"masuk terakhir "+ago(u.last_sign_in),u.provider==="google"?"Google":"Email"].filter(Boolean).map(esc).join(" · ")+"</div>"+
+    '<div class="meta">'+[u.city,"gabung "+dm(u.joined.slice(0,10))+" "+u.joined.slice(0,4),"masuk terakhir "+ago(u.last_sign_in),provName(u.provider)].filter(Boolean).map(esc).join(" · ")+"</div>"+
     '<div class="meta">'+esc(u.email||"")+(u.posts||u.hosted||u.joined_n?" · "+n(u.posts)+" kiriman, "+n(u.hosted)+" ajakan dibuat, "+n(u.joined_n)+" ajakan diikuti":"")+"</div></div></div>"}).join("")||'<p class="meta">Tidak ada pengguna yang cocok.</p>'}
-function users(){var u=D.users;
+function users(){var u=(D.users&&typeof D.users==="object")?D.users:{total:+D.users||0};u.daily=u.daily||[];u.cities=u.cities||[];
   return'<div class="kps">'+kpi("Pengguna terdaftar",u.total,'<em class="tr">'+n(u.admins)+" admin, "+n(u.verified)+" terverifikasi</em>")+kpi("Pendaftar baru",u.new,trend(u.new,u.prev_new),"Dalam "+days+" hari terakhir")+
-    kpi("Aktif 7 hari",u.active7,'<em class="tr">'+n(u.active30)+" aktif dalam 30 hari</em>","Pernah masuk akun")+kpi("Cara masuk",u.google,'<em class="tr">Google · '+n(u.email)+" email</em>")+"</div>"+
+    kpi("Aktif 7 hari",u.active7,'<em class="tr">'+n(u.active30)+" aktif dalam 30 hari</em>","Pernah masuk akun")+kpi("Metode Masuk",n(u.google||0)+' OAuth','<em class="tr">Google / FB / Discord / GitHub · '+n(u.email)+" email</em>")+"</div>"+
     card("Pendaftar baru per hari",daily(u.daily.map(function(x){return{d:x.d,n:x.n}}),"n",null,"pendaftar"))+
     '<div class="g2s">'+card("Kota pengguna",hbars(u.cities,function(i){return i.k},"n"),n(u.with_city)+" dari "+n(u.total)+" pengguna mengisi kota.")+
-    card("Kelengkapan profil",hbars([{k:"Sudah isi kota",n:u.with_city},{k:"Belum isi kota",n:Math.max(0,u.total-u.with_city)}],function(i){return i.k},"n",u.total))+"</div>"+
+    card("Kelengkapan profil",hbars([{k:"Sudah isi kota",n:u.with_city||0},{k:"Belum isi kota",n:Math.max(0,(u.total||0)-(u.with_city||0))}],function(i){return i.k},"n",u.total))+"</div>"+
     '<div class="card sc"><h3>Daftar pengguna</h3><p class="meta">Email disamarkan. Untuk memblokir penulis, pakai tab Diblokir di Tinjau &gt; Laporan komunitas.</p><div class="bar"><input id="uQ" type="search" placeholder="Cari nama atau email…" value="'+esc(UQ)+'"><button class="btn sm" id="uGo" type="button">Cari</button></div>'+
     '<div id="uList">'+ulist()+'</div><p class="meta" id="uInfo">'+n(UROWS.length)+" dari "+n(UTOT)+'</p>'+(UROWS.length<UTOT?'<div class="row"><button class="btn ghost sm" id="uMore" type="button">Tampilkan lebih banyak</button></div>':"")+"</div>"}
 function loadUsers(more){if(!more){UOFF=0;UROWS=[]}
@@ -71,12 +73,12 @@ function loadUsers(more){if(!more){UOFF=0;UROWS=[]}
     if($("uList")){$("uList").innerHTML=ulist();$("uInfo").textContent=n(UROWS.length)+" dari "+n(UTOT);var m=$("uMore");if(m)m.hidden=UROWS.length>=UTOT}else render()})}
 
 /* ---- Konten ---- */
-function content(){var c=D.content,st=c.events_by_status||{};
+function content(){var c=D.content||{},st=c.events_by_status||{};
   var sts=["published","pending","draft","rejected"].map(function(k){return{k:k,n:st[k]||0}});
   return'<div class="kps">'+kpi("Event tayang & akan datang",c.upcoming)+kpi("Menunggu persetujuan",c.pending,c.pending?'<em class="tr down">perlu diperiksa</em>':'<em class="tr up">beres</em>')+
     kpi("Kiriman forum baru",c.posts,'<em class="tr">'+n(c.replies)+" balasan</em>","Dalam "+days+" hari")+kpi("Ajakan baru",c.invites,'<em class="tr">'+n(c.invites_open)+" masih terbuka</em>","Dalam "+days+" hari")+"</div>"+
-    '<div class="g2s">'+card("Status semua postingan",hbars(sts,function(i){return STN[i.k]||i.k},"n"))+card("Event terbit menurut kategori",hbars(c.published_by_cat,function(i){return CATN[i.k]||i.k},"n"))+"</div>"+
-    card("Kota dengan event akan datang terbanyak",hbars(c.by_city,function(i){return i.k},"n"),"Bantu memutuskan kota mana yang perlu diisi lebih banyak.")}
+    '<div class="g2s">'+card("Status semua postingan",hbars(sts,function(i){return STN[i.k]||i.k},"n"))+card("Event terbit menurut kategori",hbars(c.published_by_cat||[],function(i){return CATN[i.k]||i.k},"n"))+"</div>"+
+    card("Kota dengan event akan datang terbanyak",hbars(c.by_city||[],function(i){return i.k},"n"),"Bantu memutuskan kota mana yang perlu diisi lebih banyak.")}
 
 function render(){var b=$("stBody");if(!D){b.innerHTML='<p class="meta">Memuat…</p>';return}
   b.innerHTML=tab==="visit"?visit():tab==="users"?users():content();
@@ -87,8 +89,8 @@ function load(){if(loading)return;loading=true;$("stBody").innerHTML='<p class="
     if(tab==="users"&&!UROWS.length)return loadUsers().then(render);render()})}
 
 /* ---- Beranda: ringkasan + penanda perlu tindakan ---- */
-function kpiDash(){var el=$("kpiDash");if(!el||!D)return;var t=D.traffic,u=D.users;
-  el.innerHTML=kpi("Tayangan "+D.days+" hari",t.views,trend(t.views,t.prev_views))+kpi("Pengunjung unik",t.visitors,trend(t.visitors,t.prev_visitors))+kpi("Pengguna terdaftar",u.total,'<em class="tr">+'+n(u.new)+" baru</em>")}
+function kpiDash(){var el=$("kpiDash");if(!el||!D)return;var t=D.traffic||{},u=(D.users&&typeof D.users==="object")?D.users:{total:+D.users||0,new:0};
+  el.innerHTML=kpi("Tayangan "+(D.days||days)+" hari",t.views,trend(t.views,t.prev_views))+kpi("Pengunjung unik",t.visitors,trend(t.visitors,t.prev_visitors))+kpi("Pengguna terdaftar",u.total,'<em class="tr">+'+n(u.new)+" baru</em>")}
 function sync(){var p=+($("nPend2")||{}).textContent||0,f=+($("nFrep")||{}).textContent||0,t=p+f,d=$("bTinjau");
   if(d){d.hidden=!t;d.textContent=t}
   [].forEach.call(document.querySelectorAll("#tgRev,.tgR"),function(x){x.textContent=p});[].forEach.call(document.querySelectorAll("#tgFor,.tgF"),function(x){x.textContent=f});

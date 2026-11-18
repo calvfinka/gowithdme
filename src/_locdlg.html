@@ -1,0 +1,47 @@
+<dialog id="locDlg" class="locd" aria-labelledby="locDlgTitle">
+  <div class="locd-in">
+    <div class="locd-h">
+      <div>
+        <h2 id="locDlgTitle">{{loc_title}}</h2>
+        <p class="meta">{{loc_sub}}</p>
+      </div>
+      <button class="ico-btn" id="locDlgX" type="button" aria-label="{{nv_close}}"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="locd-s">
+      <div class="locd-q">
+        <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
+        <input id="locSearch" type="search" placeholder="{{loc_search_ph}}" aria-label="{{loc_search_ph}}" autocomplete="off">
+      </div>
+      <div class="locd-rad" id="locRad" role="group" aria-label="{{loc_radius_h}}">
+        <span class="locd-rl">{{loc_radius_h}}:</span>
+        <button type="button" data-rad="0" aria-pressed="true">{{loc_r_0}}</button>
+        <button type="button" data-rad="50" aria-pressed="false">{{loc_r_50}}</button>
+        <button type="button" data-rad="100" aria-pressed="false">{{loc_r_100}}</button>
+        <button type="button" data-rad="prov" aria-pressed="false">{{loc_r_prov}}</button>
+        <button type="button" data-rad="macro" aria-pressed="false">{{loc_r_macro}}</button>
+      </div>
+    </div>
+    <div class="locd-body">
+      <section class="locd-col">
+        <h3>{{loc_macro_h}}</h3>
+        <div class="locd-list" id="locMacros"></div>
+      </section>
+      <section class="locd-col">
+        <h3>{{loc_prov_h}}</h3>
+        <div class="locd-list" id="locProvs"></div>
+      </section>
+      <section class="locd-col">
+        <h3 id="locCityH">{{loc_city_h}}</h3>
+        <div class="locd-cities" id="locCities"></div>
+        <div class="locd-extra" id="locExtra" hidden></div>
+      </section>
+    </div>
+    <div class="locd-f">
+      <button type="button" class="btn ghost sm" id="locReset">{{loc_reset}}</button>
+      <div class="locd-fr">
+        <span class="meta" id="locSelTxt"></span>
+        <button type="button" class="btn pri sm" id="locApply">{{loc_apply}}</button>
+      </div>
+    </div>
+  </div>
+</dialog>

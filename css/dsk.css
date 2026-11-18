@@ -121,6 +121,18 @@ html:where([data-dsk]) .adm{grid-template-columns:1fr}
 /* panel.css @900 */
 html:where([data-dsk]) .fgrid{grid-template-columns:1fr}
 html:where([data-dsk]) .prev{position:static}
+/* panel.css @959 */
+html:where([data-dsk]) .pf-dash-grid{grid-template-columns:1fr}
+html:where([data-dsk]) .pf-kpi-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+html:where([data-dsk]) .pf-fav-grid{grid-template-columns:1fr}
+html:where([data-dsk]) .pf-search{max-width:none;width:100%}
+/* panel.css @899 */
+html:where([data-dsk]) .adm-crumb,html:where([data-dsk]) .adm-who,html:where([data-dsk]) .adm-quick-new{display:none}
+/* panel.css @640 */
+html:where([data-dsk]) .oauth-grid{grid-template-columns:1fr}
+html:where([data-dsk]) .pf-head-wrap{padding:0 14px 16px}
+html:where([data-dsk]) .pf-actions{padding-top:8px;width:100%}
+html:where([data-dsk]) .pf-cover{height:106px}
 /* bocoran aturan PC */
 html[data-dsk] .pnav{display:none}
 html[data-dsk] .topbar{grid-template-columns:auto minmax(0,1fr) auto}
