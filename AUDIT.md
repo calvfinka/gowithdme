@@ -64,3 +64,17 @@ Diuji di Chromium headless (meniru GitHub Pages di subfolder `/gowithdme/`, URL 
 | Redundansi | Definisi `esc` dan `toast` yang tersebar digabung ke sumber tunggal di `supa.js` (dengan fallback aman bila file belum termuat). `msg` di admin kini konsisten auto-dismiss untuk status OK. |
 
 Setelah ubah teks i18n: `python3 tools/build.py` (hanya perlu bila ingin meregenerasi `js/i18n.js` + halaman). File JS di atas bisa langsung di-commit tanpa rebuild penuh.
+
+## Perubahan 18 November 2026 (2) — monetisasi, traffic readiness, legal lengkap
+
+| Bagian | Perubahan |
+|--------|-----------|
+| Schema | `supabase/schema_monetisasi.sql`: kolom `is_featured`, `featured_until`, `sponsor_label`, `boost_score`, `affiliate_note`; view `events_featured`; tabel `sponsorship_leads` + RPC `submit_sponsor_lead` & `admin_set_featured`. |
+| Config | `js/config.js`: OWNER_*, FEATURED_*, SPONSOR_LEADS_ENABLED, AFFILIATE_TICKET_BASE, AD_SLOT_* (siap diisi partner). |
+| UI listing | `js/app.js`: event Featured naik ke atas daftar + badge “Disorot/Featured”; CSS `.badge.feat`. |
+| Admin | Form event: checkbox Featured, label sponsor, tanggal berakhir, boost score. |
+| Legal | Privacy & Terms diperluas (ID+EN, UU PDP, sponsor, retensi, pihak ketiga). Halaman baru **Hak Cipta & Kepemilikan** dan **Tentang GWM & Jurkon Studio** (ID+EN). Footer menautkan About + Copyright. |
+| Build | `copyright` & `about` masuk pipeline `tools/build.py` + search index. |
+| Traffic | Setelah domain aktif: canonical/sitemap sudah otomatis lewat `GWM_SITE`; struktur event statis + blog + hreflang mendukung indexing. Featured listings memberi sinyal kualitas untuk engagement. |
+
+**Langkah setelah domain terdaftar:** (1) jalankan `schema_monetisasi.sql` di Supabase, (2) `GWM_SITE=https://gowithdme.com python3 tools/build.py`, (3) update Redirect URL Supabase & Google OAuth, (4) daftarkan Search Console + sitemap, (5) aktifkan paket Featured untuk penyelenggara lewat admin.

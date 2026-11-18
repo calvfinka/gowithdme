@@ -11,7 +11,7 @@ ROOT=os.path.join(os.path.dirname(__file__),"..")
 BASE=os.environ.get("GWM_SITE","https://calvfinka.github.io/gowithdme").rstrip("/")
 VER=os.environ.get("GWM_VER") or time.strftime("%Y%m%d%H%M")  # GWM_VER tetap -> build ulang tidak mengubah file (dipakai workflow)
 LANGS=["id","en"]; IDX={"id":0,"en":1}
-PAGES=["index","event","gunung","login","privacy","terms","ajukan","komunitas","teman","profil","bantuan","pesan"]
+PAGES=["index","event","gunung","login","privacy","terms","copyright","about","ajukan","komunitas","teman","profil","bantuan","pesan"]
 NOINDEX=("login","ajukan","profil","pesan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
 APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
 def path(p): return "" if p=="index" else p
@@ -52,6 +52,8 @@ SX_PAGES=[
  ("contact","bantuan#kontak","sx_p_contact","page","kontak hubungi email whatsapp wa laporan lapor contact report"),
  ("terms","terms","sx_p_terms","page","syarat ketentuan aturan terms conditions rules"),
  ("privacy","privacy","sx_p_privacy","page","privasi kebijakan data pribadi pdp lokasi privacy policy personal data"),
+ ("copyright","copyright","sx_p_copyright","page","hak cipta copyright ownership jurkon dmca takedown"),
+ ("about","about","sx_p_about","page","tentang about jurkon studio pemilik owner gwm"),
  ("login","login","sx_p_login","page","masuk login daftar register sign up akun google password lupa"),
  ("profile","profil","sx_p_profile","page","profil profile akun edit nama panggilan nickname kota bio foto pengunjung"),
  ("msgs","pesan","sx_p_msgs","page","pesan chat dm inbox voice note gambar kirim pesan message messages"),
@@ -73,7 +75,7 @@ for l in LANGS:
         h=inc(open(f"{ROOT}/src/{p}.html",encoding="utf-8").read())
         h=h.replace("{{search}}",inc("{{>search}}"))
         h=h.replace("{{pgshare}}",'<button class="mm-share" id="pgShare" type="button"><svg class="i" aria-hidden="true"><use href="#i-share"/></svg>{{sh_aria}}</button>' if p in APP else "")
-        if p in("privacy","terms"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
+        if p in("privacy","terms","copyright","about"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
         sw=f'<a class="lang" href="../{o}/{path(p)}" data-sw="{o}" hreflang="{o}" lang="{o}" aria-label="{S["lang_label"][IDX[l]]}">{o.upper()}</a>'
         hl="" if p in NOINDEX else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
             +"".join(f'<link rel="alternate" hreflang="{x}" href="{BASE}/{x}/{path(p)}">' for x in LANGS)

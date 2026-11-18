@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="{{lang}}"><head>
+{{>head}}<title>{{cr_title}}</title><meta name="description" content="{{cr_desc}}">
+{{hreflang}}</head><body>
+{{>icons}}{{>bar}}
+{{body}}
+<div class="page" style="padding-top:0">{{>foot}}</div>
+<script src="../js/i18n.js"></script><script src="../js/config.js"></script><script>document.getElementById("year").textContent=new Date().getFullYear();[].forEach.call(document.querySelectorAll("[data-mail]"),function(a){a.href="mailto:"+IB_CONFIG.CONTACT_EMAIL;if(a.hasAttribute("data-t"))a.textContent=IB_CONFIG.CONTACT_EMAIL})</script>
+</body></html>

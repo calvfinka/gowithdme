@@ -27,6 +27,8 @@ function today(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta"
 function days(a,b){return Math.round((Date.parse(b+"T00:00:00Z")-Date.parse(a+"T00:00:00Z"))/864e5)}
 function endOf(e){return e.end_date||e.event_date}
 function isActive(e){return endOf(e)>=today()}
+function isFeatured(e){if(!e||!e.is_featured)return false;if(e.featured_until&&e.featured_until<today())return false;return true}
+function featBadge(e){if(!isFeatured(e))return"";var lab=(e.sponsor_label||(window.IB_CONFIG&&(IB_LANG==="en"?IB_CONFIG.FEATURED_LABEL_EN:IB_CONFIG.FEATURED_LABEL_ID))||(window.IB_T?IB_T("feat"):"Featured"));return'<span class="badge feat">'+esc(lab)+'</span>'}
 /* Status: live = sedang berjalan (multi-hari / hari-H), soon = <=7 hari, next = lebih jauh, past = selesai */
 function status(e){var t=today(),s=days(t,e.event_date),en=days(t,endOf(e));
   if(en<0)return{k:"past",l:tr("past"),n:s};
@@ -89,6 +91,9 @@ function list(){var past=state.cat==="selesai";
     if(state.cat==="tersimpan")return isSaved(e.id);
     return state.cat==="semua"||e.category===state.cat})
    .sort(function(a,b){if(past)return a.event_date<b.event_date?1:-1;
+     /* Featured / boost (monetisasi) di atas daftar normal */
+     var fa=isFeatured(a)?1:0,fb=isFeatured(b)?1:0;if(fa!==fb)return fb-fa;
+     var ba=+a.boost_score||0,bb=+b.boost_score||0;if(ba!==bb)return bb-ba;
      if(state.sort==="new")return(b.created_at||"")<(a.created_at||"")?-1:1;
      return a.event_date<b.event_date?-1:1})}
 function badge(e){var s=status(e);return'<span class="badge '+s.k+'">'+(s.k==="live"?"● ":"")+esc(s.l)+'</span>'}
@@ -99,12 +104,12 @@ function tile(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
     '<div class="d"><b>'+p.d+'</b><span>'+p.m+'</span></div>'+
     '<button class="fav sh" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
     '<button class="fav" type="button" data-sv="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr("sv_label"))+'">'+ic("heart")+'</button></div>'+
-    '<div><div class="tt">'+esc(ttl(e))+'</div><div class="tm">'+where(e)+'</div><div class="tm">'+esc(kind(e))+'</div><div class="tm">'+badge(e)+invBadge(e)+'</div>'+
+    '<div><div class="tt">'+esc(ttl(e))+'</div><div class="tm">'+where(e)+'</div><div class="tm">'+esc(kind(e))+'</div><div class="tm">'+badge(e)+featBadge(e)+invBadge(e)+'</div>'+
     '<div class="tm p'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_tbd"))+'</div></div></div>'}
 function row(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
   return'<div class="r'+(s.k==="past"?' past':'')+'" data-id="'+esc(e.id)+'" role="button" tabindex="0"><div class="rd" style="'+posterStyle(e)+'"><div><b>'+p.d+'</b><span>'+p.m+'</span></div></div>'+
     '<div class="rt"><b>'+esc(ttl(e))+'</b><span>'+esc(kind(e))+' · '+esc(rng(e))+'</span></div>'+
-    '<div class="rc">'+where(e)+'</div><div class="rs">'+badge(e)+invBadge(e)+'</div>'+
+    '<div class="rc">'+where(e)+'</div><div class="rs">'+badge(e)+featBadge(e)+invBadge(e)+'</div>'+
     '<div class="rp'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_soon"))+'</div>'+
     '<div class="ra"><button class="rf" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
     '<button class="rf" type="button" data-sv="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr("sv_label"))+'">'+ic("heart")+'</button></div></div>'}

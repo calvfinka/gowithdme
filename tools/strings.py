@@ -12,6 +12,9 @@ S = {
 "f_terms": ("Syarat &amp; Ketentuan", "Terms &amp; Conditions"),
 "f_privacy": ("Kebijakan Privasi", "Privacy Policy"),
 "f_contact": ("Kontak", "Contact"),
+"f_copyright": ("Hak Cipta", "Copyright"),
+"f_about": ("Tentang", "About"),
+"feat": ("Disorot", "Featured"),
 "lang_label": ("Ganti bahasa", "Change language"),
 # --- meta ---
 "idx_title": ('GWM — Cari Teman Nonton Festival & Naik Gunung di Kotamu', 'GWM — Find Friends for Festivals & Hikes in Your City'),
@@ -28,6 +31,12 @@ S = {
 "pv_desc": ("Kebijakan Privasi GWM oleh Jurkon Studio.", "GWM Privacy Policy by Jurkon Studio."),
 "tm_title": ("Syarat & Ketentuan — GWM", "Terms & Conditions — GWM"),
 "tm_desc": ("Syarat & Ketentuan GWM oleh Jurkon Studio.", "GWM Terms & Conditions by Jurkon Studio."),
+"cr_title": ("Hak Cipta & Kepemilikan — GWM", "Copyright & Ownership — GWM"),
+"cr_desc": ("Pemilik situs, hak cipta konten event, lisensi konten pengguna, dan cara mengajukan penghapusan.", "Site owner, event content copyright, user-content license, and how to request takedown."),
+"ab_title": ("Tentang GWM & Jurkon Studio", "About GWM & Jurkon Studio"),
+"ab_desc": ("Siapa di balik GWM, model kerja sama, dan cara menghubungi pemilik.", "Who is behind GWM, partnership model, and how to contact the owner."),
+"sx_p_copyright": ("Hak Cipta", "Copyright"),
+"sx_p_about": ("Tentang", "About"),
 # --- beranda ---
 "all_cities": ("Semua kota", "All cities"),
 "hero_h": ("Gas barengan, jangan sendirian.", "Go together, don't go alone."),
@@ -212,6 +221,15 @@ J = {
 "err_rate": ("Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.", "Too many attempts. Wait a moment and try again."),
 "err_upload": ("Gagal mengunggah berkas. Pastikan format & ukuran sesuai.", "Upload failed. Check the file format and size."),
 "err_timeout": ("Permintaan kehabisan waktu. Coba lagi.", "The request timed out. Try again."),
+"cr_title": ("Hak Cipta & Kepemilikan — GWM", "Copyright & Ownership — GWM"),
+"cr_desc": ("Pemilik situs, hak cipta konten event, lisensi konten pengguna, dan cara mengajukan penghapusan.", "Site owner, event content copyright, user-content license, and how to request takedown."),
+"ab_title": ("Tentang GWM & Jurkon Studio", "About GWM & Jurkon Studio"),
+"ab_desc": ("Siapa di balik GWM, model kerja sama, dan cara menghubungi pemilik.", "Who is behind GWM, partnership model, and how to contact the owner."),
+"sx_p_copyright": ("Hak Cipta", "Copyright"),
+"sx_p_about": ("Tentang", "About"),
+"feat": ("Disorot", "Featured"),
+"f_copyright": ("Hak Cipta", "Copyright"),
+"f_about": ("Tentang", "About"),
 }
 PROV_EN = {"DKI Jakarta":"Jakarta Capital Region","Banten":"Banten","Jawa Barat":"West Java","Jawa Tengah":"Central Java","DI Yogyakarta":"Yogyakarta Special Region","Jawa Timur":"East Java","Bali":"Bali","Sumatera Utara":"North Sumatra","Sumatera Barat":"West Sumatra","Riau":"Riau","Kepulauan Riau":"Riau Islands","Sumatera Selatan":"South Sumatra","Lampung":"Lampung","Aceh":"Aceh","Kalimantan Timur":"East Kalimantan","Kalimantan Selatan":"South Kalimantan","Kalimantan Barat":"West Kalimantan","Sulawesi Selatan":"South Sulawesi","Sulawesi Utara":"North Sulawesi","Nusa Tenggara Barat":"West Nusa Tenggara"}
 
