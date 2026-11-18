@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="{{lang}}"><head>
+{{>head}}<title>{{ct_title}}</title><meta name="description" content="{{ct_desc}}">
+<meta property="og:title" content="{{ct_title}}"><meta property="og:description" content="{{ct_desc}}">
+<link rel="stylesheet" href="../css/panel.css"><link rel="stylesheet" href="../css/teman.css">
+{{hreflang}}</head><body>
+{{>icons}}{{>bar}}
+<main class="page sub tm">
+<div id="msg" class="msg" hidden></div>
+<h1>{{ct_h}}</h1><p class="meta">{{ct_p}}</p>
+<div class="tm-bar">
+  <label class="f">{{ct_where}}<select id="tmCity"></select></label>
+  <div class="tm-seg" id="tmMode" role="group" aria-label="{{ct_mode_aria}}"><button type="button" data-m="near" aria-pressed="true">{{ct_mode_near}}</button><button type="button" data-m="all" aria-pressed="false">{{ct_mode_all}}</button></div>
+  <button class="btn" id="tmNew" type="button">{{ct_new}}</button>
+</div>
+<div class="tm-chips" id="tmNiche" role="group" aria-label="{{ct_niche_aria}}"></div>
+<div class="tm-chips" id="tmTags" role="group" aria-label="{{ct_tags_aria}}" hidden></div>
+<p class="tm-hint" id="tmCombo" hidden>{{ct_combo_hint}}</p>
+<div class="tm-count" id="tmCount" aria-live="polite"></div>
+<div id="tmList"></div>
+</main>
+<div id="toast" role="status"></div>
+{{>libs}}<script src="../js/share.js"></script><script src="../js/ajakan.js"></script><script src="../js/teman.js"></script>
+</body></html>

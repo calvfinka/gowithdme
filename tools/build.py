@@ -11,7 +11,7 @@ ROOT=os.path.join(os.path.dirname(__file__),"..")
 BASE=os.environ.get("GWM_SITE","https://calvfinka.github.io/gowithdme").rstrip("/")
 VER=os.environ.get("GWM_VER") or time.strftime("%Y%m%d%H%M")  # GWM_VER tetap -> build ulang tidak mengubah file (dipakai workflow)
 LANGS=["id","en"]; IDX={"id":0,"en":1}
-PAGES=["index","event","gunung","login","privacy","terms","ajukan","komunitas","profil","bantuan","pesan"]
+PAGES=["index","event","gunung","login","privacy","terms","ajukan","komunitas","teman","profil","bantuan","pesan"]
 NOINDEX=("login","ajukan","profil","pesan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
 APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
 def path(p): return "" if p=="index" else p
@@ -45,7 +45,7 @@ SX_PAGES=[
  ("home","./","sx_p_home","page","beranda home utama awal sedang berlangsung live"),
  ("events","event","sx_p_events","page","semua event acara kalender daftar all events calendar"),
  ("hike","gunung","sx_p_mtn","page","naik gunung pendakian hiking open trip checklist packing patungan kalkulator"),
- ("invite","event?ajakan=1","sx_p_invite","page","ajakan barengan teman bareng cari teman meet up invite buddy gabung join"),
+ ("invite","teman","sx_p_invite","page","ajakan barengan teman bareng cari teman meet up invite buddy gabung join"),
  ("comm","komunitas","sx_p_comm","page","komunitas forum diskusi grup whatsapp telegram discord community"),
  ("submit","ajukan","sx_p_submit","page","ajukan pengajuan tambah event buat open trip poster submit create host"),
  ("help","bantuan","sx_p_help","page","bantuan faq tanya jawab pertanyaan help support"),

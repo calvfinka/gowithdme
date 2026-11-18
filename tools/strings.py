@@ -612,3 +612,53 @@ J.update({
 "ce_sent": ("Konfirmasi dikirim. Cek email baru (dan email lama bila diminta) lalu ketuk tombol konfirmasi.", "Confirmation sent. Check your new email (and the old one if asked) and tap the confirm button."),
 "ce_done": ("Konfirmasi diterima. Jika diminta, konfirmasi juga dari email satunya.", "Confirmation received. If asked, confirm from the other email too."),
 })
+
+
+# ---- Cari Teman: ajakan bebas, niche kombinasi, jangkauan ----
+_NICHE = {"musik": ("Musik & hiburan", "Music & entertainment"), "petualangan": ("Petualangan", "Adventure"), "olahraga": ("Olahraga", "Sports"),
+  "kuliner": ("Kuliner & nongkrong", "Food & hangouts"), "hobi": ("Hobi & game", "Hobbies & games"), "belajar": ("Belajar & karier", "Learning & career"),
+  "seni": ("Seni & budaya", "Arts & culture"), "sosial": ("Sosial & relawan", "Social & volunteering")}
+_TAG = {"konser": ("Konser", "Concerts"), "festival": ("Festival", "Festivals"), "karaoke": ("Karaoke", "Karaoke"), "jamsession": ("Jam session", "Jam session"), "kpop": ("K-pop", "K-pop"),
+  "naikgunung": ("Naik gunung", "Hiking"), "camping": ("Camping", "Camping"), "pantai": ("Pantai", "Beach"), "roadtrip": ("Road trip", "Road trip"), "sepeda": ("Sepeda", "Cycling"),
+  "lari": ("Lari", "Running"), "futsal": ("Futsal", "Futsal"), "badminton": ("Badminton", "Badminton"), "gym": ("Gym", "Gym"), "renang": ("Renang", "Swimming"),
+  "kulineran": ("Kulineran", "Food trip"), "ngopi": ("Ngopi", "Coffee"), "nongkrong": ("Nongkrong", "Hanging out"), "masak": ("Masak", "Cooking"),
+  "game": ("Game", "Gaming"), "boardgame": ("Board game", "Board games"), "fotografi": ("Fotografi", "Photography"), "film": ("Film", "Movies"), "anime": ("Anime", "Anime"),
+  "belajarbareng": ("Belajar bareng", "Study together"), "bahasa": ("Bahasa", "Languages"), "bisnis": ("Bisnis", "Business"), "karier": ("Karier", "Career"), "coding": ("Coding", "Coding"),
+  "pameran": ("Pameran", "Expos"), "museum": ("Museum", "Museums"), "teater": ("Teater", "Theater"), "komedi": ("Komedi", "Comedy"),
+  "relawan": ("Relawan", "Volunteering"), "donasi": ("Donasi", "Donations"), "lingkungan": ("Lingkungan", "Environment")}
+J.update({"ct_n_" + k: v for k, v in _NICHE.items()})
+J.update({"ct_t_" + k: v for k, v in _TAG.items()})
+J.update({
+"ct_city_all": ("Semua kota", "All cities"), "ct_pick": ("Pilih…", "Choose…"),
+"ct_count_h": ("{n} ajakan", "{n} invites"),
+"ct_none": ("Belum ada ajakan yang cocok. Coba perluas filter (pilih \"Seluruh Indonesia\") atau buat ajakan pertama.", "No matching invites yet. Try widening the filters (choose \"All Indonesia\") or create the first invite."),
+"ct_none_home": ("Belum ada ajakan di kotamu. Jadilah yang pertama.", "No invites in your city yet. Be the first."),
+"ct_more": ("Lihat lebih banyak", "Show more"),
+"ct_capped": ("Menampilkan {n} ajakan teratas. Persempit filter untuk melihat yang lain.", "Showing the top {n} invites. Narrow the filters to see others."),
+"ct_nosql": ("Perluasan ajakan belum dipasang di database. Jalankan supabase/schema_ajakan_luas.sql.", "The expanded invites are not installed in the database yet. Run supabase/schema_ajakan_luas.sql."),
+"ct_reach_h": ("Jangkauan", "Reach"),
+"ct_reach_kota": ("Kota saja", "My city only"), "ct_reach_provinsi": ("Se-provinsi", "Province-wide"), "ct_reach_nasional": ("Seluruh Indonesia", "All Indonesia"), "ct_reach_online": ("Online", "Online"),
+"ct_rh_kota": ("Tampil untuk orang di kotamu.", "Shown to people in your city."),
+"ct_rh_provinsi": ("Tampil untuk orang di provinsi yang sama.", "Shown to people in the same province."),
+"ct_rh_nasional": ("Tampil untuk semua orang di Indonesia. Cocok untuk trip lintas kota atau kopdar.", "Shown to everyone in Indonesia. Good for cross-city trips or meet-ups."),
+"ct_rh_online": ("Untuk kegiatan jarak jauh, seperti main game atau belajar bareng.", "For remote activities, like gaming or studying together."),
+"ct_f_title_ph": ("contoh: Lari pagi santai bareng", "e.g. Easy morning run together"),
+"ct_f_niche": ("Niche utama", "Main niche"), "ct_f_tags": ("Tag kombinasi (maks. 3)", "Combo tags (max. 3)"),
+"ct_f_tags_hint": ("Gabungkan beberapa minat, misalnya Konser + Kulineran.", "Mix several interests, for example Concerts + Food trip."),
+"ct_f_city": ("Kota", "City"), "ct_f_date": ("Tanggal", "Date"),
+"ct_tag_max": ("Maksimal 3 tag.", "Up to 3 tags."),
+})
+S.update({
+"ct_title": ("Cari Teman Bareng — GWM", "Find Company — GWM"),
+"ct_desc": ("Cari teman untuk konser, naik gunung, olahraga, kuliner, belajar, dan banyak lagi. Ajakan per kota, provinsi, seluruh Indonesia, atau online.", "Find company for concerts, hikes, sports, food, study, and more. Invites by city, province, all Indonesia, or online."),
+"ct_h": ("Cari teman bareng", "Find company"),
+"ct_p": ("Ajakan dari event maupun ajakan bebas. Pilih satu atau beberapa niche, lalu atur seberapa jauh jangkauannya.", "Invites from events and free-form invites. Pick one or more niches, then choose how far you want to reach."),
+"ct_where": ("Kotaku", "My city"),
+"ct_mode_aria": ("Jangkauan tampilan", "View range"), "ct_mode_near": ("Terdekat", "Nearby"), "ct_mode_all": ("Seluruh Indonesia", "All Indonesia"),
+"ct_new": ("+ Buat ajakan", "+ Create invite"),
+"ct_niche_aria": ("Niche", "Niche"), "ct_tags_aria": ("Tag", "Tags"),
+"ct_combo_hint": ("Kamu memilih lebih dari satu niche: ajakan yang cocok dengan lebih banyak tag tampil paling atas.", "You picked more than one niche: invites matching more tags are shown first."),
+"ct_home_h": ("Cari teman sesuai minatmu", "Find company for what you love"),
+"ct_home_p": ("Konser, naik gunung, lari pagi, ngopi, sampai belajar bareng. Pilih niche, kota, atau seluruh Indonesia.", "Concerts, hikes, morning runs, coffee, even study sessions. Pick a niche, a city, or all of Indonesia."),
+"ct_home_all": ("Lihat semua ajakan", "See all invites"),
+})

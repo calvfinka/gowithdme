@@ -1,0 +1,40 @@
+/* Cari Teman: chip niche/tag, kartu ajakan, formulir, widget beranda */
+.tm .tm-bar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin:14px 0 8px}
+.tm .tm-bar .f{margin:0;min-width:160px;flex:1}
+.tm-seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tm-seg button{border:0;background:var(--bg);color:var(--ink);padding:0 12px;height:34px;font:500 13px var(--f);cursor:pointer}
+.tm-seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tm-chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tm-c{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--s1,var(--bg));color:var(--ink);font:500 13px var(--f);text-decoration:none;cursor:pointer}
+.tm-c .i{width:16px;height:16px}
+.tm-c small{font-size:11px;color:var(--mute);font-weight:500}
+.tm-c.sm{padding:5px 10px;font-size:12px}
+.tm-c[aria-pressed="true"],.tm-c:has(input:checked){background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tm-c[aria-pressed="true"] small{color:inherit}
+.tm-c input{position:absolute;opacity:0;pointer-events:none}
+.tm-c:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:2px}
+.tm-hint{font-size:12px;color:var(--mute);margin:2px 0 8px}
+.tm-count{font-size:14px;font-weight:600;margin:14px 0 8px}
+.tm-card .tm-bs,.tm-mini .tm-bs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.tm-b{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--mute);font-weight:500}
+.tm-b.n{background:var(--sel,var(--hover));color:var(--ink);border-color:transparent}
+.tm-card .meta .i{width:13px;height:13px;vertical-align:-2px}
+.tm-card.focus{outline:2px solid var(--brand);outline-offset:2px}
+.tm-card .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.tm-dlg{max-height:calc(92*var(--vh,1vh));overflow:auto}
+.tm-form .tm-fs{border:0;padding:0;margin:6px 0 0;display:flex;gap:6px;flex-wrap:wrap}
+.tm-form .tm-fs legend{font-size:11px;color:var(--mute);padding:0;margin-bottom:4px}
+.tm-form .row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.tm-form .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* beranda */
+.tm-home{margin:18px 0;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.tm-home h2{font-size:16px;margin:0 0 4px}
+.tm-home-l{display:grid;gap:8px;margin:10px 0}
+@media(min-width:720px){.tm-home-l{grid-template-columns:repeat(3,1fr)}}
+.tm-mini{display:grid;gap:3px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;color:var(--ink);text-decoration:none;min-width:0}
+.tm-mini:hover{background:var(--hover)}
+.tm-mini b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tm-mini small{color:var(--mute);font-size:12px}
+.tm-home .tm-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.tm-home .tm-c{flex:none}
+.tm-home-a{display:flex;gap:8px;flex-wrap:wrap}

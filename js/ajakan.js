@@ -103,17 +103,17 @@ function mine(){
         var evIds=JP.map(function(z){return z.event_id}).filter(function(v,i,a){return a.indexOf(v)===i});
         (evIds.length?sb.from("events").select("id,slug,title,title_en").in("id",evIds):Promise.resolve({data:[]})).then(function(z){
           var EV={};(z.data||[]).forEach(function(v){EV[v.id]=v});
-          var row=function(t,sub,id,slug,badge){return'<button class="amr" type="button" data-id="'+esc(id)+'" data-slug="'+esc(slug||"")+'"><span><b>'+esc(t)+'</b><small>'+esc(sub||"")+'</small></span>'+(badge?'<em>'+esc(badge)+'</em>':'')+'</button>'};
+          var row=function(t,sub,id,slug,badge,inv){return'<button class="amr" type="button" data-id="'+esc(id)+'" data-slug="'+esc(slug||"")+'" data-inv="'+esc(inv||"")+'"><span><b>'+esc(t)+'</b><small>'+esc(sub||"")+'</small></span>'+(badge?'<em>'+esc(badge)+'</em>':'')+'</button>'};
           var sec=function(h,arr){return'<h4>'+esc(h)+'</h4>'+(arr.length?arr.join(""):'<p class="meta">—</p>')};
           var html='<div class="amb"><h3>'+tr("aj_my")+'</h3>'+
-           sec(tr("aj_my_host"),H.map(function(i){var ev=i.events;return row(i.title,evTitle(ev),ev&&ev.id,ev&&ev.slug,P[i.id]?tr("aj_waiting_n",{n:P[i.id]}):"")}))+
-           sec(tr("aj_my_joined"),JP.map(function(i){var ev=EV[i.event_id];var st=J.filter(function(q){return q.invitation_id===i.id})[0];return row(i.title,evTitle(ev),i.event_id,ev&&ev.slug,st&&st.status==="approved"?tr("aj_ok"):tr("aj_pending"))}))+
+           sec(tr("aj_my_host"),H.map(function(i){var ev=i.events;return row(i.title,evTitle(ev),ev&&ev.id,ev&&ev.slug,P[i.id]?tr("aj_waiting_n",{n:P[i.id]}):"",i.event_id?"":i.id)}))+
+           sec(tr("aj_my_joined"),JP.map(function(i){var ev=EV[i.event_id];var st=J.filter(function(q){return q.invitation_id===i.id})[0];return row(i.title,evTitle(ev),i.event_id,ev&&ev.slug,st&&st.status==="approved"?tr("aj_ok"):tr("aj_pending"),i.event_id?"":i.id)}))+
            sec(tr("aj_my_interest"),I.map(function(i){var ev=i.events,n=S[i.event_id]||0;return row(evTitle(ev),"",i.event_id,ev&&ev.slug,n?tr("aj_has_new",{n:n}):"")}))+
            '<div class="row"><button class="btn ghost sm" type="button" data-close>'+tr("close")+'</button></div></div>';
           var d=document.createElement("dialog");d.className="aqd amd";d.innerHTML=html;document.body.appendChild(d);
           d.addEventListener("close",function(){d.remove()});
           d.addEventListener("click",function(ev){if(ev.target===d||ev.target.closest("[data-close]"))return d.close();
-            var b=ev.target.closest(".amr");if(b){d.close();openEvent(b.dataset.id,b.dataset.slug)}});
+            var b=ev.target.closest(".amr");if(b){d.close();if(b.dataset.inv){location.href="teman?i="+encodeURIComponent(b.dataset.inv);return}openEvent(b.dataset.id,b.dataset.slug)}});
           d.showModal()})})
     }).catch(function(){toast(tr("aj_err"))})})}
 

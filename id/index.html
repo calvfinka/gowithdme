@@ -19,6 +19,7 @@
 <title>GWM — Cari Teman Nonton Festival & Naik Gunung di Kotamu</title>
 <meta name="description" content="Pergi sendiri? Cari teman nonton konser, festival, dan naik gunung di kotamu. Info event terbaru, ajakan barengan, dan komunitas per kota. Oleh Jurkon Studio.">
 <meta property="og:title" content="GWM — Cari Teman Nonton & Naik Gunung"><meta property="og:description" content="Gas barengan, jangan sendirian. Info event dan teman seperjalanan di kotamu."><meta property="og:image" content="https://calvfinka.github.io/gowithdme/assets/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../css/teman.css?v=202611180526">
 <link rel="canonical" href="https://calvfinka.github.io/gowithdme/id/"><link rel="alternate" hreflang="id" href="https://calvfinka.github.io/gowithdme/id/"><link rel="alternate" hreflang="en" href="https://calvfinka.github.io/gowithdme/en/"><link rel="alternate" hreflang="x-default" href="https://calvfinka.github.io/gowithdme/id/"><script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "name": "GWM (GoWithDme)", "url": "https://calvfinka.github.io/gowithdme/id/", "inLanguage": "id"}, {"@type": "Organization", "name": "GWM (GoWithDme)", "url": "https://calvfinka.github.io/gowithdme/id/", "logo": "https://calvfinka.github.io/gowithdme/assets/icon-512.png", "founder": {"@type": "Organization", "name": "Jurkon Studio"}}]}</script></head>
 <body class="nv-home">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -93,7 +94,7 @@
       <a href="event?kat=selesai"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg>Event selesai</a>
     </section>
     <section><h3>Bareng & komunitas</h3>
-      <a href="event?ajakan=1"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>Ajakan barengan</a>
+      <a href="teman"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>Ajakan barengan</a>
       <a href="komunitas"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>Komunitas kota</a>
       <a href="../blog/"><svg class="i" aria-hidden="true"><use href="#i-note"/></svg>Blog</a>
       <a href="ajukan"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>Ajukan event atau open trip</a>
@@ -133,7 +134,7 @@
       <a class="app" href="event?kat=konser" style="--c:var(--c2)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg></span><span class="ap-t">Konser</span><i class="ap-n" data-n="konser" hidden></i></a>
       <a class="app" href="event?kat=pameran" style="--c:var(--c3)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#i-bag"/></svg></span><span class="ap-t">Pameran</span><i class="ap-n" data-n="pameran" hidden></i></a>
       <a class="app" href="gunung" style="--c:var(--c1)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#i-mtn"/></svg></span><span class="ap-t">Gunung</span><i class="ap-n" data-n="naikgunung" hidden></i></a>
-      <a class="app" href="event?ajakan=1" style="--c:var(--c4)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg></span><span class="ap-t">Ajakan</span><i class="ap-n" data-n="inv" hidden></i></a>
+      <a class="app" href="teman" style="--c:var(--c4)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg></span><span class="ap-t">Ajakan</span><i class="ap-n" data-n="inv" hidden></i></a>
       <a class="app" href="komunitas" style="--c:var(--c5)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg></span><span class="ap-t">Komunitas</span></a>
       <a class="app" href="pesan" style="--c:var(--c6)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="ap-t">Pesan</span></a>
       <a class="app" href="event?kat=tersimpan" style="--c:var(--c2)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg></span><span class="ap-t">Tersimpan</span><i class="ap-n" data-n="saved" hidden></i></a>
@@ -144,6 +145,13 @@
     </div>
     <div class="nv-dots" id="nvDots" aria-hidden="true"></div>
   </nav>
+
+  <section class="tm-home" id="tmHome" hidden>
+    <h2>Cari teman sesuai minatmu</h2><p class="meta">Konser, naik gunung, lari pagi, ngopi, sampai belajar bareng. Pilih niche, kota, atau seluruh Indonesia.</p>
+    <div class="tm-chips" id="tmHomeChips"></div>
+    <div class="tm-home-l" id="tmHomeList"></div>
+    <div class="tm-home-a"><a class="btn" href="teman">Lihat semua ajakan</a></div>
+  </section>
 
   <div class="nv-cols">
     <section class="nv-ban" id="nvBan" aria-roledescription="carousel" aria-label="Event pilihan" hidden data-prev="Sebelumnya" data-next="Berikutnya" data-pause="Jeda putar otomatis" data-play="Putar otomatis">
@@ -193,7 +201,7 @@
 <dialog id="dlg"><div id="dBody"></div></dialog>
 <div id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script><script src="../js/i18n.js?v=202611180526"></script><script src="../js/config.js?v=202611180526"></script><script src="../js/supa.js?v=202611180526"></script><script src="../js/regions.js?v=202611180526"></script>
-<script>window.IB_MODE="home"</script><script src="../js/share.js?v=202611180526"></script><script src="../js/ajakan.js?v=202611180526"></script><script src="../js/forum-event.js?v=202611180526"></script><script src="../js/now.js?v=202611180526"></script><script src="../js/home.js?v=202611180526"></script><script src="../js/app.js?v=202611180526"></script>
+<script>window.IB_MODE="home"</script><script src="../js/share.js?v=202611180526"></script><script src="../js/ajakan.js?v=202611180526"></script><script src="../js/teman.js?v=202611180526"></script><script src="../js/forum-event.js?v=202611180526"></script><script src="../js/now.js?v=202611180526"></script><script src="../js/home.js?v=202611180526"></script><script src="../js/app.js?v=202611180526"></script>
 <script src="../js/gunung-data.js?v=202611180526"></script><script src="../js/search-index.js?v=202611180526"></script><script src="../js/search.js?v=202611180526"></script><script src="../js/navauth.js?v=202611180526"></script><script src="../js/naver.js?v=202611180526"></script><script src="../js/track.js?v=202611180526"></script>
 </body>
 </html>
