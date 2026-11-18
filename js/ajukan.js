@@ -10,7 +10,8 @@ var v=function(k){return $("a_"+k).value.trim()};
 function tdy(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta"}).format(new Date())}
 function dirUrl(c,slug){return location.origin+location.pathname.replace(/[^\/]*$/,"")+(c==="naikgunung"?"gunung":"event")+"?e="+encodeURIComponent(slug)}
 function fdate(s){try{return new Date(s+"T00:00:00").toLocaleDateString(tr("locale"),{day:"numeric",month:"short",year:"numeric"})}catch(e){return s}}
-function toast(m){var t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2600)}
+/* toast kini dari supa.js (window.toast); fallback lokal hanya jika belum termuat */
+function toast(m){if(window.toast)return window.toast(m);var t=$("toast");if(t){t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2600)}}
 function pv(u){var p=$("pv");p.style.backgroundImage=u?"url('"+u.replace(/'/g,"%27")+"')":"";p.textContent=u?"":tr("sj_drop")}
 
 function setKind(k){kind=k;
@@ -34,7 +35,7 @@ function up(f){if(!f)return;if(!/^image\/(jpeg|png|webp)$/.test(f.type))return m
   msg(tr("sj_uploading"));
   shrink(f).then(function(g){if(g.size>2*1024*1024)return msg(tr("sj_poster_big"),"err");
     var path=me.user.id+"/"+Date.now()+"-"+g.name.replace(/[^a-zA-Z0-9.]+/g,"-");
-    sb.storage.from("posters").upload(path,g,{contentType:g.type,cacheControl:"31536000"}).then(function(r){if(r.error)return msg(r.error.message,"err");
+    sb.storage.from("posters").upload(path,g,{contentType:g.type,cacheControl:"31536000"}).then(function(r){if(r.error)return msg(friendlyErr(r.error),"err");
       posterUrl=sb.storage.from("posters").getPublicUrl(path).data.publicUrl;pv(posterUrl);msg(tr("sj_uploaded"),"ok")})})}
 $("a_file").onchange=function(){up(this.files[0])};
 var dz=$("pv");["dragenter","dragover"].forEach(function(n){dz.addEventListener(n,function(e){e.preventDefault();dz.classList.add("over")})});
@@ -54,7 +55,7 @@ $("fSub").onsubmit=function(ev){ev.preventDefault();if(busy)return;
   if(kind==="naikgunung"){p.mountain=v("mountain");p.altitude_mdpl=v("alt");p.difficulty=v("dif");p.duration=v("dur");p.quota=v("quota");p.organizer=v("org");p.contact_wa=v("wa")}
   busy=true;$("a_send").disabled=true;msg(tr("sj_sending"));
   sb.rpc("submit_event",{p:p}).then(function(r){busy=false;$("a_send").disabled=false;
-    if(r.error)return msg(r.error.message,"err");
+    if(r.error)return msg(friendlyErr(r.error),"err");
     $("fSub").reset();posterUrl="";pv("");$("ccDesc").textContent="0";setKind("konser");
     msg(tr("sj_submit_ok"),"ok");scrollTo({top:0,behavior:"smooth"});loadMine()})};
 
@@ -73,7 +74,7 @@ function loadMine(){return sb.from("event_submissions").select("reject_reason,cr
   mine=r.data||[];$("mine").innerHTML=mine.length?mine.map(itemHtml).join(""):'<div class="empty">'+esc(tr("sj_none"))+'</div>'})}
 $("mine").onclick=function(ev){var b=ev.target.closest("[data-a]");if(!b)return;var id=b.dataset.id,s=mine.filter(function(x){return x.events&&x.events.id===id})[0];if(!s)return;
   if(b.dataset.a==="share"&&window.IB_Share){var e=s.events;return IB_Share.open({title:e.title,text:tr("share_text2",{t:e.title}),url:dirUrl(e.category,e.slug)})}
-  if(b.dataset.a==="del"){if(!confirm(tr("sj_sure")))return;return sb.rpc("withdraw_event",{p_id:id}).then(function(r){if(r.error)return msg(r.error.message,"err");toast(tr("sj_withdrawn"));loadMine()})}
+  if(b.dataset.a==="del"){if(!confirm(tr("sj_sure")))return;return sb.rpc("withdraw_event",{p_id:id}).then(function(r){if(r.error)return msg(friendlyErr(r.error),"err");toast(tr("sj_withdrawn"));loadMine()})}
   if(b.dataset.a==="reuse")sb.from("events").select("*").eq("id",id).single().then(function(r){var e=r.data;if(!e)return;
     setKind(e.category);var m={title:"title",city_id:"city",price_label:"price",event_date:"start",end_date:"end",venue:"venue",genre:"genre",lineup:"lineup",mountain:"mountain",altitude_mdpl:"alt",difficulty:"dif",duration:"dur",quota:"quota",organizer:"org",description:"desc",ticket_url:"ticket"};
     Object.keys(m).forEach(function(k){$("a_"+m[k]).value=e[k]==null?"":e[k]});

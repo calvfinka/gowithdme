@@ -17,8 +17,9 @@ if(MODE!=="home"){if(QP.get("q"))state.q=QP.get("q").slice(0,80);var qk=QP.get("
 try{if(localStorage.getItem("gwm_view")==="list")state.view="list"}catch(e){}
 function read(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
 function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-function toast(m){var t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2400)}
+/* Prefer utilitas terpusat dari supa.js; fallback hanya bila belum termuat */
+var esc=window.esc||function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
+function toast(m){if(window.toast)return window.toast(m);var t=$("toast");if(t){t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2400)}}
 function ic(n){return'<svg class="i" aria-hidden="true"><use href="#i-'+n+'"/></svg>'}
 function prov(c){for(var p in IB_REGIONS)if(IB_REGIONS[p].indexOf(c)>-1)return p;return""}
 /* ---- Logika tanggal (zona WIB, bukan jam perangkat) ---- */

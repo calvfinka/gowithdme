@@ -52,3 +52,15 @@ Diuji di Chromium headless (meniru GitHub Pages di subfolder `/gowithdme/`, URL 
 | Banner | Poster dan blok teks memakai kotak setinggi sama (`--ph`), poster tetap utuh, lebar mengikuti rasio dengan batas per orientasi |
 | Mode "situs desktop" di HP | `js/adaptive.js` mendeteksi (layar fisik ≤600px tetapi halaman ≥700px), memberi `<html data-dsk>` dan zoom isi sampai ±400px. `css/dsk.css` + `css/dsk-b.css` (dibuat otomatis oleh `tools/gen_dsk.py` dari semua blok `@media (max-width)`) memakai tata letak HP. Satuan vw/vh di CSS kini `var(--vw)`/`var(--vh)` agar ikut zoom. `search.js` dan `naver.js` disesuaikan dengan zoom |
 | Bug | `<main class="pf">` di profil bentrok dengan kelas poster `.pf` sehingga halaman melebar 15px (scroll samping); diganti `prof`. Kurung `}` berlebih di `naver.css` dibuang |
+
+## Perubahan 18 November 2026 — audit ulang, streamline, error-reporting
+
+| Bagian | Perubahan |
+|--------|-----------|
+| `js/supa.js` | Utilitas terpusat diperkuat: `$` aman (dummy element), `esc`, `msg` (auto-hide sukses 4.5 dtk), `toast` (durasi adaptif), dan **`friendlyErr(err)`** yang memetakan error jaringan / JWT / RLS / duplikat / rate-limit / upload / timeout ke teks ramah bilingual. Raw technical message Supabase tidak lagi ditampilkan ke pengguna. |
+| Error UI | `auth.js`, `ajukan.js`, `admin.js`, `teman.js`, `pesan.js`, `komunitas.js` memakai `friendlyErr` + prefer `window.toast` / `window.msg`. Redefinisi lokal `toast`/`esc` di beberapa file diganti menjadi fallback ke utilitas terpusat. |
+| i18n | Kunci baru di `tools/strings.py`: `err_network`, `err_session`, `err_perm`, `err_dup`, `err_rate`, `err_upload`, `err_timeout`. |
+| Logika niche | Normalisasi nomor WA, filter harga, status event (live/soon/past) berbasis WIB, dan validasi URL tiket/IG tetap; tidak ada regresi pada alur konser / naik gunung / ajakan. |
+| Redundansi | Definisi `esc` dan `toast` yang tersebar digabung ke sumber tunggal di `supa.js` (dengan fallback aman bila file belum termuat). `msg` di admin kini konsisten auto-dismiss untuk status OK. |
+
+Setelah ubah teks i18n: `python3 tools/build.py` (hanya perlu bila ingin meregenerasi `js/i18n.js` + halaman). File JS di atas bisa langsung di-commit tanpa rebuild penuh.

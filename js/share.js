@@ -1,7 +1,7 @@
 /* Tombol bagikan untuk semua: kartu event, rincian, ajakan, pengajuan, dan halaman. IB_Share.open({title,text,url}) */
 (function(){
 var tr=window.IB_T||function(k){return k},dlg=null;
-function toast(m){var t=document.getElementById("toast");if(!t)return;t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2400)}
+function toast(m){if(window.toast)return window.toast(m);var t=document.getElementById("toast");if(!t)return;t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2400)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function clean(u){try{var x=new URL(u,location.href);return /^https?:$/.test(x.protocol)?x.href:location.href}catch(e){return location.href}}
 function copy(text,input){

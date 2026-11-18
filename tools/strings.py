@@ -204,6 +204,14 @@ J = {
 "a_recover": ("Tautan reset diterima. Isi password baru di bawah.", "Reset link accepted. Enter your new password below."),
 "a_pass8": ("Password minimal 8 karakter.", "Password must be at least 8 characters."),
 "a_passok": ("Password diperbarui.", "Password updated."),
+# Error reporting terpusat (friendlyErr di js/supa.js)
+"err_network": ("Koneksi bermasalah. Periksa internet lalu coba lagi.", "Connection problem. Check your internet and try again."),
+"err_session": ("Sesi berakhir. Silakan masuk kembali.", "Session expired. Please log in again."),
+"err_perm": ("Anda tidak punya izin untuk tindakan ini.", "You do not have permission for this action."),
+"err_dup": ("Data sudah ada. Ubah judul, tanggal, atau kota.", "This entry already exists. Change the title, date, or city."),
+"err_rate": ("Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.", "Too many attempts. Wait a moment and try again."),
+"err_upload": ("Gagal mengunggah berkas. Pastikan format & ukuran sesuai.", "Upload failed. Check the file format and size."),
+"err_timeout": ("Permintaan kehabisan waktu. Coba lagi.", "The request timed out. Try again."),
 }
 PROV_EN = {"DKI Jakarta":"Jakarta Capital Region","Banten":"Banten","Jawa Barat":"West Java","Jawa Tengah":"Central Java","DI Yogyakarta":"Yogyakarta Special Region","Jawa Timur":"East Java","Bali":"Bali","Sumatera Utara":"North Sumatra","Sumatera Barat":"West Sumatra","Riau":"Riau","Kepulauan Riau":"Riau Islands","Sumatera Selatan":"South Sumatra","Lampung":"Lampung","Aceh":"Aceh","Kalimantan Timur":"East Kalimantan","Kalimantan Selatan":"South Kalimantan","Kalimantan Barat":"West Kalimantan","Sulawesi Selatan":"South Sulawesi","Sulawesi Utara":"North Sulawesi","Nusa Tenggara Barat":"West Nusa Tenggara"}
 
