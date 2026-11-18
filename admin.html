@@ -4,7 +4,7 @@
 <title>Panel Admin — GWM</title><meta name="robots" content="noindex"><meta name="author" content="Jurkon Studio">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="icon" href="assets/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><script src="js/theme.js"></script>
-<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/panel.css">
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/panel.css"><link rel="stylesheet" href="css/arsip.css">
 </head><body>
 <div class="top"><div class="wrap"><a class="logo" href="./"><img src="assets/favicon.svg" alt="">GWM <span class="badge adm">Admin</span></a><span class="sp"></span><span class="meta" id="who"></span><a class="btn ghost sm" href="./" target="_blank" rel="noopener">Lihat situs</a> <a class="btn ghost sm" href="login">Profil</a></div></div>
 <main class="wrap pg">
@@ -41,7 +41,7 @@
 </section>
 
 <section id="v_list" hidden>
-  <div class="seg" data-g="konten"><button class="on" data-v="list" type="button">Event &amp; pendakian</button><button data-v="blog" type="button">Blog</button></div>
+  <div class="seg" data-g="konten"><button class="on" data-v="list" type="button">Event &amp; pendakian</button><button data-v="blog" type="button">Blog</button><button data-v="arsip" type="button">Arsip</button></div>
   <h2>Postingan</h2>
   <div class="bar" id="flKind"><button class="tab on" data-k="" type="button">Semua</button><button class="tab" data-k="konser" type="button">🎤 Konser</button><button class="tab" data-k="naikgunung" type="button">⛰️ Naik Gunung</button></div>
   <div class="flt"><select id="flStatus" aria-label="Status"><option value="">Semua status</option><option value="published">Terbit</option><option value="pending">Menunggu</option><option value="rejected">Ditolak</option><option value="draft">Draft</option></select><select id="flCity" aria-label="Kota"></select><input id="flQ" type="search" placeholder="Cari judul…"></div>
@@ -49,7 +49,7 @@
 </section>
 
 <section id="v_blog" hidden>
-  <div class="seg" data-g="konten"><button data-v="list" type="button">Event &amp; pendakian</button><button class="on" data-v="blog" type="button">Blog</button></div>
+  <div class="seg" data-g="konten"><button data-v="list" type="button">Event &amp; pendakian</button><button class="on" data-v="blog" type="button">Blog</button><button data-v="arsip" type="button">Arsip</button></div>
   <h2>Blog</h2><p class="meta">Tulisan teks tanpa foto, maksimal 15000 karakter. Halaman publik dibuat di folder <code>blog/&lt;kategori&gt;/</code> saat sinkron.</p>
   <div class="bar"><button class="btn" id="bgNew" type="button">➕ Tulisan baru</button></div>
   <div id="bgList"></div>
@@ -67,6 +67,31 @@
     <div class="sticky"><button class="btn ghost" id="bgSaveD" type="button">Simpan draft</button><button class="btn" id="bgSaveP" type="button">Terbitkan</button></div>
     <p style="text-align:center"><button class="lnk" id="bgCancel" type="button">Kembali</button> · <button class="lnk" id="bgDel" type="button" hidden>Hapus</button></p>
   </form>
+</section>
+
+<section id="v_arsip" hidden>
+  <div class="seg" data-g="konten"><button data-v="list" type="button">Event &amp; pendakian</button><button data-v="blog" type="button">Blog</button><button class="on" data-v="arsip" type="button">Arsip</button></div>
+  <h2>Arsip Blog</h2><p class="meta">Pindahkan atau pulihkan blog Blogger/Blogspot. Unggah berkas cadangan (<code>.xml</code>/<code>.atom</code> dari Blogger, atau <code>.zip</code> Google Takeout), maksimal tidak dibatasi; berkas dibaca bertahap di browser dan masuk langsung ke Supabase. Hasilnya tampil terpisah di halaman <a href="arsip" target="_blank" rel="noopener">/arsip</a>, tidak bercampur dengan Blog GWM.</p>
+  <div class="card">
+    <h3>Unggah cadangan Blogger</h3>
+    <label class="ar-drop" for="arFile"><b>Pilih berkas cadangan (.xml / .atom / .zip)</b><span id="arFileInfo">Ketuk untuk memilih. Ukuran 200 MB pun aman.</span></label>
+    <input class="sr" id="arFile" type="file" accept=".xml,.atom,.zip,application/xml,text/xml,application/zip">
+    <label class="f">Nama koleksi (niche arsip)<input id="arKoleksi" type="text" maxlength="80" value="ISIBLOGPINDAHANDATIBLOGSPOT"></label>
+    <div class="ar-opt">
+      <label><input type="checkbox" id="arLive" checked> Terbitkan langsung (tulisan berstatus draft di Blogger tetap draft)</label>
+      <label><input type="checkbox" id="arHal" checked> Sertakan halaman statis (About, Kontak, dst.)</label>
+      <label><input type="checkbox" id="arKom" checked> Sertakan komentar</label>
+    </div>
+    <div class="bar"><button class="btn" id="arGo" type="button">⬆️ Mulai impor</button><button class="btn ghost" id="arStop" type="button" hidden>⏹ Hentikan</button></div>
+    <div id="arProg" hidden>
+      <div class="ar-row"><span id="arStat"></span><span id="arPct">0%</span></div>
+      <div class="ar-track"><div class="ar-fill" id="arBar"></div></div>
+      <div class="ar-log" id="arLog"></div>
+      <p class="meta">Jangan tutup tab selama impor berjalan. Jika terputus, unggah berkas yang sama lagi: data yang sudah masuk tidak dobel.</p>
+    </div>
+  </div>
+  <h3 class="sh">Koleksi tersimpan</h3>
+  <div id="arList"></div>
 </section>
 
 <section id="v_stats" hidden>
@@ -129,10 +154,10 @@
 <nav class="bnav" id="bnav" hidden aria-label="Menu admin">
   <button data-v="dash" class="on" type="button"><i>🏠</i><span>Beranda</span></button>
   <button data-v="review" data-g="review,forum" type="button"><i>✅</i><span>Tinjau</span><b class="dot" id="bTinjau" hidden></b><b class="dot" id="bPend" hidden></b><b class="dot" id="bFrep" hidden></b></button>
-  <button data-v="list" data-g="list,blog" type="button"><i>📋</i><span>Postingan</span></button>
+  <button data-v="list" data-g="list,blog,arsip" type="button"><i>📋</i><span>Postingan</span></button>
   <button data-v="stats" type="button"><i>📊</i><span>Statistik</span></button>
   <button data-v="form" type="button"><i>➕</i><span>Buat baru</span></button>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script><script src="js/admin-blog.js"></script><script src="js/admin-stats.js"></script>
+<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script><script src="js/admin-blog.js"></script><script src="js/arsip-san.js"></script><script src="js/admin-arsip.js"></script><script src="js/admin-stats.js"></script>
 </body></html>

@@ -10,7 +10,7 @@ function tdy(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta"})
 function fd(s){if(!s)return"";var d=new Date(s+"T00:00:00");return d.getDate()+" "+MON[d.getMonth()]+" "+d.getFullYear()}
 function slug(t,d){return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+d}
 function pv(u){var p=$("pv");p.style.backgroundImage=u?"url('"+u.replace(/'/g,"%27")+"')":"";p.textContent=u?"":"Tarik poster ke sini atau ketuk untuk memilih (JPG/PNG, otomatis dikecilkan)"}
-function go(v){view=v;["dash","review","forum","list","blog","stats","form"].forEach(function(x){$("v_"+x).hidden=x!==v});
+function go(v){view=v;["dash","review","forum","list","blog","arsip","stats","form"].forEach(function(x){$("v_"+x).hidden=x!==v});
   [].forEach.call(document.querySelectorAll("#bnav button"),function(b){b.classList.toggle("on",b.dataset.v===v||(b.dataset.g||"").split(",").indexOf(v)>-1)});
   [].forEach.call(document.querySelectorAll(".seg[data-g] button"),function(b){b.classList.toggle("on",b.dataset.v===v)});scrollTo(0,0);msg("")}
 function setKind(k){kind=k;[].forEach.call(document.querySelectorAll(".kind button"),function(b){b.classList.toggle("on",b.dataset.kind===k)});
