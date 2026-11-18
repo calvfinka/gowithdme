@@ -18,8 +18,8 @@ if(!QP.get("kota")&&!QP.get("prov")&&!QP.get("macro")){try{var svLoc=JSON.parse(
 try{if(localStorage.getItem("gwm_view")==="list")state.view="list"}catch(e){}
 function read(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
 function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-function toast(m){var t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2400)}
+var esc=window.esc||function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function toast(m){if(window.toast)return window.toast(m);var t=$("toast");if(t){t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2400)}}
 function ic(n){return'<svg class="i" aria-hidden="true"><use href="#i-'+n+'"/></svg>'}
 function prov(c){for(var p in IB_REGIONS)if(IB_REGIONS[p].indexOf(c)>-1)return p;return""}
 /* ---- Logika tanggal (zona WIB, bukan jam perangkat) ---- */
@@ -27,6 +27,8 @@ function today(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta"
 function days(a,b){return Math.round((Date.parse(b+"T00:00:00Z")-Date.parse(a+"T00:00:00Z"))/864e5)}
 function endOf(e){return e.end_date||e.event_date}
 function isActive(e){return endOf(e)>=today()}
+function isFeatured(e){if(!e||!e.is_featured)return false;if(e.featured_until&&e.featured_until<today())return false;return true}
+function featBadge(e){if(!isFeatured(e))return"";var lab=(e.sponsor_label||(window.IB_CONFIG&&(window.IB_LANG==="en"?IB_CONFIG.FEATURED_LABEL_EN:IB_CONFIG.FEATURED_LABEL_ID))||(window.IB_T?IB_T("feat"):"Featured"));return'<span class="badge feat">'+esc(lab)+'</span>'}
 /* Status: live = sedang berjalan (multi-hari / hari-H), soon = <=7 hari, next = lebih jauh, past = selesai */
 function status(e){var t=today(),s=days(t,e.event_date),en=days(t,endOf(e));
   if(en<0)return{k:"past",l:tr("past"),n:s};
@@ -94,6 +96,8 @@ function list(){var past=state.cat==="selesai";
     if(state.cat==="tersimpan")return isSaved(e.id);
     return state.cat==="semua"||e.category===state.cat})
    .sort(function(a,b){if(past)return a.event_date<b.event_date?1:-1;
+     var fa=isFeatured(a)?1:0,fb=isFeatured(b)?1:0;if(fa!==fb)return fb-fa;
+     var ba=+a.boost_score||0,bb=+b.boost_score||0;if(ba!==bb)return bb-ba;
      if(state.sort==="new")return(b.created_at||"")<(a.created_at||"")?-1:1;
      return a.event_date<b.event_date?-1:1});
   if(!past&&state.sort==="date"&&window.IB_MonetizeCore&&C&&C.MONETIZE){
@@ -109,13 +113,13 @@ function tile(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
     '<div class="d"><b>'+p.d+'</b><span>'+p.m+'</span></div>'+
     '<button class="fav sh" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
     '<button class="fav" type="button" data-sv="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr("sv_label"))+'">'+ic("heart")+'</button></div>'+
-    '<div><div class="tt">'+esc(ttl(e))+'</div><div class="tm">'+where(e)+'</div><div class="tm">'+esc(kind(e))+(sp?' · '+sp:'')+'</div><div class="tm">'+badge(e)+invBadge(e)+'</div>'+
+    '<div><div class="tt">'+esc(ttl(e))+'</div><div class="tm">'+where(e)+'</div><div class="tm">'+esc(kind(e))+(sp?' · '+sp:'')+'</div><div class="tm">'+badge(e)+featBadge(e)+invBadge(e)+'</div>'+
     '<div class="tm p'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_tbd"))+'</div></div></div>'}
 function row(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
   var sp=e._sponsored?' · <span class="meta-sp">'+esc(tr("promo_partner_badge"))+'</span>':'';
   return'<div class="r'+(s.k==="past"?' past':'')+'" data-id="'+esc(e.id)+'" role="button" tabindex="0"><div class="rd" style="'+posterStyle(e)+'"><div><b>'+p.d+'</b><span>'+p.m+'</span></div></div>'+
     '<div class="rt"><b>'+esc(ttl(e))+'</b><span>'+esc(kind(e))+' · '+esc(rng(e))+sp+'</span></div>'+
-    '<div class="rc">'+where(e)+'</div><div class="rs">'+badge(e)+invBadge(e)+'</div>'+
+    '<div class="rc">'+where(e)+'</div><div class="rs">'+badge(e)+featBadge(e)+invBadge(e)+'</div>'+
     '<div class="rp'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_soon"))+'</div>'+
     '<div class="ra"><button class="rf" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
     '<button class="rf" type="button" data-sv="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr("sv_label"))+'">'+ic("heart")+'</button></div></div>'}
@@ -127,7 +131,7 @@ function group(l){var G=[["live",tr("g_live")],["soon",tr("g_soon")],["next",tr(
   if(state.cat==="selesai"||state.sort!=="date")return sec("",l);
   return G.map(function(g){return sec(g[1],l.filter(function(e){return status(e).k===g[0]}))}).join("")}
 /* ---- Sidebar & chip kategori ---- */
-var NAVS=[["home","n_home","home","./"],["semua","n_all","cal","event"],["konser","cat_konser","mic","event?kat=konser"],["naikgunung","cat_naikgunung","mtn","gunung"],["pameran","cat_pameran","bag","event?kat=pameran"],["festival","cat_festival","ticket","event?kat=festival"],["komedi","cat_komedi","chat","event?kat=komedi"],["seminar","cat_seminar","note","event?kat=seminar"],["meetup","cat_meetup","users","event?kat=meetup"],["lainnya","cat_lainnya","cal","event?kat=lainnya"],["blog","n_blog","note","../blog/"],["komunitas","n_forum","users","komunitas"],["ajukan","n_submit","plus","ajukan"],["bantuan","n_help","help","bantuan"]],
+var NAVS=[["home","n_home","home","./"],["semua","n_all","cal","event"],["konser","cat_konser","mic","event?kat=konser"],["naikgunung","cat_naikgunung","mtn","gunung"],["pameran","cat_pameran","bag","event?kat=pameran"],["festival","cat_festival","ticket","event?kat=festival"],["komedi","cat_komedi","chat","event?kat=komedi"],["seminar","cat_seminar","note","event?kat=seminar"],["meetup","cat_meetup","users","event?kat=meetup"],["lainnya","cat_lainnya","cal","event?kat=lainnya"],["blog","n_blog","doc","../blog/"],["komunitas","n_forum","users","komunitas"],["ajukan","n_submit","plus","ajukan"],["bantuan","n_help","help","bantuan"]],
     MINE=[["tersimpan","tab_saved","heart","event?kat=tersimpan"],["selesai","tab_done","clock","event?kat=selesai"]];
 function curKey(){return MODE==="home"?"home":MODE==="gunung"?"naikgunung":state.cat}
 function item(c,n,chip){var cur=curKey()===c[0],inpage=MODE==="all"&&c[0]!=="home"&&c[0]!=="naikgunung"&&c[0]!=="ajukan"&&c[0]!=="komunitas"&&c[0]!=="bantuan"&&c[0]!=="blog";
@@ -209,7 +213,7 @@ function openEv(id){
   var rawTicket=safeUrl(e.ticket_url);
   var tixUrl=rawTicket&&window.IB_MonetizeCore?IB_MonetizeCore.buildPartnerTicketUrl(rawTicket,e.slug||e.id,C&&C.MONETIZE&&C.MONETIZE.AFFILIATE):rawTicket;
   var areas=(e.city&&window.IB_AREAS&&IB_AREAS[e.city])?IB_AREAS[e.city]:null;
-  $("dBody").innerHTML='<div class="dp'+(e.poster_url?' pf':'')+'" style="'+posterStyle(e,1)+'">'+deco(e)+badge(e)+'</div><div class="db"><h2>'+esc(ttl(e))+'</h2><ul class="dm">'+
+  $("dBody").innerHTML='<div class="dp'+(e.poster_url?' pf':'')+'" style="'+posterStyle(e,1)+'">'+deco(e)+badge(e)+featBadge(e)+'</div><div class="db"><h2>'+esc(ttl(e))+'</h2><ul class="dm">'+
    '<li>'+ic("cal")+'<span>'+p.full+(multi?esc(tr("to"))+dparts(e.end_date).full:'')+'</span></li>'+
    '<li>'+ic("pin")+'<span>'+esc(e.venue||e.city)+(e.city&&e.venue!==e.city?', '+esc(e.city):'')+'</span></li>'+
    '<li>'+ic("tag")+'<span>'+esc(e.price_label||tr("price_tbd"))+'</span></li>'+

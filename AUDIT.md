@@ -52,3 +52,17 @@ Diuji di Chromium headless (meniru GitHub Pages di subfolder `/gowithdme/`, URL 
 | Banner | Poster dan blok teks memakai kotak setinggi sama (`--ph`), poster tetap utuh, lebar mengikuti rasio dengan batas per orientasi |
 | Mode "situs desktop" di HP | `js/adaptive.js` mendeteksi (layar fisik ≤600px tetapi halaman ≥700px), memberi `<html data-dsk>` dan zoom isi sampai ±400px. `css/dsk.css` + `css/dsk-b.css` (dibuat otomatis oleh `tools/gen_dsk.py` dari semua blok `@media (max-width)`) memakai tata letak HP. Satuan vw/vh di CSS kini `var(--vw)`/`var(--vh)` agar ikut zoom. `search.js` dan `naver.js` disesuaikan dengan zoom |
 | Bug | `<main class="pf">` di profil bentrok dengan kelas poster `.pf` sehingga halaman melebar 15px (scroll samping); diganti `prof`. Kurung `}` berlebih di `naver.css` dibuang |
+
+## Perubahan 18 November 2026 — paket lengkap (audit + revenue + bot + ikon)
+
+| Area | Perubahan |
+|------|-----------|
+| Error UI | `js/supa.js`: `friendlyErr`, `msg` auto-hide OK, `toast` adaptif, `$` aman |
+| Streamline | Prefer utilitas global di app; raw Supabase errors diganti di auth/admin |
+| Monetisasi | `supabase/schema_monetisasi.sql` + Featured sort/badge + admin fields + config |
+| Legal | Privacy/Terms diperluas; halaman About & Copyright (ID+EN); footer lengkap |
+| Favicon | SVG modern (gradien brand + dua companion) |
+| Blog icon | Simbol `i-doc` (dokumen); nav blog tidak lagi memakai ikon musik `i-note` |
+| Guide Bot | `js/gwm-bot.js` di Bantuan + tips Pesan + welcome-back di beranda |
+
+Jalankan `schema_monetisasi.sql` di Supabase setelah deploy.

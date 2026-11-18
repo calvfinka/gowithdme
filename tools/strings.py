@@ -12,6 +12,8 @@ S = {
 "f_terms": ("Syarat &amp; Ketentuan", "Terms &amp; Conditions"),
 "f_privacy": ("Kebijakan Privasi", "Privacy Policy"),
 "f_contact": ("Kontak", "Contact"),
+"f_about": ("Tentang", "About"),
+"f_copyright": ("Hak Cipta", "Copyright"),
 "lang_label": ("Ganti bahasa", "Change language"),
 # --- meta ---
 "idx_title": ('GWM — Cari Teman Nonton Festival & Naik Gunung di Kotamu', 'GWM — Find Friends for Festivals & Hikes in Your City'),
@@ -118,6 +120,12 @@ S = {
 "lg_rec_h": ("Buat password baru", "Set a new password"),
 "lg_rec_p": ("Tautan reset berhasil. Isi password baru untuk akunmu.", "Reset link accepted. Enter a new password for your account."),
 "lg_rec_btn": ("Simpan password baru", "Save new password"),
+"cr_title": ("Hak Cipta & Kepemilikan — GWM", "Copyright & Ownership — GWM"),
+"cr_desc": ("Pemilik situs, hak cipta, dan cara mengajukan penghapusan.", "Site owner, copyright, and takedown process."),
+"ab_title": ("Tentang GWM & Jurkon Studio", "About GWM & Jurkon Studio"),
+"ab_desc": ("Pemilik, model kerja sama, dan kontak.", "Owner, partnership model, and contact."),
+"hp_bot_h": ("Panduan cepat", "Quick guide"),
+"hp_bot_p": ("Tanya asisten GWM — jawaban disesuaikan fitur situs.", "Ask the GWM guide — answers matched to site features."),
 }
 # ---- Teks dinamis untuk JavaScript (j_*) ----
 J = {
@@ -204,6 +212,26 @@ J = {
 "a_recover": ("Tautan reset diterima. Isi password baru di bawah.", "Reset link accepted. Enter your new password below."),
 "a_pass8": ("Password minimal 8 karakter.", "Password must be at least 8 characters."),
 "a_passok": ("Password diperbarui.", "Password updated."),
+
+"err_network": ("Koneksi bermasalah. Periksa internet lalu coba lagi.", "Connection problem. Check your internet and try again."),
+"err_session": ("Sesi berakhir. Silakan masuk kembali.", "Session expired. Please log in again."),
+"err_perm": ("Anda tidak punya izin untuk tindakan ini.", "You do not have permission for this action."),
+"err_dup": ("Data sudah ada. Ubah judul, tanggal, atau kota.", "This entry already exists. Change the title, date, or city."),
+"err_rate": ("Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.", "Too many attempts. Wait a moment and try again."),
+"err_upload": ("Gagal mengunggah berkas. Pastikan format & ukuran sesuai.", "Upload failed. Check the file format and size."),
+"err_timeout": ("Permintaan kehabisan waktu. Coba lagi.", "The request timed out. Try again."),
+"cr_title": ("Hak Cipta & Kepemilikan — GWM", "Copyright & Ownership — GWM"),
+"cr_desc": ("Pemilik situs, hak cipta, dan cara mengajukan penghapusan.", "Site owner, copyright, and takedown process."),
+"ab_title": ("Tentang GWM & Jurkon Studio", "About GWM & Jurkon Studio"),
+"ab_desc": ("Pemilik, model kerja sama, dan kontak.", "Owner, partnership model, and contact."),
+"sx_p_copyright": ("Hak Cipta", "Copyright"),
+"sx_p_about": ("Tentang", "About"),
+"feat": ("Disorot", "Featured"),
+"f_copyright": ("Hak Cipta", "Copyright"),
+"f_about": ("Tentang", "About"),
+"hp_bot_h": ("Panduan cepat", "Quick guide"),
+"hp_bot_p": ("Tanya asisten GWM — jawaban disesuaikan fitur situs.", "Ask the GWM guide — answers matched to site features."),
+
 }
 PROV_EN = {
   "DKI Jakarta":"Jakarta Capital Region","Banten":"Banten","Jawa Barat":"West Java","Jawa Tengah":"Central Java","DI Yogyakarta":"Yogyakarta Special Region","Jawa Timur":"East Java","Bali":"Bali",

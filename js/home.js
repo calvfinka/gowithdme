@@ -129,3 +129,17 @@ function start(){if(started)return;started=true;init()}
 d.addEventListener("ib:ready",start);
 if(window.IB_Api&&window.IB_Api.ready)start();
 })();
+
+(function(){
+  if(!window.GWMBot||!GWMBot.retentionHint)return;
+  var h=GWMBot.retentionHint();
+  if(!h||(!h.welcome&&!(h.links&&h.links.length)))return;
+  var box=document.createElement("div");box.className="gwm-ret";box.setAttribute("role","status");
+  var parts=[];
+  if(h.welcome)parts.push("<span>"+h.welcome.replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})+"</span>");
+  (h.links||[]).forEach(function(l){parts.push('<a href="'+l.h+'">'+l.t.replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})+"</a>")});
+  if(!parts.length)return;
+  box.innerHTML=parts.join(" · ");
+  var main=document.querySelector("main");
+  if(main&&main.firstChild)main.insertBefore(box,main.firstChild);
+})();

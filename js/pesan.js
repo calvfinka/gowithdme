@@ -78,3 +78,19 @@ sb.auth.getSession().then(function(s){me=s.data.session&&s.data.session.user;if(
   if(u)return sb.rpc("chat_open",{p_other:u}).then(function(r){if(r.error){toast(r.error.message);return inbox()}try{history.replaceState(null,"","pesan?t="+r.data)}catch(e){}openThread(r.data)});
   t?openThread(t):inbox()});
 })();
+
+(function(){
+  function injectTip(){
+    if(!window.GWMBot)return;
+    var root=document.getElementById("pRoot");if(!root||root.querySelector(".gwm-bot-tip"))return;
+    var ctx="inbox";
+    if(root.querySelector(".ms-bar"))ctx="thread";
+    if(root.textContent&&/belum|empty|no conversation|tidak ada/i.test(root.textContent.slice(0,200)))ctx="empty";
+    var tip=document.createElement("div");tip.innerHTML=GWMBot.tipHtml(ctx);
+    var note=root.querySelector(".ms-note,.ms-h");
+    if(note&&note.parentNode)note.parentNode.insertBefore(tip.firstChild,note.nextSibling);
+    else if(tip.firstChild)root.insertBefore(tip.firstChild,root.firstChild);
+  }
+  var r=document.getElementById("pRoot");
+  if(r){new MutationObserver(injectTip).observe(r,{childList:true,subtree:true});setTimeout(injectTip,400)}
+})();

@@ -15,14 +15,14 @@ $("fReg").onsubmit=function(e){e.preventDefault();
   if(!$("rConsent").checked)return msg(tr("a_consent"),"err");
   msg(tr("processing"));setAfter();
   sb.auth.signUp({email:$("rEmail").value.trim(),password:$("rPass").value,options:{data:{nickname:$("rNick").value.trim()},emailRedirectTo:location.href}}).then(function(r){
-    if(r.error){takeAfter();return msg(r.error.message,"err")}
+    if(r.error){takeAfter();return msg(friendlyErr(r.error),"err")}
     var us=r.data&&r.data.user;if(us&&us.identities&&us.identities.length===0){takeAfter();return msg(tr("a_exists"),"err")}
     if(!r.data.session)takeAfter();
     msg(r.data.session?tr("a_created"):tr("a_created_mail"),"ok")})};
 $("bGoogle").onclick=function(){msg(tr("a_gredir"));setAfter();
   sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:"select_account"}}}).then(function(r){if(r.error)msg(tr("a_goff"),"err")})};
 $("lForgot").onclick=function(){var em=$("lEmail").value.trim();if(!em)return msg(tr("a_needmail"),"err");
-  sb.auth.resetPasswordForEmail(em,{redirectTo:location.href}).then(function(r){msg(r.error?r.error.message:tr("a_resetsent"),r.error?"err":"ok")})};
+  sb.auth.resetPasswordForEmail(em,{redirectTo:location.href}).then(function(r){msg(r.error?friendlyErr(r.error):tr("a_resetsent"),r.error?"err":"ok")})};
 /* Login tanpa password: link sekali pakai ke email. Hanya untuk email yang sudah terdaftar (shouldCreateUser:false), supaya akun tidak terbuat tanpa nama panggilan dan persetujuan. */
 $("lMagic").onclick=function(){var em=$("lEmail").value.trim();if(!em)return msg(tr("a_needmail"),"err");
   msg(tr("processing"));setAfter();var b=this;b.disabled=true;
@@ -38,7 +38,7 @@ $("fMail").onsubmit=function(e){e.preventDefault();var ne=$("nEmail").value.trim
     btn.disabled=true;msg(tr("processing"));
     return sb.auth.updateUser({email:ne},{emailRedirectTo:location.href}).then(function(r){
       btn.disabled=false;
-      if(r.error)return msg(r.error.message,"err");
+      if(r.error)return msg(friendlyErr(r.error),"err");
       $("nEmail").value="";msg(tr("ce_sent"),"ok")})})};
 if(/type=email_change/.test(location.hash))setTimeout(function(){msg(tr("ce_done"),"ok")},600);
 $("bOut").onclick=function(){sb.auth.signOut().then(function(){location.href="./"},function(){location.href="./"})};
@@ -89,14 +89,14 @@ $("fAll").onsubmit=function(e){e.preventDefault();var btn=this.querySelector('[t
     if(r&&r.error)throw r.error;
     msg(tr("pe_saved_go"),"ok");var to=safeNext("profil");if(to==="profil")to="profil?saved=1";
     setTimeout(function(){location.href=to},700)
-  }).catch(function(err){btn.disabled=false;msg((err&&err.message)||tr("a_notready"),"err")})};
+  }).catch(function(err){btn.disabled=false;msg(friendlyErr(err),"err")})};
 sb.auth.onAuthStateChange(function(ev){
   if(ev==="PASSWORD_RECOVERY"){recovering=true;$("guest").hidden=true;$("me").hidden=true;$("rec").hidden=false;msg(tr("a_recover"),"ok");return}
   if(ev==="SIGNED_IN"&&!holding&&goAfter())return;
   show()});
 $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
   if(p.length<8)return msg(tr("a_pass8"),"err");
-  sb.auth.updateUser({password:p}).then(function(r){if(r.error)return msg(r.error.message,"err");
+  sb.auth.updateUser({password:p}).then(function(r){if(r.error)return msg(friendlyErr(r.error),"err");
     recovering=false;$("rec").hidden=true;$("nPass").value="";msg(tr("a_passok"),"ok");show()})};
 show();
 })();
