@@ -131,7 +131,7 @@ if(window.IB_Api&&window.IB_Api.ready)start();
 })();
 
 (function(){
-  if(!window.GWMBot||!GWMBot.retentionHint)return;
+  return; /* bilah "Lanjut lihat event" dimatikan */
   var h=GWMBot.retentionHint();
   if(!h||(!h.welcome&&!(h.links&&h.links.length)))return;
   var box=document.createElement("div");box.className="gwm-ret";box.setAttribute("role","status");
