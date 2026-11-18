@@ -94,7 +94,7 @@ def top(p,cur):
         f'<a href="{p}blog/{k}/"'+(' aria-current="page"' if cur==k else "")+f'>{esc(n)}</a>' for k,n,_ in CATS)
     return f"""<body class="bl"><header class="bl-top"><div class="wrap"><a class="logo" href="{p}id/"><img src="{p}assets/favicon.svg" alt="" width="24" height="24">GWM</a><span class="sp"></span><a class="bl-l" href="{p}blog/">Blog</a><a class="bl-l" href="{p}id/event">Event</a><a class="bl-l" href="{p}id/gunung">Gunung</a></div></header>
 <nav class="bl-cats wrap" aria-label="Kategori blog">{chips}</nav>"""
-FOOT='<footer class="bl-foot wrap"><span>GWM oleh Jurkon Studio</span><a href="{p}id/bantuan">Bantuan</a><a href="{p}id/terms">Syarat</a><a href="{p}id/privacy">Privasi</a></footer><script src="{{rel}}js/config.js"></script><script src="{{rel}}js/blog-live.js"></script></body></html>'
+FOOT='<footer class="bl-foot wrap"><span>GWM oleh Jurkon Studio</span><a href="{p}id/bantuan">Bantuan</a><a href="{p}id/terms">Syarat</a><a href="{p}id/privacy">Privasi</a></footer><script src="{p}js/config.js"></script><script src="{p}js/blog-live.js"></script></body></html>'
 def card(p,x):
     return (f'<article class="bl-card"><h2><a href="{p}blog/{x["category"]}/{x["slug"]}">{esc(x["title"])}</a></h2>'
             f'<p class="bl-meta"><span>{esc(CATNAME[x["category"]])}</span> · <time datetime="{esc((x.get("published_at") or "")[:10])}">{fdate(x.get("published_at"))}</time></p>'

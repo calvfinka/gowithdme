@@ -106,7 +106,7 @@
           var sh = s.querySelector(".bl-sh a");
           return sh && (sh.getAttribute("href") || "").indexOf("/" + p.category + "/") > -1;
         });
-        var sec = secs.length ? secs : null;
+        var sec = secs.length ? secs[0] : null;
         if (!sec) {
           sec = document.createElement("section");
           sec.className = "bl-sec";

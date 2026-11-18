@@ -135,6 +135,7 @@ def ev_page(l,e):
     where=", ".join(x for x in (e.get("venue"),e.get("city")) if x)
     u=f"{BASE}/{l}/e/{e['slug']}"
     img=e.get("poster_url") or f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"
+    if not re.match(r"https?://",img): img=BASE+"/"+img.lstrip("/")  # og:image dan JSON-LD wajib URL absolut
     ld={"@context":"https://schema.org","@type":"Event","name":title,"startDate":sd,"endDate":ed,"description":desc,
         "eventStatus":"https://schema.org/EventScheduled","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
         "image":[img],"url":u,"inLanguage":l,
