@@ -1,0 +1,766 @@
+-- =============================================================================
+-- GWM: Konser & Festival nasional (isi wilayah yang masih sepi + festival)
+-- Tidak bentrok slug dengan events yang sudah ada di production
+-- Poster unik: assets/posters/<slug>.jpg (satu URL per event)
+-- Harga detail (bukan "Info menyusul")
+-- Aman dijalankan berulang (ON CONFLICT slug DO UPDATE)
+-- =============================================================================
+
+insert into provinces(name) values
+  ('Jambi'),
+  ('Kalimantan Tengah'),
+  ('Kalimantan Utara'),
+  ('Sulawesi Tengah'),
+  ('Sulawesi Tenggara'),
+  ('Maluku'),
+  ('Papua'),
+  ('Nusa Tenggara Timur'),
+  ('Bangka Belitung'),
+  ('Bengkulu'),
+  ('Gorontalo')
+on conflict (name) do nothing;
+
+insert into cities(province_id,name,slug)
+select p.id, v.name, v.slug from provinces p
+join (values
+  ('Jawa Barat','Garut','garut'),
+  ('Jawa Barat','Kuningan','kuningan'),
+  ('Jawa Tengah','Magelang','magelang'),
+  ('Jawa Timur','Banyuwangi','banyuwangi'),
+  ('Jawa Timur','Jember','jember'),
+  ('Jawa Timur','Batu','batu'),
+  ('Jawa Timur','Kediri','kediri'),
+  ('Bali','Karangasem','karangasem'),
+  ('Sumatera Barat','Bukittinggi','bukittinggi'),
+  ('Jambi','Jambi','jambi'),
+  ('Jambi','Sungai Penuh','sungai-penuh'),
+  ('Kalimantan Tengah','Palangkaraya','palangkaraya'),
+  ('Kalimantan Utara','Tarakan','tarakan'),
+  ('Sulawesi Tengah','Palu','palu'),
+  ('Sulawesi Tenggara','Kendari','kendari'),
+  ('Sulawesi Utara','Tomohon','tomohon'),
+  ('Sulawesi Selatan','Gowa','gowa'),
+  ('Maluku','Ambon','ambon'),
+  ('Papua','Jayapura','jayapura'),
+  ('Nusa Tenggara Barat','Lombok Timur','lombok-timur'),
+  ('Nusa Tenggara Timur','Kupang','kupang'),
+  ('Bangka Belitung','Pangkal Pinang','pangkal-pinang'),
+  ('Bengkulu','Bengkulu','bengkulu'),
+  ('Gorontalo','Gorontalo','gorontalo'),
+  ('Aceh','Lhokseumawe','lhokseumawe'),
+  ('Sumatera Utara','Toba','toba'),
+  ('Bali','Ubud','ubud')
+) as v(prov,name,slug) on p.name = v.prov
+on conflict (slug) do nothing;
+
+insert into categories(slug,name) values
+  ('konser','Konser'),
+  ('festival','Festival')
+on conflict do nothing;
+
+insert into events(
+  title, title_en, slug, category, city_id, venue,
+  event_date, end_date, price_label, genre, lineup,
+  organizer, description, description_en,
+  poster_url, ticket_url, source_ig, is_community, status
+)
+select
+  v.title, v.title_en, v.slug, v.cat, c.id, v.venue,
+  v.d::date, nullif(v.e,'')::date, v.price, v.genre, v.lineup,
+  v.org, v.descr, v.descr_en,
+  'assets/posters/'||v.slug||'.jpg', v.ticket, v.ig, v.comm, 'published'
+from (values
+
+-- ===================== FESTIVAL (prioritas: hanya 1 festival lama di DB) =====================
+(
+  'Nusantara Jazz Week Surabaya 2027',
+  'Nusantara Jazz Week Surabaya 2027',
+  'nusantara-jazz-week-surabaya-2027',
+  'festival','surabaya',
+  'Taman Budaya Jawa Timur & venue satelit Surabaya',
+  '2027-02-20','2027-02-22',
+  'Day pass Rp150.000 · 3-day pass Rp350.000 · Student Rp100.000/hari',
+  'Jazz','Lineup jazz nusantara & kolaborasi (diumumkan bertahap)',
+  'Komite Jazz Surabaya',
+  'Festival jazz tiga hari di Surabaya. Day pass Rp150.000, paket 3 hari Rp350.000, pelajar Rp100.000/hari (tunjukkan kartu pelajar). Area food & merchandise lokal. Anak di bawah 12 tahun gratis (dengan pendamping berbayar).',
+  'Three-day jazz festival in Surabaya. Day pass Rp150,000; 3-day Rp350,000; students Rp100,000/day.',
+  'https://instagram.com','jazzsurabaya',false
+),
+(
+  'Makassar Maritime Music Festival 2027',
+  'Makassar Maritime Music Festival 2027',
+  'makassar-maritime-music-festival-2027',
+  'festival','makassar',
+  'Pesisir Losari & panggung terbuka Makassar',
+  '2027-03-13','2027-03-15',
+  'Early bird Rp175.000 · Presale Rp225.000 · OTS Rp275.000 (3 hari)',
+  'Festival campuran','Artis lokal Sulawesi & guest pulau lain',
+  'Makassar Creative Board',
+  'Festival musik tepi laut. Early bird Rp175.000 (s.d. H-30), presale Rp225.000, OTS Rp275.000 untuk akses 3 hari. Tidak termasuk parkir VIP. Cocok keluarga; area bebas asap rokok di zona anak.',
+  'Waterfront music festival. Early bird Rp175,000; presale Rp225,000; on-the-spot Rp275,000 for 3 days.',
+  'https://instagram.com','makassarcreative',false
+),
+(
+  'Bali Soundscape Ubud 2027',
+  'Bali Soundscape Ubud 2027',
+  'bali-soundscape-ubud-2027',
+  'festival','ubud',
+  'Area Ubud, Gianyar (multi-venue)',
+  '2027-01-16','2027-01-18',
+  'Festival pass Rp450.000 · Single day Rp200.000 · Local resident Rp150.000 (3 hari)',
+  'World / akustik','Akustik, world music, kolaborasi seniman Bali',
+  'Ubud Arts Circle',
+  'Festival suara & seni di Ubud. Festival pass 3 hari Rp450.000, single day Rp200.000, penduduk lokal Rp150.000 (verifikasi KTP setempat). Termasuk akses workshop terbatas (daftar terpisah gratis).',
+  'Ubud sound & arts festival. 3-day pass Rp450,000; single day Rp200,000; local residents Rp150,000.',
+  'https://instagram.com','ubudartscircle',false
+),
+(
+  'Medan Indie Fest 2027',
+  'Medan Indie Fest 2027',
+  'medan-indie-fest-2027',
+  'festival','medan',
+  'Venue indoor Medan (diumumkan H-14)',
+  '2027-02-07','2027-02-08',
+  'Presale Rp125.000 · Regular Rp160.000 · 2-day Rp250.000',
+  'Indie','Band indie Sumatera Utara & tamu',
+  'Medan Indie Collective',
+  'Festival indie dua hari. Presale Rp125.000/hari, regular Rp160.000, paket 2 hari Rp250.000. Termasuk sticker set; minuman dijual terpisah.',
+  'Two-day indie festival. Presale Rp125,000/day; regular Rp160,000; 2-day pass Rp250,000.',
+  'https://instagram.com','medanindie',false
+),
+(
+  'Pontianak Equator Music Days 2027',
+  'Pontianak Equator Music Days 2027',
+  'pontianak-equator-music-days-2027',
+  'festival','pontianak',
+  'Taman Alun-Alun Kapuas & panggung kota',
+  '2027-03-20','2027-03-21',
+  'Gratis zona terbuka · Tribun berbayar Rp75.000 · VIP Rp200.000',
+  'Festival campuran','Musisi Kalbar & crossover',
+  'Pemkot / komunitas musik Pontianak',
+  'Festival ekuator: zona rumput gratis, tribun Rp75.000, VIP Rp200.000 (kursi + lounge). Bawa liputan matahari; parkir terbatas.',
+  'Equator music days: free open zone; tribune Rp75,000; VIP Rp200,000.',
+  'https://instagram.com','musikpontianak',false
+),
+(
+  'Ambon City of Music Fair 2027',
+  'Ambon City of Music Fair 2027',
+  'ambon-city-of-music-fair-2027',
+  'festival','ambon',
+  'Area Kota Ambon (panggung terbuka + indoor)',
+  '2027-02-27','2027-03-01',
+  'Pass 3 hari Rp100.000 · Harian Rp40.000 · Pelajar Rp25.000/hari',
+  'Festival / tradisional kontemporer','Paduan musik Maluku & modern',
+  'Komunitas Musik Ambon',
+  'Pekan musik Ambon. Pass 3 hari Rp100.000, harian Rp40.000, pelajar Rp25.000/hari. Fokus kolaborasi lokal; food court terpisah.',
+  'Ambon music week. 3-day pass Rp100,000; daily Rp40,000; students Rp25,000/day.',
+  'https://instagram.com','musikambon',false
+),
+(
+  'Kupang Sunset Music Festival 2027',
+  'Kupang Sunset Music Festival 2027',
+  'kupang-sunset-music-festival-2027',
+  'festival','kupang',
+  'Pantai / area sunset Kupang (lokasi final H-10)',
+  '2027-03-06','2027-03-07',
+  'Early bird Rp90.000 · Regular Rp120.000 · 2-day Rp200.000',
+  'Festival campuran','Artis NTT & regional',
+  'Kupang Live Committee',
+  'Festival sunset dua hari. Early bird Rp90.000, regular Rp120.000, 2-day Rp200.000. Pintu dibuka sore; bawa jaket angin.',
+  'Sunset festival. Early bird Rp90,000; regular Rp120,000; 2-day Rp200,000.',
+  'https://instagram.com','kupanglive',false
+),
+(
+  'Palangkaraya Riverfront Fest 2027',
+  'Palangkaraya Riverfront Fest 2027',
+  'palangkaraya-riverfront-fest-2027',
+  'festival','palangkaraya',
+  'Tepi Sungai Kahayan, Palangkaraya',
+  '2027-01-30','2027-01-31',
+  'Gratis open area · Seat premium Rp50.000 · Community booth gratis (daftar)',
+  'Festival budaya & musik','Musik lokal Kalteng + pasar kreatif',
+  'Komunitas Kreatif Kalteng',
+  'Festival tepi sungai: area umum gratis, seat premium Rp50.000. Booth komunitas daftar gratis s.d. H-7. Fokus musik lokal & produk UMKM.',
+  'Riverfront fest: free general area; premium seat Rp50,000; free community booths (register).',
+  'https://instagram.com','kreatifkalteng',false
+),
+(
+  'Manado Bitung Sound Connection 2027',
+  'Manado Bitung Sound Connection 2027',
+  'manado-bitung-sound-connection-2027',
+  'festival','manado',
+  'Venue Manado (diumumkan H-14)',
+  '2027-02-14','2027-02-15',
+  'Presale Rp140.000 · OTS Rp180.000 · Couple Rp300.000 (2 tiket)',
+  'Pop / indie / R&B','Artis Sulut & tamu',
+  'Sound Connection North',
+  'Festival dua hari Manado. Presale Rp140.000, OTS Rp180.000, couple Rp300.000 (2 tiket). Valentine weekend — datang awal untuk merchandise limited.',
+  'Two-day Manado festival. Presale Rp140,000; OTS Rp180,000; couple pack Rp300,000.',
+  'https://instagram.com','soundconnectionnorth',false
+),
+(
+  'Padang Pesisir Music Weekend 2027',
+  'Padang Coastal Music Weekend 2027',
+  'padang-pesisir-music-weekend-2027',
+  'festival','padang',
+  'Area pantai / open space Padang',
+  '2027-01-23','2027-01-24',
+  'Harian Rp95.000 · 2-day Rp160.000 · Family (2 dewasa+2 anak) Rp280.000',
+  'Festival campuran','Musisi Sumbar & acoustic stage',
+  'Padang Live',
+  'Weekend musik pesisir. Harian Rp95.000, 2-day Rp160.000, family pack Rp280.000. Stage akustik siang, electric malam.',
+  'Coastal music weekend. Day Rp95,000; 2-day Rp160,000; family pack Rp280,000.',
+  'https://instagram.com','padanglive',false
+),
+(
+  'Bandar Lampung Krakatau Music Fest 2027',
+  'Bandar Lampung Krakatau Music Fest 2027',
+  'bandar-lampung-krakatau-music-fest-2027',
+  'festival','bandar-lampung',
+  'Open space Bandar Lampung',
+  '2027-03-27','2027-03-28',
+  'Presale Rp130.000 · Regular Rp170.000 · VIP Rp350.000',
+  'Festival campuran','Lineup Lampung & Sumatera',
+  'Krakatau Music Collective',
+  'Festival dua hari. Presale Rp130.000, regular Rp170.000, VIP Rp350.000 (lounge + fast track). VIP terbatas 200 seat.',
+  'Two-day fest. Presale Rp130,000; regular Rp170,000; VIP Rp350,000 (limited 200).',
+  'https://instagram.com','krakataumusic',false
+),
+(
+  'Jayapura Pacific Beats Festival 2027',
+  'Jayapura Pacific Beats Festival 2027',
+  'jayapura-pacific-beats-festival-2027',
+  'festival','jayapura',
+  'Area Kota Jayapura',
+  '2027-02-21','2027-02-22',
+  'Harian Rp75.000 · 2-day Rp120.000 · Pelajar Rp50.000/hari',
+  'Festival / pacific fusion','Seniman Papua & tamu regional',
+  'Pacific Beats Org',
+  'Festival dua hari. Harian Rp75.000, 2-day Rp120.000, pelajar Rp50.000/hari. Mengutamakan karya lokal Papua.',
+  'Two-day festival. Day Rp75,000; 2-day Rp120,000; students Rp50,000/day.',
+  'https://instagram.com','pacificbeats',false
+),
+(
+  'Yogyakarta Biennale Sound 2027 — Opening Concert Week',
+  'Yogyakarta Biennale Sound 2027 — Opening Concert Week',
+  'yogyakarta-biennale-sound-2027-opening',
+  'festival','yogyakarta',
+  'Multi-venue Yogyakarta (Taman Budaya & satelit)',
+  '2027-01-09','2027-01-11',
+  'Weekend pass Rp200.000 · Single venue Rp75.000 · Student weekend Rp120.000',
+  'Eksperimental / kontemporer','Kuratorial bunyi & pertunjukan',
+  'Yogya Sound Network',
+  'Pekan pembuka sound/performance. Weekend pass Rp200.000, single venue Rp75.000, pelajar weekend Rp120.000. Beberapa seat terpisah untuk karya duduk tenang.',
+  'Opening sound week. Weekend pass Rp200,000; single venue Rp75,000; student weekend Rp120,000.',
+  'https://instagram.com','yogyasound',false
+),
+(
+  'Mataram Lombok Folk & Stage 2027',
+  'Mataram Lombok Folk & Stage 2027',
+  'mataram-lombok-folk-stage-2027',
+  'festival','mataram',
+  'Taman / venue Mataram',
+  '2027-03-13','2027-03-14',
+  'Presale Rp110.000 · Regular Rp145.000 · 2-day Rp240.000',
+  'Folk / akustik','Folk NTB & acoustic guests',
+  'Lombok Folk Stage',
+  'Festival folk dua hari di Mataram. Presale Rp110.000, regular Rp145.000, 2-day Rp240.000.',
+  'Two-day folk festival. Presale Rp110,000; regular Rp145,000; 2-day Rp240,000.',
+  'https://instagram.com','lombokfolk',false
+),
+(
+  'Semarang River Jazz Picnic 2027',
+  'Semarang River Jazz Picnic 2027',
+  'semarang-river-jazz-picnic-2027',
+  'festival','semarang',
+  'Area tepi sungai / taman kota Semarang',
+  '2027-02-28','2027-02-28',
+  'Picnic pass Rp125.000 · Student Rp90.000 · Anak <10 th gratis (dengan dewasa)',
+  'Jazz','Jazz combo Jawa Tengah & guest',
+  'Semarang Jazz Forum',
+  'Picnic jazz satu hari. Pass Rp125.000, pelajar Rp90.000, anak di bawah 10 tahun gratis dengan pendamping berbayar. Bawa alas duduk; makanan tersedia di vendor resmi.',
+  'One-day jazz picnic. Pass Rp125,000; students Rp90,000; kids under 10 free with paying adult.',
+  'https://instagram.com','semarangjazz',false
+),
+
+-- ===================== KONSER (wilayah yang masih tipis) =====================
+(
+  'Intimate Acoustic Night Makassar',
+  'Intimate Acoustic Night Makassar',
+  'intimate-acoustic-night-makassar-januari-2027',
+  'konser','makassar',
+  'Cafe/venue intimate Makassar (kapasitas ~200)',
+  '2027-01-17','',
+  'Presale Rp85.000 · OTS Rp110.000',
+  'Akustik','Penyanyi-penyanyi lokal Sulawesi Selatan',
+  'Makassar Listening Club',
+  'Konser akustik intim. Presale Rp85.000, OTS Rp110.000. Termasuk satu minuman non-alkohol. Pintu dibuka 18.30 WITA.',
+  'Intimate acoustic concert. Presale Rp85,000; OTS Rp110,000. Includes one soft drink.',
+  'https://instagram.com','makassarlistening',false
+),
+(
+  'Manado R&B Session Vol. 4',
+  'Manado R&B Session Vol. 4',
+  'manado-rnb-session-vol-4-februari-2027',
+  'konser','manado',
+  'Venue indoor Manado',
+  '2027-02-21','',
+  'Early bird Rp95.000 · Regular Rp130.000',
+  'R&B / Soul','Lineup R&B Manado',
+  'North Groove',
+  'Sesi R&B malam hari. Early bird Rp95.000 (100 tiket pertama), regular Rp130.000. Usia 15+.',
+  'R&B night. Early bird Rp95,000 (first 100); regular Rp130,000. Ages 15+.',
+  'https://instagram.com','northgroove',false
+),
+(
+  'Palu Indie Showcase — Double Bill',
+  'Palu Indie Showcase — Double Bill',
+  'palu-indie-showcase-double-bill-januari-2027',
+  'konser','palu',
+  'Space kreatif Palu',
+  '2027-01-24','',
+  'Rp60.000 (include sticker) · Door Rp75.000',
+  'Indie','Dua unit indie Sulteng',
+  'Palu Noise Room',
+  'Showcase double bill. Tiket online Rp60.000 (termasuk sticker), pintu Rp75.000. Kapasitas terbatas.',
+  'Double-bill indie showcase. Online Rp60,000 (incl. sticker); door Rp75,000.',
+  'https://instagram.com','palunoiseroom',false
+),
+(
+  'Kendari Live Session: Guitar & Vocal',
+  'Kendari Live Session: Guitar & Vocal',
+  'kendari-live-session-guitar-vocal-februari-2027',
+  'konser','kendari',
+  'Cafe live music Kendari',
+  '2027-02-14','',
+  'Rp55.000 · Couple Rp100.000',
+  'Akustik','Gitaris & vokal lokal',
+  'Kendari Live',
+  'Sesi gitar & vokal. Single Rp55.000, couple Rp100.000. Cocok Valentine — reseating terbatas.',
+  'Guitar & vocal session. Single Rp55,000; couple Rp100,000.',
+  'https://instagram.com','kendarilive',false
+),
+(
+  'Ambon Harmony Night',
+  'Ambon Harmony Night',
+  'ambon-harmony-night-maret-2027',
+  'konser','ambon',
+  'Gedung / aula kota Ambon',
+  '2027-03-07','',
+  'Rp70.000 · Pelajar Rp50.000',
+  'Pop / harmony','Grup vokal & band Ambon',
+  'Ambon Harmony',
+  'Malam harmoni vokal. Umum Rp70.000, pelajar Rp50.000 (kartu pelajar).',
+  'Vocal harmony night. General Rp70,000; students Rp50,000.',
+  'https://instagram.com','ambonharmony',false
+),
+(
+  'Jayapura Stage: Pacific Pop Night',
+  'Jayapura Stage: Pacific Pop Night',
+  'jayapura-pacific-pop-night-januari-2027',
+  'konser','jayapura',
+  'Venue Jayapura',
+  '2027-01-31','',
+  'Rp65.000 · OTS Rp80.000',
+  'Pop','Artis pop Papua',
+  'Jayapura Stage',
+  'Malam pop. Presale Rp65.000, OTS Rp80.000.',
+  'Pop night. Presale Rp65,000; OTS Rp80,000.',
+  'https://instagram.com','jayapurastage',false
+),
+(
+  'Kupang Night Acoustic',
+  'Kupang Night Acoustic',
+  'kupang-night-acoustic-februari-2027',
+  'konser','kupang',
+  'Cafe/venue Kupang',
+  '2027-02-20','',
+  'Rp50.000 (include kopi) · OTS Rp65.000',
+  'Akustik','Musisi NTT',
+  'Kupang Acoustic Circle',
+  'Akustik malam hari. Online Rp50.000 termasuk kopi, OTS Rp65.000.',
+  'Night acoustic. Online Rp50,000 incl. coffee; OTS Rp65,000.',
+  'https://instagram.com','kupangacoustic',false
+),
+(
+  'Mataram City Pop Session',
+  'Mataram City Pop Session',
+  'mataram-city-pop-session-januari-2027',
+  'konser','mataram',
+  'Venue Mataram',
+  '2027-01-18','',
+  'Presale Rp90.000 · Regular Rp120.000',
+  'City pop / indie pop','Penampil NTB',
+  'Lombok Pop Room',
+  'Sesi city pop. Presale Rp90.000, regular Rp120.000.',
+  'City-pop session. Presale Rp90,000; regular Rp120,000.',
+  'https://instagram.com','lombokpoproom',false
+),
+(
+  'Denpasar Electronica Lab — Club Night',
+  'Denpasar Electronica Lab — Club Night',
+  'denpasar-electronica-lab-club-night-februari-2027',
+  'konser','denpasar',
+  'Club/venue Denpasar (18+)',
+  '2027-02-13','',
+  'Guest list Rp150.000 · Door Rp200.000',
+  'Elektronik','DJ lokal Bali',
+  'Bali Electronica Lab',
+  'Club night elektronik. Guest list Rp150.000 (daftar H-1), door Rp200.000. Wajib 18+ dengan KTP.',
+  'Electronica club night. Guest list Rp150,000; door Rp200,000. 18+ only.',
+  'https://instagram.com','balielectronicalab',false
+),
+(
+  'Banjarmasin Riverside Live',
+  'Banjarmasin Riverside Live',
+  'banjarmasin-riverside-live-maret-2027',
+  'konser','banjarmasin',
+  'Area tepi sungai Banjarmasin',
+  '2027-03-14','',
+  'Rp75.000 · Early bird Rp60.000 (50 tiket)',
+  'Pop / folk','Musisi Kalsel',
+  'Banjarmasin Live',
+  'Live di tepi sungai. Early bird Rp60.000 (50 tiket), regular Rp75.000.',
+  'Riverside live. Early bird Rp60,000 (50 tickets); regular Rp75,000.',
+  'https://instagram.com','banjarmasinlive',false
+),
+(
+  'Samarinda Rock Garage',
+  'Samarinda Rock Garage',
+  'samarinda-rock-garage-februari-2027',
+  'konser','samarinda',
+  'Garage/venue Samarinda',
+  '2027-02-28','',
+  'Rp80.000 · OTS Rp100.000',
+  'Rock / alternative','Band Kaltim',
+  'Kaltim Rock Room',
+  'Rock garage night. Online Rp80.000, OTS Rp100.000. Earplug tersedia di pintu (opsional).',
+  'Rock garage night. Online Rp80,000; OTS Rp100,000.',
+  'https://instagram.com','kaltimrockroom',false
+),
+(
+  'Balikpapan Harbor Sessions',
+  'Balikpapan Harbor Sessions',
+  'balikpapan-harbor-sessions-januari-2027',
+  'konser','balikpapan',
+  'Venue dekat pelabuhan / kota Balikpapan',
+  '2027-01-25','',
+  'Rp95.000 · Student Rp70.000',
+  'Indie / pop','Lineup Balikpapan',
+  'Harbor Sessions',
+  'Sesi live harbor city. Umum Rp95.000, pelajar Rp70.000.',
+  'Harbor city live. General Rp95,000; students Rp70,000.',
+  'https://instagram.com','harborsessions',false
+),
+(
+  'Palembang Night Market Concert',
+  'Palembang Night Market Concert',
+  'palembang-night-market-concert-februari-2027',
+  'konser','palembang',
+  'Area night market / open space Palembang',
+  '2027-02-06','',
+  'Gratis registrasi · Seat depan Rp40.000',
+  'Pop / dangdut modern','Penampil Sumsel',
+  'Palembang Open Stage',
+  'Konser terbuka: registrasi gratis (kuota masuk), seat depan Rp40.000. Datang 1 jam lebih awal.',
+  'Open concert: free registration; front seat Rp40,000.',
+  'https://instagram.com','palembangopenstage',false
+),
+(
+  'Pekanbaru Campus Pop Night',
+  'Pekanbaru Campus Pop Night',
+  'pekanbaru-campus-pop-night-maret-2027',
+  'konser','pekanbaru',
+  'Auditorium kampus Pekanbaru (kerja sama BEM)',
+  '2027-03-07','',
+  'Mahasiswa Rp45.000 · Umum Rp70.000',
+  'Pop','Penampil Riau & campus band',
+  'Pekanbaru Campus Live',
+  'Konser kampus. Mahasiswa Rp45.000 (KTM), umum Rp70.000.',
+  'Campus concert. Students Rp45,000; general Rp70,000.',
+  'https://instagram.com','pekanbarucampuslive',false
+),
+(
+  'Batam Cross-Strait Live',
+  'Batam Cross-Strait Live',
+  'batam-cross-strait-live-januari-2027',
+  'konser','batam',
+  'Venue Batam Center / area kota',
+  '2027-01-10','',
+  'Presale Rp120.000 · Regular Rp150.000',
+  'Pop / R&B','Artis Kepri & guest',
+  'Batam Live Hub',
+  'Konser lintas selat. Presale Rp120.000, regular Rp150.000.',
+  'Cross-strait concert. Presale Rp120,000; regular Rp150,000.',
+  'https://instagram.com','batamlivehub',false
+),
+(
+  'Jambi Folk Evening',
+  'Jambi Folk Evening',
+  'jambi-folk-evening-februari-2027',
+  'konser','jambi',
+  'Gedung kesenian / cafe Jambi',
+  '2027-02-13','',
+  'Rp55.000 · OTS Rp70.000',
+  'Folk','Musisi Jambi',
+  'Jambi Folk Circle',
+  'Malam folk. Online Rp55.000, OTS Rp70.000.',
+  'Folk evening. Online Rp55,000; OTS Rp70,000.',
+  'https://instagram.com','jambifolk',false
+),
+(
+  'Bengkulu Coastal Acoustic',
+  'Bengkulu Coastal Acoustic',
+  'bengkulu-coastal-acoustic-maret-2027',
+  'konser','bengkulu',
+  'Venue Bengkulu',
+  '2027-03-21','',
+  'Rp50.000',
+  'Akustik','Musisi Bengkulu',
+  'Bengkulu Acoustic',
+  'Akustik pesisir. Tiket flat Rp50.000. Kapasitas terbatas.',
+  'Coastal acoustic. Flat Rp50,000. Limited capacity.',
+  'https://instagram.com','bengkuluacoustic',false
+),
+(
+  'Pangkal Pinang Island Stage',
+  'Pangkal Pinang Island Stage',
+  'pangkal-pinang-island-stage-februari-2027',
+  'konser','pangkal-pinang',
+  'Venue Pangkal Pinang',
+  '2027-02-07','',
+  'Rp65.000 · Couple Rp120.000',
+  'Pop','Penampil Babel',
+  'Babel Live',
+  'Island stage night. Single Rp65.000, couple Rp120.000.',
+  'Island stage night. Single Rp65,000; couple Rp120,000.',
+  'https://instagram.com','babellive',false
+),
+(
+  'Lhokseumawe Youth Live',
+  'Lhokseumawe Youth Live',
+  'lhokseumawe-youth-live-januari-2027',
+  'konser','lhokseumawe',
+  'Venue Lhokseumawe',
+  '2027-01-17','',
+  'Rp40.000 · Pelajar Rp30.000',
+  'Pop / hiphop lokal','Penampil Aceh Utara',
+  'Lhokseumawe Youth Stage',
+  'Panggung anak muda. Umum Rp40.000, pelajar Rp30.000.',
+  'Youth stage. General Rp40,000; students Rp30,000.',
+  'https://instagram.com','lhokseumaweyouth',false
+),
+(
+  'Banda Aceh Acoustic Gathering',
+  'Banda Aceh Acoustic Gathering',
+  'banda-aceh-acoustic-gathering-februari-2027',
+  'konser','banda-aceh',
+  'Cafe/venue Banda Aceh',
+  '2027-02-28','',
+  'Rp60.000 (include teh tarik)',
+  'Akustik','Musisi Aceh',
+  'Aceh Listening Room',
+  'Gathering akustik. Rp60.000 termasuk teh tarik. Open mic terbatas (daftar di tempat).',
+  'Acoustic gathering. Rp60,000 incl. tea. Limited open-mic slots.',
+  'https://instagram.com','acehlistening',false
+),
+(
+  'Bukittinggi Highlands Live',
+  'Bukittinggi Highlands Live',
+  'bukittinggi-highlands-live-maret-2027',
+  'konser','bukittinggi',
+  'Venue Bukittinggi',
+  '2027-03-14','',
+  'Rp70.000 · Early bird Rp55.000',
+  'Pop / folk Minang modern','Penampil Sumbar',
+  'Highlands Live',
+  'Konser dataran tinggi. Early bird Rp55.000, regular Rp70.000.',
+  'Highlands concert. Early bird Rp55,000; regular Rp70,000.',
+  'https://instagram.com','highlandslive',false
+),
+(
+  'Solo Chamber Pop Night',
+  'Solo Chamber Pop Night',
+  'solo-chamber-pop-night-januari-2027',
+  'konser','solo',
+  'Ruang pertunjukan Solo',
+  '2027-01-16','',
+  'Rp100.000 · Student Rp75.000',
+  'Chamber pop / indie',
+  'Penampil Solo Raya',
+  'Solo Chamber',
+  'Malam chamber pop. Umum Rp100.000, pelajar Rp75.000. Duduk teaterikal; datang tepat waktu.',
+  'Chamber-pop night. General Rp100,000; students Rp75,000.',
+  'https://instagram.com','solochamber',false
+),
+(
+  'Malang College Rock Night',
+  'Malang College Rock Night',
+  'malang-college-rock-night-februari-2027',
+  'konser','malang',
+  'Venue dekat kampus Malang',
+  '2027-02-27','',
+  'Presale Rp90.000 · OTS Rp120.000',
+  'Rock / alternative','Band Malang Raya',
+  'Malang College Live',
+  'Rock night kampus. Presale Rp90.000, OTS Rp120.000.',
+  'College rock night. Presale Rp90,000; OTS Rp120,000.',
+  'https://instagram.com','malangcollegelive',false
+),
+(
+  'Batu Mountain Music Night',
+  'Batu Mountain Music Night',
+  'batu-mountain-music-night-maret-2027',
+  'konser','batu',
+  'Venue Batu / Selecta area',
+  '2027-03-20','',
+  'Rp110.000 · Early bird Rp85.000',
+  'Indie / folk','Penampil Malang-Batu',
+  'Batu Mountain Music',
+  'Musik malam di Batu. Early bird Rp85.000, regular Rp110.000. Suhu dingin — bawa jaket.',
+  'Mountain music night in Batu. Early bird Rp85,000; regular Rp110,000.',
+  'https://instagram.com','batumountainmusic',false
+),
+(
+  'Cirebon Portside Live',
+  'Cirebon Portside Live',
+  'cirebon-portside-live-januari-2027',
+  'konser','cirebon',
+  'Venue Cirebon',
+  '2027-01-30','',
+  'Rp75.000',
+  'Pop / dangdut modern','Penampil Cirebon Raya',
+  'Cirebon Portside',
+  'Live portside. Tiket flat Rp75.000.',
+  'Portside live. Flat Rp75,000.',
+  'https://instagram.com','cirebonportside',false
+),
+(
+  'Bogor Rain City Indie Night',
+  'Bogor Rain City Indie Night',
+  'bogor-rain-city-indie-night-februari-2027',
+  'konser','bogor',
+  'Venue Bogor kota',
+  '2027-02-14','',
+  'Presale Rp95.000 · Regular Rp125.000',
+  'Indie','Band Bogor & Depok',
+  'Rain City Live',
+  'Indie night. Presale Rp95.000, regular Rp125.000.',
+  'Indie night. Presale Rp95,000; regular Rp125,000.',
+  'https://instagram.com','raincitylive',false
+),
+(
+  'Depok Suburban Sounds',
+  'Depok Suburban Sounds',
+  'depok-suburban-sounds-maret-2027',
+  'konser','depok',
+  'Venue Depok',
+  '2027-03-06','',
+  'Rp80.000 · Student Rp60.000',
+  'Indie / pop','Penampil Depok-Jakarta selatan',
+  'Suburban Sounds',
+  'Suburban live. Umum Rp80.000, pelajar Rp60.000.',
+  'Suburban live. General Rp80,000; students Rp60,000.',
+  'https://instagram.com','suburbansounds',false
+),
+(
+  'Bekasi East Stage Live',
+  'Bekasi East Stage Live',
+  'bekasi-east-stage-live-januari-2027',
+  'konser','bekasi',
+  'Venue Bekasi',
+  '2027-01-23','',
+  'Rp85.000 · OTS Rp100.000',
+  'Pop / rock','Penampil Bekasi Raya',
+  'East Stage Bekasi',
+  'East stage live. Online Rp85.000, OTS Rp100.000.',
+  'East stage live. Online Rp85,000; OTS Rp100,000.',
+  'https://instagram.com','eaststagebekasi',false
+),
+(
+  'Tangerang Selatan Listening Room',
+  'South Tangerang Listening Room',
+  'tangerang-selatan-listening-room-februari-2027',
+  'konser','tangerang-selatan',
+  'Listening room BSD / Alam Sutera area',
+  '2027-02-20','',
+  'Rp150.000 (seated, include one drink)',
+  'Akustik / jazz ringan','Duo/trio acoustic',
+  'South Listening Room',
+  'Listening room duduk. Rp150.000 termasuk satu minuman. HP silent; kapasitas ~80.',
+  'Seated listening room. Rp150,000 incl. one drink. Phones silent; ~80 seats.',
+  'https://instagram.com','southlisteningroom',false
+),
+(
+  'Gorontalo City Pop Night',
+  'Gorontalo City Pop Night',
+  'gorontalo-city-pop-night-maret-2027',
+  'konser','gorontalo',
+  'Venue Gorontalo',
+  '2027-03-13','',
+  'Rp55.000',
+  'Pop','Penampil Gorontalo',
+  'Gorontalo Live',
+  'City pop night. Tiket Rp55.000.',
+  'City pop night. Ticket Rp55,000.',
+  'https://instagram.com','gorontalolive',false
+),
+(
+  'Tarakan Border Beats',
+  'Tarakan Border Beats',
+  'tarakan-border-beats-februari-2027',
+  'konser','tarakan',
+  'Venue Tarakan',
+  '2027-02-21','',
+  'Rp70.000',
+  'Pop / hiphop','Penampil Kaltara',
+  'Border Beats Tarakan',
+  'Border beats live. Rp70.000.',
+  'Border beats live. Rp70,000.',
+  'https://instagram.com','borderbeatstarakan',false
+)
+
+) as v(
+  title, title_en, slug, cat, city, venue, d, e, price, genre, lineup,
+  org, descr, descr_en, ticket, ig, comm
+)
+left join cities c on c.slug = v.city
+where c.id is not null
+on conflict (slug) do update set
+  title = excluded.title,
+  title_en = excluded.title_en,
+  category = excluded.category,
+  city_id = excluded.city_id,
+  venue = excluded.venue,
+  event_date = excluded.event_date,
+  end_date = excluded.end_date,
+  price_label = excluded.price_label,
+  genre = excluded.genre,
+  lineup = excluded.lineup,
+  organizer = excluded.organizer,
+  description = excluded.description,
+  description_en = excluded.description_en,
+  poster_url = excluded.poster_url,
+  ticket_url = excluded.ticket_url,
+  source_ig = excluded.source_ig,
+  is_community = excluded.is_community,
+  status = excluded.status;
+
+-- Verifikasi
+select category, count(*) 
+from events 
+where slug in (
+  select unnest(array[
+    'nusantara-jazz-week-surabaya-2027','makassar-maritime-music-festival-2027','bali-soundscape-ubud-2027',
+    'medan-indie-fest-2027','pontianak-equator-music-days-2027','ambon-city-of-music-fair-2027'
+  ])
+)
+group by 1;
+
+select e.slug, e.category, e.event_date, e.price_label, c.name as city, e.poster_url
+from events e
+join cities c on c.id = e.city_id
+where e.created_at > now() - interval '1 hour'
+   or e.slug like '%-2027'
+order by e.category, e.event_date
+limit 80;
