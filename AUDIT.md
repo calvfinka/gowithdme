@@ -52,29 +52,3 @@ Diuji di Chromium headless (meniru GitHub Pages di subfolder `/gowithdme/`, URL 
 | Banner | Poster dan blok teks memakai kotak setinggi sama (`--ph`), poster tetap utuh, lebar mengikuti rasio dengan batas per orientasi |
 | Mode "situs desktop" di HP | `js/adaptive.js` mendeteksi (layar fisik ≤600px tetapi halaman ≥700px), memberi `<html data-dsk>` dan zoom isi sampai ±400px. `css/dsk.css` + `css/dsk-b.css` (dibuat otomatis oleh `tools/gen_dsk.py` dari semua blok `@media (max-width)`) memakai tata letak HP. Satuan vw/vh di CSS kini `var(--vw)`/`var(--vh)` agar ikut zoom. `search.js` dan `naver.js` disesuaikan dengan zoom |
 | Bug | `<main class="pf">` di profil bentrok dengan kelas poster `.pf` sehingga halaman melebar 15px (scroll samping); diganti `prof`. Kurung `}` berlebih di `naver.css` dibuang |
-
-## Perubahan 18 November 2026 — audit ulang, streamline, error-reporting
-
-| Bagian | Perubahan |
-|--------|-----------|
-| `js/supa.js` | Utilitas terpusat diperkuat: `$` aman (dummy element), `esc`, `msg` (auto-hide sukses 4.5 dtk), `toast` (durasi adaptif), dan **`friendlyErr(err)`** yang memetakan error jaringan / JWT / RLS / duplikat / rate-limit / upload / timeout ke teks ramah bilingual. Raw technical message Supabase tidak lagi ditampilkan ke pengguna. |
-| Error UI | `auth.js`, `ajukan.js`, `admin.js`, `teman.js`, `pesan.js`, `komunitas.js` memakai `friendlyErr` + prefer `window.toast` / `window.msg`. Redefinisi lokal `toast`/`esc` di beberapa file diganti menjadi fallback ke utilitas terpusat. |
-| i18n | Kunci baru di `tools/strings.py`: `err_network`, `err_session`, `err_perm`, `err_dup`, `err_rate`, `err_upload`, `err_timeout`. |
-| Logika niche | Normalisasi nomor WA, filter harga, status event (live/soon/past) berbasis WIB, dan validasi URL tiket/IG tetap; tidak ada regresi pada alur konser / naik gunung / ajakan. |
-| Redundansi | Definisi `esc` dan `toast` yang tersebar digabung ke sumber tunggal di `supa.js` (dengan fallback aman bila file belum termuat). `msg` di admin kini konsisten auto-dismiss untuk status OK. |
-
-Setelah ubah teks i18n: `python3 tools/build.py` (hanya perlu bila ingin meregenerasi `js/i18n.js` + halaman). File JS di atas bisa langsung di-commit tanpa rebuild penuh.
-
-## Perubahan 18 November 2026 (2) — monetisasi, traffic readiness, legal lengkap
-
-| Bagian | Perubahan |
-|--------|-----------|
-| Schema | `supabase/schema_monetisasi.sql`: kolom `is_featured`, `featured_until`, `sponsor_label`, `boost_score`, `affiliate_note`; view `events_featured`; tabel `sponsorship_leads` + RPC `submit_sponsor_lead` & `admin_set_featured`. |
-| Config | `js/config.js`: OWNER_*, FEATURED_*, SPONSOR_LEADS_ENABLED, AFFILIATE_TICKET_BASE, AD_SLOT_* (siap diisi partner). |
-| UI listing | `js/app.js`: event Featured naik ke atas daftar + badge “Disorot/Featured”; CSS `.badge.feat`. |
-| Admin | Form event: checkbox Featured, label sponsor, tanggal berakhir, boost score. |
-| Legal | Privacy & Terms diperluas (ID+EN, UU PDP, sponsor, retensi, pihak ketiga). Halaman baru **Hak Cipta & Kepemilikan** dan **Tentang GWM & Jurkon Studio** (ID+EN). Footer menautkan About + Copyright. |
-| Build | `copyright` & `about` masuk pipeline `tools/build.py` + search index. |
-| Traffic | Setelah domain aktif: canonical/sitemap sudah otomatis lewat `GWM_SITE`; struktur event statis + blog + hreflang mendukung indexing. Featured listings memberi sinyal kualitas untuk engagement. |
-
-**Langkah setelah domain terdaftar:** (1) jalankan `schema_monetisasi.sql` di Supabase, (2) `GWM_SITE=https://gowithdme.com python3 tools/build.py`, (3) update Redirect URL Supabase & Google OAuth, (4) daftarkan Search Console + sitemap, (5) aktifkan paket Featured untuk penyelenggara lewat admin.

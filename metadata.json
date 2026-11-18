@@ -1,0 +1,7 @@
+{
+  "name": "GWM — Go With Me",
+  "description": "Portal info konser, festival, dan naik gunung, plus cari teman jalan dan komunitas per kota.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

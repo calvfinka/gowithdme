@@ -1,4 +1,23 @@
 /* Dibuat oleh tools/gen_dsk.py. Jangan edit tangan. Tata letak HP untuk mode "situs desktop" (html[data-dsk]). */
+/* portal-pro.css @1080 */
+html:where([data-dsk]) .tb-nav{display:none}
+/* portal-pro.css @640 */
+html:where([data-dsk]) .tb-main{grid-template-columns:auto minmax(0,1fr) auto;gap:8px;padding-inline:12px}
+html:where([data-dsk]) .tb-c{justify-content:flex-end}
+html:where([data-dsk]) .tb-loc{max-width:138px;padding:0 9px;height:34px;font-size:12px}
+html:where([data-dsk]) .tb-cta span{display:none}
+html:where([data-dsk]) .tb-cta{width:34px;padding:0;justify-content:center}
+/* portal-pro.css @740 */
+html:where([data-dsk]) .loc-qbar{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding:2px 4px}
+html:where([data-dsk]) .loc-qbar::-webkit-scrollbar{display:none}
+/* portal-pro.css @860 */
+html:where([data-dsk]) .promo-wrap{grid-template-columns:1fr}
+/* portal-pro.css @900 */
+html:where([data-dsk]) .nv-tabs{position:static}
+/* portal-pro.css @740 */
+html:where([data-dsk]) .locd-body{grid-template-columns:1fr;overflow-y:auto}
+html:where([data-dsk]) .locd-col{border-right:0;border-bottom:1px solid var(--line);overflow-y:visible}
+html:where([data-dsk]) .est-grid{grid-template-columns:1fr}
 /* balance.css @900 */
 html:where([data-dsk]) .main{padding-inline:var(--gx)}
 /* balance.css @640 */

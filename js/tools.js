@@ -10,9 +10,10 @@ $("pReset").onclick=function(){saved={};try{localStorage.removeItem(KEY)}catch(x
 prog();
 function calc(){
   var t=Math.max(0,+$("total").value||0),n=Math.max(1,Math.floor(+$("orang").value||1)),a=Math.min(30,Math.max(0,+$("admin").value||0));
-  /* hitung dengan bilangan bulat (t*(100+a)) supaya tidak kena galat desimal: 100000/2 orang/10% = 55.000, bukan 56.000 */
-  var per=Math.ceil(t*(100+a)/(100000*n))*1000;
-  $("hasil").innerHTML=t?tr("per")+' <b>Rp'+per.toLocaleString(tr("numloc"))+'</b><br><small>'+tr("round",{a:a})+'</small>':tr("fill");
+  var hf=$("hostFee")?Math.min(25,Math.max(0,+$("hostFee").value||0)):0;
+  var res=window.IB_MonetizeCore?IB_MonetizeCore.calculateTripSplitWithFee(t,n,a,hf):{perPerson:Math.ceil(t*(100+a)/(100000*n))*1000,grandTotal:Math.round(t*(100+a+hf)/100)};
+  var note=hf>0?tr("host_fee_note",{a:a,h:hf,g:res.grandTotal.toLocaleString(tr("numloc"))}):tr("round",{a:a});
+  $("hasil").innerHTML=t?tr("per")+' <b>Rp'+res.perPerson.toLocaleString(tr("numloc"))+'</b><br><small>'+note+'</small>':tr("fill");
 }
-["total","orang","admin"].forEach(function(i){$(i).oninput=calc});calc();
+["total","orang","admin","hostFee"].forEach(function(i){if($(i))$(i).oninput=calc});calc();
 })();

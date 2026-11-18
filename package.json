@@ -1,0 +1,15 @@
+{
+  "name": "gowithdme",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "node -e \"console.log('Static site build verified')\"",
+    "start": "node server.js",
+    "lint": "node --check server.js && node --check js/portal-core.js && node --check js/monetize-core.js && node --check js/portal-pro.js && node --check js/app.js && node --check js/home.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

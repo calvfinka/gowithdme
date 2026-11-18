@@ -377,8 +377,3 @@ a.kpost{display:block;color:inherit;text-decoration:none}a.kpost:hover{border-co
 .fchip{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--side);font-size:13px;font-weight:600}
 .fchip button{border:0;background:none;color:var(--brand);font-weight:600;cursor:pointer;font-size:13px;white-space:nowrap}
 .sxn{margin:4px 4px 2px;padding:7px 10px;border-radius:8px;background:var(--soon-bg);color:var(--soon);font-size:12px;font-weight:600}
-
-/* Featured / sponsor badge (monetisasi) */
-.badge.feat{background:linear-gradient(135deg,#0E5A46,#1a8a6a);color:#fff;font-weight:600;letter-spacing:.02em}
-.tile.feat,.r.feat{box-shadow:0 0 0 2px rgba(14,90,70,.25)}
-

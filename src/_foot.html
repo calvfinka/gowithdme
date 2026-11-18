@@ -1,9 +1,39 @@
-<div class="foot"><span>{{f_poster}}</span><nav>
-<a href="about">{{f_about}}</a>
-<a href="bantuan">{{f_help}}</a>
-<a href="../blog/">{{f_blog}}</a>
-<a href="terms">{{f_terms}}</a>
-<a href="privacy">{{f_privacy}}</a>
-<a href="copyright">{{f_copyright}}</a>
-<a href="bantuan#kontak">{{f_contact}}</a>
-</nav></div>
+<div class="foot"><span>{{f_poster}}</span><nav><a href="bantuan">{{f_help}}</a><a href="../blog/">{{f_blog}}</a><a href="terms">{{f_terms}}</a><a href="privacy">{{f_privacy}}</a><a href="bantuan#kontak">{{f_contact}}</a></nav></div>
+<dialog id="locDlg" class="locd" aria-labelledby="locDlgT">
+  <div class="locd-in">
+    <div class="locd-h">
+      <div><h2 id="locDlgT">{{loc_title}}</h2><p class="meta">{{loc_sub}}</p></div>
+      <button class="ico-btn" type="button" id="locDlgX" aria-label="{{nv_close}}"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="locd-s">
+      <div class="locd-q"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input id="locSearch" type="search" placeholder="{{loc_search_ph}}" autocomplete="off"></div>
+      <div class="locd-rad" id="locRad" role="group" aria-label="{{loc_radius_h}}">
+        <span class="locd-rl">{{loc_radius_h}}:</span>
+        <button type="button" data-rad="0">{{loc_r_0}}</button>
+        <button type="button" data-rad="50">{{loc_r_50}}</button>
+        <button type="button" data-rad="100">{{loc_r_100}}</button>
+        <button type="button" data-rad="prov">{{loc_r_prov}}</button>
+        <button type="button" data-rad="macro">{{loc_r_macro}}</button>
+      </div>
+    </div>
+    <div class="locd-body">
+      <div class="locd-col">
+        <h3>{{loc_macro_h}}</h3>
+        <div class="locd-list" id="locMacros"></div>
+      </div>
+      <div class="locd-col">
+        <h3>{{loc_prov_h}}</h3>
+        <div class="locd-list" id="locProvs"></div>
+      </div>
+      <div class="locd-col locd-cities-col">
+        <h3 id="locCityH">{{loc_city_h}}</h3>
+        <div class="locd-cities" id="locCities"></div>
+        <div class="locd-extra" id="locExtra" hidden></div>
+      </div>
+    </div>
+    <div class="locd-f">
+      <button type="button" class="btn line" id="locReset">{{loc_reset}}</button>
+      <div class="locd-fr"><span id="locSelTxt" class="meta"></span><button type="button" class="btn pri" id="locApply">{{loc_apply}}</button></div>
+    </div>
+  </div>
+</dialog>

@@ -4,7 +4,7 @@
 # sama dengan HP. Dipanggil otomatis oleh tools/build.py. Jangan edit css/dsk.css dengan tangan.
 import re, os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FILES = ["style.css", "adaptive.css", "naver.css", "panel.css", "balance.css"]
+FILES = ["style.css", "adaptive.css", "naver.css", "panel.css", "portal-pro.css", "balance.css"]
 MAXW = 1100
 
 def strip_comments(s):

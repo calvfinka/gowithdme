@@ -30,8 +30,10 @@ function lev(a,b,max){var la=a.length,lb=b.length;if(Math.abs(la-lb)>max)return 
 /* ---------- kamus: singkatan, kata sambung, bulan ---------- */
 var ALIAS={jkt:"jakarta",dki:"jakarta",bdg:"bandung",jogja:"yogyakarta",jogya:"yogyakarta",yogya:"yogyakarta",jogjakarta:"yogyakarta",diy:"yogyakarta",
  sby:"surabaya",dps:"denpasar",tangsel:"tangerang selatan",mlg:"malang",smg:"semarang",mdn:"medan",plg:"palembang",mks:"makassar",bpp:"balikpapan",
+ ikn:"nusantara",solo:"solo",lmg:"lamongan",bwi:"banyuwangi",pwt:"purwokerto",pkb:"pekanbaru",jpr:"jayapura",mnd:"manado",amb:"ambon",
  jabar:"jawa barat",jateng:"jawa tengah",jatim:"jawa timur",sumut:"sumatera utara",sumbar:"sumatera barat",sumsel:"sumatera selatan",
- kaltim:"kalimantan timur",kalsel:"kalimantan selatan",kalbar:"kalimantan barat",sulsel:"sulawesi selatan",sulut:"sulawesi utara",ntb:"nusa tenggara barat",kepri:"kepulauan riau",
+ kaltim:"kalimantan timur",kalsel:"kalimantan selatan",kalbar:"kalimantan barat",kalteng:"kalimantan tengah",kaltara:"kalimantan utara",
+ sulsel:"sulawesi selatan",sulut:"sulawesi utara",sulteng:"sulawesi tengah",sultra:"sulawesi tenggara",ntb:"nusa tenggara barat",ntt:"nusa tenggara timur",kepri:"kepulauan riau",
  gn:"gunung",mt:"gunung",mtn:"gunung",mount:"gunung",tix:"tiket"};
 var STOP={ini:1,itu:1,this:1,that:1,di:1,ke:1,dan:1,yang:1,untuk:1,dari:1,the:1,in:1,at:1,of:1,to:1,for:1,with:1,a:1,an:1,on:1};
 var PFX={event:"event",events:"event",acara:"event",kota:"place",wilayah:"place",daerah:"place",provinsi:"place",city:"place",place:"place",places:"place",
@@ -40,7 +42,7 @@ var MID=["januari","februari","maret","april","mei","juni","juli","agustus","sep
     MEN=["january","february","march","april","may","june","july","august","september","october","november","december"];
 var CATKW={konser:"konser musik festival gig live concert music",naikgunung:"naik gunung pendakian hiking open trip trekking camping mountain",pameran:"pameran expo exhibition seni art",festival:"festival musik seni fest",komedi:"komedi stand up comedy open mic lawak",seminar:"seminar konferensi talkshow workshop conference talk",meetup:"meetup komunitas trivia nobar mahjong gathering",lainnya:"teater pertunjukan pameran properti lainnya other"};
 var CATIC={konser:"mic",naikgunung:"mtn",pameran:"bag",festival:"ticket",komedi:"chat",seminar:"note",meetup:"users",lainnya:"cal"};
-var PGIC={home:"home",events:"cal",hike:"mtn",invite:"users",comm:"users",submit:"plus",help:"help",contact:"help",terms:"note",privacy:"note",login:"users",profile:"users",saved:"heart",done:"clock",concert:"mic",expo:"bag",hiking:"mtn"};
+var PGIC={home:"home",events:"cal",hike:"mtn",invite:"users",comm:"users",submit:"plus",help:"help",contact:"help",terms:"note",privacy:"note",login:"users",profile:"users",saved:"heart",done:"clock",concert:"mic",expo:"bag",hiking:"mtn",deals:"store",promo:"megaphone"};
 var TYPES=["event","place","mtn","page","faq"],CAP=4,CAP_OTHER=3;
 
 /* ---------- tanggal (zona WIB) ---------- */
@@ -60,6 +62,7 @@ function mk(type,title,fields,o){var d={type:type,title:title,tn:norm(title),f:[
 var DOCS={page:[],faq:[],mtn:[],place:[],event:[]},EVENTS=null,STATE="idle";
 
 function buildStatic(){
+  var AREAS=window.IB_AREAS||{};
   (SX.pages||[]).forEach(function(p){
     DOCS.page.push(mk("page",p.t[LI],[[p.t[0],3],[p.t[1],3],[p.kw,1.2]],{href:p.h,icon:PGIC[p.k]||"search",sub:tr(p.type==="cat"?"sx_p_sub_cat":"sx_p_sub_page")}))});
   (SX.faq||[]).forEach(function(f){
@@ -70,7 +73,8 @@ function buildStatic(){
   Object.keys(REG).forEach(function(p){
     DOCS.place.push(mk("place",provName(p),[[p,3],[provName(p),3],["provinsi province wilayah daerah",.6]],{href:"event?prov="+encodeURIComponent(p),icon:"pin",kind:"prov",prov:p}));
     REG[p].forEach(function(c){
-      DOCS.place.push(mk("place",c,[[c,3],[p+" "+provName(p),.9],["kota city wilayah daerah",.6]],{href:"event?kota="+encodeURIComponent(c),icon:"pin",kind:"city",city:c,prov:p}))})})}
+      var areaStr=AREAS[c]?AREAS[c].join(" "):"";
+      DOCS.place.push(mk("place",c,[[c,3],[p+" "+provName(p),.9],[areaStr,1.1],["kota city wilayah daerah",.6]],{href:"event?kota="+encodeURIComponent(c),icon:"pin",kind:"city",city:c,prov:p}))})})}
 
 function dedupe(rows){function nk(t){return String(t||"").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,10)}
   var m={},out=[];rows.forEach(function(r){var k=[r.city_id||r.city,r.event_date,nk(r.title)].join("|"),i=m[k];

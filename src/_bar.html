@@ -1,6 +1,21 @@
 <header class="topbar" id="top" data-skip="{{skip}}" data-top="{{totop}}">
 <div class="tb-main">
-<div class="tb-l"><button class="ico-btn js-mm mm-ico" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="mm" aria-label="{{nv_all}}"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button><a class="logo" href="./" aria-label="GWM"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="mk-bg" width="32" height="32" rx="7.5"/><path class="mk-pin" d="M16 28.5C16 28.5 5.5 20 5.5 12.5a10.5 10.5 0 0 1 21 0C26.5 20 16 28.5 16 28.5Z"/><circle cx="12.25" cy="11" r="3.1" fill="#E4501A"/><circle cx="19.75" cy="11" r="3.1" fill="#F5B416"/><path d="M7.9 18.75a4.35 4.35 0 0 1 8.7 0Z" fill="#E4501A"/><path d="M15.4 18.75a4.35 4.35 0 0 1 8.7 0Z" fill="#F5B416"/></svg><span class="w">GWM</span></a></div>{{search}}
+  <div class="tb-l">
+    <button class="ico-btn js-mm mm-ico" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="mm" aria-label="{{nv_all}}"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
+    <a class="logo" href="./" aria-label="GWM"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="mk-bg" width="32" height="32" rx="7.5"/><path class="mk-pin" d="M16 28.5C16 28.5 5.5 20 5.5 12.5a10.5 10.5 0 0 1 21 0C26.5 20 16 28.5 16 28.5Z"/><circle cx="12.25" cy="11" r="3.1" fill="#E4501A"/><circle cx="19.75" cy="11" r="3.1" fill="#F5B416"/><path d="M7.9 18.75a4.35 4.35 0 0 1 8.7 0Z" fill="#E4501A"/><path d="M15.4 18.75a4.35 4.35 0 0 1 8.7 0Z" fill="#F5B416"/></svg><span class="w">GWM</span></a>
+  </div>
+  <nav class="tb-nav" aria-label="{{nav_primary}}">
+    <a href="event">{{pnav_events}}</a>
+    <a href="gunung">{{pnav_hike}}</a>
+    <a href="komunitas">{{pnav_comm}}</a>
+    <a href="../blog/">{{pnav_blog}}</a>
+    <a href="./#deals" class="js-tab-link" data-ptab="deals">{{pnav_deals}}</a>
+  </nav>
+  <div class="tb-c">{{search}}</div>
+  <div class="tb-r">
+    <button class="tb-loc" id="tbLocBtn" type="button" aria-haspopup="dialog" aria-label="{{loc_title}}"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span id="tbLocLbl">{{loc_all_id}}</span></button>
+    <a class="btn pri sm tb-cta" href="ajukan"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg><span>{{pnav_submit}}</span></a>
+  </div>
 </div>
 </header>
 {{>menu}}

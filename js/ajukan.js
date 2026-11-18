@@ -10,8 +10,7 @@ var v=function(k){return $("a_"+k).value.trim()};
 function tdy(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta"}).format(new Date())}
 function dirUrl(c,slug){return location.origin+location.pathname.replace(/[^\/]*$/,"")+(c==="naikgunung"?"gunung":"event")+"?e="+encodeURIComponent(slug)}
 function fdate(s){try{return new Date(s+"T00:00:00").toLocaleDateString(tr("locale"),{day:"numeric",month:"short",year:"numeric"})}catch(e){return s}}
-/* toast kini dari supa.js (window.toast); fallback lokal hanya jika belum termuat */
-function toast(m){if(window.toast)return window.toast(m);var t=$("toast");if(t){t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2600)}}
+function toast(m){var t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2600)}
 function pv(u){var p=$("pv");p.style.backgroundImage=u?"url('"+u.replace(/'/g,"%27")+"')":"";p.textContent=u?"":tr("sj_drop")}
 
 function setKind(k){kind=k;
@@ -27,7 +26,23 @@ function fillSelects(){
   $("a_dif").innerHTML='<option value="">'+tr("sj_pick")+'</option>'+["pemula","menengah","sulit"].map(function(d){return'<option value="'+d+'">'+esc(tr("dif_"+d))+'</option>'}).join("");
   loadCities($("a_city"),true);
   $("a_start").min=tdy();$("a_end").min=tdy();
-  if(window.IB_MountainBind)IB_MountainBind($("a_mountain"),$("a_alt"))}
+  if(window.IB_MountainBind)IB_MountainBind($("a_mountain"),$("a_alt"));
+  if($("a_promo")&&window.IB_MonetizeCore){
+    var tierOrder=["free","city_spotlight","national_portal"].filter(function(id){return!!IB_MonetizeCore.PROMO_TIERS[id]});
+    var tierLbl={free:tr("promo_tier_free"),city_spotlight:tr("promo_tier_city"),national_portal:tr("promo_tier_nat")};
+    $("a_promo").innerHTML=tierOrder.map(function(id){
+      var t=IB_MonetizeCore.PROMO_TIERS[id];
+      var p=t.pricePerWeekIdr?(" · Rp"+t.pricePerWeekIdr.toLocaleString(tr("numloc"))+"/mg"):(window.IB_LANG==="en"?" · Free":" · Gratis");
+      return'<option value="'+id+'">'+esc(tierLbl[id]||id)+p+'</option>';
+    }).join("");
+    function updEst(){
+      var selCity=$("a_city")&&$("a_city").selectedOptions&&$("a_city").selectedOptions[0]?$("a_city").selectedOptions[0].textContent:"Bandung";
+      var est=IB_MonetizeCore.estimatePromoCampaign({tierId:$("a_promo").value,weeks:1,city:selCity});
+      $("aPromoEst").textContent=tr("sb_promo_est",{imp:est.estImpressions.toLocaleString(tr("numloc")),clk:est.estClicks.toLocaleString(tr("numloc"))});
+    }
+    $("a_promo").onchange=updEst;$("a_city").onchange=updEst;updEst();
+  }
+}
 
 /* ---- poster ---- */
 function shrink(f){return new Promise(function(res){if(f.size<250*1024)return res(f);var i=new Image();i.onload=function(){var s=Math.min(1,1280/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);c.toBlob(function(b){res(b&&b.size<f.size?new File([b],f.name.replace(/\.\w+$/,"")+".jpg",{type:"image/jpeg"}):f)},"image/jpeg",.85)};i.onerror=function(){res(f)};i.src=URL.createObjectURL(f)})}
@@ -35,7 +50,7 @@ function up(f){if(!f)return;if(!/^image\/(jpeg|png|webp)$/.test(f.type))return m
   msg(tr("sj_uploading"));
   shrink(f).then(function(g){if(g.size>2*1024*1024)return msg(tr("sj_poster_big"),"err");
     var path=me.user.id+"/"+Date.now()+"-"+g.name.replace(/[^a-zA-Z0-9.]+/g,"-");
-    sb.storage.from("posters").upload(path,g,{contentType:g.type,cacheControl:"31536000"}).then(function(r){if(r.error)return msg(friendlyErr(r.error),"err");
+    sb.storage.from("posters").upload(path,g,{contentType:g.type,cacheControl:"31536000"}).then(function(r){if(r.error)return msg(r.error.message,"err");
       posterUrl=sb.storage.from("posters").getPublicUrl(path).data.publicUrl;pv(posterUrl);msg(tr("sj_uploaded"),"ok")})})}
 $("a_file").onchange=function(){up(this.files[0])};
 var dz=$("pv");["dragenter","dragover"].forEach(function(n){dz.addEventListener(n,function(e){e.preventDefault();dz.classList.add("over")})});
@@ -51,11 +66,16 @@ $("fSub").onsubmit=function(ev){ev.preventDefault();if(busy)return;
   if(v("end")&&v("end")<v("start"))return msg(tr("sj_end_before"),"err");
   var p={category:kind,title:v("title"),city_id:v("city"),price_label:v("price"),event_date:v("start"),end_date:v("end"),venue:v("venue"),description:v("desc"),
     ticket_url:v("ticket"),source_ig:v("ig"),poster_url:posterUrl};
+  if($("a_promo")&&$("a_promo").value&&$("a_promo").value!=="free"){
+    var selCity=$("a_city")&&$("a_city").selectedOptions&&$("a_city").selectedOptions[0]?$("a_city").selectedOptions[0].textContent:"IDN";
+    var code=window.IB_MonetizeCore?IB_MonetizeCore.buildPromoOrderCode(selCity,$("a_promo").value):"GWM-PROMO";
+    p.description=(p.description?p.description+"\n\n":"")+"[PROMO TIER: "+$("a_promo").value+" · REF "+code+"]";
+  }
   if(kind==="konser"){p.genre=v("genre");p.lineup=v("lineup")}
   if(kind==="naikgunung"){p.mountain=v("mountain");p.altitude_mdpl=v("alt");p.difficulty=v("dif");p.duration=v("dur");p.quota=v("quota");p.organizer=v("org");p.contact_wa=v("wa")}
   busy=true;$("a_send").disabled=true;msg(tr("sj_sending"));
   sb.rpc("submit_event",{p:p}).then(function(r){busy=false;$("a_send").disabled=false;
-    if(r.error)return msg(friendlyErr(r.error),"err");
+    if(r.error)return msg(r.error.message,"err");
     $("fSub").reset();posterUrl="";pv("");$("ccDesc").textContent="0";setKind("konser");
     msg(tr("sj_submit_ok"),"ok");scrollTo({top:0,behavior:"smooth"});loadMine()})};
 
@@ -74,7 +94,7 @@ function loadMine(){return sb.from("event_submissions").select("reject_reason,cr
   mine=r.data||[];$("mine").innerHTML=mine.length?mine.map(itemHtml).join(""):'<div class="empty">'+esc(tr("sj_none"))+'</div>'})}
 $("mine").onclick=function(ev){var b=ev.target.closest("[data-a]");if(!b)return;var id=b.dataset.id,s=mine.filter(function(x){return x.events&&x.events.id===id})[0];if(!s)return;
   if(b.dataset.a==="share"&&window.IB_Share){var e=s.events;return IB_Share.open({title:e.title,text:tr("share_text2",{t:e.title}),url:dirUrl(e.category,e.slug)})}
-  if(b.dataset.a==="del"){if(!confirm(tr("sj_sure")))return;return sb.rpc("withdraw_event",{p_id:id}).then(function(r){if(r.error)return msg(friendlyErr(r.error),"err");toast(tr("sj_withdrawn"));loadMine()})}
+  if(b.dataset.a==="del"){if(!confirm(tr("sj_sure")))return;return sb.rpc("withdraw_event",{p_id:id}).then(function(r){if(r.error)return msg(r.error.message,"err");toast(tr("sj_withdrawn"));loadMine()})}
   if(b.dataset.a==="reuse")sb.from("events").select("*").eq("id",id).single().then(function(r){var e=r.data;if(!e)return;
     setKind(e.category);var m={title:"title",city_id:"city",price_label:"price",event_date:"start",end_date:"end",venue:"venue",genre:"genre",lineup:"lineup",mountain:"mountain",altitude_mdpl:"alt",difficulty:"dif",duration:"dur",quota:"quota",organizer:"org",description:"desc",ticket_url:"ticket"};
     Object.keys(m).forEach(function(k){$("a_"+m[k]).value=e[k]==null?"":e[k]});
