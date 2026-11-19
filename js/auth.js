@@ -121,45 +121,61 @@ $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
   if(p.length<8)return msg(tr("a_pass8"),"err");
   sb.auth.updateUser({password:p}).then(function(r){if(r.error)return msg(friendlyErr(r.error),"err");
     recovering=false;$("rec").hidden=true;$("nPass").value="";msg(tr("a_passok"),"ok");show()})};
-/* ---- Login nomor HP: kode OTP lewat WhatsApp (Fonnte) ---- */
+/* ---- Masuk / daftar dengan nomor HP: kode OTP lewat WhatsApp ---- */
 (function(){
-  var EN=window.IB_LANG==="en",C=window.IB_CONFIG||{},KEY=C.SUPABASE_ANON_KEY,FN=C.SUPABASE_URL+"/functions/v1/";
-  var T=EN?{open:"Sign in with phone number (WhatsApp)",ph:"WhatsApp number, e.g. 0812xxxxxxx",send:"Send code",code:"6-digit code",ok:"Verify & sign in",back:"Back",resend:"Resend code",sent:"Code sent to your WhatsApp.",wait:"Wait a minute before requesting another code.",bad:"Invalid phone number.",fail:"Could not send the code. Try again.",wrong:"Wrong or expired code.",many:"Too many attempts. Request a new code.",lbl:"Phone number",lbc:"Code"}
-  :{open:"Masuk dengan nomor HP (WhatsApp)",ph:"Nomor WhatsApp, contoh 0812xxxxxxx",send:"Kirim kode",code:"Kode 6 digit",ok:"Verifikasi & masuk",back:"Kembali",resend:"Kirim ulang kode",sent:"Kode dikirim ke WhatsApp kamu.",wait:"Tunggu 1 menit sebelum minta kode lagi.",bad:"Nomor tidak valid.",fail:"Gagal mengirim kode. Coba lagi.",wrong:"Kode salah atau kedaluwarsa.",many:"Terlalu banyak percobaan. Minta kode baru.",lbl:"Nomor HP",lbc:"Kode"};
-  var seg0=$("sLogin")&&$("sLogin").parentNode;if(!seg0||!KEY)return;
+  var EN=window.IB_LANG==="en",C=window.IB_CONFIG||{},KEY=C.SUPABASE_ANON_KEY,FN=(C.SUPABASE_URL||"")+"/functions/v1/";
+  var hd=document.querySelector("#guest .auth-hd");if(!hd||!KEY)return;
+  var T=EN?{title:"Sign in or sign up with your phone number",lbl:"WhatsApp number",send:"Send code via WhatsApp",auto:"New here? Your account is created automatically after verification.",to:"We sent a 6-digit code to WhatsApp",lbc:"Verification code",cph:"······",nick:"Nickname (for new accounts)",nph:"Optional",ok:"Verify & continue",resend:"Resend code",chg:"Change number",or:"or",sent:"Code sent to your WhatsApp.",wait:"Wait a minute before requesting another code.",bad:"Enter a valid mobile number, e.g. 812 3456 7890.",fail:"Could not send the code. Try again.",wrong:"Wrong or expired code.",many:"Too many attempts. Request a new code.",lfail:"Could not sign you in. Try again."}
+  :{title:"Masuk atau daftar dengan nomor HP",lbl:"Nomor WhatsApp",send:"Kirim kode via WhatsApp",auto:"Belum punya akun? Akun dibuat otomatis setelah verifikasi.",to:"Kode 6 digit dikirim ke WhatsApp",lbc:"Kode verifikasi",cph:"······",nick:"Nama panggilan (untuk akun baru)",nph:"Boleh dikosongkan",ok:"Verifikasi & lanjut",resend:"Kirim ulang kode",chg:"Ganti nomor",or:"atau",sent:"Kode dikirim ke WhatsApp kamu.",wait:"Tunggu 1 menit sebelum minta kode lagi.",bad:"Masukkan nomor HP yang valid, contoh 812 3456 7890.",fail:"Gagal mengirim kode. Coba lagi.",wrong:"Kode salah atau kedaluwarsa.",many:"Terlalu banyak percobaan. Minta kode baru.",lfail:"Gagal masuk. Coba lagi."};
+  var st=document.createElement("style");
+  st.textContent=".ph-card{margin:16px 0 6px}.ph-t{font-weight:700;margin:0 0 10px}.ph-row{display:flex;gap:8px;align-items:stretch}.ph-pre{display:flex;align-items:center;padding:0 14px;border-radius:12px;background:rgba(127,127,127,.14);font-weight:700;white-space:nowrap}.ph-row input{flex:1;min-width:0}#phCode{font-size:1.5em;letter-spacing:.4em;text-align:center}.ph-note{margin:8px 0 0}.ph-links{display:flex;justify-content:space-between;gap:12px;margin-top:10px}";
+  document.head.appendChild(st);
   var box=document.createElement("div");
-  box.innerHTML='<button class="btn ghost block" id="phOpen" type="button">'+T.open+'</button>'+
-   '<form id="fPhone" hidden>'+
-   '<label class="f">'+T.lbl+'<input id="phNum" type="tel" inputmode="tel" autocomplete="tel" placeholder="'+T.ph+'" required></label>'+
-   '<button class="btn pri block" id="phSend" type="submit">'+T.send+'</button>'+
-   '<div id="phStep2" hidden>'+
-   '<label class="f">'+T.lbc+'<input id="phCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="'+T.code+'"></label>'+
-   '<button class="btn pri block" id="phOk" type="button">'+T.ok+'</button></div>'+
-   '<p class="auth-links"><button class="lnk" id="phBack" type="button">'+T.back+'</button></p></form>';
-  seg0.parentNode.insertBefore(box,seg0);
-  var f=$("fPhone"),timer=null;
+  box.innerHTML='<div class="ph-card"><p class="ph-t">'+T.title+'</p>'+
+   '<form id="fPhone" novalidate>'+
+   '<div id="phS1"><label class="f">'+T.lbl+'<div class="ph-row"><span class="ph-pre">+62</span><input id="phNum" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="812 3456 7890"></div></label>'+
+   '<button class="btn pri block" id="phSend" type="submit">'+T.send+'</button><p class="meta ph-note">'+T.auto+'</p></div>'+
+   '<div id="phS2" hidden><p class="meta" id="phTo"></p>'+
+   '<label class="f">'+T.lbc+'<input id="phCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="'+T.cph+'"></label>'+
+   '<label class="f">'+T.nick+'<input id="phNick" type="text" maxlength="30" autocomplete="nickname" placeholder="'+T.nph+'"></label>'+
+   '<button class="btn pri block" id="phOk" type="button">'+T.ok+'</button>'+
+   '<div class="ph-links"><button class="lnk" id="phRe" type="button" disabled>'+T.resend+'</button><button class="lnk" id="phChg" type="button">'+T.chg+'</button></div></div>'+
+   '</form><p class="meta auth-agree ph-note" id="phAg"></p></div>'+
+   '<div class="auth-sep"><span>'+T.or+'</span></div>';
+  hd.parentNode.insertBefore(box,hd.nextSibling);
+  var ag=document.querySelector("#guest p.auth-agree:not(#phAg)");if(ag)$("phAg").innerHTML=ag.innerHTML;else $("phAg").hidden=true;
+  var timer=null;
+  function num(){var d=$("phNum").value.replace(/\D/g,"");if(d.indexOf("62")===0)d=d.slice(2);if(d.charAt(0)==="0")d=d.slice(1);return d}
+  function full(){return"62"+num()}
   function call(name,body){return fetch(FN+name,{method:"POST",headers:{"Content-Type":"application/json",apikey:KEY,Authorization:"Bearer "+KEY},body:JSON.stringify(body)})
     .then(function(r){return r.json().catch(function(){return{}}).then(function(j){j._s=r.status;return j})})}
-  function panel(on){f.hidden=!on;$("phOpen").hidden=on;seg0.hidden=on;if(on){$("fLogin").hidden=true;$("fReg").hidden=true}else seg(mode);msg("")}
-  $("phOpen").onclick=function(){panel(true)};
-  $("phBack").onclick=function(){panel(false)};
-  function cooldown(){var b=$("phSend"),n=60;b.disabled=true;clearInterval(timer);
+  function cd(){var b=$("phRe"),n=60;b.disabled=true;clearInterval(timer);b.textContent=T.resend+" ("+n+")";
     timer=setInterval(function(){n--;if(n<=0){clearInterval(timer);b.disabled=false;b.textContent=T.resend}else b.textContent=T.resend+" ("+n+")"},1000)}
-  f.onsubmit=function(e){e.preventDefault();msg(tr("processing"));$("phSend").disabled=true;
-    call("send-otp",{phone:$("phNum").value}).then(function(j){
-      if(j.ok){$("phStep2").hidden=false;$("phCode").focus();msg(T.sent,"ok");return cooldown()}
-      $("phSend").disabled=false;
-      msg(j._s===429?T.wait:j._s===400?T.bad:T.fail,"err")
-    }).catch(function(){$("phSend").disabled=false;msg(T.fail,"err")})};
-  $("phOk").onclick=function(){var code=$("phCode").value.replace(/\D/g,"");if(code.length!==6)return msg(T.wrong,"err");
-    var b=this;b.disabled=true;msg(tr("processing"));holding=true;setAfter();
-    call("verify-otp",{phone:$("phNum").value,code:code}).then(function(j){
-      if(!j.token_hash){holding=false;takeAfter();b.disabled=false;return msg(j._s===429?T.many:T.wrong,"err")}
+  function sendCode(btn){
+    if(!/^8\d{8,12}$/.test(num()))return msg(T.bad,"err");
+    msg(tr("processing"));btn.disabled=true;
+    call("send-otp",{phone:full()}).then(function(j){
+      if(j.ok){$("phS1").hidden=true;$("phS2").hidden=false;$("phTo").textContent=T.to+" +62 "+num();$("phCode").value="";$("phCode").focus();msg(T.sent,"ok");btn.id==="phRe"?0:btn.disabled=false;return cd()}
+      if(j._s===429&&!$("phS2").hidden)return cd();
+      btn.disabled=false;msg(j._s===429?T.wait:j._s===400?T.bad:T.fail,"err")
+    }).catch(function(){btn.disabled=false;msg(T.fail,"err")})}
+  function verify(){
+    var code=$("phCode").value.replace(/\D/g,""),nick=$("phNick").value.trim();
+    if(code.length!==6)return msg(T.wrong,"err");
+    if(nick&&WF){var ck=WF.enforce(nick,{userId:"signup",userLabel:nick,context:"signup_nickname",lang:window.IB_LANG});if(!ck.ok)return msg(ck.message,"err")}
+    var b=$("phOk");b.disabled=true;msg(tr("processing"));holding=true;setAfter();
+    function stop(m){holding=false;takeAfter();b.disabled=false;msg(m,"err")}
+    call("verify-otp",{phone:full(),code:code,nickname:nick}).then(function(j){
+      if(!j.token_hash)return stop(j._s===429?T.many:j._s===400?T.wrong:T.lfail);
       return sb.auth.verifyOtp({token_hash:j.token_hash,type:"magiclink"}).then(function(r){
-        if(r.error){holding=false;takeAfter();b.disabled=false;return msg(T.fail,"err")}
+        if(r.error)return stop(T.lfail);
         msg(tr("a_redirect"),"ok");
         logLocation(function(){holding=false;if(!goAfter())show()})})
-    }).catch(function(){holding=false;takeAfter();b.disabled=false;msg(T.fail,"err")})};
+    }).catch(function(){stop(T.lfail)})}
+  $("fPhone").onsubmit=function(e){e.preventDefault();if($("phS2").hidden)sendCode($("phSend"));else verify()};
+  $("phOk").onclick=verify;
+  $("phRe").onclick=function(){sendCode(this)};
+  $("phChg").onclick=function(){clearInterval(timer);$("phS2").hidden=true;$("phS1").hidden=false;$("phSend").disabled=false;msg("");$("phNum").focus()};
 })();
 show();
 })();
