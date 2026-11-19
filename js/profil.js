@@ -183,11 +183,12 @@ function updateMainSections(){
   if(isAll||state.tab==="activity")out+='<section class="card pf-dash-card" id="pfSecActivity">'+renderActivitySection(ac,lim)+'</section>';
   body.innerHTML=out;
 
-  var kUp=$("pfKpiUp"),kSv=$("pfKpiSv");
+  var kUp=$("pfKpiUp"),kSv=$("pfKpiSv"),cUp=$("pfTcUp"),cSv=$("pfTcSv"),cAc=$("pfTcAc");
+  if(cUp)cUp.textContent=state.upcoming.length;if(cSv)cSv.textContent=state.savedEvents.length;if(cAc)cAc.textContent=state.activities.length;
   if(kUp)kUp.textContent=state.upcoming.length;
   if(kSv)kSv.textContent=state.savedEvents.length;
   [].forEach.call(document.querySelectorAll(".pf-tabs [data-tab]"),function(b){
-    b.classList.toggle("on",b.dataset.tab===state.tab);
+    b.classList.toggle("on",b.dataset.tab===state.tab);b.setAttribute("aria-selected",b.dataset.tab===state.tab?"true":"false");
   });
 }
 
@@ -211,6 +212,7 @@ function draw(){
     h+='<a class="btn pri sm pf-msg-btn" href="pesan?u='+encodeURIComponent(Q)+'"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg><span>'+esc(tr("ms_send"))+'</span></a>';
     h+='<a class="btn ghost sm" href="teman">'+esc(tr("nv_a_invite"))+'</a>';
   }
+  h+='<button class="btn ghost sm" data-x="share" data-pid="'+esc(d.id||"")+'" type="button">'+esc(tr("pf_share"))+'</button>';
   h+='<button class="btn ghost sm" data-x="copyid" data-uid="'+esc(uid)+'" type="button">'+esc(tr("pf_copy_uid"))+'</button>';
   h+='</div></div>';
 
@@ -256,10 +258,10 @@ function draw(){
 
     h+='<div class="pf-dash-bar">'
       +'<div class="pf-tabs" role="tablist" aria-label="Profile dashboard sections">'
-      +'<button type="button" class="pf-tab on" data-tab="all">'+esc(tr("pf_tab_all"))+'</button>'
-      +'<button type="button" class="pf-tab" data-tab="upcoming">'+esc(tr("pf_tab_upcoming"))+'</button>'
-      +(d.mine?'<button type="button" class="pf-tab" data-tab="saved">'+esc(tr("pf_tab_saved"))+'</button>':"")
-      +'<button type="button" class="pf-tab" data-tab="activity">'+esc(tr("pf_tab_activity"))+'</button>'
+      +'<button type="button" class="pf-tab on" role="tab" data-tab="all">'+esc(tr("pf_tab_all"))+'</button>'
+      +'<button type="button" class="pf-tab" role="tab" data-tab="upcoming">'+esc(tr("pf_tab_upcoming"))+' <span class="pf-tc" id="pfTcUp">0</span></button>'
+      +(d.mine?'<button type="button" class="pf-tab" role="tab" data-tab="saved">'+esc(tr("pf_tab_saved"))+' <span class="pf-tc" id="pfTcSv">0</span></button>':"")
+      +'<button type="button" class="pf-tab" role="tab" data-tab="activity">'+esc(tr("pf_tab_activity"))+' <span class="pf-tc" id="pfTcAc">0</span></button>'
       +'</div>'
       +'<input id="pfFilterQ" class="pf-search" type="search" value="'+esc(state.q)+'" placeholder="'+esc(tr("pf_search_ph"))+'" aria-label="'+esc(tr("pf_search_ph"))+'">'
       +'</div>';
@@ -294,6 +296,8 @@ function draw(){
     if(tabBtn){
       state.tab=tabBtn.dataset.tab;
       updateMainSections();
+      var bar=document.querySelector(".pf-dash-bar");
+      if(bar&&bar.getBoundingClientRect().top<0&&bar.scrollIntoView)bar.scrollIntoView({block:"start"});
       return;
     }
     var unsaveBtn=ev.target.closest("[data-unsave]");
@@ -319,6 +323,12 @@ function draw(){
       return;
     }
     var b=ev.target.closest("[data-x]");if(!b)return;
+    if(b.dataset.x==="share"){
+      var link=location.origin+location.pathname+"?u="+encodeURIComponent(b.dataset.pid||"");
+      if(navigator.share){navigator.share({title:nameOf(d),url:link}).catch(function(){});return}
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(link).then(function(){toast(tr("pf_share_ok"))},function(){toast(link)})}else{toast(link)}
+      return;
+    }
     if(b.dataset.x==="copyid"){
       var val=b.dataset.uid||"";
       if(navigator.clipboard&&navigator.clipboard.writeText){

@@ -70,30 +70,49 @@ function logLocation(done){
 $("bLoc").onclick=function(){logLocation()};
 var recovering=false;
 function show(){if(recovering||holding)return;getMe().then(function(m){
-  $("guest").hidden=!!m;$("me").hidden=!m;if(!m)return;
+  $("guest").hidden=!!m;$("me").hidden=!m;var mn=document.querySelector("main.auth-pg");if(mn)mn.classList.toggle("wide",!!m);if(!m)return;document.title=tr("ac_title");
   var p=m.profile,n=p.nickname||m.user.email.split("@")[0];
   $("av").textContent=p.avatar_url?"":n.charAt(0).toUpperCase();$("av").style.background=p.avatar_url?"center/cover url('"+p.avatar_url.replace(/'/g,"%27")+"')":"";$("nm").textContent=n;$("em").textContent=/@phone\.jurkon\.my\.id$/.test(m.user.email)?"+"+m.user.email.split("@")[0]:m.user.email;
   if($("meUid"))$("meUid").textContent=WF?WF.shortUid(m.user.id):("ID-"+String(m.user.id||"").slice(0,8).toUpperCase());
   $("bv").hidden=!p.verified;$("ba").hidden=p.role!=="admin";$("lAdmin").hidden=p.role!=="admin";
-  $("pNick").value=p.nickname||"";loadCities($("pCity"),true).then(function(){$("pCity").value=p.city_id||""});
+  if(dirty)return;
+  $("pNick").value=p.nickname||"";loadCities($("pCity"),true).then(function(){$("pCity").value=p.city_id||"";setDirty(false)});
   loadExtra(m.user.id);
 })}
 /* ---- profil diperluas: bio, minat, level, privasi, statistik ---- */
 var INT=["konser","festival","pameran","naikgunung","camping","pop","rock","indie","edm","jazz","hiphop","dangdut","kpop"],LV=["pemula","menengah","sulit"],sel=[];
-function drawInt(){$("pInt").innerHTML=INT.map(function(k){return'<button type="button" class="chip" data-k="'+k+'" aria-pressed="'+(sel.indexOf(k)>-1)+'">'+esc(tr("it_"+k))+'</button>'}).join("")}
+function drawInt(){$("pInt").innerHTML=INT.map(function(k){return'<button type="button" class="chip" data-k="'+k+'" aria-pressed="'+(sel.indexOf(k)>-1)+'">'+esc(tr("it_"+k))+'</button>'}).join("");$("pIntN").textContent=sel.length+"/8"}
 $("pInt").onclick=function(ev){var b=ev.target.closest("[data-k]");if(!b)return;var k=b.dataset.k,i=sel.indexOf(k);
-  if(i>-1)sel.splice(i,1);else{if(sel.length>=8)return msg(tr("pe_max"),"err");sel.push(k)}drawInt()};
-$("pBio").oninput=function(){$("pBioN").textContent=this.value.length};
+  if(i>-1)sel.splice(i,1);else{if(sel.length>=8)return msg(tr("pe_max"),"err");sel.push(k)}drawInt();setDirty(true)};
+$("pBio").oninput=function(){$("pBioN").textContent=this.value.length+"/200"};
 $("pLevel").innerHTML='<option value="">'+esc(tr("pe_nolevel"))+'</option>'+LV.map(function(k){return'<option value="'+k+'">'+esc(tr("lv_"+k))+'</option>'}).join("");
 function loadExtra(id){
   Promise.all([sb.rpc("profile_view",{p_id:id}),sb.from("profile_extra").select("log_visits").eq("user_id",id).maybeSingle()]).then(function(x){
-    var r=x[0];if(r.error||!r.data){$("fExtra").hidden=true;return}
-    $("fExtra").hidden=false;var d=r.data,st=d.stats||{};
+    var r=x[0];if(r.error||!r.data){setExtra(false);return}
+    setExtra(true);var d=r.data,st=d.stats||{};
     $("sPosts").textContent=st.posts||0;$("sJoined").textContent=st.joined||0;$("sHosted").textContent=st.hosted||0;
-    $("pBio").value=d.bio||"";$("pBioN").textContent=($("pBio").value||"").length;sel=(d.interests||[]).slice();drawInt();$("pLevel").value=d.level||"";
-    $("pPublic").checked=d.is_public!==false;$("pShowV").checked=d.show_visitors!==false;$("pLog").checked=!(x[1].data&&x[1].data.log_visits===false)})}
-$("fExtra").hidden=true;
-$("pCancel").href=safeNext("profil");
+    $("pBio").value=d.bio||"";$("pBioN").textContent=($("pBio").value||"").length+"/200";sel=(d.interests||[]).slice();drawInt();$("pLevel").value=d.level||"";
+    $("pPublic").checked=d.is_public!==false;$("pShowV").checked=d.show_visitors!==false;$("pLog").checked=!(x[1].data&&x[1].data.log_visits===false);setDirty(false)})}
+function setExtra(on){$("fExtra").hidden=!on;$("me").classList.toggle("has-extra",!!on)}
+setExtra(false);
+/* ---- ruang edit: penanda perubahan, navigasi bagian, salin ID ---- */
+var dirty=false;
+function setDirty(v){dirty=!!v;var st=$("pStat");if(!st)return;st.textContent=dirty?tr("ac_dirty"):tr("ac_after");st.classList.toggle("dirty",dirty)}
+$("fAll").addEventListener("input",function(){setDirty(true)});
+$("fAll").addEventListener("change",function(){setDirty(true)});
+$("pCancel").addEventListener("click",function(e){if(dirty&&!window.confirm(tr("ac_leave")))e.preventDefault()});
+window.addEventListener("beforeunload",function(e){if(dirty){e.preventDefault();e.returnValue=""}});
+var SECS=["s-basic","s-about","s-priv","s-acct"],navEl=$("acctNav");
+function markSec(id){[].forEach.call(navEl.querySelectorAll("[data-go]"),function(b){var on=b.dataset.go===id;b.classList.toggle("on",on);if(on){b.setAttribute("aria-current","true");if(navEl.scrollWidth>navEl.clientWidth+4&&navEl.scrollTo)navEl.scrollTo({left:Math.max(0,b.offsetLeft-16),behavior:"smooth"})}else b.removeAttribute("aria-current")})}
+navEl.onclick=function(ev){var b=ev.target.closest("[data-go]");if(!b)return;var el=$(b.dataset.go);if(!el)return;
+  var calm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;el.scrollIntoView({behavior:calm?"auto":"smooth",block:"start"});markSec(b.dataset.go)};
+var spyBusy=false;
+window.addEventListener("scroll",function(){if(spyBusy||$("me").hidden)return;spyBusy=true;requestAnimationFrame(function(){spyBusy=false;
+  var cur=SECS[0];SECS.forEach(function(id){var el=$(id);if(el&&el.offsetParent!==null&&el.getBoundingClientRect().top<=Math.max(170,window.innerHeight*.35))cur=id});
+  if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4)cur=SECS[SECS.length-1];markSec(cur)})},{passive:true});
+$("bCopy").onclick=function(){var v=$("meUid").textContent||"";function ok(){msg(tr("pf_uid_copied")+": "+v,"ok")}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(ok,function(){msg(v,"ok")});else msg(v,"ok")};
+$("pCancel").href=safeNext("profil");$("pBack").href=safeNext("profil");
 $("fAll").onsubmit=function(e){e.preventDefault();var btn=this.querySelector('[type="submit"]'),nick=$("pNick").value.trim(),bio=$("pBio").value.trim();
   if(!nick)return msg(tr("pe_nick_need"),"err");
   btn.disabled=true;msg(tr("processing"));
@@ -106,15 +125,17 @@ $("fAll").onsubmit=function(e){e.preventDefault();var btn=this.querySelector('[t
   }).then(function(r){
     if(r===null)return;
     if(r.error)throw r.error;
-    return $("fExtra").hidden?null:sb.rpc("profile_save",{p_bio:$("pBio").value,p_interests:sel,p_level:$("pLevel").value||null,p_public:$("pPublic").checked,p_show_visitors:$("pShowV").checked,p_log_visits:$("pLog").checked})
+    var more=function(){return $("fExtra").hidden?null:sb.rpc("profile_save",{p_bio:$("pBio").value,p_interests:sel,p_level:$("pLevel").value||null,p_public:$("pPublic").checked,p_show_visitors:$("pShowV").checked,p_log_visits:$("pLog").checked})};
+    /* samakan nama di header (diambil dari data sesi) dengan nama panggilan baru */
+    return sb.auth.updateUser({data:{nickname:nick}}).then(more,more)
   }).then(function(r){
     if(r===undefined)return;
     if(r&&r.error)throw r.error;
-    msg(tr("pe_saved_go"),"ok");var to=safeNext("profil");if(to==="profil")to="profil?saved=1";
+    setDirty(false);msg(tr("pe_saved_go"),"ok");var to=safeNext("profil");if(to==="profil")to="profil?saved=1";
     setTimeout(function(){location.href=to},700)
   }).catch(function(err){btn.disabled=false;msg(friendlyErr(err),"err")})};
 sb.auth.onAuthStateChange(function(ev){
-  if(ev==="PASSWORD_RECOVERY"){recovering=true;$("guest").hidden=true;$("me").hidden=true;$("rec").hidden=false;msg(tr("a_recover"),"ok");return}
+  if(ev==="PASSWORD_RECOVERY"){recovering=true;var mn0=document.querySelector("main.auth-pg");if(mn0)mn0.classList.remove("wide");$("guest").hidden=true;$("me").hidden=true;$("rec").hidden=false;msg(tr("a_recover"),"ok");return}
   if(ev==="SIGNED_IN"&&!holding&&goAfter())return;
   show()});
 $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;

@@ -50,46 +50,87 @@
   </form>
 </div>
 
-<div class="card auth-card" id="me" hidden>
-  <div class="ph">
-    <div class="av" id="av">?</div>
-    <div class="ph-meta">
-      <div class="ph-row">
-        <h3 id="nm">{{lg_name}}</h3>
-        <span class="badge ok" id="bv" hidden>{{lg_verified}}</span>
-        <span class="badge adm" id="ba" hidden>Admin</span>
-      </div>
-      <div class="meta" id="em"></div>
-      <div class="uid-row"><code class="uid-tag mono" id="meUid">ID-GUEST</code></div>
+<div class="acct" id="me" hidden>
+  <div class="acct-top">
+    <a class="acct-back" id="pBack" href="profil">{{ac_back}}</a>
+    <h1 class="acct-h">{{acct_h}}</h1>
+    <p class="acct-sub">{{acct_sub}}</p>
+  </div>
+  <div class="acct-grid">
+    <aside class="acct-side">
+      <section class="card acct-id">
+        <div class="ph">
+          <div class="av" id="av">?</div>
+          <div class="ph-meta">
+            <div class="ph-row">
+              <h3 id="nm">{{lg_name}}</h3>
+              <span class="badge ok" id="bv" hidden>{{lg_verified}}</span>
+              <span class="badge adm" id="ba" hidden>Admin</span>
+            </div>
+            <div class="meta acct-mail" id="em"></div>
+            <div class="uid-row"><code class="uid-tag mono" id="meUid">ID-GUEST</code> <button class="lnk acct-copy" id="bCopy" type="button">{{pf_copy_uid}}</button></div>
+          </div>
+        </div>
+        <div class="st"><div><b id="sPosts">0</b>{{lg_st1}}</div><div><b id="sJoined">0</b>{{lg_st2}}</div><div><b id="sHosted">0</b>{{lg_st3}}</div></div>
+      </section>
+      <nav class="card acct-nav" id="acctNav" aria-label="{{acct_h}}">
+        <button type="button" class="on" data-go="s-basic"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg><span>{{ac_s_basic}}</span></button>
+        <button type="button" data-go="s-about" data-extra><svg class="i" aria-hidden="true"><use href="#i-users"/></svg><span>{{ac_s_about}}</span></button>
+        <button type="button" data-go="s-priv" data-extra><svg class="i" aria-hidden="true"><use href="#i-eye"/></svg><span>{{ac_s_priv}}</span></button>
+        <button type="button" data-go="s-acct"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg><span>{{ac_s_acct}}</span></button>
+      </nav>
+      <nav class="card acct-links" aria-label="{{ac_links}}">
+        <h4>{{ac_links}}</h4>
+        <a href="profil">{{ac_view}}</a>
+        <a href="pesan">{{pf_inbox}}</a>
+        <a href="ajukan">{{lg_submit}}</a>
+        <a href="bantuan">{{hp_h}}</a>
+        <a id="lAdmin" href="../admin" hidden>{{lg_admin}}</a>
+        <button class="acct-out" id="bOut" type="button">{{lg_out}}</button>
+      </nav>
+    </aside>
+    <div class="acct-main">
+      <form id="fAll" novalidate>
+        <section class="card acct-sec" id="s-basic">
+          <header class="acct-sh"><h2>{{ac_s_basic}}</h2><p>{{ac_basic_sub}}</p></header>
+          <div class="g2">
+            <label class="f">{{lg_nick}}<input id="pNick" type="text" maxlength="30" autocomplete="nickname" placeholder="{{lg_nick_ph2}}"></label>
+            <label class="f">{{lg_home_city}}<select id="pCity"></select></label>
+          </div>
+        </section>
+        <div id="fExtra" class="acct-extra" hidden>
+          <section class="card acct-sec" id="s-about">
+            <header class="acct-sh"><h2>{{ac_s_about}}</h2><p>{{ac_about_sub}}</p></header>
+            <label class="f"><span class="f-hd">{{pe_bio}} <i class="cc" id="pBioN">0/200</i></span><textarea id="pBio" rows="4" maxlength="200" placeholder="{{pe_bio_ph}}"></textarea></label>
+            <div class="f"><span class="f-hd">{{pe_int}} <i class="cc" id="pIntN">0/8</i></span><div class="chips" id="pInt"></div></div>
+            <label class="f">{{pe_level}}<select id="pLevel"></select></label>
+          </section>
+          <section class="card acct-sec" id="s-priv">
+            <header class="acct-sh"><h2>{{pe_priv_h}}</h2><p>{{ac_priv_sub}}</p></header>
+            <label class="sw"><span>{{pe_public}}</span><input id="pPublic" type="checkbox"></label>
+            <label class="sw"><span>{{pe_showv}}</span><input id="pShowV" type="checkbox"></label>
+            <label class="sw"><span>{{pe_log}}</span><input id="pLog" type="checkbox"></label>
+            <p class="meta">{{pe_note}}</p>
+          </section>
+        </div>
+        <div class="acct-bar">
+          <span class="acct-stat" id="pStat" role="status" aria-live="polite">{{ac_after}}</span>
+          <a class="btn ghost" id="pCancel" href="profil">{{pe_cancel}}</a>
+          <button class="btn pri" type="submit">{{lg_save}}</button>
+        </div>
+      </form>
+      <section class="card acct-sec" id="s-acct">
+        <header class="acct-sh"><h2>{{ac_s_acct}}</h2><p>{{ac_acct_sub}}</p></header>
+        <form id="fMail">
+          <h3 class="kh">{{ce_h}}</h3>
+          <label class="f">{{ce_new}}<input id="nEmail" type="email" autocomplete="email" placeholder="nama@email.com" required></label>
+          <button class="btn ghost" type="submit">{{ce_btn}}</button>
+          <p class="meta">{{ce_note}}</p>
+        </form>
+        <div class="acct-loc"><b>{{lg_loc_h}}</b><span class="meta" id="locSt">{{lg_loc_p}}</span><button class="btn ghost sm" id="bLoc" type="button">{{lg_loc_btn}}</button></div>
+      </section>
     </div>
   </div>
-  <div class="st"><div><b id="sPosts">0</b>{{lg_st1}}</div><div><b id="sJoined">0</b>{{lg_st2}}</div><div><b id="sHosted">0</b>{{lg_st3}}</div></div>
-  <form id="fAll">
-    <h3 class="kh">{{pe_edit_h}}</h3>
-    <label class="f">{{lg_nick}}<input id="pNick" type="text" maxlength="30" placeholder="{{lg_nick_ph2}}"></label>
-    <label class="f">{{lg_home_city}}<select id="pCity"></select></label>
-    <div id="fExtra" hidden>
-      <h3 class="kh">{{pe_h}}</h3>
-      <label class="f">{{pe_bio}} <i class="cc" id="pBioN">0</i><textarea id="pBio" rows="3" maxlength="200" placeholder="{{pe_bio_ph}}"></textarea></label>
-      <div class="f"><span>{{pe_int}}</span><div class="chips" id="pInt"></div></div>
-      <label class="f">{{pe_level}}<select id="pLevel"></select></label>
-      <h3 class="kh">{{pe_priv_h}}</h3>
-      <label class="chk"><input id="pPublic" type="checkbox"> <span>{{pe_public}}</span></label>
-      <label class="chk"><input id="pShowV" type="checkbox"> <span>{{pe_showv}}</span></label>
-      <label class="chk"><input id="pLog" type="checkbox"> <span>{{pe_log}}</span></label>
-      <p class="meta">{{pe_note}}</p>
-    </div>
-    <div class="row"><button class="btn pri" type="submit">{{lg_save}}</button><a class="btn ghost" id="pCancel" href="profil">{{pe_cancel}}</a></div>
-    <p class="meta" style="margin-top:8px">{{pe_after}}</p>
-  </form>
-  <form id="fMail" style="margin-top:18px">
-    <h3 class="kh">{{ce_h}}</h3>
-    <label class="f">{{ce_new}}<input id="nEmail" type="email" autocomplete="email" placeholder="nama@email.com" required></label>
-    <button class="btn ghost" type="submit">{{ce_btn}}</button>
-    <p class="meta" style="margin-top:8px">{{ce_note}}</p>
-  </form>
-  <div class="msg" style="margin-top:14px"><b>{{lg_loc_h}}</b><br><span id="locSt">{{lg_loc_p}}</span><br><button class="btn ghost sm" id="bLoc" type="button" style="margin-top:6px">{{lg_loc_btn}}</button></div>
-  <div class="row" style="margin-top:12px"><a class="btn" href="profil">{{nav_profile}}</a><a class="btn ghost" href="ajukan">{{lg_submit}}</a><a class="btn ghost" href="bantuan">{{hp_h}}</a><a class="btn ghost" id="lAdmin" href="../admin" hidden>{{lg_admin}}</a><button class="btn ghost" id="bOut" type="button">{{lg_out}}</button></div>
 </div>
 <div class="card auth-card" id="rec" hidden>
   <h3>{{lg_rec_h}}</h3><p>{{lg_rec_p}}</p>
