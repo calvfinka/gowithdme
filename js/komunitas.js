@@ -1,6 +1,11 @@
 /* Komunitas per kota: papan kiriman, tautan grup, daftar tunggu. Tulis lewat RPC di supabase/schema_forum.sql */
 (function(){
-var tr=window.IB_T||function(k){return k};
+var tr0=window.IB_T||function(k){return k};
+/* cadangan teks baru: bila i18n.js lama masih tersimpan di cache peramban, halaman tetap menampilkan teks yang benar, bukan nama kuncinya */
+var KX={id:{kx_stat_c:"{n} kota buka",kx_stat_p:"{n} kiriman",kx_stat_g:"{n} grup",kx_stat_p_1:"{n} kiriman",kx_stat_g_1:"{n} grup",kx_yours:"Kotamu",kx_resume:"Lanjut ke {c}",kx_events:"Lihat event di {c}",kx_events_d:"Konser, festival, dan pendakian yang bisa kamu datangi.",kx_none_f:"Tidak ada kiriman yang cocok.",kx_empty_cta:"Tulis kiriman pertama",kx_nofind:"Kota itu belum buka. Pilih dari daftar di bawah untuk dikabari."},
+ en:{kx_stat_c:"{n} cities open",kx_stat_p:"{n} posts",kx_stat_g:"{n} groups",kx_stat_p_1:"{n} post",kx_stat_g_1:"{n} group",kx_yours:"Your city",kx_resume:"Continue to {c}",kx_events:"See events in {c}",kx_events_d:"Concerts, festivals, and hikes you can go to.",kx_none_f:"No matching posts.",kx_empty_cta:"Write the first post",kx_nofind:"That city isn't open yet. Pick it in the list below to get notified."}};
+function tr(k,o){var r=tr0(k,o);if(r!==k)return r;var d=KX[(document.documentElement.lang||"id").slice(0,2)==="en"?"en":"id"][k];
+  if(d==null)return r;return d.replace(/\{(\w+)\}/g,function(m,x){return o&&o[x]!=null?o[x]:""})}
 if(!window.sb){msg(tr("k_off"),"err");return}
 var KINDS=["teman","tanya","tips"],st={city:null,kind:"semua",me:null,posts:[],cities:[],q:""};
 var QS=new URLSearchParams(location.search),CITY=QS.get("kota"),POST=QS.get("p"),EVT=QS.get("event");
