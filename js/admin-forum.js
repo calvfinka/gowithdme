@@ -160,7 +160,7 @@ function show(){
   if(tab==="ban")return showBans();
   var box=$("fmList");box.innerHTML='<div class="meta">Memuat…</div>';
   fetchItems().then(function(L){return loadAuthors(L).then(function(){return L})}).then(function(L){
-    var none={rep:"Tidak ada laporan yang menunggu. 🎉",new:"Belum ada kiriman atau balasan.",off:"Tidak ada yang disembunyikan atau dihapus."}[tab];
+    var none={rep:"Tidak ada laporan yang menunggu.",new:"Belum ada kiriman atau balasan.",off:"Tidak ada yang disembunyikan atau dihapus."}[tab];
     box.innerHTML=L.length?L.map(card).join(""):'<div class="empty">'+none+'</div>'})}
 function refresh(){return loadReports().then(function(ok){if(ok)show()})}
 

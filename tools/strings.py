@@ -255,9 +255,9 @@ S.update({
                "Submissions are for registered accounts only, so organizers can be reached and abuse can be prevented."),
 "sb_login_btn": ("Ke halaman masuk", "Go to log in"),
 "sb_kind_aria": ("Jenis pengajuan", "Submission type"),
-"sb_k_konser": ("🎤 Konser / festival", "🎤 Concert / festival"),
-"sb_k_pameran": ("🛍 Pameran", "🛍 Expo"),
-"sb_k_trip": ("⛰️ Open trip gunung", "⛰️ Mountain open trip"),
+"sb_k_konser": ("Konser / festival", "Concert / festival"),
+"sb_k_pameran": ("Pameran", "Expo"),
+"sb_k_trip": ("Open trip gunung", "Mountain open trip"),
 "sb_f1": ("1. Poster (opsional)", "1. Poster (optional)"),
 "sb_drop": ("Tarik poster ke sini atau ketuk untuk memilih (JPG/PNG/WebP, maks. 2 MB)", "Drop a poster here or tap to choose (JPG/PNG/WebP, max 2 MB)"),
 "sb_f2": ("2. Info utama", "2. Main info"),
@@ -903,28 +903,3 @@ S.update(SOCIAL_AUTH)
 J.update(SOCIAL_AUTH)
 
 
-
-# ---- Pengaturan akun (edit profil) & penyempurnaan profil v2 ----
-ACCT_V2 = {
-  "acct_h": ("Pengaturan akun", "Account settings"),
-  "acct_sub": ("Kelola profil, privasi, dan akunmu di satu tempat.", "Manage your profile, privacy, and account in one place."),
-  "ac_title": ("Pengaturan akun — GWM", "Account settings — GWM"),
-  "ac_back": ("← Kembali ke profil", "← Back to profile"),
-  "ac_s_basic": ("Profil dasar", "Basics"),
-  "ac_s_about": ("Tentang & minat", "About & interests"),
-  "ac_s_priv": ("Privasi", "Privacy"),
-  "ac_s_acct": ("Email & keamanan", "Email & security"),
-  "ac_basic_sub": ("Nama dan kota yang tampil ke pengguna lain.", "The name and city other users see."),
-  "ac_about_sub": ("Ceritakan dirimu supaya mudah menemukan teman jalan.", "Tell others about yourself to find trip buddies."),
-  "ac_priv_sub": ("Atur siapa yang bisa melihat profil dan aktivitasmu.", "Control who can see your profile and activity."),
-  "ac_acct_sub": ("Ganti email dan cek lokasi untuk keamanan akun.", "Change your email and check location for account safety."),
-  "ac_links": ("Pintasan", "Shortcuts"),
-  "ac_view": ("Lihat profil", "View profile"),
-  "ac_after": ("Setelah disimpan, kamu kembali ke halaman profilmu.", "After saving, you return to your profile page."),
-  "ac_dirty": ("Ada perubahan yang belum disimpan.", "You have unsaved changes."),
-  "ac_leave": ("Buang perubahan yang belum disimpan?", "Discard your unsaved changes?"),
-  "ac_cur_email": ("Email atau nomor saat ini", "Current email or number"),
-  "pf_share_ok": ("Tautan profil disalin.", "Profile link copied."),
-}
-S.update(ACCT_V2)
-J.update(ACCT_V2)

@@ -1,7 +1,7 @@
 (function(){
 if(!sb){$("lock").hidden=false;$("lockT").textContent=(!window.supabase?"Pustaka Supabase gagal dimuat dari CDN. Cek koneksi/pemblokir iklan lalu muat ulang.":!(window.IB_CONFIG&&IB_CONFIG.SUPABASE_URL)?"File js/config.js tidak terbaca atau kosong. Buka alamat /js/config.js untuk mengeceknya.":"Supabase belum siap. Muat ulang halaman.");return}
 var KEYS=["title","city_id","event_date","end_date","price_label","venue","genre","lineup","mountain","altitude_mdpl","difficulty","duration","quota","organizer","contact_wa","description","poster_url","ticket_url","source_ig","sponsor_label","featured_until"];
-var CAT={konser:"🎤 Konser",naikgunung:"⛰️ Naik Gunung",pameran:"🛍 Pameran",festival:"🎪 Festival",komedi:"🎭 Komedi",seminar:"🎓 Seminar",meetup:"👥 Meetup",lainnya:"📌 Lainnya"},DIF={pemula:"Pemula",menengah:"Menengah",sulit:"Sulit"};
+var CAT={konser:"Konser",naikgunung:"Naik Gunung",pameran:"Pameran",festival:"Festival",komedi:"Komedi",seminar:"Seminar",meetup:"Meetup",lainnya:"Lainnya"},DIF={pemula:"Pemula",menengah:"Menengah",sulit:"Sulit"};
 var MON=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
 var ST={published:"Terbit",draft:"Draft",pending:"Menunggu",rejected:"Ditolak"};
 var rows=[],editing=null,editStatus="draft",kind="konser",fk="",view="dash";
@@ -66,7 +66,7 @@ function draw(){
   $("nKon").textContent=n(function(e){return e.category==="konser"});$("nGun").textContent=n(function(e){return e.category==="naikgunung"});
   var pend=rows.filter(function(e){return e.status==="pending"}).sort(function(a,b){return(a.created_at||"")<(b.created_at||"")?-1:1});
   $("nPend").textContent=pend.length;$("nPend2").textContent=pend.length;$("pendCta").hidden=!pend.length;$("bPend").hidden=!pend.length;$("bPend").textContent=pend.length;if($("sPend")){$("sPend").hidden=!pend.length;$("sPend").textContent=pend.length}
-  $("rev").innerHTML=pend.length?pend.map(item).join(""):'<div class="empty">Tidak ada pengajuan yang menunggu. 🎉</div>';
+  $("rev").innerHTML=pend.length?pend.map(item).join(""):'<div class="empty">Tidak ada pengajuan yang menunggu.</div>';
   var today=tdy();
   var soon=rows.filter(function(e){return e.status==="published"&&(e.end_date||e.event_date)>=today}).sort(function(a,b){return a.event_date<b.event_date?-1:1}).slice(0,5);
   $("soon").innerHTML=soon.length?soon.map(item).join(""):'<div class="meta">Belum ada event terbit yang akan datang.</div>';
