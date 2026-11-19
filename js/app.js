@@ -107,6 +107,7 @@ function list(){var past=state.cat==="selesai";
 function badge(e){var s=status(e);return'<span class="badge '+s.k+'">'+(s.k==="live"?"● ":"")+esc(s.l)+'</span>'}
 function where(e){return esc(e.venue||e.city||"")+(e.venue&&e.city&&e.venue!==e.city&&state.city==="semua"?", "+esc(e.city):"")}
 function priceOf(e){return e.price_label||""}
+function buddyBtn(e){return'<button class="buddy" type="button" data-bd="'+esc(e.id)+'" aria-label="'+esc(tr("buddy_aria"))+'">'+ic("users")+'<span>'+esc(tr("buddy_btn"))+'</span></button>'}
 function tile(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
   var sp=e._sponsored?'<span class="meta-sp">'+esc(tr("promo_partner_badge"))+'</span>':'';
   return'<div class="tile'+(s.k==="past"?' past':'')+(e._sponsored?' is-sp':'')+'" data-id="'+esc(e.id)+'" tabindex="0" role="button" aria-label="'+esc(ttl(e))+'"><div class="thumb'+(e.poster_url?' pf':'')+'" style="'+posterStyle(e,1)+'">'+deco(e)+
@@ -114,14 +115,14 @@ function tile(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
     '<button class="fav sh" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
     '<button class="fav" type="button" data-sv="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr("sv_label"))+'">'+ic("heart")+'</button></div>'+
     '<div><div class="tt">'+esc(ttl(e))+'</div><div class="tm">'+where(e)+'</div><div class="tm">'+esc(kind(e))+(sp?' · '+sp:'')+'</div><div class="tm">'+badge(e)+featBadge(e)+invBadge(e)+'</div>'+
-    '<div class="tm p'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_tbd"))+'</div></div></div>'}
+    '<div class="tm p'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_tbd"))+'</div>'+(s.k==="past"?'':buddyBtn(e))+'</div></div>'}
 function row(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
   var sp=e._sponsored?' · <span class="meta-sp">'+esc(tr("promo_partner_badge"))+'</span>':'';
   return'<div class="r'+(s.k==="past"?' past':'')+'" data-id="'+esc(e.id)+'" role="button" tabindex="0"><div class="rd" style="'+posterStyle(e)+'"><div><b>'+p.d+'</b><span>'+p.m+'</span></div></div>'+
     '<div class="rt"><b>'+esc(ttl(e))+'</b><span>'+esc(kind(e))+' · '+esc(rng(e))+sp+'</span></div>'+
     '<div class="rc">'+where(e)+'</div><div class="rs">'+badge(e)+featBadge(e)+invBadge(e)+'</div>'+
     '<div class="rp'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_soon"))+'</div>'+
-    '<div class="ra"><button class="rf" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
+    '<div class="ra">'+(s.k==="past"?'':'<button class="rf rbd" type="button" data-bd="'+esc(e.id)+'" aria-label="'+esc(tr("buddy_aria"))+'" title="'+esc(tr("buddy_btn"))+'">'+ic("users")+'</button>')+'<button class="rf" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
     '<button class="rf" type="button" data-sv="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr("sv_label"))+'">'+ic("heart")+'</button></div></div>'}
 function sec(h,arr){if(!arr.length)return"";
   return'<div class="group">'+(h?'<h2>'+esc(h)+' <small>'+arr.length+'</small></h2>':'')+
@@ -206,7 +207,14 @@ function byId(id){return state.events.filter(function(x){return String(x.id)===S
 function share(e){var d={title:ttl(e),text:e.city?tr("share_text",{t:ttl(e),c:e.city}):tr("share_text2",{t:ttl(e)}),url:evUrl(e)};
   if(window.IB_Share)return IB_Share.open(d);
   if(navigator.clipboard)navigator.clipboard.writeText(d.text+" "+d.url).then(function(){toast(tr("copied"))});else toast(tr("copy_manual"))}
-function openEv(id){
+/* Tombol "Cari teman": gulir ke bagian ajakan di rincian event dan buka formulir "Buat ajakan".
+   Belum login: handler formulir sendiri yang mengarahkan ke halaman login. */
+function goBuddy(){var n=0,t=setInterval(function(){var box=$("ajk"),b=box&&box.querySelector('[data-x="new"]');
+  if(!b&&++n<=40)return;clearInterval(t);if(!box)return;
+  var f=box.querySelector("form.nw");if(b&&f&&f.hidden)b.click();
+  (f&&!f.hidden?f:box).scrollIntoView({behavior:"smooth",block:"center"});
+  var i=box.querySelector("form.nw:not([hidden]) input[name=t]");if(i)try{i.focus({preventScroll:true})}catch(x){}},150)}
+function openEv(id,buddy){
   var e=byId(id);if(!e)return;var p=dparts(e.event_date);
   document.dispatchEvent(new CustomEvent("ib:open",{detail:{id:e.id}}));
   var inf=info(e).filter(Boolean).join(" · "),multi=e.end_date&&e.end_date!==e.event_date;
@@ -221,6 +229,7 @@ function openEv(id){
    (e.organizer||e.quota?'<li>'+ic("note")+'<span>'+(e.organizer?esc(tr("organizer"))+': '+esc(e.organizer):'')+(e.organizer&&e.quota?' · ':'')+(e.quota?esc(tr("quota"))+': '+esc(e.quota)+' '+esc(tr("aj_people")):'')+'</span></li>':'')+
    '</ul>'+(areas?'<p class="meta"><b>'+esc(tr("ev_areas_lbl",{c:e.city}))+'</b> '+esc(areas.join(" · "))+'</p>':'')+(e.is_community?'<p class="meta"><span class="cmty">'+esc(tr("community"))+'</span> '+esc(tr("community_note"))+'</p>':'')+
    (e.lineup?'<p><b>'+tr("lineup")+'</b> '+esc(e.lineup)+'</p>':'')+'<p>'+esc(dsc(e)||tr("nodesc"))+'</p><div class="row">'
+   +'<button class="btn buddy-d" type="button" id="dBuddy">'+ic("users")+tr("buddy_btn_d")+'</button>'
    +(tixUrl?'<a class="btn" id="dTicketLink" target="_blank" rel="noopener noreferrer" href="'+esc(tixUrl)+'">'+tr("ticket")+'</a>':'<span class="btn line" style="opacity:.6">'+tr("noticket")+'</span>')
    +(waDigits(e.contact_wa)?'<a class="btn" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+waDigits(e.contact_wa)+'?text='+encodeURIComponent(tr("wa_hello",{t:ttl(e)}))+'">'+tr("wa_contact")+'</a>':'')
    +(igHandle(e.source_ig)?'<a class="btn line" target="_blank" rel="noopener noreferrer" href="https://instagram.com/'+encodeURIComponent(igHandle(e.source_ig))+'">'+tr("source")+esc(igHandle(e.source_ig))+'</a>':'')
@@ -230,7 +239,7 @@ function openEv(id){
   $("dlg").showModal();
   if(history.replaceState){var u=new URL(location.href);u.searchParams.set("e",e.slug||e.id);history.replaceState(null,"",u.pathname+u.search)}
   $("close").onclick=function(){$("dlg").close()};
-  $("dIcs").onclick=function(){ics(e)};$("dShare").onclick=function(){share(e)};
+  $("dIcs").onclick=function(){ics(e)};$("dShare").onclick=function(){share(e)};$("dBuddy").onclick=goBuddy;if(buddy)goBuddy();
   var tl=$("dTicketLink");if(tl&&tl!==DUM)tl.onclick=function(){try{var n=+localStorage.getItem("gwm_aff_clicks")||0;localStorage.setItem("gwm_aff_clicks",String(n+1))}catch(ex){}};
   if(window.IB_Ajakan)IB_Ajakan.mount(e,$("ajk"));else $("ajk").innerHTML='<p class="meta">'+tr("aj_off")+'</p>';
   if(window.IB_ForumEvent)IB_ForumEvent.mount(e,$("fe"));
@@ -255,7 +264,8 @@ function catClick(ev){var a=ev.target.closest("a[data-in]");if(!a)return;ev.prev
   if(history.replaceState)history.replaceState(null,"",a.dataset.c==="semua"?location.pathname:location.pathname+"?kat="+a.dataset.c);render()}
 $("navCat").onclick=catClick;$("navMine").onclick=catClick;$("mCat").onclick=catClick;
 $("navCity").onclick=function(ev){var b=ev.target.closest("[data-city]");if(!b)return;state.city=b.dataset.city;render()};
-function openOrSave(ev){var h=ev.target.closest("[data-sh]");if(h){ev.stopPropagation();var he=byId(h.dataset.sh);if(he)share(he);return}
+function openOrSave(ev){var bd=ev.target.closest("[data-bd]");if(bd){ev.stopPropagation();return openEv(bd.dataset.bd,true)}
+  var h=ev.target.closest("[data-sh]");if(h){ev.stopPropagation();var he=byId(h.dataset.sh);if(he)share(he);return}
   var s=ev.target.closest("[data-sv]");if(s){ev.stopPropagation();return toggleSave(s.dataset.sv)}var b=ev.target.closest(".tile,.r");if(b&&b.dataset.id)openEv(b.dataset.id)}
 $("list").onclick=openOrSave;
 if($("moreB")!==DUM)$("moreB").onclick=function(){state.limit+=12;render()};

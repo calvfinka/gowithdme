@@ -410,6 +410,7 @@ J.update({
 "fe_all": ("Semua kiriman di {c}", "All posts in {c}"),
 "k_gone": ("Kiriman ini sudah tidak tersedia.", "This post is no longer available."),
 })
+J.update({"buddy_btn": ("Cari teman", "Find buddies"), "buddy_btn_d": ("Cari teman jalan", "Find a buddy"), "buddy_aria": ("Cari teman untuk event ini", "Find a buddy for this event")})  # tombol ajakan di kartu dan detail event
 J.update({"pf_title": ("Profil — GWM", "Profile — GWM")})  # dipakai js/profil.js (gerbang tamu), bukan hanya <title>
 S.update({
 "pf_title": ("Profil — GWM", "Profile — GWM"),

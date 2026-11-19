@@ -204,3 +204,12 @@ html[data-tier] .nv-rail .now{grid-template-columns:minmax(0,1fr) !important;col
 /* Pesan cuaca/jam di halaman lain (mis. Event, Gunung) juga tidak boleh melebihi kartunya */
 .now>div,.now .wx{min-width:0}
 .now .wmsg,.now .wd{overflow-wrap:anywhere}
+
+/* Tombol "Cari teman" di kartu event dan rincian event */
+.buddy{display:inline-flex;align-items:center;gap:6px;justify-self:start;margin-top:2px;min-height:34px;padding:0 12px;border:1.5px solid var(--brand);border-radius:999px;background:transparent;color:var(--brand);font:600 var(--fs-xs,13px)/1 var(--f);cursor:pointer;transition:background-color .15s,color .15s}
+.buddy .i{width:16px;height:16px}
+.buddy:hover,.buddy:focus-visible{background:var(--brand);color:var(--brand-ink)}
+.rf.rbd{color:var(--brand)}
+.btn.buddy-d{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.buddy-d .i{width:18px;height:18px;margin-right:6px;vertical-align:-3px}
+@media (pointer:coarse){.buddy{min-height:38px}}
