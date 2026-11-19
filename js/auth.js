@@ -162,12 +162,12 @@ $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
   function cd(){var b=$("phRe"),n=60;b.disabled=true;clearInterval(timer);b.textContent=T.resend+" ("+n+")";
     timer=setInterval(function(){n--;if(n<=0){clearInterval(timer);b.disabled=false;b.textContent=T.resend}else b.textContent=T.resend+" ("+n+")"},1000)}
   function sendCode(btn){
-    if(!/^8\d{8,12}$/.test(num()))return msg(T.bad,"err");
+    if(!/^8\d{8,12}$/.test(num()))return msg(T.bad+" [+62 "+(num()||"-")+"]","err");
     msg(tr("processing"));btn.disabled=true;
     call("send-otp",{phone:full()}).then(function(j){
       if(j.ok){$("phS1").hidden=true;$("phS2").hidden=false;$("phTo").textContent=T.to+" +62 "+num();$("phCode").value="";$("phCode").focus();msg(T.sent,"ok");$("phSend").disabled=false;return cd()}
       if(j._s===429&&!$("phS2").hidden)return cd();
-      btn.disabled=false;msg(j._s===429?T.wait:j._s===400?T.bad:T.fail,"err")
+      btn.disabled=false;msg(j._s===429?T.wait:j._s===400?T.bad+" [server]":T.fail,"err")
     }).catch(function(){btn.disabled=false;msg(T.fail,"err")})}
   function verify(){
     var code=$("phCode").value.replace(/\D/g,""),nick=$("phNick").value.trim();
