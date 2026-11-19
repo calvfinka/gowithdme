@@ -45,3 +45,20 @@ html:where([data-dsk]) .nv-sl[data-o="tall"]{--pwmax:min(110px,calc(26*var(--vw)
 html:where([data-dsk]) .nv-sl-in{padding:var(--pad) 16px var(--pad) 18px;gap:14px}
 html:where([data-dsk]) .nv-sl-tx{gap:8px}
 html:where([data-dsk]) .nv-sl-po,html:where([data-dsk]) .nv-sl[data-o] .nv-sl-po{border-radius:var(--r-poster)}
+/* balance.css @640 */
+html:where([data-dsk]) .now,html:where([data-dsk])[data-tier] .now{grid-template-columns: minmax(0, 1fr) !important;
+    column-gap: 0 !important;
+    max-width: 100%;}
+html:where([data-dsk]) .now > div,html:where([data-dsk]) .now > div + div{min-width: 0;
+    padding-left: 0;
+    border-left: 0;}
+html:where([data-dsk]) .now > div + div{border-top: 1px solid var(--line);}
+html:where([data-dsk]) .now .clock{max-width: none;
+    grid-template-columns: minmax(0, 1fr) auto;
+    justify-content: space-between;
+    column-gap: 12px;}
+html:where([data-dsk]) .now .cal{width: min(154px, 100%);}
+html:where([data-dsk]) .now .wx{flex-wrap: wrap; row-gap: 6px;}
+html:where([data-dsk]) .now .wd{flex: 1 1 140px; min-width: 0; overflow-wrap: break-word; word-break: normal;}
+/* balance.css @340 */
+html:where([data-dsk]) .now .clock{grid-template-columns: minmax(0, 1fr); row-gap: 10px;}

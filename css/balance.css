@@ -191,6 +191,37 @@ div.nv-sl-po{aspect-ratio:4/5;--ar:.8}
   }
 }
 
+/* HP: aturan 2 kolom + !important di atas mengalahkan aturan 1 kolom di style.css/naver.css, sehingga jam+kalender
+   memakan hampir seluruh lebar dan cuaca terdorong keluar layar (teks "Gerimis Bandung..." tertumpuk per huruf).
+   Di layar HP paksa satu kolom, cuaca boleh turun baris, dan semua anak grid boleh menyusut. */
+@media (max-width: 640px) {
+  .now,
+  html[data-tier] .now {
+    grid-template-columns: minmax(0, 1fr) !important;
+    column-gap: 0 !important;
+    max-width: 100%;
+  }
+  .now > div,
+  .now > div + div {
+    min-width: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+  .now > div + div { border-top: 1px solid var(--line); }
+  .now .clock {
+    max-width: none;
+    grid-template-columns: minmax(0, 1fr) auto;
+    justify-content: space-between;
+    column-gap: 12px;
+  }
+  .now .cal { width: min(154px, 100%); }
+  .now .wx { flex-wrap: wrap; row-gap: 6px; }
+  .now .wd { flex: 1 1 140px; min-width: 0; overflow-wrap: break-word; word-break: normal; }
+}
+@media (max-width: 340px) {
+  .now .clock { grid-template-columns: minmax(0, 1fr); row-gap: 10px; }
+}
+
 /* Di kolom samping (.nv-rail) kartu cuaca/jam HARUS satu kolom: dua kolom + !important di atas membuat teks cuaca
    terdorong keluar kartu dan melebarkan halaman (HP maupun desktop). Ditaruh setelah aturan di atas. */
 .nv-rail .now,

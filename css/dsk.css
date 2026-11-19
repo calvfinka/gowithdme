@@ -133,47 +133,6 @@ html:where([data-dsk]) .oauth-grid{grid-template-columns:1fr}
 html:where([data-dsk]) .pf-head-wrap{padding:0 14px 16px}
 html:where([data-dsk]) .pf-actions{padding-top:8px;width:100%}
 html:where([data-dsk]) .pf-cover{height:106px}
-/* panel.css @959 */
-html:where([data-dsk]) .pf-dash-grid{display:flex;flex-direction:column;align-items:stretch;gap:14px}
-html:where([data-dsk]) .pf-dash-bar{min-width:0}
-html:where([data-dsk]) .pf-rail{display:contents}
-html:where([data-dsk]) .pf-rail>.pf-rail-card:first-child{order:0}
-html:where([data-dsk]) .pf-main{order:1}
-html:where([data-dsk]) .pf-rail>.pf-rail-card:last-child{order:2}
-html:where([data-dsk]) .pf-identity h1{font-size:25px}
-/* panel.css @899 */
-html:where([data-dsk]) .auth-pg.wide{max-width:720px}
-html:where([data-dsk]) .acct-grid{display:flex;flex-direction:column;align-items:stretch;gap:12px}
-html:where([data-dsk]) .acct-side{display:contents;position:static;max-height:none;overflow:visible}
-html:where([data-dsk]) .acct-id{order:0}
-html:where([data-dsk]) .acct-nav{order:1;position:sticky;top:calc(var(--bh) + var(--sat));z-index:15;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:8px}
-html:where([data-dsk]) .acct-nav::-webkit-scrollbar{display:none}
-html:where([data-dsk]) .acct-nav button{width:auto;flex:none;white-space:nowrap;border-radius:999px;padding:8px 14px;background:var(--side)}
-html:where([data-dsk]) .acct-nav button.on{background:var(--sel)}
-html:where([data-dsk]) .acct-nav .i{display:none}
-html:where([data-dsk]) .acct-main{order:2}
-html:where([data-dsk]) .acct-links{order:3;grid-template-columns:1fr 1fr}
-html:where([data-dsk]) .acct-links h4{grid-column:1/-1}
-html:where([data-dsk]) .acct-links a,html:where([data-dsk]) .acct-out{border:1px solid var(--line)}
-/* panel.css @640 */
-html:where([data-dsk]) .auth-pg.wide{padding:12px 12px 40px}
-html:where([data-dsk]) .acct-h{font-size:22px}
-html:where([data-dsk]) .acct-sec{padding:16px}
-html:where([data-dsk]) .acct-sec .g2{grid-template-columns:1fr}
-html:where([data-dsk]) .acct-sec .f input,html:where([data-dsk]) .acct-sec .f select,html:where([data-dsk]) .acct-sec .f textarea{font-size:16px;min-height:44px}
-html:where([data-dsk]) .acct-sec .f textarea{min-height:110px}
-html:where([data-dsk]) .acct-bar{bottom:calc(10px + env(safe-area-inset-bottom,0px));flex-wrap:wrap}
-html:where([data-dsk]) .acct-stat{flex:1 1 100%}
-html:where([data-dsk]) .acct-bar .btn{flex:1;justify-content:center;min-height:44px}
-html:where([data-dsk]) .pf-av-ring{width:80px;height:80px}
-html:where([data-dsk]) .pf-top-row{margin-top:-40px}
-html:where([data-dsk]) .pf-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
-html:where([data-dsk]) .pf-actions .btn{justify-content:center;text-align:center;min-height:40px}
-html:where([data-dsk]) .pf-actions .btn.pri{grid-column:1/-1}
-html:where([data-dsk]) .pf-identity h1{font-size:22px}
-html:where([data-dsk]) .pf-row-cta{display:none}
-html:where([data-dsk]) .pf-dash-bar{position:static;padding:6px;box-shadow:none}
-html:where([data-dsk]) .pf-up-row,html:where([data-dsk]) .pf-act-row{padding-left:2px;padding-right:2px}
 /* bocoran aturan PC */
 html[data-dsk] .pnav{display:none}
 html[data-dsk] .topbar{grid-template-columns:auto minmax(0,1fr) auto}
