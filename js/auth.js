@@ -121,17 +121,26 @@ $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
   if(p.length<8)return msg(tr("a_pass8"),"err");
   sb.auth.updateUser({password:p}).then(function(r){if(r.error)return msg(friendlyErr(r.error),"err");
     recovering=false;$("rec").hidden=true;$("nPass").value="";msg(tr("a_passok"),"ok");show()})};
-/* ---- Masuk / daftar dengan nomor HP: kode OTP lewat WhatsApp ---- */
+/* ---- Daftar / masuk dengan WhatsApp (OTP) + gaya tombol email link ---- */
 (function(){
   var EN=window.IB_LANG==="en",C=window.IB_CONFIG||{},KEY=C.SUPABASE_ANON_KEY,FN=(C.SUPABASE_URL||"")+"/functions/v1/";
-  var hd=document.querySelector("#guest .auth-hd");if(!hd||!KEY)return;
-  var T=EN?{title:"Sign in or sign up with your phone number",lbl:"WhatsApp number",send:"Send code via WhatsApp",auto:"New here? Your account is created automatically after verification.",to:"We sent a 6-digit code to WhatsApp",lbc:"Verification code",cph:"······",nick:"Nickname (for new accounts)",nph:"Optional",ok:"Verify & continue",resend:"Resend code",chg:"Change number",or:"or",sent:"Code sent to your WhatsApp.",wait:"Wait a minute before requesting another code.",bad:"Enter a valid mobile number, e.g. 812 3456 7890.",fail:"Could not send the code. Try again.",wrong:"Wrong or expired code.",many:"Too many attempts. Request a new code.",lfail:"Could not sign you in. Try again."}
-  :{title:"Masuk atau daftar dengan nomor HP",lbl:"Nomor WhatsApp",send:"Kirim kode via WhatsApp",auto:"Belum punya akun? Akun dibuat otomatis setelah verifikasi.",to:"Kode 6 digit dikirim ke WhatsApp",lbc:"Kode verifikasi",cph:"······",nick:"Nama panggilan (untuk akun baru)",nph:"Boleh dikosongkan",ok:"Verifikasi & lanjut",resend:"Kirim ulang kode",chg:"Ganti nomor",or:"atau",sent:"Kode dikirim ke WhatsApp kamu.",wait:"Tunggu 1 menit sebelum minta kode lagi.",bad:"Masukkan nomor HP yang valid, contoh 812 3456 7890.",fail:"Gagal mengirim kode. Coba lagi.",wrong:"Kode salah atau kedaluwarsa.",many:"Terlalu banyak percobaan. Minta kode baru.",lfail:"Gagal masuk. Coba lagi."};
+  var G=$("guest"),grid=document.querySelector("#guest .oauth-grid"),hd=document.querySelector("#guest .auth-hd");
+  if(!G||!grid||!hd||!KEY)return;
+  var T=EN?{btn:"Sign up / in with WhatsApp",title:"Sign up or sign in with WhatsApp",lbl:"WhatsApp number",send:"Send code",auto:"New here? Your account is created automatically after verification.",to:"We sent a 6-digit code to WhatsApp",lbc:"Verification code",cph:"······",nick:"Nickname (for new accounts)",nph:"Optional",ok:"Verify & continue",resend:"Resend code",chg:"Change number",back:"Back",sent:"Code sent to your WhatsApp.",wait:"Wait a minute before requesting another code.",bad:"Enter a valid mobile number, e.g. 812 3456 7890.",fail:"Could not send the code. Try again.",wrong:"Wrong or expired code.",many:"Too many attempts. Request a new code.",lfail:"Could not sign you in. Try again."}
+  :{btn:"Daftar / masuk dengan WhatsApp",title:"Daftar atau masuk dengan WhatsApp",lbl:"Nomor WhatsApp",send:"Kirim kode",auto:"Belum punya akun? Akun dibuat otomatis setelah verifikasi.",to:"Kode 6 digit dikirim ke WhatsApp",lbc:"Kode verifikasi",cph:"······",nick:"Nama panggilan (untuk akun baru)",nph:"Boleh dikosongkan",ok:"Verifikasi & lanjut",resend:"Kirim ulang kode",chg:"Ganti nomor",back:"Kembali",sent:"Kode dikirim ke WhatsApp kamu.",wait:"Tunggu 1 menit sebelum minta kode lagi.",bad:"Masukkan nomor HP yang valid, contoh 812 3456 7890.",fail:"Gagal mengirim kode. Coba lagi.",wrong:"Kode salah atau kedaluwarsa.",many:"Terlalu banyak percobaan. Minta kode baru.",lfail:"Gagal masuk. Coba lagi."};
   var st=document.createElement("style");
-  st.textContent=".ph-card{margin:16px 0 6px}.ph-t{font-weight:700;margin:0 0 10px}.ph-row{display:flex;gap:8px;align-items:stretch}.ph-pre{display:flex;align-items:center;padding:0 14px;border-radius:12px;background:rgba(127,127,127,.14);font-weight:700;white-space:nowrap}.ph-row input{flex:1;min-width:0}#phCode{font-size:1.5em;letter-spacing:.4em;text-align:center}.ph-note{margin:8px 0 0}.ph-links{display:flex;justify-content:space-between;gap:12px;margin-top:10px}";
+  st.textContent=".oa-wa{grid-column:1/-1}#guest.ph-on>*:not(.auth-hd):not(.ph-panel){display:none!important}.ph-panel[hidden]{display:none}.ph-t{font-weight:700;margin:6px 0 12px}.ph-row{display:flex;gap:8px;align-items:stretch}.ph-pre{display:flex;align-items:center;padding:0 14px;border-radius:12px;background:rgba(127,127,127,.14);font-weight:700;white-space:nowrap}.ph-row input{flex:1;min-width:0}#phCode{font-size:1.5em;letter-spacing:.4em;text-align:center}.ph-note{margin:10px 0 0}.ph-links{display:flex;justify-content:space-between;gap:12px;margin-top:10px}.ph-back{margin-bottom:4px}#lMagic.oauth-btn{width:100%;margin-top:8px}";
   document.head.appendChild(st);
-  var box=document.createElement("div");
-  box.innerHTML='<div class="ph-card"><p class="ph-t">'+T.title+'</p>'+
+  /* tombol WhatsApp di daftar tombol atas */
+  var wa=document.createElement("button");wa.type="button";wa.id="bWa";wa.className="btn ghost oauth-btn oa-wa";
+  wa.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg><span>'+T.btn+'</span>';
+  grid.insertBefore(wa,grid.firstChild);
+  /* tombol "Email me a login link" ikut gaya tombol atas */
+  var lm=$("lMagic");
+  if(lm&&lm.classList){lm.classList.add("oauth-btn");lm.insertAdjacentHTML("afterbegin",'<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>')}
+  /* panel nomor HP */
+  var pn=document.createElement("div");pn.className="ph-panel";pn.hidden=true;
+  pn.innerHTML='<button class="lnk ph-back" id="phBack" type="button">← '+T.back+'</button><p class="ph-t">'+T.title+'</p>'+
    '<form id="fPhone" novalidate>'+
    '<div id="phS1"><label class="f">'+T.lbl+'<div class="ph-row"><span class="ph-pre">+62</span><input id="phNum" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="812 3456 7890"></div></label>'+
    '<button class="btn pri block" id="phSend" type="submit">'+T.send+'</button><p class="meta ph-note">'+T.auto+'</p></div>'+
@@ -140,11 +149,12 @@ $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
    '<label class="f">'+T.nick+'<input id="phNick" type="text" maxlength="30" autocomplete="nickname" placeholder="'+T.nph+'"></label>'+
    '<button class="btn pri block" id="phOk" type="button">'+T.ok+'</button>'+
    '<div class="ph-links"><button class="lnk" id="phRe" type="button" disabled>'+T.resend+'</button><button class="lnk" id="phChg" type="button">'+T.chg+'</button></div></div>'+
-   '</form><p class="meta auth-agree ph-note" id="phAg"></p></div>'+
-   '<div class="auth-sep"><span>'+T.or+'</span></div>';
-  hd.parentNode.insertBefore(box,hd.nextSibling);
+   '</form><p class="meta auth-agree ph-note" id="phAg"></p>';
+  hd.parentNode.insertBefore(pn,hd.nextSibling);
   var ag=document.querySelector("#guest p.auth-agree:not(#phAg)");if(ag)$("phAg").innerHTML=ag.innerHTML;else $("phAg").hidden=true;
   var timer=null;
+  function open(on){G.classList.toggle("ph-on",on);pn.hidden=!on;msg("");if(on)setTimeout(function(){var i=$("phS2").hidden?$("phNum"):$("phCode");i.focus()},50)}
+  wa.onclick=function(){open(true)};$("phBack").onclick=function(){open(false)};
   function num(){var d=$("phNum").value.replace(/\D/g,"");if(d.indexOf("62")===0)d=d.slice(2);if(d.charAt(0)==="0")d=d.slice(1);return d}
   function full(){return"62"+num()}
   function call(name,body){return fetch(FN+name,{method:"POST",headers:{"Content-Type":"application/json",apikey:KEY,Authorization:"Bearer "+KEY},body:JSON.stringify(body)})
@@ -155,7 +165,7 @@ $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
     if(!/^8\d{8,12}$/.test(num()))return msg(T.bad,"err");
     msg(tr("processing"));btn.disabled=true;
     call("send-otp",{phone:full()}).then(function(j){
-      if(j.ok){$("phS1").hidden=true;$("phS2").hidden=false;$("phTo").textContent=T.to+" +62 "+num();$("phCode").value="";$("phCode").focus();msg(T.sent,"ok");btn.id==="phRe"?0:btn.disabled=false;return cd()}
+      if(j.ok){$("phS1").hidden=true;$("phS2").hidden=false;$("phTo").textContent=T.to+" +62 "+num();$("phCode").value="";$("phCode").focus();msg(T.sent,"ok");$("phSend").disabled=false;return cd()}
       if(j._s===429&&!$("phS2").hidden)return cd();
       btn.disabled=false;msg(j._s===429?T.wait:j._s===400?T.bad:T.fail,"err")
     }).catch(function(){btn.disabled=false;msg(T.fail,"err")})}
@@ -170,7 +180,7 @@ $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
       return sb.auth.verifyOtp({token_hash:j.token_hash,type:"magiclink"}).then(function(r){
         if(r.error)return stop(T.lfail);
         msg(tr("a_redirect"),"ok");
-        logLocation(function(){holding=false;if(!goAfter())show()})})
+        logLocation(function(){holding=false;G.classList.remove("ph-on");if(!goAfter())show()})})
     }).catch(function(){stop(T.lfail)})}
   $("fPhone").onsubmit=function(e){e.preventDefault();if($("phS2").hidden)sendCode($("phSend"));else verify()};
   $("phOk").onclick=verify;
