@@ -183,6 +183,7 @@ $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
         logLocation(function(){holding=false;G.classList.remove("ph-on");if(!goAfter())show()})})
     }).catch(function(){stop(T.lfail)})}
   $("fPhone").onsubmit=function(e){e.preventDefault();if($("phS2").hidden)sendCode($("phSend"));else verify()};
+  $("phNum").oninput=$("phCode").oninput=function(){msg("")};
   $("phOk").onclick=verify;
   $("phRe").onclick=function(){sendCode(this)};
   $("phChg").onclick=function(){clearInterval(timer);$("phS2").hidden=true;$("phS1").hidden=false;$("phSend").disabled=false;msg("");$("phNum").focus()};
