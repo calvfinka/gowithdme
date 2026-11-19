@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="js/theme.js"></script>
-<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/panel.css"><link rel="stylesheet" href="css/arsip.css">
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/panel.css"><link rel="stylesheet" href="css/arsip.css"><link rel="stylesheet" href="css/admin-sponsor.css">
 </head><body class="adm-body">
 <header class="top adm-top"><div class="wrap adm-top-in">
   <a class="logo" href="./"><img src="assets/favicon.svg" alt=""><span>GWM</span> <span class="badge adm">Admin</span></a>
@@ -40,6 +40,7 @@
     <button data-v="review" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Pengajuan Event</span><b class="sdot" id="sPend" hidden>0</b></button>
     <button data-v="forum" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Komunitas &amp; Grup</span><b class="sdot" id="sFrep" hidden>0</b></button>
     <button data-v="words" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9.5 9.5l5 5M14.5 9.5l-5 5"/></svg><span>Filter Kata (ID)</span><b class="sdot" id="sWords" hidden>0</b></button>
+    <button data-v="sponsor" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg><span>Lead Sponsor</span><b class="sdot" id="sSpon" hidden>0</b></button>
   </div>
   <div class="adm-sgrp">
     <div class="adm-slbl">Konten &amp; Publikasi</div>
@@ -75,20 +76,20 @@
 </section>
 
 <section id="v_review" hidden>
-  <div class="seg" data-g="tinjau"><button class="on" data-v="review" type="button">Pengajuan event <small id="tgRev">0</small></button><button data-v="forum" type="button">Laporan komunitas <small id="tgFor">0</small></button><button data-v="words" type="button">Filter kata ID</button></div>
+  <div class="seg" data-g="tinjau"><button class="on" data-v="review" type="button">Pengajuan event <small id="tgRev">0</small></button><button data-v="forum" type="button">Laporan komunitas <small id="tgFor">0</small></button><button data-v="words" type="button">Filter kata ID</button><button data-v="sponsor" type="button">Lead sponsor</button></div>
   <div class="adm-hd"><div><h2>Persetujuan Event</h2><p class="meta">Periksa judul, tanggal, lokasi, kontak, dan poster sebelum menayangkan pengajuan publik.</p></div></div>
   <div id="rev"></div>
 </section>
 
 <section id="v_forum" hidden>
-  <div class="seg" data-g="tinjau"><button data-v="review" type="button">Pengajuan event <small class="tgR">0</small></button><button class="on" data-v="forum" type="button">Laporan komunitas <small class="tgF">0</small></button><button data-v="words" type="button">Filter kata ID</button></div>
+  <div class="seg" data-g="tinjau"><button data-v="review" type="button">Pengajuan event <small class="tgR">0</small></button><button class="on" data-v="forum" type="button">Laporan komunitas <small class="tgF">0</small></button><button data-v="words" type="button">Filter kata ID</button><button data-v="sponsor" type="button">Lead sponsor</button></div>
   <div class="adm-hd"><div><h2>Moderasi Komunitas &amp; Kota</h2><p class="meta">Kelola kiriman forum yang dilaporkan, blokir penulis bermasalah, serta buka atau atur grup kota.</p></div></div>
   <div class="bar" id="fmTabs"><button class="tab on" data-ft="rep" type="button">Dilaporkan <small id="fmNRep">0</small></button><button class="tab" data-ft="new" type="button">Terbaru</button><button class="tab" data-ft="off" type="button">Disembunyikan / dihapus</button><button class="tab" data-ft="ban" type="button">Diblokir</button><button class="tab" data-ft="cfg" type="button">Grup &amp; kota</button></div>
   <div id="fmList"></div>
 </section>
 
 <section id="v_words" hidden>
-  <div class="seg" data-g="tinjau"><button data-v="review" type="button">Pengajuan event <small class="tgR">0</small></button><button data-v="forum" type="button">Laporan komunitas <small class="tgF">0</small></button><button class="on" data-v="words" type="button">Filter kata ID</button></div>
+  <div class="seg" data-g="tinjau"><button data-v="review" type="button">Pengajuan event <small class="tgR">0</small></button><button data-v="forum" type="button">Laporan komunitas <small class="tgF">0</small></button><button class="on" data-v="words" type="button">Filter kata ID</button><button data-v="sponsor" type="button">Lead sponsor</button></div>
   <div class="adm-hd"><div><h2>Filter Kata Terlarang (Wilayah Indonesia)</h2><p class="meta">Memblokir otomatis kata kasar, judi online, SARA, pornografi, dan penipuan pada seluruh formulir pengguna yang login sekaligus mencatat User ID.</p></div></div>
   <div class="kps" id="wfKpi"></div>
   <div class="g2s">
@@ -183,6 +184,14 @@
   <div id="arList"></div>
 </section>
 
+<section id="v_sponsor" hidden>
+  <div class="seg" data-g="tinjau"><button data-v="review" type="button">Pengajuan event <small class="tgR">0</small></button><button data-v="forum" type="button">Laporan komunitas <small class="tgF">0</small></button><button data-v="words" type="button">Filter kata ID</button><button class="on" data-v="sponsor" type="button">Lead sponsor</button></div>
+  <div class="adm-hd"><div><h2>Lead Sponsor</h2><p class="meta">Permintaan dari halaman Promote: hubungi, catat pembayaran manual, lalu aktifkan Featured. Waktu menurut WIB.</p></div><button class="btn ghost sm" id="spRefresh" type="button">Muat ulang</button></div>
+  <div id="spStats"></div>
+  <div class="sp-tools"><div class="bar" id="spTabs" style="margin:0"></div>
+  <label class="f"><span>Cari (nama, event, kode, WA, kota, invoice)</span><input id="spQ" type="search" maxlength="80" autocomplete="off"></label></div>
+  <div id="spList"></div>
+</section>
 <section id="v_stats" hidden>
   <div class="adm-hd"><div><h2>Statistik Situs</h2><p class="meta">Pengunjung situs, pengguna terdaftar (OAuth &amp; email), serta sebaran konten. Tanggal menurut WIB.</p></div></div>
   <div class="bar" id="stRange"><button class="tab" data-d="7" type="button">7 hari</button><button class="tab on" data-d="30" type="button">30 hari</button><button class="tab" data-d="90" type="button">90 hari</button></div>
@@ -248,11 +257,11 @@
 
 <nav class="bnav" id="bnav" hidden aria-label="Menu admin">
   <button data-v="dash" class="on" type="button"><i>🏠</i><span>Beranda</span></button>
-  <button data-v="review" data-g="review,forum,words" type="button"><i>🛡️</i><span>Tinjau</span><b class="dot" id="bTinjau" hidden></b><b class="dot" id="bPend" hidden></b><b class="dot" id="bFrep" hidden></b></button>
+  <button data-v="review" data-g="review,forum,words,sponsor" type="button"><i>🛡️</i><span>Tinjau</span><b class="dot" id="bTinjau" hidden></b><b class="dot" id="bPend" hidden></b><b class="dot" id="bFrep" hidden></b></button>
   <button data-v="list" data-g="list,blog,arsip" type="button"><i>📋</i><span>Konten</span></button>
   <button data-v="stats" type="button"><i>📊</i><span>Statistik</span></button>
   <button data-v="form" type="button"><i>➕</i><span>Buat</span></button>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/word-filter.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script><script src="js/admin-blog.js"></script><script src="js/arsip-san.js"></script><script src="js/admin-arsip.js"></script><script src="js/admin-stats.js"></script><script src="js/admin-words.js"></script>
+<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/word-filter.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script><script src="js/admin-blog.js"></script><script src="js/arsip-san.js"></script><script src="js/admin-arsip.js"></script><script src="js/admin-stats.js"></script><script src="js/admin-words.js"></script><script src="js/monetize-core.js"></script><script src="js/admin-sponsor.js"></script>
 </body></html>

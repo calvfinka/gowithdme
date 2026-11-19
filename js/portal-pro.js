@@ -395,7 +395,7 @@
     var order=["free","city_spotlight","national_portal"].filter(function(id){return!!MC.PROMO_TIERS[id]});
     tiersBox.innerHTML=order.map(function(id){
       var t=MC.PROMO_TIERS[id],meta=promoTierMeta(id);
-      var pr=t.pricePerWeekIdr?("Rp"+t.pricePerWeekIdr.toLocaleString(tr("numloc"))+"/mg"):(L==="en"?"Free":"Gratis");
+      var pr=t.pricePerWeekIdr?(MC.formatRupiah(t.pricePerWeekIdr)+"/mg"):(L==="en"?"Free":"Gratis");
       return'<button type="button" class="tier-opt'+(selTier===id?" on":"")+'" data-tier="'+esc(id)+'">'+
         '<div class="tier-h"><b>'+esc(meta.name)+'</b><span>'+esc(pr)+'</span></div>'+
         '<small>'+esc(meta.perks)+'</small>'+
@@ -405,29 +405,56 @@
     estBox.innerHTML='<div class="est-grid">'+
       '<div><span>'+esc(tr("promo_reach"))+'</span><b class="mono">'+est.estImpressions.toLocaleString(tr("numloc"))+'</b></div>'+
       '<div><span>'+esc(tr("promo_clicks"))+'</span><b class="mono">'+est.estClicks.toLocaleString(tr("numloc"))+'</b></div>'+
-      '<div><span>'+esc(tr("promo_total"))+'</span><b class="mono">Rp'+est.totalCostIdr.toLocaleString(tr("numloc"))+'</b></div>'+
+      '<div><span>'+esc(tr("promo_total"))+'</span><b class="mono">'+esc(MC.formatRupiah(est.totalCostIdr))+'</b></div>'+
     '</div>'+(est.discountPct?'<p class="est-disc">'+esc(tr("promo_disc",{p:est.discountPct}))+'</p>':"");
+  }
+  var promoBusy=false;
+  var PROMO_PKG_ID={free:"Listing Komunitas (Gratis)",city_spotlight:"City Spotlight",national_portal:"Banner Nasional (Portal Hero)"};
+  function promoShowErr(res,key,args){res.hidden=false;res.className="promo-res err";res.textContent=tr(key,args)}
+  function promoShowOk(res,okKey,code,msgTxt,synced){
+    var waHref="https://wa.me/"+(C.CONTACT_WA||"6282243562960")+"?text="+encodeURIComponent(msgTxt);
+    var mailHref="mailto:"+(C.CONTACT_EMAIL||"gowithdme@jurkon.my.id")+"?subject="+encodeURIComponent("Order Promosi "+code)+"&body="+encodeURIComponent(msgTxt);
+    res.hidden=false;res.className="promo-res "+(synced?"ok":"warn");
+    res.innerHTML='<p>'+esc(tr(okKey,{code:code}))+'</p><div class="promo-res-act"><a class="btn sm pri" target="_blank" rel="noopener noreferrer" href="'+esc(waHref)+'">'+esc(tr("promo_wa_send"))+'</a><a class="btn sm line" href="'+esc(mailHref)+'">'+esc(tr("promo_mail_send"))+'</a></div>';
   }
   function handlePromoSubmit(e){
     e.preventDefault();
-    var org=$("prOrg").value.trim(),title=$("prTitle").value.trim(),wa=$("prWa").value.trim(),note=$("prNote").value.trim();
-    var res=$("promoResult");if(!res)return;
-    if(!org||!title||wa.length<8){
-      res.hidden=false;res.className="promo-res err";res.textContent=tr("promo_err_req");return;
-    }
+    if(promoBusy)return;
+    var res=$("promoResult");if(!res||!MC)return;
     var city=$("promoCity").value||"Bandung",weeks=+$("promoWeeks").value||1;
+    var f={org:$("prOrg").value,title:$("prTitle").value,wa:$("prWa").value,note:$("prNote").value,tierId:selTier,city:city};
+    var v=MC.validatePromoLead(f);
+    if(!v.ok){
+      promoShowErr(res,v.field==="org"?"promo_err_name":v.field==="title"?"promo_err_title":"promo_err_wa");
+      var fid={org:"prOrg",title:"prTitle",wa:"prWa"}[v.field];if(fid&&$(fid).focus)$(fid).focus();
+      return;
+    }
     var est=MC.estimatePromoCampaign({tierId:selTier,weeks:weeks,city:city});
-    var code=MC.buildPromoOrderCode(city,selTier);
-    var order={code:code,org:org,title:title,wa:wa,note:note,tier:selTier,city:city,weeks:weeks,totalIdr:est.totalCostIdr,createdAt:new Date().toISOString()};
-    try{
-      var prev=JSON.parse(localStorage.getItem("gwm_promo_orders")||"[]");
-      prev.unshift(order);localStorage.setItem("gwm_promo_orders",JSON.stringify(prev.slice(0,12)));
-    }catch(ex){}
-    var msgTxt="Halo GWM! Order Promosi "+code+"\nBrand/EO: "+org+"\nEvent: "+title+"\nPaket: "+selTier+" ("+weeks+" minggu · "+city+")\nEstimasi Investasi: Rp"+est.totalCostIdr.toLocaleString("id-ID")+"\nWA: "+wa+(note?"\nCatatan: "+note:"");
-    var waHref="https://wa.me/"+(C.CONTACT_WA||"6282243562960")+"?text="+encodeURIComponent(msgTxt);
-    var mailHref="mailto:"+(C.CONTACT_EMAIL||"gowithdme@jurkon.my.id")+"?subject="+encodeURIComponent("Order Promosi "+code+" — "+title)+"&body="+encodeURIComponent(msgTxt);
-    res.hidden=false;res.className="promo-res ok";
-    res.innerHTML='<p>'+esc(tr("promo_ok",{code:code}))+'</p><div class="promo-res-act"><a class="btn sm pri" target="_blank" rel="noopener noreferrer" href="'+esc(waHref)+'">'+esc(tr("promo_wa_send"))+'</a><a class="btn sm line" href="'+esc(mailHref)+'">'+esc(tr("promo_mail_send"))+'</a></div>';
+    var btn=$("promoForm").querySelector('button[type="submit"]'),btnTxt=btn?btn.textContent:"";
+    promoBusy=true;if(btn){btn.disabled=true;btn.textContent=tr("promo_sending")}
+    res.hidden=true;
+    var args=MC.buildSponsorLeadArgs(f,est);
+    var canSend=!!window.sb&&C.SPONSOR_LEADS_ENABLED!==false;
+    var call=canSend?Promise.resolve(window.sb.rpc("submit_sponsor_lead",args)).then(function(r){return r},function(err){return{error:err||{message:"network"}}}):Promise.resolve({error:{message:"offline"}});
+    call.then(function(r){
+      promoBusy=false;if(btn){btn.disabled=false;btn.textContent=btnTxt}
+      var err=r&&r.error;
+      /* P0001 = penolakan sengaja dari fungsi SQL (validasi / pembatas laju): tampilkan, jangan buat kode palsu */
+      if(err&&err.code==="P0001"){
+        promoShowErr(res,/terlalu banyak/i.test(err.message||"")?"promo_err_rate":"promo_err_server",{why:err.message||""});
+        return;
+      }
+      var synced=!err&&r&&r.data&&r.data.code;
+      var code=synced?String(r.data.code):MC.buildPromoOrderCode(city,selTier);
+      var msgTxt="Halo GWM! Order Promosi "+code+(synced?"":" (belum tercatat di server)")+"\nBrand/EO: "+f.org.trim()+"\nEvent: "+f.title.trim()+"\nPaket: "+(PROMO_PKG_ID[selTier]||selTier)+" ("+weeks+" minggu · "+city+")\nEstimasi Investasi: "+MC.formatRupiah(est.totalCostIdr)+"\nWA: "+v.wa+(f.note.trim()?"\nCatatan: "+f.note.trim():"");
+      try{
+        var prev=JSON.parse(localStorage.getItem("gwm_promo_orders")||"[]");
+        prev.unshift({code:code,org:f.org.trim(),title:f.title.trim(),wa:v.wa,note:f.note.trim(),tier:selTier,city:city,weeks:weeks,totalIdr:est.totalCostIdr,synced:!!synced,createdAt:new Date().toISOString()});
+        localStorage.setItem("gwm_promo_orders",JSON.stringify(prev.slice(0,12)));
+      }catch(ex){}
+      promoShowOk(res,synced?"promo_ok":"promo_ok_offline",code,msgTxt,!!synced);
+      if(synced&&$("promoForm"))$("promoForm").reset();
+    });
   }
 
   /* ---- Right Rail: Regional Pulse & Nearby Cities + Native Sponsor ---- */

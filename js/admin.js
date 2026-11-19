@@ -10,7 +10,7 @@ function tdy(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta"})
 function fd(s){if(!s)return"";var d=new Date(s+"T00:00:00");return d.getDate()+" "+MON[d.getMonth()]+" "+d.getFullYear()}
 function slug(t,d){return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-"+d}
 function pv(u){var p=$("pv");p.style.backgroundImage=u?"url('"+u.replace(/'/g,"%27")+"')":"";p.textContent=u?"":"Tarik poster ke sini atau ketuk untuk memilih (JPG/PNG, otomatis dikecilkan)"}
-var VIEW_TITLES={dash:"Beranda",review:"Persetujuan Event",forum:"Komunitas & Grup",words:"Filter Kata (ID)",list:"Kelola Postingan",blog:"Artikel Blog",arsip:"Arsip Blog",stats:"Statistik Situs",form:"Buat / Edit Postingan"};
+var VIEW_TITLES={dash:"Beranda",review:"Persetujuan Event",forum:"Komunitas & Grup",words:"Filter Kata (ID)",sponsor:"Lead Sponsor",list:"Kelola Postingan",blog:"Artikel Blog",arsip:"Arsip Blog",stats:"Statistik Situs",form:"Buat / Edit Postingan"};
 /* Dialog modal inline pengganti alert/confirm/prompt */
 window.admAsk=function(o){o=o||{};return new Promise(function(res){
   var d=document.createElement("dialog");d.className="aqd adm-dlg";
@@ -42,7 +42,7 @@ window.admAsk=function(o){o=o||{};return new Promise(function(res){
   });
   d.showModal();
 })};
-function go(v){view=v;["dash","review","forum","words","list","blog","arsip","stats","form"].forEach(function(x){var el=$("v_"+x);if(el)el.hidden=x!==v});
+function go(v){view=v;["dash","review","forum","words","sponsor","list","blog","arsip","stats","form"].forEach(function(x){var el=$("v_"+x);if(el)el.hidden=x!==v});
   [].forEach.call(document.querySelectorAll("#bnav button"),function(b){b.classList.toggle("on",b.dataset.v===v||(b.dataset.g||"").split(",").indexOf(v)>-1)});
   [].forEach.call(document.querySelectorAll("#admSide button"),function(b){b.classList.toggle("on",b.dataset.v===v)});
   [].forEach.call(document.querySelectorAll(".seg[data-g] button"),function(b){b.classList.toggle("on",b.dataset.v===v)});

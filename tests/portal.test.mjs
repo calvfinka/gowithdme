@@ -106,6 +106,60 @@ test('estimatePromoCampaign applies volume discounts and city tier multipliers',
   assert.ok(singleWeek.estClicks > 0 && singleWeek.estImpressions > singleWeek.estClicks);
 });
 
+test('formatRupiah memakai titik ribuan tanpa bergantung locale', () => {
+  assert.equal(monetizeCore.formatRupiah(0), 'Rp0');
+  assert.equal(monetizeCore.formatRupiah(999), 'Rp999');
+  assert.equal(monetizeCore.formatRupiah(149000), 'Rp149.000');
+  assert.equal(monetizeCore.formatRupiah(1234567.6), 'Rp1.234.568');
+  assert.equal(monetizeCore.formatRupiah('abc'), 'Rp0');
+  assert.equal(monetizeCore.formatRupiah(-5000), '-Rp5.000');
+});
+
+test('normalizeIdWhatsapp menormalkan nomor seluler Indonesia dan menolak yang lain', () => {
+  const n = monetizeCore.normalizeIdWhatsapp;
+  assert.equal(n('081234567890'), '6281234567890');
+  assert.equal(n('0812-3456-7890'), '6281234567890');
+  assert.equal(n('+62 812 3456 7890'), '6281234567890');
+  assert.equal(n('6281234567890'), '6281234567890');
+  assert.equal(n('81234567890'), '6281234567890');
+  assert.equal(n(''), '');
+  assert.equal(n(null), '');
+  assert.equal(n('12345'), '');
+  assert.equal(n('0212345678'), '');        // telepon rumah
+  assert.equal(n('08123'), '');             // terlalu pendek
+  assert.equal(n('08123456789012345'), ''); // terlalu panjang
+});
+
+test('validatePromoLead menunjuk kolom yang salah', () => {
+  const v = monetizeCore.validatePromoLead;
+  assert.deepEqual(v({ org: '', title: 'x y', wa: '081234567890' }), { ok: false, field: 'org' });
+  assert.deepEqual(v({ org: 'EO', title: ' ', wa: '081234567890' }), { ok: false, field: 'title' });
+  assert.deepEqual(v({ org: 'EO', title: 'Konser', wa: '123' }), { ok: false, field: 'wa' });
+  assert.deepEqual(v({ org: 'EO', title: 'Konser', wa: '0812 3456 7890' }), { ok: true, field: '', wa: '6281234567890' });
+  assert.equal(v(null).ok, false);
+});
+
+test('buildSponsorLeadArgs cocok dengan parameter RPC submit_sponsor_lead', () => {
+  const est = monetizeCore.estimatePromoCampaign({ tierId: 'city_spotlight', weeks: 2, city: 'Bandung' });
+  const a = monetizeCore.buildSponsorLeadArgs({ org: ' Acme ', title: 'Konser', wa: '081234567890', note: 'https://x.id', tierId: 'city_spotlight', city: 'Bandung' }, est);
+  assert.deepEqual(Object.keys(a).sort(), ['p_budget', 'p_city', 'p_email', 'p_package', 'p_title', 'p_total', 'p_name', 'p_wa', 'p_weeks'].sort());
+  assert.equal(a.p_name, 'Acme');
+  assert.equal(a.p_wa, '6281234567890');
+  assert.equal(a.p_weeks, 2);
+  assert.equal(a.p_total, est.totalCostIdr);
+  assert.equal(a.p_package, 'city_spotlight');
+});
+
+test('buildPromoOrderCode: format tetap, dan kode tidak bentrok walau dibuat di milidetik yang sama', () => {
+  const same = Date.now();
+  const codes = new Set();
+  for (let i = 0; i < 500; i++) codes.add(monetizeCore.buildPromoOrderCode('Bandung', 'city_spotlight', same));
+  assert.ok(codes.size >= 499, `terlalu banyak bentrok: ${codes.size}/500 unik`);
+  for (const c of codes) assert.match(c, /^GWM-BAN-CTY-[A-Z2-9]{4}\d{4}$/);
+  assert.equal(monetizeCore.buildPromoOrderCode('', 'free', 1234, 'ab'), 'GWM-IDN-FRE-AB1234');
+  assert.match(monetizeCore.buildPromoOrderCode('Tangerang Selatan', 'national_portal', 99999, 'QQ'), /^GWM-TAN-NAT-QQ9999$/);
+});
+
 test('calculateTripSplitWithFee computes fair rounded split including optional host service fee', () => {
   const res = monetizeCore.calculateTripSplitWithFee(1000000, 4, 10, 5);
   assert.equal(res.bufferedTotal, 1100000);

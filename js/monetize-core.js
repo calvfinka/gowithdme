@@ -150,14 +150,78 @@
     };
   }
 
-  function buildPromoOrderCode(city, tierId, ts) {
+  function buildPromoOrderCode(city, tierId, ts, rnd) {
     var codeCity = String(city || 'IDN')
       .replace(/[^a-zA-Z]/g, '')
       .toUpperCase()
       .slice(0, 3) || 'IDN';
     var codeTier = tierId === 'national_portal' ? 'NAT' : tierId === 'city_spotlight' ? 'CTY' : 'FRE';
     var stamp = String(ts || Date.now()).slice(-4);
-    return 'GWM-' + codeCity + '-' + codeTier + '-' + stamp;
+    // 4 karakter acak + 4 digit waktu: cukup unik untuk kode cadangan di browser.
+    // Kode resmi dibuat server (submit_sponsor_lead); ini hanya dipakai bila server tak terjangkau.
+    var r = rnd;
+    if (r == null) {
+      r = '';
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      var buf = null;
+      try {
+        if (typeof crypto !== 'undefined' && crypto.getRandomValues) buf = crypto.getRandomValues(new Uint8Array(4));
+      } catch (e) { buf = null; }
+      for (var i = 0; i < 4; i++) {
+        var n = buf ? buf[i] : Math.floor(Math.random() * 256);
+        r += chars.charAt(n % chars.length);
+      }
+    }
+    return 'GWM-' + codeCity + '-' + codeTier + '-' + String(r).toUpperCase() + stamp;
+  }
+
+  // 149000 -> "Rp149.000" (titik pemisah ribuan, tanpa bergantung ICU/locale browser)
+  function formatRupiah(n) {
+    var v = Math.round(Number(n));
+    if (!isFinite(v)) v = 0;
+    var neg = v < 0;
+    var s = String(Math.abs(v)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return (neg ? '-' : '') + 'Rp' + s;
+  }
+
+  // 0812-3456-7890 / +62 812... / 812... -> "62812..."; nomor bukan seluler Indonesia -> ""
+  function normalizeIdWhatsapp(raw) {
+    var d = String(raw == null ? '' : raw).replace(/[^0-9]/g, '');
+    if (!d) return '';
+    if (d.charAt(0) === '0') d = '62' + d.slice(1);
+    else if (d.charAt(0) === '8') d = '62' + d;
+    return /^628\d{8,11}$/.test(d) ? d : '';
+  }
+
+  function isValidEmail(s) {
+    return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(s || '').trim());
+  }
+
+  // Validasi form Promote. Mengembalikan {ok, field, wa} - field berisi nama kolom yang salah.
+  function validatePromoLead(f) {
+    var o = f || {};
+    if (String(o.org || '').trim().length < 2) return { ok: false, field: 'org' };
+    if (String(o.title || '').trim().length < 2) return { ok: false, field: 'title' };
+    var wa = normalizeIdWhatsapp(o.wa);
+    if (!wa) return { ok: false, field: 'wa' };
+    return { ok: true, field: '', wa: wa };
+  }
+
+  // Argumen RPC submit_sponsor_lead dari isi form + hasil estimasi
+  function buildSponsorLeadArgs(f, est) {
+    var o = f || {};
+    var e = est || {};
+    return {
+      p_name: String(o.org || '').trim(),
+      p_email: '',
+      p_wa: normalizeIdWhatsapp(o.wa),
+      p_title: String(o.title || '').trim(),
+      p_package: o.tierId,
+      p_budget: String(o.note || '').trim().slice(0, 300),
+      p_city: o.city || null,
+      p_weeks: e.weeks || null,
+      p_total: e.totalCostIdr != null ? Math.round(e.totalCostIdr) : null
+    };
   }
 
   return {
@@ -167,6 +231,11 @@
     rankPortalEvents: rankPortalEvents,
     estimatePromoCampaign: estimatePromoCampaign,
     calculateTripSplitWithFee: calculateTripSplitWithFee,
-    buildPromoOrderCode: buildPromoOrderCode
+    buildPromoOrderCode: buildPromoOrderCode,
+    formatRupiah: formatRupiah,
+    normalizeIdWhatsapp: normalizeIdWhatsapp,
+    isValidEmail: isValidEmail,
+    validatePromoLead: validatePromoLead,
+    buildSponsorLeadArgs: buildSponsorLeadArgs
   };
 });

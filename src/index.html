@@ -134,12 +134,13 @@
               <label>{{promo_dur_h}}<select id="promoWeeks"><option value="1">1</option><option value="2">2</option><option value="4">4</option><option value="8">8</option></select></label>
             </div>
             <div class="promo-est" id="promoEstBox"></div>
+            <p class="meta promo-note">{{promo_est_note}}</p>
           </div>
           <form class="promo-form card" id="promoForm">
             <h3>{{promo_form_h}}</h3>
             <label class="f">{{promo_name}}<input id="prOrg" type="text" maxlength="80" required></label>
             <label class="f">{{promo_title}}<input id="prTitle" type="text" maxlength="120" required></label>
-            <label class="f">{{promo_wa}}<input id="prWa" type="tel" maxlength="20" placeholder="08xxxxxxxxxx" required></label>
+            <label class="f">{{promo_wa}}<input id="prWa" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="08xxxxxxxxxx" required></label>
             <label class="f">{{promo_note}}<textarea id="prNote" rows="2" maxlength="300" placeholder="https://…"></textarea></label>
             <button type="submit" class="btn pri block">{{promo_btn}}</button>
             <div id="promoResult" class="promo-res" hidden></div>
