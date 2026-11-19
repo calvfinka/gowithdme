@@ -237,7 +237,7 @@ function openEv(id,buddy){
    +'<button class="btn line" type="button" id="dIcs">'+ic("cal")+tr("cal")+'</button><button class="btn line" type="button" id="dShare">'+ic("share")+tr("share")+'</button>'
    +'<button class="btn line" type="button" id="close">'+tr("close")+'</button></div><div id="ajk" class="ajk"></div><div id="fe" class="fe"></div></div>';
   $("dlg").showModal();
-  if(history.replaceState){var u=new URL(location.href);u.searchParams.set("e",e.slug||e.id);history.replaceState(null,"",u.pathname+u.search)}
+  if(history.replaceState){var u=new URL(location.href);u.searchParams.set("e",e.slug||e.id);u.searchParams.delete("teman");history.replaceState(null,"",u.pathname+u.search)}
   $("close").onclick=function(){$("dlg").close()};
   $("dIcs").onclick=function(){ics(e)};$("dShare").onclick=function(){share(e)};$("dBuddy").onclick=goBuddy;if(buddy)goBuddy();
   var tl=$("dTicketLink");if(tl&&tl!==DUM)tl.onclick=function(){try{var n=+localStorage.getItem("gwm_aff_clicks")||0;localStorage.setItem("gwm_aff_clicks",String(n+1))}catch(ex){}};
@@ -306,7 +306,7 @@ window.IB_Api={ready:false,
   today:today,days:days,where:where,esc:esc,gratis:gratis};
 load().then(function(){IB_Api.ready=true;buildCities();if(MODE==="home"&&!state.events.some(function(e){return isActive(e)&&status(e).k==="live"})){$("note").hidden=false}render();
   document.dispatchEvent(new CustomEvent("ib:ready"));
-  var want=new URLSearchParams(location.search).get("e");if(want){var w=state.events.filter(function(x){return String(x.slug)===want||String(x.id)===want})[0];if(w)openEv(w.id)}});
+  var qs=new URLSearchParams(location.search),want=qs.get("e");if(want){var w=state.events.filter(function(x){return String(x.slug)===want||String(x.id)===want})[0];if(w)openEv(w.id,qs.get("teman")==="1")}});
 })();
 if(location.hash&&!/^#(blog|deals|promo|tools|top)$/.test(location.hash))history.replaceState(null,"",location.pathname+location.search);
 document.addEventListener("click",function(e){

@@ -14,7 +14,8 @@ function ask(o){return new Promise(function(res){
   d.addEventListener("close",function(){var v=d.querySelector("textarea"),ok=d.returnValue==="ok";res(ok?(v?v.value.trim():true):null);d.remove()});
   d.showModal();var t=d.querySelector("textarea");if(t)t.focus()})}
 function run(p,okMsg,after){return p.then(function(r){if(r.error){toast(r.error.message||tr("aj_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("aj_err"));return false})}
-function needLogin(){toast(tr("aj_needlogin"));setTimeout(function(){location.href="login"},900)}
+/* e (opsional): setelah login, pengguna dikembalikan ke event ini dan formulir ajakan dibuka (?teman=1, dibaca app.js). */
+function needLogin(e){toast(tr("aj_needlogin"));var nx=e?"?next="+encodeURIComponent((e.category==="naikgunung"?"gunung":"event")+"?e="+encodeURIComponent(e.slug||e.id)+"&teman=1"):"";setTimeout(function(){location.href="login"+nx},900)}
 function refresh(){if(window.IB_AjakanBadge)window.IB_AjakanBadge()}
 
 /* ---------- Di dalam rincian event ---------- */
@@ -67,7 +68,7 @@ function draw(e,box,me,L,M,C,soc,mineInt){
   var again=function(){mount(e,box);refresh()};
   box.onclick=function(ev){var b=ev.target.closest("[data-x]");if(!b)return;var x=b.dataset.x,i=b.dataset.i;
     if(x==="share"){var ij=L.filter(function(z){return z.id===i})[0];if(ij&&window.IB_Share){var u=new URL(location.href);u.searchParams.set("e",e.slug||e.id);IB_Share.open({title:ij.title,text:tr("aj_share_text",{t:ij.title,e:e.title}),url:u.origin+u.pathname+u.search})}return}
-    if(x==="login"||(!me&&(x==="new"||x==="interest")))return needLogin();
+    if(x==="login"||(!me&&(x==="new"||x==="interest")))return needLogin(e);
     if(x==="new"){var f=box.querySelector("form.nw");f.hidden=!f.hidden;return}
     if(x==="edit"){var ef=box.querySelector('form.ed[data-i="'+i+'"]');if(ef)ef.hidden=!ef.hidden;return}
     if(x==="interest")return run(sb.rpc("set_interest",{p_event:e.id,p_on:!mineInt}),tr(mineInt?"aj_interest_off":"aj_interest_added"),again);
