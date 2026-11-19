@@ -34,21 +34,45 @@
     return txt.length>155?txt.slice(0,155)+"…":txt;
   }
 
+  if (document.getElementById("blArt") && !location.search) return; /* artikel statis: tidak perlu cek tulisan baru */
+  var ROOT = (window.GWMBlog && GWMBlog.ROOT) || (function(){var sc=document.currentScript;return sc&&sc.src?new URL("../",sc.src).href:new URL("../",location.href).href})();
   var path = location.pathname.replace(/\/+$/, "");
   var parts = path.split("/");
   var bi = parts.indexOf("blog");
   var curCat = (bi > -1 && parts[bi + 1] && CATS[parts[bi + 1]]) ? parts[bi + 1] : "";
-  var basePrefix = curCat ? "../../" : "../";
+  /* alamat tanpa garis miring akhir (/blog atau /blog/berita) membuat tautan relatif salah: rapikan */
+  if (!/\.html$/.test(path) && !/\/$/.test(location.pathname) && bi > -1 && parts.length <= bi + 2) {
+    try { history.replaceState(null, "", location.pathname + "/" + location.search + location.hash); } catch (e) {}
+  }
+  function ic(n){return '<svg class="i" aria-hidden="true"><use href="#ic-'+n+'"/></svg>'}
+  function mins(body,isHtml){var tmp=document.createElement("div");tmp.innerHTML=renderBody(body,isHtml);return Math.max(1,Math.round(((tmp.textContent||"").trim().split(/\s+/).length)/200))}
+  function ub(k){return encodeURIComponent(k)}
+  function liveUrl(p){return ROOT + "blog/?cat=" + ub(p.category) + "&post=" + ub(p.slug)}
 
   function openReader(p){
     var main = document.querySelector("main.bl-main");
     if (!main) return;
+    var key = p.category + "/" + p.slug, url = liveUrl(p), cn = CATS[p.category] || p.category, m = mins(p.body, p.is_html);
     document.title = p.title + " – Blog GWM";
-    main.innerHTML = '<p><a href="' + basePrefix + 'blog/' + (curCat ? curCat + "/" : "") + '">← Kembali ke daftar blog</a></p>' +
-      '<article class="bl-art"><h1>' + esc(p.title) + '</h1>' +
-      '<p class="bl-meta"><span>' + esc(CATS[p.category] || p.category) + '</span> · <time>' + fd(p.published_at) + '</time></p>' +
-      '<div class="bl-body">' + renderBody(p.body, p.is_html) + '</div></article>';
+    var shr = [["WhatsApp","https://wa.me/?text="+encodeURIComponent(p.title+" "+url),"wa"],["Telegram","https://t.me/share/url?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(p.title),"tg"],["X","https://twitter.com/intent/tweet?text="+encodeURIComponent(p.title)+"&url="+encodeURIComponent(url),"x"],["Facebook","https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(url),"fb"]]
+      .map(function(l){return '<a class="bl-sb bl-sb-'+l[2]+'" target="_blank" rel="noopener noreferrer" href="'+esc(l[1])+'">'+l[0]+'</a>'}).join("");
+    main.className = "wrap bl-main bl-art-wrap";
+    main.innerHTML = '<div class="bl-grid bl-grid-a"><article class="bl-art bl-c-'+esc(p.category)+'" id="blArt" data-k="'+esc(key)+'" data-title="'+esc(p.title)+'" data-url="'+esc(url)+'">' +
+      '<nav class="bl-bc"><a href="'+ROOT+'blog/">Blog</a><span>›</span><a href="'+ROOT+'blog/'+esc(p.category)+'/">'+esc(cn)+'</a></nav>' +
+      '<a class="bl-badge" href="'+ROOT+'blog/'+esc(p.category)+'/">'+ic(p.category)+esc(cn)+'</a><h1>'+esc(p.title)+'</h1>' +
+      '<div class="bl-by"><span class="bl-av" aria-hidden="true">G</span><div><b>Redaksi GWM</b><span>'+fd(p.published_at)+' · '+m+' menit baca</span></div></div>' +
+      '<p class="bl-stats"><span class="bl-s bl-sv" hidden>'+ic("eye")+'<b data-v></b> dibaca</span><span class="bl-s bl-sc" hidden>'+ic("chat")+'<b data-c></b> komentar</span><span class="bl-s bl-sl" hidden>'+ic("heart")+'<b data-l></b> suka</span></p>' +
+      '<div class="bl-share" role="group" aria-label="Bagikan tulisan"><span class="bl-sl-t">'+ic("share")+'Bagikan</span>'+shr+'<button type="button" class="bl-sb bl-sb-cp" data-copy>'+ic("link")+'Salin tautan</button><button type="button" class="bl-sb bl-sb-nat" data-native hidden>Lainnya…</button><span class="sp"></span><span class="bl-fs" role="group" aria-label="Ukuran teks">'+ic("type")+'<button type="button" data-fs="-1" aria-label="Kecilkan teks">A−</button><button type="button" data-fs="1" aria-label="Besarkan teks">A+</button></span></div>' +
+      '<details class="bl-toc-m" id="blTocM" hidden><summary>'+ic("list")+'Daftar isi</summary><ol></ol></details>' +
+      '<div class="bl-body" id="blBody">'+renderBody(p.body, p.is_html)+'</div>' +
+      '<div class="bl-end"><button type="button" class="bl-like" id="blLike" aria-pressed="false">'+ic("heart")+'<span>Suka tulisan ini</span><b data-l></b></button><p>Ada yang mau ditambah atau dikoreksi? Tulis di kolom komentar di bawah.</p></div>' +
+      '<section class="bl-cm" id="komentar" data-k="'+esc(key)+'"><h2 id="blCmH">Komentar <i data-c></i></h2><div id="blCmBox"><p class="bl-muted">Memuat komentar…</p></div></section>' +
+      '<p class="bl-cta"><a class="btn" href="'+ROOT+'blog/">← Kembali ke daftar blog</a></p></article>' +
+      '<aside class="bl-side bl-side-a"><section class="bl-box bl-toc" id="blToc" hidden><h3>'+ic("list")+'Daftar isi</h3><ol></ol></section></aside></div>';
+    if (!document.getElementById("blProg")) document.body.insertAdjacentHTML("afterbegin", '<div class="bl-prog" id="blProg" aria-hidden="true"><i></i></div>');
+    if (!document.querySelector(".bl-dock")) document.body.insertAdjacentHTML("beforeend", '<div class="bl-dock off" role="toolbar" aria-label="Aksi cepat"><button type="button" id="dkLike" aria-label="Suka" aria-pressed="false">'+ic("heart")+'<b data-l></b></button><a href="#komentar" aria-label="Ke komentar">'+ic("chat")+'<b data-c></b></a><button type="button" id="dkShare" aria-label="Bagikan">'+ic("share")+'</button><button type="button" id="dkTop" aria-label="Kembali ke atas">'+ic("up")+'</button></div>');
     window.scrollTo(0, 0);
+    if (window.GWMBlog) GWMBlog.initArticle(document.getElementById("blArt"));
   }
 
   function renderPosts(posts){
@@ -60,79 +84,50 @@
     }
     var main = document.querySelector("main.bl-main");
     if (!main) return;
-    var list = main.querySelector(".bl-list");
-    var filtered = curCat ? posts.filter(function(x){ return x.category === curCat; }) : posts;
-    if (!list && filtered.length) {
-      var emp = main.querySelector(".empty");
-      if (emp) emp.remove();
-      list = document.createElement("div");
-      list.className = "bl-list";
-      main.appendChild(list);
-    }
+    var list = main.querySelector("#blFeed");
     if (!list) return;
+    var filtered = curCat ? posts.filter(function(x){ return x.category === curCat; }) : posts;
 
     var pubMap = {};
-    filtered.forEach(function(p){ pubMap[p.category + "/" + p.slug] = p; });
-
+    posts.forEach(function(p){ pubMap[p.category + "/" + p.slug] = p; });
+    /* tulisan yang dicabut/di-draft-kan sejak build terakhir: buang kartunya */
     [].forEach.call(list.querySelectorAll("article.bl-card"), function(card){
       var a = card.querySelector("h2 a"); if (!a) return;
-      var href = a.getAttribute("href") || "";
-      var m = href.match(/([a-z0-9-]+)\/([a-z0-9-]+)(?:\.html)?$/);
-      if (m && !pubMap[m[1] + "/" + m[2]]) card.remove();
+      var m = (a.getAttribute("href") || "").match(/([a-z0-9-]+)\/([a-z0-9-]+)(?:\.html)?$/);
+      if (m && !pubMap[m[1] + "/" + m[2]] && card.getAttribute("data-live") !== "1") card.remove();
     });
 
-    filtered.slice().reverse().forEach(function(p){
+    filtered.forEach(function(p){
       var key = p.category + "/" + p.slug;
-      var exists = [].some.call(list.querySelectorAll("article.bl-card h2 a"), function(a){
-        return (a.getAttribute("href") || "").indexOf(key) > -1;
-      });
+      var exists = [].some.call(list.querySelectorAll("article.bl-card"), function(c){ return c.getAttribute("data-k") === key; });
       if (exists) return;
-      var liveUrl = basePrefix + "blog/?cat=" + encodeURIComponent(p.category) + "&post=" + encodeURIComponent(p.slug);
+      var u = liveUrl(p), cn = CATS[p.category] || p.category, m = mins(p.body, p.is_html);
       var art = document.createElement("article");
-      art.className = "bl-card";
-      art.innerHTML = '<h2><a href="' + liveUrl + '">' + esc(p.title) + '</a></h2>' +
-        '<p class="bl-meta"><span>' + esc(CATS[p.category] || p.category) + '</span> · <time>' + fd(p.published_at) + '</time></p>' +
-        '<p>' + esc(snippet(p.body, p.is_html)) + '</p>';
-      art.querySelector("a").addEventListener("click", function(e){
-        e.preventDefault();
-        history.pushState(null, "", liveUrl);
-        openReader(p);
-      });
-
-      if (curCat) {
-        list.insertBefore(art, list.firstChild);
-      } else {
-        var secs = [].filter.call(list.querySelectorAll("section.bl-sec"), function(s){
-          var sh = s.querySelector(".bl-sh a");
-          return sh && (sh.getAttribute("href") || "").indexOf("/" + p.category + "/") > -1;
-        });
-        var sec = secs.length ? secs[0] : null;
-        if (!sec) {
-          sec = document.createElement("section");
-          sec.className = "bl-sec";
-          sec.innerHTML = '<p class="bl-sh"><a href="' + basePrefix + 'blog/' + esc(p.category) + '/">' + esc(CATS[p.category] || p.category) + '</a><span>0</span></p>';
-          list.insertBefore(sec, list.firstChild);
-        }
-        var sh = sec.querySelector(".bl-sh");
-        sec.insertBefore(art, sh ? sh.nextSibling : sec.firstChild);
-      }
+      art.className = "bl-card bl-c-" + p.category;
+      art.setAttribute("data-k", key); art.setAttribute("data-live", "1"); art.setAttribute("data-d", (p.published_at || "").slice(0, 19));
+      art.innerHTML = '<a class="bl-th" href="'+u+'" tabindex="-1" aria-hidden="true">'+ic(p.category)+'<em>'+m+' mnt</em></a>' +
+        '<div class="bl-cb"><p class="bl-bd"><a class="bl-badge" href="'+ROOT+'blog/'+esc(p.category)+'/">'+ic(p.category)+esc(cn)+'</a><time>'+fd(p.published_at)+'</time></p>' +
+        '<h2><a href="'+u+'">'+esc(p.title)+'</a></h2><p class="bl-ex">'+esc(snippet(p.body, p.is_html))+'</p>' +
+        '<p class="bl-ft"><span class="bl-s">'+ic("clock")+m+' mnt baca</span><span class="bl-s bl-sv" hidden>'+ic("eye")+'<b data-v></b></span><span class="bl-s bl-sc" hidden>'+ic("chat")+'<b data-c></b></span><span class="bl-s bl-sl" hidden>'+ic("heart")+'<b data-l></b></span>' +
+        '<button type="button" class="bl-ib bl-sh2" data-share="'+esc(u)+'" data-title="'+esc(p.title)+'" aria-label="Bagikan tulisan">'+ic("share")+'</button></p></div>';
+      art.querySelector("h2 a").addEventListener("click", function(e){ e.preventDefault(); history.pushState(null, "", u); openReader(p); });
+      art.querySelector(".bl-th").addEventListener("click", function(e){ e.preventDefault(); history.pushState(null, "", u); openReader(p); });
+      var d = (p.published_at || "").slice(0, 19), before = null;
+      [].some.call(list.querySelectorAll("article.bl-card"), function(c){ if ((c.getAttribute("data-d") || "") < d) { before = c; return true; } return false; });
+      list.insertBefore(art, before);
     });
-
-    [].forEach.call(list.querySelectorAll("section.bl-sec"), function(sec){
-      var cnt = sec.querySelectorAll("article.bl-card").length;
-      var sp = sec.querySelector(".bl-sh span");
-      if (sp) sp.textContent = cnt;
-      if (cnt === 0) sec.style.display = "none";
-    });
+    var none = main.querySelector(".bl-empty"); if (none && list.querySelector("article.bl-card")) none.remove();
+    if (window.GWMBlog) GWMBlog.paint();
   }
 
   /* Hemat egress: daftar ringan dulu (tanpa isi tulisan), lalu isi hanya untuk tulisan yang belum punya kartu statis
      (hasil build) atau yang sedang dibuka lewat ?cat=&post=. Dulu: isi 200 tulisan diunduh di setiap kunjungan. */
   var H = { "apikey": KEY, "Authorization": "Bearer " + KEY },
       BASE = URL + "/rest/v1/blog_posts?status=eq.published";
-  function jget(u){ return fetch(u, { headers: H }).then(function(r){ return r.ok ? r.json() : []; }); }
+  function jget(u){ return fetch(u, { headers: H }).then(function(r){ return r.ok ? r.json() : null; }); }
   jget(BASE + "&select=id,title,slug,category,is_html,published_at&order=published_at.desc&limit=200").then(function(meta){
-    if (!Array.isArray(meta)) return;
+    /* galat/kuota Supabase habis atau daftar kosong: biarkan kartu hasil build, jangan dikosongkan */
+    if (!Array.isArray(meta) || !meta.length) return;
     var q = new URLSearchParams(location.search), qCat = q.get("cat"), qSlug = q.get("post"),
         hrefs = [].map.call(document.querySelectorAll("main.bl-main article.bl-card h2 a"), function(a){ return a.getAttribute("href") || ""; });
     var need = meta.filter(function(p){
