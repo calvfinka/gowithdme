@@ -19,6 +19,7 @@
 <title>Komunitas — Cari Teman Nonton Festival & Naik Gunung | GWM</title><meta name="description" content="Komunitas GWM per kota: cari teman nonton konser dan naik gunung, tanya info, dan bagi tips bareng sesama pengunjung.">
 <meta property="og:title" content="Komunitas — Cari Teman Nonton Festival & Naik Gunung | GWM"><meta property="og:description" content="Komunitas GWM per kota: cari teman nonton konser dan naik gunung, tanya info, dan bagi tips bareng sesama pengunjung.">
 <link rel="stylesheet" href="../css/panel.css?v=202611190753">
+<link rel="stylesheet" href="../css/komunitas.css?v=202611190753">
 <link rel="canonical" href="https://calvfinka.github.io/gowithdme/id/komunitas"><link rel="alternate" hreflang="id" href="https://calvfinka.github.io/gowithdme/id/komunitas"><link rel="alternate" hreflang="en" href="https://calvfinka.github.io/gowithdme/en/komunitas"><link rel="alternate" hreflang="x-default" href="https://calvfinka.github.io/gowithdme/id/komunitas"></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></symbol>
@@ -185,23 +186,80 @@
 
 <main class="page sub kom">
 <div id="msg" class="msg" hidden></div>
+
+<!-- ===== Beranda komunitas: pilih kota ===== -->
 <section id="kHome">
-  <h1>Komunitas</h1><p class="meta">Pergi sendiri bukan berarti harus sendirian. Pilih kotamu, cari teman jalan, dan tanya info sebelum berangkat.</p>
-  <div class="kgrid" id="kCities"></div>
+  <div class="kx-hero">
+    <div class="kx-hero-t">
+      <p class="kx-eyebrow"><i></i>Komunitas per kota</p>
+      <h1>Komunitas</h1>
+      <p class="kx-lead">Pergi sendiri bukan berarti harus sendirian. Pilih kotamu, cari teman jalan, dan tanya info sebelum berangkat.</p>
+      <div class="kx-stats" id="kStats" aria-live="polite"></div>
+      <a class="kx-resume" id="kResume" href="komunitas" hidden></a>
+    </div>
+    <svg class="kx-art" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+      <circle class="r r1" cx="60" cy="98" r="14"/><circle class="r r2" cx="60" cy="98" r="30"/><circle class="r r3" cx="60" cy="98" r="48"/>
+      <path class="pin" d="M60 108C60 108 22 78 22 46a38 38 0 0 1 76 0C98 78 60 108 60 108Z"/>
+      <circle cx="46" cy="41" r="11.5" fill="#E4501A"/><circle cx="74" cy="41" r="11.5" fill="#F5B416"/>
+      <path d="M30.5 68a15.7 15.7 0 0 1 31.4 0Z" fill="#E4501A"/><path d="M58.1 68a15.7 15.7 0 0 1 31.4 0Z" fill="#F5B416"/>
+    </svg>
+  </div>
+
+  <ol class="kx-how" aria-label="Cara kerjanya">
+    <li><span class="n n1">1</span><div><b>Pilih kotamu</b><p>Masuk ke ruang komunitas kota tempat acaranya.</p></div></li>
+    <li><span class="n n2">2</span><div><b>Cari teman jalan</b><p>Tulis rencanamu, atau balas ajakan orang lain.</p></div></li>
+    <li><span class="n n3">3</span><div><b>Bertemu dengan aman</b><p>Pilih tempat umum dan kabari orang terdekat.</p></div></li>
+  </ol>
+
+  <div class="kx-sech">
+    <h2>Pilih kotamu</h2>
+    <label class="kx-find"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input id="kFind" type="search" autocomplete="off" placeholder="Cari kota…" aria-label="Cari kota…"></label>
+  </div>
+  <div class="kgrid" id="kCities" aria-busy="true">
+    <span class="kcard sk"></span><span class="kcard sk"></span><span class="kcard sk"></span><span class="kcard sk"></span>
+  </div>
+  <p class="meta kx-nofind" id="kNoFind" hidden></p>
   <div class="ksoon" id="kSoon" hidden></div>
-  <h2 class="kh">Aturan main</h2>
-  <ul class="krules"><li>Saling hormat. Tidak ada ujaran kebencian, pelecehan, atau SARA.</li><li>Tanpa tautan, nomor telepon, atau jual-beli tiket. Untuk kontak, pakai fitur ajakan di halaman event.</li><li>Bertemu orang baru? Pilih tempat umum dan kabari orang terdekat.</li><li>Naik gunung: daftar lewat basecamp resmi dan patuhi aturan taman nasional.</li><li>Laporkan kiriman bermasalah. Tiga laporan menyembunyikan kiriman otomatis.</li></ul>
+
+  <details class="kx-rules">
+    <summary><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Aturan main<small>Baca sebelum menulis</small></summary>
+    <ul class="krules"><li>Saling hormat. Tidak ada ujaran kebencian, pelecehan, atau SARA.</li><li>Tanpa tautan, nomor telepon, atau jual-beli tiket. Untuk kontak, pakai fitur ajakan di halaman event.</li><li>Bertemu orang baru? Pilih tempat umum dan kabari orang terdekat.</li><li>Naik gunung: daftar lewat basecamp resmi dan patuhi aturan taman nasional.</li><li>Laporkan kiriman bermasalah. Tiga laporan menyembunyikan kiriman otomatis.</li></ul>
+  </details>
 </section>
+
+<!-- ===== Halaman kota ===== -->
 <section id="kCity" hidden>
-  <p><a class="lnk" href="komunitas">← Semua kota</a></p>
-  <h1 id="kTitle"></h1><p class="meta" id="kSub"></p>
-  <p class="ksafe" id="kSafe"></p>
-  <div id="kGroups"></div>
-  <div class="row"><button class="btn" id="kNew" type="button"></button></div>
-  <div class="seg" id="kTabs" role="group"></div>
-  <div id="kList"></div>
-  <h2 class="kh">Aturan main</h2>
-  <ul class="krules"><li>Saling hormat. Tidak ada ujaran kebencian, pelecehan, atau SARA.</li><li>Tanpa tautan, nomor telepon, atau jual-beli tiket. Untuk kontak, pakai fitur ajakan di halaman event.</li><li>Bertemu orang baru? Pilih tempat umum dan kabari orang terdekat.</li><li>Naik gunung: daftar lewat basecamp resmi dan patuhi aturan taman nasional.</li><li>Laporkan kiriman bermasalah. Tiga laporan menyembunyikan kiriman otomatis.</li></ul>
+  <nav class="kx-crumb" aria-label="Breadcrumb">
+    <a href="komunitas">Komunitas</a><span aria-hidden="true">›</span>
+    <label class="kx-switch"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><select id="kSwitch" aria-label="Ganti kota"></select></label>
+  </nav>
+
+  <header class="kx-chead">
+    <div><h1 id="kTitle"></h1><p class="meta" id="kSub"></p></div>
+    <button class="btn kx-new" id="kNew" type="button"></button>
+  </header>
+
+  <div class="kx-cols">
+    <div class="kx-main">
+      <p class="ksafe" id="kSafe"></p>
+      <div class="kx-tools">
+        <div class="kx-tabs" id="kTabs" role="group"></div>
+        <label class="kx-q"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input id="kQ" type="search" autocomplete="off" placeholder="Cari kiriman di kota ini…" aria-label="Cari kiriman di kota ini…"></label>
+      </div>
+      <div id="kList"></div>
+      <details class="kx-rules kx-rules-m">
+        <summary><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Aturan main<small>Baca sebelum menulis</small></summary>
+        <ul class="krules"><li>Saling hormat. Tidak ada ujaran kebencian, pelecehan, atau SARA.</li><li>Tanpa tautan, nomor telepon, atau jual-beli tiket. Untuk kontak, pakai fitur ajakan di halaman event.</li><li>Bertemu orang baru? Pilih tempat umum dan kabari orang terdekat.</li><li>Naik gunung: daftar lewat basecamp resmi dan patuhi aturan taman nasional.</li><li>Laporkan kiriman bermasalah. Tiga laporan menyembunyikan kiriman otomatis.</li></ul>
+      </details>
+    </div>
+    <aside class="kx-aside">
+      <div id="kGroups"></div>
+      <a class="kx-ev" id="kEvents" href="event"><span class="kx-ev-i"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg></span><span><b id="kEvT"></b><small id="kEvD"></small></span></a>
+      <div class="kx-rules kx-rules-d"><h2 class="kh">Aturan main</h2>
+        <ul class="krules"><li>Saling hormat. Tidak ada ujaran kebencian, pelecehan, atau SARA.</li><li>Tanpa tautan, nomor telepon, atau jual-beli tiket. Untuk kontak, pakai fitur ajakan di halaman event.</li><li>Bertemu orang baru? Pilih tempat umum dan kabari orang terdekat.</li><li>Naik gunung: daftar lewat basecamp resmi dan patuhi aturan taman nasional.</li><li>Laporkan kiriman bermasalah. Tiga laporan menyembunyikan kiriman otomatis.</li></ul></div>
+    </aside>
+  </div>
+  <button class="kx-fab" id="kFab" type="button" hidden></button>
 </section>
 </main>
 <dialog id="dlg"><div id="dBody" class="kb"></div></dialog>

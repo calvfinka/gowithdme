@@ -345,6 +345,27 @@ S.update({
 "kom_r5": ("Laporkan kiriman bermasalah. Tiga laporan menyembunyikan kiriman otomatis.", "Report problem posts. Three reports hide a post automatically."),
 "kom_back": ("← Semua kota", "← All cities"),
 })
+S.update({
+"kx_eyebrow": ("Komunitas per kota", "Community by city"),
+"kx_how_h": ("Cara kerjanya", "How it works"),
+"kx_s1_t": ("Pilih kotamu", "Pick your city"), "kx_s1_d": ("Masuk ke ruang komunitas kota tempat acaranya.", "Step into the community space of the city hosting the event."),
+"kx_s2_t": ("Cari teman jalan", "Find someone to go with"), "kx_s2_d": ("Tulis rencanamu, atau balas ajakan orang lain.", "Post your plan, or reply to someone else's invite."),
+"kx_s3_t": ("Bertemu dengan aman", "Meet safely"), "kx_s3_d": ("Pilih tempat umum dan kabari orang terdekat.", "Pick a public place and tell someone close to you."),
+"kx_pick_h": ("Pilih kotamu", "Choose your city"),
+"kx_find_ph": ("Cari kota…", "Search a city…"),
+"kx_search_ph": ("Cari kiriman di kota ini…", "Search posts in this city…"),
+"kx_switch": ("Ganti kota", "Switch city"),
+"kx_rules_hint": ("Baca sebelum menulis", "Read before posting"),
+})
+J.update({
+"kx_stat_p_1": ("{n} kiriman", "{n} post"), "kx_stat_g_1": ("{n} grup", "{n} group"),
+"kx_stat_c": ("{n} kota buka", "{n} cities open"), "kx_stat_p": ("{n} kiriman", "{n} posts"), "kx_stat_g": ("{n} grup", "{n} groups"),
+"kx_yours": ("Kotamu", "Your city"), "kx_resume": ("Lanjut ke {c}", "Continue to {c}"),
+"kx_events": ("Lihat event di {c}", "See events in {c}"), "kx_events_d": ("Konser, festival, dan pendakian yang bisa kamu datangi.", "Concerts, festivals, and hikes you can go to."),
+"kx_none_f": ("Tidak ada kiriman yang cocok.", "No matching posts."), "kx_empty_cta": ("Tulis kiriman pertama", "Write the first post"),
+"kx_nofind": ("Kota itu belum buka. Pilih dari daftar di bawah untuk dikabari.", "That city isn't open yet. Pick it in the list below to get notified."),
+"kx_last": ("Terakhir dibuka", "Last opened"),
+})
 J.update({
 "n_forum": ("Komunitas", "Community"),
 "k_off": ("Komunitas belum aktif di situs ini.", "The community is not active on this site yet."),

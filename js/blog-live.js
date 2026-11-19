@@ -28,13 +28,32 @@
     if(t==="a"){var h=safeHref(n.getAttribute("href"));return h?'<a href="'+esc(h)+'" rel="noopener nofollow">'+inner+"</a>":"<a>"+inner+"</a>"}
     return"<"+t+">"+inner+"</"+t+">"}
   function renderBody(body,isHtml){return isHtml?walk(new DOMParser().parseFromString("<body>"+body+"</body>","text/html").body):t2h(body)}
-  function snippet(body,isHtml){
-    var tmp=document.createElement("div");tmp.innerHTML=renderBody(body,isHtml);
-    var txt=(tmp.textContent||"").replace(/\s+/g," ").trim();
-    return txt.length>155?txt.slice(0,155)+"…":txt;
-  }
+  function plainOf(h){var d=document.createElement("div");d.innerHTML=h;return(d.textContent||"").replace(/\s+/g," ").trim()}
+  function nk(t){return String(t).toLowerCase().replace(/\W+/g,"")}
+  function dropTitle(h,title){
+    if(!title)return h;
+    var m=h.match(/^\s*<p>([\s\S]*?)<br>/);
+    if(m&&nk(plainOf(m[1]))===nk(title))return"<p>"+h.slice(m[0].length);
+    m=h.match(/^\s*<(p|h2|h3)>([\s\S]*?)<\/\1>/);
+    if(m&&nk(plainOf(m[2]))===nk(title))return h.slice(m[0].length).replace(/^\s+/,"");
+    m=h.match(/^\s*([^<]+)/);
+    if(m&&nk(plainOf(m[1]))===nk(title))return h.slice(m[0].length);
+    return h}
+  var KW=/\s*<p>\s*(?:<(?:em|i)>\s*)?Kata kunci\s*:\s*([\s\S]*?)(?:<\/(?:em|i)>\s*)?<\/p>\s*$/i;
+  function prep(body,isHtml,title){
+    var h=dropTitle(renderBody(body,isHtml),title),kw=[],m=h.match(KW);
+    if(m){h=h.slice(0,m.index);kw=plainOf(m[1]).split(",").map(function(k){return k.replace(/^[\s.]+|[\s.]+$/g,"")}).filter(function(k){return k.length>1&&k.length<=60}).slice(0,8)}
+    return{html:h,kw:kw}}
+  function trimEx(t,n){n=n||155;if(t.length<=n)return t;var cut=t.slice(0,n),m,last=-1,re=/[.!?](?=\s|$)/g;
+    while((m=re.exec(cut)))last=m.index+1;
+    if(last>=90)return cut.slice(0,last);
+    return cut.slice(0,cut.lastIndexOf(" ")).replace(/[,.;:\-\s]+$/,"")+"…"}
+  function snippet(body,isHtml,title){return trimEx(plainOf(prep(body,isHtml,title).html))}
 
   if (document.getElementById("blArt") && !location.search) return; /* artikel statis: tidak perlu cek tulisan baru */
+  var shown = location.pathname + location.search;
+  /* tombol Kembali dari pembaca langsung ke daftar (tanpa ini halaman tetap menampilkan tulisan). Pindah #bagian tidak memuat ulang. */
+  window.addEventListener("popstate", function(){ if (location.pathname + location.search !== shown) location.reload(); });
   var ROOT = (window.GWMBlog && GWMBlog.ROOT) || (function(){var sc=document.currentScript;return sc&&sc.src?new URL("../",sc.src).href:new URL("../",location.href).href})();
   var path = location.pathname.replace(/\/+$/, "");
   var parts = path.split("/");
@@ -45,15 +64,22 @@
     try { history.replaceState(null, "", location.pathname + "/" + location.search + location.hash); } catch (e) {}
   }
   function ic(n){return '<svg class="i" aria-hidden="true"><use href="#ic-'+n+'"/></svg>'}
-  function mins(body,isHtml){var tmp=document.createElement("div");tmp.innerHTML=renderBody(body,isHtml);return Math.max(1,Math.round(((tmp.textContent||"").trim().split(/\s+/).length)/200))}
+  function mins(body,isHtml,title){return Math.max(1,Math.round(plainOf(prep(body,isHtml,title).html).split(/\s+/).length/200))}
   function ub(k){return encodeURIComponent(k)}
   function liveUrl(p){return ROOT + "blog/?cat=" + ub(p.category) + "&post=" + ub(p.slug)}
 
   function openReader(p){
     var main = document.querySelector("main.bl-main");
     if (!main) return;
-    var key = p.category + "/" + p.slug, url = liveUrl(p), cn = CATS[p.category] || p.category, m = mins(p.body, p.is_html);
+    var key = p.category + "/" + p.slug, url = liveUrl(p), cn = CATS[p.category] || p.category, m = mins(p.body, p.is_html, p.title), pr = prep(p.body, p.is_html, p.title);
     document.title = p.title + " – Blog GWM";
+    var stat = ROOT + "blog/" + p.category + "/" + p.slug, ex = trimEx(plainOf(pr.html));
+    function sm(sel, attr, v){ var e = document.querySelector(sel); if (e) e.setAttribute(attr, v); }
+    sm('meta[name="description"]', "content", ex); sm('link[rel="canonical"]', "href", stat);
+    sm('meta[property="og:title"]', "content", p.title + " – Blog GWM"); sm('meta[property="og:description"]', "content", ex);
+    sm('meta[property="og:url"]', "content", stat); sm('meta[property="og:type"]', "content", "article");
+    document.body.classList.add("bl-reading");
+    shown = location.pathname + location.search;
     var shr = [["WhatsApp","https://wa.me/?text="+encodeURIComponent(p.title+" "+url),"wa"],["Telegram","https://t.me/share/url?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(p.title),"tg"],["X","https://twitter.com/intent/tweet?text="+encodeURIComponent(p.title)+"&url="+encodeURIComponent(url),"x"],["Facebook","https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(url),"fb"]]
       .map(function(l){return '<a class="bl-sb bl-sb-'+l[2]+'" target="_blank" rel="noopener noreferrer" href="'+esc(l[1])+'">'+l[0]+'</a>'}).join("");
     main.className = "wrap bl-main bl-art-wrap";
@@ -64,7 +90,8 @@
       '<p class="bl-stats"><span class="bl-s bl-sv" hidden>'+ic("eye")+'<b data-v></b> dibaca</span><span class="bl-s bl-sc" hidden>'+ic("chat")+'<b data-c></b> komentar</span><span class="bl-s bl-sl" hidden>'+ic("heart")+'<b data-l></b> suka</span></p>' +
       '<div class="bl-share" role="group" aria-label="Bagikan tulisan"><span class="bl-sl-t">'+ic("share")+'Bagikan</span>'+shr+'<button type="button" class="bl-sb bl-sb-cp" data-copy>'+ic("link")+'Salin tautan</button><button type="button" class="bl-sb bl-sb-nat" data-native hidden>Lainnya…</button><span class="sp"></span><span class="bl-fs" role="group" aria-label="Ukuran teks">'+ic("type")+'<button type="button" data-fs="-1" aria-label="Kecilkan teks">A−</button><button type="button" data-fs="1" aria-label="Besarkan teks">A+</button></span></div>' +
       '<details class="bl-toc-m" id="blTocM" hidden><summary>'+ic("list")+'Daftar isi</summary><ol></ol></details>' +
-      '<div class="bl-body" id="blBody">'+renderBody(p.body, p.is_html)+'</div>' +
+      '<div class="bl-body" id="blBody">'+pr.html+'</div>' +
+      (pr.kw.length?'<p class="bl-tags" aria-label="Topik terkait">'+pr.kw.map(function(k){return'<a href="'+ROOT+'blog/?q='+encodeURIComponent(k)+'" rel="nofollow">'+esc(k)+'</a>'}).join("")+'</p>':"") +
       '<div class="bl-end"><button type="button" class="bl-like" id="blLike" aria-pressed="false">'+ic("heart")+'<span>Suka tulisan ini</span><b data-l></b></button><p>Ada yang mau ditambah atau dikoreksi? Tulis di kolom komentar di bawah.</p></div>' +
       '<section class="bl-cm" id="komentar" data-k="'+esc(key)+'"><h2 id="blCmH">Komentar <i data-c></i></h2><div id="blCmBox"><p class="bl-muted">Memuat komentar…</p></div></section>' +
       '<p class="bl-cta"><a class="btn" href="'+ROOT+'blog/">← Kembali ke daftar blog</a></p></article>' +
@@ -101,13 +128,13 @@
       var key = p.category + "/" + p.slug;
       var exists = [].some.call(list.querySelectorAll("article.bl-card"), function(c){ return c.getAttribute("data-k") === key; });
       if (exists) return;
-      var u = liveUrl(p), cn = CATS[p.category] || p.category, m = mins(p.body, p.is_html);
+      var u = liveUrl(p), cn = CATS[p.category] || p.category, m = mins(p.body, p.is_html, p.title);
       var art = document.createElement("article");
       art.className = "bl-card bl-c-" + p.category;
       art.setAttribute("data-k", key); art.setAttribute("data-live", "1"); art.setAttribute("data-d", (p.published_at || "").slice(0, 19));
       art.innerHTML = '<a class="bl-th" href="'+u+'" tabindex="-1" aria-hidden="true">'+ic(p.category)+'<em>'+m+' mnt</em></a>' +
         '<div class="bl-cb"><p class="bl-bd"><a class="bl-badge" href="'+ROOT+'blog/'+esc(p.category)+'/">'+ic(p.category)+esc(cn)+'</a><time>'+fd(p.published_at)+'</time></p>' +
-        '<h2><a href="'+u+'">'+esc(p.title)+'</a></h2><p class="bl-ex">'+esc(snippet(p.body, p.is_html))+'</p>' +
+        '<h2><a href="'+u+'">'+esc(p.title)+'</a></h2><p class="bl-ex">'+esc(snippet(p.body, p.is_html, p.title))+'</p>' +
         '<p class="bl-ft"><span class="bl-s">'+ic("clock")+m+' mnt baca</span><span class="bl-s bl-sv" hidden>'+ic("eye")+'<b data-v></b></span><span class="bl-s bl-sc" hidden>'+ic("chat")+'<b data-c></b></span><span class="bl-s bl-sl" hidden>'+ic("heart")+'<b data-l></b></span>' +
         '<button type="button" class="bl-ib bl-sh2" data-share="'+esc(u)+'" data-title="'+esc(p.title)+'" aria-label="Bagikan tulisan">'+ic("share")+'</button></p></div>';
       art.querySelector("h2 a").addEventListener("click", function(e){ e.preventDefault(); history.pushState(null, "", u); openReader(p); });

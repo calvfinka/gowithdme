@@ -16,6 +16,7 @@ function ago(ts){var s=(Date.now()-new Date(ts).getTime())/1000;if(isNaN(s))retu
 var tt;function toast(m){var t=$("#blToast");if(!t)return;t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(function(){t.classList.remove("on")},2200)}
 /* ---- pembaca (kode acak per browser, bersama dengan js/track.js) ---- */
 function vid(){var v="";try{v=localStorage.getItem("gwm_vid")||"";if(!/^[A-Za-z0-9]{16,40}$/.test(v)){var a=new Uint8Array(12);crypto.getRandomValues(a);v=[].map.call(a,function(b){return("0"+b.toString(16)).slice(-2)}).join("");localStorage.setItem("gwm_vid",v)}}catch(e){return""}return v}
+var MINV=20; /* angka "dibaca" baru tampil setelah cukup besar; "Terpopuler" butuh minimal 3 tulisan yang lolos */
 var local=/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname)||location.protocol==="file:";
 var dnt=navigator.doNotTrack==="1"||window.doNotTrack==="1"||navigator.globalPrivacyControl;
 function rpc(fn,args){
@@ -38,13 +39,14 @@ function loadIdx(){return IDX||(IDX=fetch(ROOT+"blog/index.json").then(function(
 function setStat(el,key,S){
   var s=S&&S[key];if(!s)return;
   [["v","bl-sv","data-v"],["c","bl-sc","data-c"],["l","bl-sl","data-l"]].forEach(function(p){
-    $$("["+p[2]+"]",el).forEach(function(b){var n=s[p[0]];b.textContent=nf(n);var wrap=b.closest("."+p[1]);if(wrap)wrap.hidden=!n&&p[0]!=="v"})})}
+    $$("["+p[2]+"]",el).forEach(function(b){var n=s[p[0]];b.textContent=nf(n);var wrap=b.closest("."+p[1]);if(wrap)wrap.hidden=p[0]==="v"?n<MINV:!n})})}
 function paint(S){
   if(!S)return;
   $$("article.bl-card[data-k]").forEach(function(c){setStat(c,c.getAttribute("data-k"),S)});
   var tot=0;Object.keys(S).forEach(function(k){tot+=S[k].v});
-  $$("[data-tv]").forEach(function(b){b.textContent=nf(tot);b.parentNode.hidden=!tot});
-  var sort=$('[data-sort="pop"]');if(sort)sort.hidden=false}
+  $$("[data-tv]").forEach(function(b){b.textContent=nf(tot);b.parentNode.hidden=tot<MINV});
+  var sort=$('[data-sort="pop"]');if(sort)sort.hidden=!Object.keys(S).some(function(k){return S[k].v>=MINV})}
+function popHead(ol){var sec=ol&&ol.closest("section"),sp=sec&&$("h3 span",sec);if(sp)sp.textContent="Terpopuler"}
 /* ---- bagikan ---- */
 function clip(text){
   if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text).then(function(){toast("Tautan disalin")},function(){fb()});
@@ -96,10 +98,10 @@ function initList(){
   /* terpopuler: sidebar + strip HP */
   Promise.all([loadStats(),loadIdx()]).then(function(r){
     var S=r[0],L=r[1];paint(S);if(!S||!L.length)return;
-    var top=L.filter(function(p){return S[p.k]&&S[p.k].v>0}).sort(function(a,b){return S[b.k].v-S[a.k].v||b.d.localeCompare(a.d)}).slice(0,5);
-    if(!top.length)return;
+    var top=L.filter(function(p){return S[p.k]&&S[p.k].v>=MINV}).sort(function(a,b){return S[b.k].v-S[a.k].v||b.d.localeCompare(a.d)}).slice(0,5);
+    if(top.length<3)return;
     var ol=$("#blPop .bl-rank");
-    if(ol)ol.innerHTML=top.map(function(p){return'<li data-k="'+esc(p.k)+'"><a href="'+ROOT+'blog/'+p.k+'"><b>'+esc(p.t)+'</b><span>'+esc(CN[p.c]||p.c)+' · <i><b>'+nf(S[p.k].v)+'</b> dibaca</i></span></a></li>'}).join("");
+    if(ol){popHead(ol);ol.innerHTML=top.map(function(p){return'<li data-k="'+esc(p.k)+'"><a href="'+ROOT+'blog/'+p.k+'"><b>'+esc(p.t)+'</b><span>'+esc(CN[p.c]||p.c)+' · <i><b>'+nf(S[p.k].v)+'</b> dibaca</i></span></a></li>'}).join("")}
     var strip=$("#blStrip");
     if(strip&&!/\/blog\/[a-z-]+\/$/.test(location.pathname)){strip.hidden=false;
       strip.innerHTML=top.map(function(p){return'<a class="bl-c-'+esc(p.c)+'" href="'+ROOT+'blog/'+p.k+'"><small>'+ic("flame")+'Populer</small><b>'+esc(p.t)+'</b><span>'+nf(S[p.k].v)+' dibaca · '+p.m+' mnt</span></a>'}).join("")}})}
@@ -127,7 +129,7 @@ function initArticle(root){
   window.addEventListener("scroll",onS,{passive:true});onS();
   var fsb=$("#dkTop");if(fsb)fsb.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"})});
   var dks=$("#dkShare");if(dks)dks.addEventListener("click",function(){share({title:root.getAttribute("data-title"),url:root.getAttribute("data-url")})});
-  var nat=$("[data-native]");if(nat&&navigator.share)nat.hidden=false;
+  var nat=$("[data-native]");if(nat&&navigator.share){nat.hidden=false;var shr=nat.closest(".bl-share");if(shr)shr.classList.add("has-native")}
   /* ukuran teks */
   var fs=1;try{fs=+localStorage.getItem("gwm_blfs")||1}catch(e){}
   function setFs(v){fs=Math.min(1.3,Math.max(.85,v));body.style.setProperty("--fs",fs);try{localStorage.setItem("gwm_blfs",fs)}catch(e){}}
@@ -144,17 +146,26 @@ function initArticle(root){
      .catch(function(){setLike(!want);toast("Gagal menyimpan. Coba lagi.")})})});
   var cmBox=$("#blCmBox"),count=0;
   if(v&&!local&&!dnt){rpc("blog_hit",{p_key:key,p_vid:v}).then(function(r){if(!r)return;var S=STATS||{};S[key]=S[key]||{v:0,l:0,c:0};S[key].v=r.v;S[key].l=r.l;
-      own("[data-v]").forEach(function(b){b.textContent=nf(r.v);var w=b.closest(".bl-sv");if(w)w.hidden=false});setLike(!!r.m,r.l);try{localStorage.setItem("gwm_bl_"+key,r.m?"1":"0")}catch(e){}}).catch(function(){})}
+      own("[data-v]").forEach(function(b){b.textContent=nf(r.v);var w=b.closest(".bl-sv");if(w)w.hidden=r.v<MINV});setLike(!!r.m,r.l);try{localStorage.setItem("gwm_bl_"+key,r.m?"1":"0")}catch(e){}}).catch(function(){})}
   loadStats().then(function(S){if(!S)return;var s=S[key]||{v:0,l:0,c:0};
-    own("[data-v]").forEach(function(b){b.textContent=nf(s.v);var w=b.closest(".bl-sv");if(w)w.hidden=false});
+    own("[data-v]").forEach(function(b){b.textContent=nf(s.v);var w=b.closest(".bl-sv");if(w)w.hidden=s.v<MINV});
     if(s.l)setLike(liked,s.l);count=s.c;setC()});
   function setC(){own("[data-c]").forEach(function(b){b.textContent=count?nf(count):"";var w=b.closest(".bl-sc");if(w)w.hidden=!count})}
   initComments(key,v,cmBox,function(n){count=n;setC()});
   /* artikel populer (sidebar): isi lewat daftar) */
   Promise.all([loadStats(),loadIdx()]).then(function(r){
     var S=r[0],L=r[1];if(!S||!L.length)return;
-    var top=L.filter(function(p){return S[p.k]&&S[p.k].v>0&&p.k!==key}).sort(function(a,b){return S[b.k].v-S[a.k].v}).slice(0,5),ol=$("#blPop .bl-rank");
-    if(ol&&top.length)ol.innerHTML=top.map(function(p){return'<li data-k="'+esc(p.k)+'"><a href="'+ROOT+'blog/'+p.k+'"><b>'+esc(p.t)+'</b><span>'+esc(CN[p.c]||p.c)+' · <i><b>'+nf(S[p.k].v)+'</b> dibaca</i></span></a></li>'}).join("")});
+    var top=L.filter(function(p){return S[p.k]&&S[p.k].v>=MINV&&p.k!==key}).sort(function(a,b){return S[b.k].v-S[a.k].v}).slice(0,5),ol=$("#blPop .bl-rank");
+    if(ol&&top.length>=3){popHead(ol);ol.innerHTML=top.map(function(p){return'<li data-k="'+esc(p.k)+'"><a href="'+ROOT+'blog/'+p.k+'"><b>'+esc(p.t)+'</b><span>'+esc(CN[p.c]||p.c)+' · <i><b>'+nf(S[p.k].v)+'</b> dibaca</i></span></a></li>'}).join("")}});
+  /* Baca juga: halaman statis sudah punya; pembaca langsung (tulisan baru) dilengkapi dari blog/index.json */
+  if(!$(".bl-rel",root))loadIdx().then(function(L){
+    var cat=key.split("/")[0],rest=L.filter(function(p){return p.k!==key}),
+        pick=rest.filter(function(p){return p.c===cat}).concat(rest.filter(function(p){return p.c!==cat})).slice(0,3);
+    if(!pick.length)return;
+    var sec=document.createElement("section");sec.className="bl-rel";
+    sec.innerHTML='<h2 class="bl-h2">Baca juga</h2><div class="bl-list">'+pick.map(function(p){var u=ROOT+"blog/"+p.k;
+      return'<article class="bl-card bl-c-'+esc(p.c)+'"><a class="bl-th" href="'+u+'" tabindex="-1" aria-hidden="true">'+ic(p.c)+'<em>'+p.m+' mnt</em></a><div class="bl-cb"><p class="bl-bd"><span class="bl-badge">'+ic(p.c)+esc(CN[p.c]||p.c)+'</span><time>'+fd(p.d)+'</time></p><h2><a href="'+u+'">'+esc(p.t)+'</a></h2><p class="bl-ex">'+esc(p.x)+'</p></div></article>'}).join("")+'</div>';
+    var cta=$(".bl-cta",root);if(cta)root.insertBefore(sec,cta);else root.appendChild(sec)})
 }
 /* ---- komentar ---- */
 function initComments(key,v,box,onCount){
@@ -164,17 +175,24 @@ function initComments(key,v,box,onCount){
   function item(c,fresh){var h=0,n=c.author||"?";for(var i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))%360;
     return'<li class="bl-ci'+(fresh?" new":"")+'" style="--h:'+h+'"><span class="bl-av" aria-hidden="true">'+esc(n.charAt(0).toUpperCase())+'</span><div><header><b>'+esc(n)+'</b><time datetime="'+esc(c.created_at)+'">'+esc(ago(c.created_at))+'</time></header><p>'+esc(c.body)+'</p></div></li>'}
   function render(list,ok){
+    var t0=Date.now(),ord="new";
     box.innerHTML='<form class="bl-cf" id="blCf" novalidate><label class="sr" for="cfN">Nama</label><input type="text" id="cfN" maxlength="40" placeholder="Nama kamu" autocomplete="nickname" value="'+esc(nm)+'">'
       +'<label class="sr" for="cfB">Komentar</label><textarea id="cfB" maxlength="800" placeholder="Tulis komentar yang sopan dan membangun…"></textarea>'
-      +'<input class="hp" type="text" id="cfH" tabindex="-1" autocomplete="off" aria-hidden="true"><p class="bl-cerr" id="cfE" role="alert" hidden></p>'
+      +'<input class="hp" type="text" id="cfH" tabindex="-1" autocomplete="off" aria-hidden="true"><p class="bl-cerr" id="cfE" role="alert" hidden></p><p class="bl-cnote">Tanpa email. Komentar langsung tampil, jadi jaga bahasa tetap sopan. Maksimal 1 tautan.</p>'
       +'<div class="bl-cr"><small id="cfC">0 / 800</small><button type="submit">Kirim komentar</button></div></form>'
-      +'<ul class="bl-cl" id="blCl">'+(list.length?list.map(function(c){return item(c)}).join(""):'<li class="bl-muted" id="cfNone">Belum ada komentar. Jadilah yang pertama.</li>')+'</ul>';
+      +(list.length>1?'<div class="bl-csort" id="cfS" role="group" aria-label="Urutkan komentar"><button type="button" class="on" data-o="new" aria-pressed="true">Terbaru</button><button type="button" data-o="old" aria-pressed="false">Terlama</button></div>':'')+'<ul class="bl-cl" id="blCl">'+(list.length?list.map(function(c){return item(c)}).join(""):'<li class="bl-muted" id="cfNone">Belum ada komentar. Jadilah yang pertama.</li>')+'</ul>';
     var f=$("#blCf",box),ta=$("#cfB",box),er=$("#cfE",box),ct=$("#cfC",box),sb=$("button[type=submit]",f);
     ta.addEventListener("input",function(){ct.textContent=ta.value.length+" / 800"});
+    var cs=$("#cfS",box);if(cs)cs.addEventListener("click",function(e){var b=e.target.closest("button[data-o]");if(!b||b.getAttribute("data-o")===ord)return;ord=b.getAttribute("data-o");
+      $$("button",cs).forEach(function(x){var on=x===b;x.classList.toggle("on",on);x.setAttribute("aria-pressed",on)});
+      var ul=$("#blCl",box);[].slice.call(ul.children).reverse().forEach(function(c){ul.appendChild(c)})});
     f.addEventListener("submit",function(e){e.preventDefault();
       var n=$("#cfN",box).value.trim().replace(/\s+/g," "),b=ta.value.trim();er.hidden=true;
       function bad(m){er.textContent=m;er.hidden=false}
       if($("#cfH",box).value)return;
+      if(Date.now()-t0<2500)return bad("Tunggu beberapa detik, lalu kirim lagi.");
+      var last=0;try{last=+localStorage.getItem("gwm_blct")||0}catch(e){}
+      var wait=30-Math.floor((Date.now()-last)/1000);if(wait>0&&wait<=30)return bad("Tunggu "+wait+" detik sebelum komentar berikutnya.");
       if(n.length<2)return bad("Isi nama minimal 2 huruf.");
       if(b.length<3)return bad("Komentar terlalu pendek.");
       var WF=window.IB_WordFilter;if(WF&&WF.check){var r=WF.check(n+" "+b);if(r&&r.blocked)return bad(WF.formatError(r))}
@@ -182,7 +200,9 @@ function initComments(key,v,box,onCount){
       rpc("blog_comment_add",{p_key:key,p_name:n,p_body:b,p_vid:v}).then(function(c){
         try{localStorage.setItem("gwm_blname",n)}catch(e){}nm=n;ta.value="";ct.textContent="0 / 800";
         var none=$("#cfNone",box);if(none)none.remove();
-        $("#blCl",box).insertAdjacentHTML("afterbegin",item({author:c.author,body:c.body,created_at:c.created_at},true));
+        var ul=$("#blCl",box);ul.insertAdjacentHTML(ord==="new"?"afterbegin":"beforeend",item({author:c.author,body:c.body,created_at:c.created_at},true));
+        try{localStorage.setItem("gwm_blct",String(Date.now()))}catch(e){}
+        var nw=ord==="new"?ul.firstElementChild:ul.lastElementChild;if(nw&&nw.scrollIntoView)nw.scrollIntoView({block:"nearest",behavior:"smooth"});
         total++;onCount(total);toast("Komentar terkirim")})
        .catch(function(err){bad(err.message||"Gagal mengirim. Coba lagi.")})
        .then(function(){sb.disabled=false;sb.textContent="Kirim komentar"})})}

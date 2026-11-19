@@ -86,6 +86,8 @@ def drop_title(h,title):
     if m and title and _nk(plain(m.group(1)))==_nk(title): return "<p>"+h[m.end():]
     m=re.match(r"\s*<(p|h2|h3)>(.*?)</\1>",h,re.S)
     if m and title and _nk(plain(m.group(2)))==_nk(title): return h[m.end():].lstrip()
+    m=re.match(r"\s*([^<]+)",h)
+    if m and title and _nk(plain(m.group(1)))==_nk(title): return h[m.end():]
     return h
 def render(post):
     h=sanitize(post["body"]) if post.get("is_html") else text_to_html(post["body"])
@@ -97,9 +99,21 @@ def srcbox(x):
     link=f'<a href="{esc(u)}" target="_blank" rel="noopener nofollow">{esc(n or u)}</a>' if ok else esc(n or u)
     return f'<aside class="bl-src"><b>Sumber rujukan:</b> {link}</aside>' 
 def plain(h): return re.sub(r"\s+"," ",_h.unescape(re.sub(r"<[^>]+>"," ",h))).strip()
-def excerpt(h,n=160):
+def excerpt(h,n=155):
+    """Ringkasan untuk meta description: berhenti di akhir kalimat bila ada (>=90 karakter), bukan memotong di tengah."""
     t=plain(h)
-    return t if len(t)<=n else t[:n].rsplit(" ",1)[0].rstrip(",.;:- ")+"…"
+    if len(t)<=n: return t
+    cut=t[:n]; m=None
+    for m in re.finditer(r"[.!?](?=\s|$)",cut): pass
+    if m and m.end()>=90: return cut[:m.end()]
+    return cut.rsplit(" ",1)[0].rstrip(",.;:- ")+"…"
+_KW=re.compile(r"\s*<p>\s*(?:<(?:em|i)>\s*)?Kata kunci\s*:\s*(.*?)(?:</(?:em|i)>\s*)?</p>\s*$",re.S|re.I)
+def pull_keywords(h):
+    """Baris penutup 'Kata kunci: a, b, c' bukan untuk dibaca: dipindah ke meta keywords dan deretan topik. Mengembalikan (isi, [kata kunci])."""
+    m=_KW.search(h)
+    if not m: return h,[]
+    kw=[k.strip(" .") for k in plain(m.group(1)).split(",")]
+    return h[:m.start()],[k for k in kw if 1<len(k)<=60][:8]
 def slugify(t):
     s=re.sub(r"[^a-z0-9]+","-",t.lower()).strip("-")[:48].strip("-")
     return s or "bagian"
@@ -173,7 +187,7 @@ def side_in(p,posts,counts,cur,pop=True):
     popl="".join(f'<li data-k="{x["category"]}/{x["slug"]}"><a href="{p}blog/{x["category"]}/{x["slug"]}"><b>{esc(x["title"])}</b><span>{esc(CATNAME[x["category"]])} · <i class="bl-sv" hidden><b data-v></b> dibaca</i><i class="bl-nv">{fdate(x.get("published_at"))}</i></span></a></li>' for x in posts[:5])
     cnt=lambda k: counts.get(k,0)
     topics="".join(f'<li><a class="bl-c-{k}" href="{p}blog/{k}/"'+(' aria-current="page"' if cur==k else '')+f'><span class="bl-dot">{ic(k)}</span>{esc(CATNAME[k])}<i>{cnt(k)}</i></a></li>' for k,_,_ in CATS if cnt(k))
-    return ((f'<section class="bl-box" id="blPop"><h3>{ic("flame")}Terpopuler</h3><ol class="bl-rank">{popl}</ol></section>' if popl and pop else "")
+    return ((f'<section class="bl-box" id="blPop"><h3>{ic("flame")}<span>Tulisan terbaru</span></h3><ol class="bl-rank">{popl}</ol></section>' if popl and pop else "")
             +(f'<section class="bl-box bl-topics-box"><h3>{ic("grid")}Topik</h3><ul class="bl-topics-l">{topics}</ul></section>' if topics else "")
             +f'<section class="bl-box bl-promo"><h3>Cari tontonan atau pendakian?</h3><p>Lihat jadwal konser, festival, dan open trip terbaru di GWM.</p><a class="btn" href="{p}id/event">Lihat event</a> <a class="btn line" href="{p}id/gunung">Gunung</a></section>')
 def side(p,posts,counts,cur): return '<aside class="bl-side" aria-label="Samping">'+side_in(p,posts,counts,cur)+'</aside>'
@@ -208,7 +222,7 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
     k=x["category"]; key=f'{k}/{x["slug"]}'; canon=x["_canon"]; ex=x["_ex"]; m=x["_m"]
     ld=ldj({"@context":"https://schema.org","@graph":[
       {"@type":"BlogPosting","headline":x["title"],"description":ex,"inLanguage":"id","articleSection":CATNAME[k],"mainEntityOfPage":canon,"url":canon,"timeRequired":f"PT{m}M","wordCount":len(plain(x["_html"]).split()),
-       "datePublished":x.get("published_at"),"dateModified":x.get("updated_at") or x.get("published_at"),
+       "datePublished":x.get("published_at"),**({"keywords":", ".join(x["_kw"])} if x.get("_kw") else {}),"dateModified":x.get("updated_at") or x.get("published_at"),
        "author":{"@type":"Organization","name":"GWM (GoWithDme)","url":f"{BASE}/id/"},
        "publisher":{"@type":"Organization","name":"GWM (GoWithDme)","logo":{"@type":"ImageObject","url":f"{BASE}/assets/icon-512.png"}}},
       {"@type":"BreadcrumbList","itemListElement":[
@@ -221,7 +235,9 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
         if not o: return f'<span class="bl-pn-e {cls}"></span>'
         arrow=ic(icon)
         return f'<a class="bl-pn-a {cls}" href="{p}blog/{o["category"]}/{o["slug"]}" rel="{"prev" if left else "next"}"><small>{arrow if left else ""}{lab}{arrow if not left else ""}</small><b>{esc(o["title"])}</b><span>{esc(CATNAME[o["category"]])}</span></a>'
-    return (head(p,f"{x['title']} – Blog GWM",ex,canon,BASE,ld,"article")+top(p,k,counts,False)+
+    kwm=f'<meta name="keywords" content="{esc(", ".join(x["_kw"]))}">' if x.get("_kw") else ""
+    tags=('<p class="bl-tags" aria-label="Topik terkait">'+"".join(f'<a href="{p}blog/?q={_u(t)}" rel="nofollow">{esc(t)}</a>' for t in x["_kw"])+'</p>') if x.get("_kw") else ""
+    return (head(p,f"{x['title']} – Blog GWM",ex,canon,BASE,kwm+ld,"article")+top(p,k,counts,False)+
       f'<div class="bl-prog" id="blProg" aria-hidden="true"><i></i></div>'
       f'<main class="wrap bl-main bl-art-wrap"><div class="bl-grid bl-grid-a">'
       f'<article class="bl-art bl-c-{k}" id="blArt" data-k="{key}" data-title="{esc(x["title"])}" data-url="{esc(canon)}">'
@@ -233,7 +249,7 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
       f'<div class="bl-share" role="group" aria-label="Bagikan tulisan"><span class="bl-sl-t">{ic("share")}Bagikan</span>{shr}<button type="button" class="bl-sb bl-sb-cp" data-copy>{ic("link")}Salin tautan</button><button type="button" class="bl-sb bl-sb-nat" data-native hidden>Lainnya…</button>'
       f'<span class="sp"></span><span class="bl-fs" role="group" aria-label="Ukuran teks">{ic("type")}<button type="button" data-fs="-1" aria-label="Kecilkan teks">A−</button><button type="button" data-fs="1" aria-label="Besarkan teks">A+</button></span></div>'
       f'<details class="bl-toc-m" id="blTocM" hidden><summary>{ic("list")}Daftar isi</summary><ol></ol></details>'
-      f'<div class="bl-body" id="blBody">{x["_html"]}</div>{srcbox(x)}'
+      f'<div class="bl-body" id="blBody">{x["_html"]}</div>{tags}{srcbox(x)}'
       f'<div class="bl-end"><button type="button" class="bl-like" id="blLike" aria-pressed="false">{ic("heart")}<span>Suka tulisan ini</span><b data-l></b></button>'
       f'<p>Ada yang mau ditambah atau dikoreksi? Tulis di kolom komentar di bawah.</p></div>'
       f'<section class="bl-cm" id="komentar" data-k="{key}" aria-labelledby="blCmH"><h2 id="blCmH">Komentar <i data-c></i></h2><div id="blCmBox"><p class="bl-muted">Memuat komentar…</p></div></section>'
@@ -260,7 +276,7 @@ def build(ROOT,BASE,posts):
     ok=[]
     for x in posts:
         if x.get("category") not in CATNAME or not re.match(r"^[a-z0-9]+(-[a-z0-9]+)*$",x.get("slug") or "") or not x.get("title") or not x.get("body"): print("lewati tulisan tidak valid:",x.get("slug")); continue
-        x["_html"]=add_ids(render(x)); x["_ex"]=excerpt(x["_html"]); x["_m"]=mins(x["_html"]); x["_canon"]=f"{BASE}/blog/{x['category']}/{x['slug']}"; ok.append(x)
+        h,x["_kw"]=pull_keywords(render(x)); x["_html"]=add_ids(h); x["_ex"]=excerpt(x["_html"]); x["_m"]=mins(x["_html"]); x["_canon"]=f"{BASE}/blog/{x['category']}/{x['slug']}"; ok.append(x)
     ok.sort(key=lambda x:x.get("published_at") or "",reverse=True)
     counts={}
     for x in ok: counts[x["category"]]=counts.get(x["category"],0)+1

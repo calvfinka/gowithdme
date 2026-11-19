@@ -25,7 +25,7 @@ body.bl{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 var(--f);-w
 /* kerangka */
 .bl-main{max-width:1120px;padding-top:18px;padding-bottom:40px}
 .bl-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
-@media(min-width:980px){.bl-grid{grid-template-columns:minmax(0,1fr) 300px;gap:40px}}
+@media(min-width:960px){.bl-grid{grid-template-columns:minmax(0,1fr) 300px;gap:40px}}
 .bl-h2{font-size:1.05rem;margin:0;letter-spacing:-.01em}
 /* hero + pencarian */
 .bl-hero{display:grid;gap:16px;padding:22px;border-radius:18px;background:var(--cg);color:#fff;margin-bottom:22px;position:relative;overflow:hidden}
@@ -55,7 +55,7 @@ body.bl{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 var(--f);-w
 .bl-pop-strip small{color:var(--cc);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;display:flex;gap:6px;align-items:center}
 .bl-pop-strip b{font-size:14px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .bl-pop-strip span{font-size:12px;color:var(--mute)}
-@media(min-width:980px){.bl-pop-strip{display:none!important}}
+@media(min-width:960px){.bl-pop-strip{display:none!important}}
 /* bar urut */
 .bl-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
 .bl-seg{display:inline-flex;background:var(--field);border-radius:9px;padding:2px}.bl-seg button{border:0;background:transparent;color:var(--mute);font-weight:600;font-size:12.5px;padding:5px 12px;border-radius:7px;cursor:pointer}
@@ -105,7 +105,7 @@ a.bl-badge:hover{filter:brightness(.96)}
 .bl-topics-l i{margin-left:auto;font-style:normal;font-size:12px;color:var(--mute);font-weight:600}
 .bl-promo{background:var(--sel)}.bl-promo p{margin:0 0 12px;font-size:14px;color:var(--mute);line-height:1.5}.bl-promo h3{text-transform:none;letter-spacing:0;font-size:15px;color:var(--ink)}
 .bl a.btn{color:var(--accent-ink)}.bl a.btn.line{color:var(--ink)}
-@media(min-width:980px){.bl-side-a{position:sticky;top:68px;align-self:start;max-height:calc(100vh - 84px);overflow:auto;scrollbar-width:thin}.bl-side-a .bl-box:not(.bl-toc):not(#blPop){display:none}}
+@media(min-width:960px){.bl-side-a{position:sticky;top:68px;align-self:start;max-height:calc(100vh - 84px);overflow:auto;scrollbar-width:thin}.bl-side-a .bl-box:not(.bl-toc):not(#blPop){display:none}}
 .bl-toc ol,.bl-toc-m ol{list-style:none;margin:0;padding:0;display:grid;gap:1px}
 .bl-toc a{display:block;padding:5px 8px;border-left:2px solid var(--line);font-size:13.5px;line-height:1.4;color:var(--mute)}
 .bl-toc a:hover{color:var(--ink)}.bl-toc a.on{border-left-color:var(--brand);color:var(--brand);font-weight:600;background:var(--sel)}.bl-toc .l3 a{padding-left:20px;font-size:13px}
@@ -123,7 +123,7 @@ a.bl-badge:hover{filter:brightness(.96)}
 .bl-fs{display:inline-flex;align-items:center;gap:4px;color:var(--mute)}.bl-fs button{border:1px solid var(--line);background:var(--bg);color:var(--ink);height:30px;min-width:34px;border-radius:8px;font-weight:700;font-size:12.5px;cursor:pointer}.bl-fs button:hover{border-color:var(--brand);color:var(--brand)}
 .bl-toc-m{border:1px solid var(--line);border-radius:12px;padding:0 14px;margin:0 0 18px;background:var(--bg)}.bl-toc-m summary{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;font-size:14px;padding:11px 0;list-style:none}.bl-toc-m summary::-webkit-details-marker{display:none}
 .bl-toc-m ol{padding-bottom:10px}.bl-toc-m a{display:block;padding:5px 0;font-size:14px;color:var(--mute)}.bl-toc-m .l3 a{padding-left:14px}
-@media(min-width:980px){.bl-toc-m{display:none!important}}
+@media(min-width:960px){.bl-toc-m{display:none!important}}
 .bl-body{font-size:calc(17px * var(--fs,1));line-height:1.8}
 .bl-body h2{font-size:1.4rem;margin:34px 0 10px;line-height:1.3;scroll-margin-top:72px}.bl-body h3{font-size:1.15rem;margin:26px 0 8px;scroll-margin-top:72px}.bl-body h4{margin:18px 0 4px}
 .bl-body p,.bl-body ul,.bl-body ol,.bl-body blockquote,.bl-body pre,.bl-body table{margin:0 0 18px}
@@ -182,6 +182,54 @@ a.bl-badge:hover{filter:brightness(.96)}
 .bl-feed>.bl-card:first-child{border-left-width:1px}
 .bl-feed>.bl-card:first-child .bl-th{display:grid}
 @media(max-width:560px){.bl-card{grid-template-columns:1fr;gap:0}.bl-feed>.bl-card:first-child .bl-th{min-height:96px}}
-@media(max-width:979px){.bl-tp,.bl-topics-box{display:none}}
+@media(max-width:959px){.bl-tp,.bl-topics-box{display:none}}
 .bl-src{margin:22px 0 0;padding:12px 14px;border:1px solid var(--line);border-left:4px solid var(--cc);border-radius:12px;font-size:14px;color:var(--mute)}
 .bl-src b{color:var(--ink)}.bl-src a{color:var(--brand);text-decoration:underline}
+/* ---- penyempurnaan pembaca: bilah kategori, daftar isi HP, bagikan, paragraf pembuka, topik, komentar ---- */
+.bl-reading .bl-cats{display:none}
+@media(max-width:959px){.bl-side-a .bl-toc{display:none!important}}
+@media(max-width:640px){.bl-share.has-native .bl-sb-tg,.bl-share.has-native .bl-sb-x,.bl-share.has-native .bl-sb-fb,.bl-share.has-native .bl-sb-em{display:none}.bl-share .sp{display:none}.bl-share .bl-fs{margin-left:auto}}
+.bl-body>p:first-child{font-size:1.07em;line-height:1.75;font-weight:500}
+.bl-tags{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 20px}
+.bl-tags a{font-size:12.5px;font-weight:600;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:3px 11px;background:var(--bg)}
+.bl-tags a:hover{color:var(--brand);border-color:var(--brand)}
+.bl-cf input[type=text],.bl-cf textarea{background:var(--bg);border-color:color-mix(in srgb,var(--mute) 38%,var(--line))}
+.bl-cnote{margin:0;font-size:12.5px;line-height:1.5;color:var(--mute)}
+.bl-csort{display:inline-flex;gap:4px;margin:0 0 12px;padding:3px;border-radius:99px;background:var(--field)}
+.bl-csort button{border:0;background:transparent;color:var(--mute);font-size:12.5px;font-weight:700;padding:4px 12px;border-radius:99px;cursor:pointer}
+.bl-csort button.on{background:var(--bg);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.14)}
+
+
+/* v3: responsif HP / tablet / PC.
+   HP: bilah atas tidak boleh melebihi layar (dulu tombol tema keluar 27px dan Chrome memperkecil halaman).
+   Tablet: kolom artikel di tengah, kartu 2 kolom. PC lebar: kerangka dan huruf ikut membesar. */
+body.bl{overflow-x:clip;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+.bl-top{padding-top:env(safe-area-inset-top,0px)}
+.bl-top .wrap{min-width:0}.bl-top .logo{flex:none}.bl-top .bl-l{white-space:nowrap}
+.bl-dock{bottom:calc(16px + env(safe-area-inset-bottom,0px))}.bl-toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+@media(max-width:480px){.bl-top .wrap{gap:12px}.bl-top .bl-l{font-size:13px}.bl-main{padding-top:14px}}
+@media(max-width:400px){.bl-top .wrap{gap:9px}.bl-top .bl-l[href$="blog/"]{display:none}}
+@media(max-width:340px){.bl-top .bl-l[href$="gunung"]{display:none}}
+@media(pointer:coarse){.bl-ib{width:38px;height:38px}.bl-sb{height:38px}.bl-fs button{height:36px;min-width:40px}.bl-cats a{padding:8px 14px}.bl-toc-m summary{padding:13px 0}}
+/* tablet dan HP besar: artikel di tengah, bukan menempel kiri */
+@media(max-width:959px){.bl-art{margin-inline:auto;width:100%}.bl-art~.bl-side,.bl-grid>.bl-side{max-width:740px;width:100%;margin-inline:auto}}
+@media(min-width:700px) and (max-width:959px){
+  .bl-body{font-size:calc(18px * var(--fs,1))}
+  .bl-feed{grid-template-columns:1fr 1fr;align-items:start}.bl-feed>.bl-card:first-child,.bl-feed>.bl-note,.bl-feed>.bl-empty{grid-column:1/-1}
+  .bl-feed>.bl-card{height:100%}
+  .bl-pn{grid-template-columns:1fr 1fr}
+}
+/* laptop kecil: sisi lebih ramping supaya artikel tetap lega */
+@media(min-width:960px) and (max-width:1139px){.bl-grid{grid-template-columns:minmax(0,1fr) 260px;gap:28px}.bl-main,.bl-top .wrap,.bl-cats{padding-left:20px;padding-right:20px}}
+/* PC lebar */
+@media(min-width:1280px){
+  .bl .wrap,.bl-main{max-width:1240px}
+  .bl-grid{grid-template-columns:minmax(0,1fr) 340px;gap:56px}
+  .bl-art{max-width:780px}.bl-body{font-size:calc(18px * var(--fs,1));line-height:1.85}
+  .bl-art h1{font-size:2.7rem}
+  .bl-hero{padding:34px 40px}
+  .bl-tg{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(min-width:1700px){.bl .wrap,.bl-main{max-width:1360px}.bl-grid{grid-template-columns:minmax(0,1fr) 380px}.bl-art{max-width:840px}.bl-body{font-size:calc(19px * var(--fs,1))}}
+/* layar pendek (HP landscape): dock tidak menutup bacaan */
+@media(max-height:480px){.bl-dock{display:none}.bl-top{position:static}.bl-side-a{position:static;max-height:none}}
