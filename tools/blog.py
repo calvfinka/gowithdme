@@ -79,7 +79,23 @@ class _San(HTMLParser):
         return "".join(s.o)
 def sanitize(h):
     p=_San(); p.feed(h); p.close(); return p.result()
-def render(post): return sanitize(post["body"]) if post.get("is_html") else text_to_html(post["body"])
+def _nk(t): return re.sub(r"\W+","",str(t).lower())
+def drop_title(h,title):
+    """Buang baris pembuka isi bila sama dengan judul (judul sudah tampil sebagai H1)."""
+    m=re.match(r"\s*<p>(.*?)<br>",h,re.S)
+    if m and title and _nk(plain(m.group(1)))==_nk(title): return "<p>"+h[m.end():]
+    m=re.match(r"\s*<(p|h2|h3)>(.*?)</\1>",h,re.S)
+    if m and title and _nk(plain(m.group(2)))==_nk(title): return h[m.end():].lstrip()
+    return h
+def render(post):
+    h=sanitize(post["body"]) if post.get("is_html") else text_to_html(post["body"])
+    return drop_title(h,post.get("title",""))
+def srcbox(x):
+    n=(x.get("source_name") or "").strip(); u=(x.get("source_url") or "").strip()
+    if not (n or u): return ""
+    ok=bool(re.match(r"^https?://\S+$",u))
+    link=f'<a href="{esc(u)}" target="_blank" rel="noopener nofollow">{esc(n or u)}</a>' if ok else esc(n or u)
+    return f'<aside class="bl-src"><b>Sumber rujukan:</b> {link}</aside>' 
 def plain(h): return re.sub(r"\s+"," ",_h.unescape(re.sub(r"<[^>]+>"," ",h))).strip()
 def excerpt(h,n=160):
     t=plain(h)
@@ -134,12 +150,13 @@ def head(p,title,desc,canon,BASE,extra="",otype="website"):
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="{p}assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="{p}assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="{p}js/theme.js"></script><link rel="stylesheet" href="{p}css/style.css"><link rel="stylesheet" href="{p}css/blog.css{v}">{extra}</head>"""
-def top(p,cur,counts):
+def top(p,cur,counts,bar=True):
     tot=sum(counts.values())
     chip=lambda href,name,icon,n,on: f'<a href="{href}"'+(' aria-current="page"' if on else '')+f'>{ic(icon)}<span>{esc(name)}</span>'+(f'<i>{n}</i>' if n else '')+'</a>'
-    chips=chip(f"{p}blog/","Semua","grid",tot,cur=="")+"".join(chip(f"{p}blog/{k}/",n,k,counts.get(k,0),cur==k) for k,n,_ in CATS)
-    return f"""<body class="bl">{SPRITE}<header class="bl-top"><div class="wrap"><a class="logo" href="{p}id/"><img src="{p}assets/favicon.svg" alt="" width="24" height="24">GWM</a><span class="sp"></span><a class="bl-l" href="{p}blog/">Blog</a><a class="bl-l" href="{p}id/event">Event</a><a class="bl-l" href="{p}id/gunung">Gunung</a><button type="button" class="bl-ib" id="theme" aria-label="Ganti tema terang/gelap">{ic("moon")}</button></div></header>
-<nav class="bl-cats wrap" aria-label="Kategori blog">{chips}</nav>"""
+    chips=chip(f"{p}blog/","Semua","grid",tot,cur=="")+"".join(chip(f"{p}blog/{k}/",n,k,counts.get(k,0),cur==k) for k,n,_ in CATS if counts.get(k,0) or cur==k)
+    navbar=f'<nav class="bl-cats wrap" aria-label="Kategori blog">{chips}</nav>' if bar else ""
+    return f"""<body class="bl">{SPRITE}<header class="bl-top"><div class="wrap"><a class="logo" href="{p}id/"><img src="{p}assets/favicon.svg" alt="" width="24" height="24">GWM</a><span class="sp"></span><a class="bl-l" href="{p}blog/">Blog</a><a class="bl-l" href="{p}id/event">Event</a><a class="bl-l" href="{p}id/gunung">Gunung</a><a class="bl-l" href="{p}id/komunitas">Komunitas</a><button type="button" class="bl-ib" id="theme" aria-label="Ganti tema terang/gelap">{ic("moon")}</button></div></header>
+{navbar}"""
 def foot(p):
     v=f"?v={VER}" if VER else ""
     return (f'<footer class="bl-foot wrap"><span>GWM oleh Jurkon Studio</span><a href="{p}id/bantuan">Bantuan</a><a href="{p}id/terms">Syarat</a><a href="{p}id/privacy">Privasi</a></footer>'
@@ -157,7 +174,7 @@ def side_in(p,posts,counts,cur,pop=True):
     cnt=lambda k: counts.get(k,0)
     topics="".join(f'<li><a class="bl-c-{k}" href="{p}blog/{k}/"'+(' aria-current="page"' if cur==k else '')+f'><span class="bl-dot">{ic(k)}</span>{esc(CATNAME[k])}<i>{cnt(k)}</i></a></li>' for k,_,_ in CATS if cnt(k))
     return ((f'<section class="bl-box" id="blPop"><h3>{ic("flame")}Terpopuler</h3><ol class="bl-rank">{popl}</ol></section>' if popl and pop else "")
-            +(f'<section class="bl-box"><h3>{ic("grid")}Topik</h3><ul class="bl-topics-l">{topics}</ul></section>' if topics else "")
+            +(f'<section class="bl-box bl-topics-box"><h3>{ic("grid")}Topik</h3><ul class="bl-topics-l">{topics}</ul></section>' if topics else "")
             +f'<section class="bl-box bl-promo"><h3>Cari tontonan atau pendakian?</h3><p>Lihat jadwal konser, festival, dan open trip terbaru di GWM.</p><a class="btn" href="{p}id/event">Lihat event</a> <a class="btn line" href="{p}id/gunung">Gunung</a></section>')
 def side(p,posts,counts,cur): return '<aside class="bl-side" aria-label="Samping">'+side_in(p,posts,counts,cur)+'</aside>'
 def listing(p,cur,posts,BASE,allp,counts):
@@ -204,7 +221,7 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
         if not o: return f'<span class="bl-pn-e {cls}"></span>'
         arrow=ic(icon)
         return f'<a class="bl-pn-a {cls}" href="{p}blog/{o["category"]}/{o["slug"]}" rel="{"prev" if left else "next"}"><small>{arrow if left else ""}{lab}{arrow if not left else ""}</small><b>{esc(o["title"])}</b><span>{esc(CATNAME[o["category"]])}</span></a>'
-    return (head(p,f"{x['title']} – Blog GWM",ex,canon,BASE,ld,"article")+top(p,k,counts)+
+    return (head(p,f"{x['title']} – Blog GWM",ex,canon,BASE,ld,"article")+top(p,k,counts,False)+
       f'<div class="bl-prog" id="blProg" aria-hidden="true"><i></i></div>'
       f'<main class="wrap bl-main bl-art-wrap"><div class="bl-grid bl-grid-a">'
       f'<article class="bl-art bl-c-{k}" id="blArt" data-k="{key}" data-title="{esc(x["title"])}" data-url="{esc(canon)}">'
@@ -216,7 +233,7 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
       f'<div class="bl-share" role="group" aria-label="Bagikan tulisan"><span class="bl-sl-t">{ic("share")}Bagikan</span>{shr}<button type="button" class="bl-sb bl-sb-cp" data-copy>{ic("link")}Salin tautan</button><button type="button" class="bl-sb bl-sb-nat" data-native hidden>Lainnya…</button>'
       f'<span class="sp"></span><span class="bl-fs" role="group" aria-label="Ukuran teks">{ic("type")}<button type="button" data-fs="-1" aria-label="Kecilkan teks">A−</button><button type="button" data-fs="1" aria-label="Besarkan teks">A+</button></span></div>'
       f'<details class="bl-toc-m" id="blTocM" hidden><summary>{ic("list")}Daftar isi</summary><ol></ol></details>'
-      f'<div class="bl-body" id="blBody">{x["_html"]}</div>'
+      f'<div class="bl-body" id="blBody">{x["_html"]}</div>{srcbox(x)}'
       f'<div class="bl-end"><button type="button" class="bl-like" id="blLike" aria-pressed="false">{ic("heart")}<span>Suka tulisan ini</span><b data-l></b></button>'
       f'<p>Ada yang mau ditambah atau dikoreksi? Tulis di kolom komentar di bawah.</p></div>'
       f'<section class="bl-cm" id="komentar" data-k="{key}" aria-labelledby="blCmH"><h2 id="blCmH">Komentar <i data-c></i></h2><div id="blCmBox"><p class="bl-muted">Memuat komentar…</p></div></section>'

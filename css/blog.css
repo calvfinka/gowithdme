@@ -175,3 +175,13 @@ a.bl-badge:hover{filter:brightness(.96)}
 @media(max-width:560px){.bl-card{grid-template-columns:64px minmax(0,1fr);gap:12px}.bl-th{min-height:64px}.bl-th svg.i{width:26px;height:26px}.bl-th em{display:none}.bl-hero{border-radius:16px;padding:18px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media print{.bl-top,.bl-cats,.bl-share,.bl-dock,.bl-side,.bl-cm,.bl-pn,.bl-rel,.bl-end,.bl-prog,.bl-cta,.bl-foot{display:none!important}.bl-body{font-size:12pt}}
+
+/* v2: kartu tanpa thumbnail (teks dulu), navigasi lebih ringkas, kotak sumber */
+.bl-card{grid-template-columns:1fr;gap:0;border-left:4px solid var(--cc);padding:14px 16px}
+.bl-card .bl-th{display:none}
+.bl-feed>.bl-card:first-child{border-left-width:1px}
+.bl-feed>.bl-card:first-child .bl-th{display:grid}
+@media(max-width:560px){.bl-card{grid-template-columns:1fr;gap:0}.bl-feed>.bl-card:first-child .bl-th{min-height:96px}}
+@media(max-width:979px){.bl-tp,.bl-topics-box{display:none}}
+.bl-src{margin:22px 0 0;padding:12px 14px;border:1px solid var(--line);border-left:4px solid var(--cc);border-radius:12px;font-size:14px;color:var(--mute)}
+.bl-src b{color:var(--ink)}.bl-src a{color:var(--brand);text-decoration:underline}

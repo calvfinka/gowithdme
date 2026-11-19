@@ -153,6 +153,9 @@
     <div class="seg" id="bgMode"><button type="button" data-m="text" class="on">Teks</button><button type="button" data-m="html">HTML</button></div>
     <label class="f">Isi tulisan <i class="cc" id="bgCc">0 karakter</i><textarea id="bgBody" rows="14" style="min-height:260px" placeholder="Tulis di sini…"></textarea></label>
     <p class="meta" id="bgHelp"></p>
+    <div class="card" id="bgOrigBox"><h3 style="margin-top:0">Pemeriksa orisinalitas</h3><div id="bgOrig"></div>
+      <div class="g2"><label class="f">Sumber rujukan (jika ada)<input id="bgSrcName" type="text" maxlength="80" placeholder="contoh: Katadata"></label><label class="f">Tautan sumber<input id="bgSrcUrl" type="url" maxlength="300" placeholder="https://…"></label></div>
+      <label class="f" style="display:flex;gap:8px;align-items:flex-start"><input id="bgAck" type="checkbox" style="margin-top:4px"><span>Saya sudah menulis ulang dengan kata-kata sendiri dan mencantumkan sumber bila perlu.</span></label></div>
     <h3>Pratinjau</h3><div class="card" id="bgPv" style="line-height:1.7"></div>
     <div class="sticky"><button class="btn ghost" id="bgSaveD" type="button">Simpan draft</button><button class="btn pri" id="bgSaveP" type="button">Terbitkan</button></div>
     <p style="text-align:center"><button class="lnk" id="bgCancel" type="button">Kembali</button> · <button class="lnk" id="bgDel" type="button" hidden>Hapus</button></p>
@@ -263,5 +266,5 @@
   <button data-v="form" type="button"><i>➕</i><span>Buat</span></button>
 </nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/word-filter.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script><script src="js/admin-blog.js"></script><script src="js/arsip-san.js"></script><script src="js/admin-arsip.js"></script><script src="js/admin-stats.js"></script><script src="js/admin-words.js"></script><script src="js/monetize-core.js"></script><script src="js/admin-sponsor.js"></script>
+<script src="js/config.js"></script><script src="js/supa.js"></script><script src="js/word-filter.js"></script><script src="js/gunung-data.js"></script><script src="js/admin.js"></script><script src="js/admin-ux.js"></script><script src="js/admin-forum.js"></script><script src="js/admin-orisinal.js"></script><script src="js/admin-blog.js"></script><script src="js/arsip-san.js"></script><script src="js/admin-arsip.js"></script><script src="js/admin-stats.js"></script><script src="js/admin-words.js"></script><script src="js/monetize-core.js"></script><script src="js/admin-sponsor.js"></script>
 </body></html>
