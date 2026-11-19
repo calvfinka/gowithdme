@@ -66,3 +66,18 @@ Diuji di Chromium headless (meniru GitHub Pages di subfolder `/gowithdme/`, URL 
 | Guide Bot | `js/gwm-bot.js` di Bantuan + tips Pesan + welcome-back di beranda |
 
 Jalankan `schema_monetisasi.sql` di Supabase setelah deploy.
+
+## Perubahan 19 November 2026 — audit ulang + uji fungsi + game 404
+
+Diuji di Chromium headless (33 halaman × PC & HP, URL bersih, Supabase dan Open-Meteo ditiru). Hasil akhir: lint lulus, 19 uji unit lulus, 0 galat JS di semua halaman, 0 tautan/aset internal putus, 26 uji fungsi + 15 uji tamu/login + 10 uji 404 lulus.
+
+| # | Temuan | Perbaikan |
+|---|--------|-----------|
+| 1 | Halaman event statis (`id/e/*`, `en/e/*`): `<img src="assets/posters/…">` relatif, jadi poster **tidak tampil** di 24 halaman | `tools/build.py`: alamat poster lokal dinaikkan `../../` |
+| 2 | Poster `boomfest-bandung-2026.jpg` ada di data tetapi berkasnya tidak ada | `build.py`: poster lokal yang berkasnya tidak ada dilewati (tanpa gambar rusak; `og:image` memakai gambar bawaan). **Tambahkan berkasnya ke `assets/posters/`** bila ada |
+| 3 | `profil` untuk tamu menampilkan teks mentah `pf_title` sebagai judul kartu (kunci hanya ada di kamus halaman, tidak di kamus JS) | `tools/strings.py`: kunci ditambah ke `J` |
+| 4 | `bash jalankan.sh` memakai `python -m http.server` yang tidak mengenal URL bersih; semua menu di Codespace jatuh ke 404 | `tools/serve.py` baru (URL bersih + 404.html berstatus 404); `jalankan.sh` memakainya dan memakai versi tetap dari commit terakhir agar `git status` tidak kotor |
+| 5 | `npm test` tidak ada; `npm run lint` hanya memeriksa sebagian berkas JS | `package.json`: `test` menjalankan 3 berkas uji, `lint` memeriksa semua `js/*.js`, `serve` dan `site` ditambah |
+| 6 | `404.html`: game lama sederhana | Game baru (±3 KB tambahan, tanpa gambar/pustaka): pegunungan paralaks, matahari naik, pendaki beranimasi, lompat **dan merunduk** (burung muncul setelah 250 mdpl), penanda gunung yang dilewati, jeda otomatis saat tab disembunyikan, skor tertinggi tersimpan, teks Inggris di alamat `/en/`, layar tinggi-lebar mengikuti ukuran (HP) |
+
+Catatan: alur login/Google/RLS asli tetap belum teruji (Supabase asli tidak dapat diakses saat pengujian); poin "Perlu kamu cek" di atas masih berlaku.

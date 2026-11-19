@@ -7,7 +7,10 @@
     "dev": "node server.js",
     "build": "node -e \"console.log('Static site build verified')\"",
     "start": "node server.js",
-    "lint": "node --check server.js && node --check js/portal-core.js && node --check js/monetize-core.js && node --check js/portal-pro.js && node --check js/app.js && node --check js/home.js && node --check js/word-filter.js && node --check js/auth.js && node --check js/profil-core.js && node --check js/profil.js && node --check js/navauth.js && node --check js/admin.js && node --check js/admin-ux.js && node --check js/admin-forum.js && node --check js/admin-blog.js && node --check js/admin-stats.js && node --check js/admin-words.js && node --check js/komunitas.js && node --check js/ajakan.js && node --check js/teman.js && node --check js/ajukan.js && node --check js/pesan.js"
+    "lint": "node --check server.js && for f in js/*.js; do node --check \"$f\" || exit 1; done",
+    "test": "node --test tests/*.test.mjs",
+    "serve": "python3 tools/serve.py 8000",
+    "site": "python3 tools/build.py"
   },
   "dependencies": {
     "express": "^4.21.2"

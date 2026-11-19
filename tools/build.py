@@ -134,7 +134,11 @@ def ev_page(l,e):
     t=TX[l]; cat=CAT[l].get(e.get("category"),e.get("category") or "")
     where=", ".join(x for x in (e.get("venue"),e.get("city")) if x)
     u=f"{BASE}/{l}/e/{e['slug']}"
-    img=e.get("poster_url") or f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"
+    pu=e.get("poster_url") or ""
+    # poster lokal: harus ada filenya, dan dari id/e/ atau en/e/ alamatnya naik dua tingkat ke akar situs
+    if pu and not re.match(r"https?://",pu) and not os.path.exists(f"{ROOT}/{pu.lstrip('/')}"): pu=""
+    pimg=pu if (not pu or re.match(r"https?://",pu)) else "../../"+pu.lstrip("/")
+    img=pu or f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"
     if not re.match(r"https?://",img): img=BASE+"/"+img.lstrip("/")  # og:image dan JSON-LD wajib URL absolut
     ld={"@context":"https://schema.org","@type":"Event","name":title,"startDate":sd,"endDate":ed,"description":desc,
         "eventStatus":"https://schema.org/EventScheduled","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
@@ -156,7 +160,7 @@ def ev_page(l,e):
 <style>body{{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}}main{{max-width:720px;margin:0 auto;padding:20px 16px 48px}}img{{max-width:100%;border-radius:14px;display:block}}h1{{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}}.c{{color:#0E5A46;font-weight:600;font-size:.9rem}}dl{{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0}}dt{{font-weight:600}}dd{{margin:0}}.b{{display:inline-block;background:#0E5A46;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin:4px 6px 4px 0}}.b.l{{background:#fff;color:#0E5A46;border:1px solid #0E5A46}}small{{color:#5b6a63}}nav a{{color:#0E5A46}}@media(prefers-color-scheme:dark){{body{{background:#101613;color:#e8efeb}}.b.l{{background:transparent;color:#7fd1b4;border-color:#7fd1b4}}.c,nav a{{color:#7fd1b4}}small{{color:#9bb0a6}}}}</style>
 {ldj(ld)}</head><body><main>
 <nav><a href="../">GWM</a> › <a href="../event">{t["all"]}</a></nav>
-{f'<img src="{esc(e["poster_url"])}" alt="{esc(title)}" loading="eager">' if e.get("poster_url") else ""}
+{f'<img src="{esc(pimg)}" alt="{esc(title)}" loading="eager">' if pimg else ""}
 <div class="c">{esc(cat)}{(" · "+esc(e["genre"])) if e.get("genre") else ""}</div>
 <h1>{esc(title)}</h1><dl>{dl}</dl><p>{esc(desc)}</p><p>{btn}</p><p><small>{t["note"]}</small></p>
 </main></body></html>

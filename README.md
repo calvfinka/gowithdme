@@ -32,7 +32,7 @@ File yang dibuat otomatis (jangan diedit): `id/`, `en/`, `js/i18n.js`, `js/searc
 5. **GitHub Pages:** Settings > Pages > Deploy from branch (`main`, root). Settings > Actions > General > Workflow permissions: **Read and write**.
 6. **Bangun:** `python3 tools/gen_events.py && python3 tools/gen_blog.py && python3 tools/build.py`, lalu commit dan push.
 
-Uji lokal: `bash jalankan.sh` (membangun lalu melayani di port 8000; buka `/id/`). Perhatian: build lokal mengubah angka versi `?v=` di `id/` dan `en/`. Jangan di-commit; `git restore id en` bila perlu.
+Uji lokal: `bash jalankan.sh` (membangun lalu melayani di port 8000 lewat `tools/serve.py`, yang meniru URL bersih dan 404.html GitHub Pages; buka `/id/`). Versi `?v=` dikunci ke commit terakhir sehingga build lokal tidak mengotori `git status`. Tes: `npm run lint` dan `npm test`.
 
 ## Pekerjaan sehari-hari
 | Tugas | Cara |

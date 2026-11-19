@@ -389,6 +389,7 @@ J.update({
 "fe_all": ("Semua kiriman di {c}", "All posts in {c}"),
 "k_gone": ("Kiriman ini sudah tidak tersedia.", "This post is no longer available."),
 })
+J.update({"pf_title": ("Profil — GWM", "Profile — GWM")})  # dipakai js/profil.js (gerbang tamu), bukan hanya <title>
 S.update({
 "pf_title": ("Profil — GWM", "Profile — GWM"),
 "pe_h": ("Tentang kamu", "About you"),
