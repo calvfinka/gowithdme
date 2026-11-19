@@ -6,15 +6,38 @@ var CAT={konser:tr("cat_konser"),naikgunung:tr("cat_naikgunung"),pameran:tr("cat
 var GRAD={konser:["#3b1a78","#ff3d81"],pameran:["#b45309","#e11d48"],festival:["#7c2d12","#f59e0b"],komedi:["#0f766e","#facc15"],seminar:["#1e3a8a","#38bdf8"],meetup:["#6d28d9","#ec4899"],lainnya:["#334155","#64748b"]};
 var CICON={naikgunung:"mtn",pameran:"bag",festival:"ticket",komedi:"chat",seminar:"note",meetup:"users",lainnya:"cal"};
 var DIF={pemula:tr("dif_pemula"),menengah:tr("dif_menengah"),sulit:tr("dif_sulit")};
-var SOC={},state={inv:false,cat:"semua",city:"semua",when:"semua",price:"semua",sort:"date",q:"",prov:"",macro:"",radiusKm:0,view:"grid",events:[],limit:12};
+var SOC={},state={inv:false,cat:"semua",city:"semua",when:"semua",price:"semua",sort:"date",q:"",prov:"",macro:"",artist:"",genre:"",radiusKm:0,view:"grid",events:[],limit:12};
+var F=window.IB_Facets||{norm:function(x){return String(x||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim()},slug:function(x){return String(x||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")},artists:function(){return[]},genres:function(){return[]},hasArtist:function(){return true},hasGenre:function(){return true}};
 var saved=read("ib_saved",[]);
 var kp=new URLSearchParams(location.search).get("kat");
 if(MODE==="all"&&/^(konser|naikgunung|pameran|festival|komedi|seminar|meetup|lainnya|tersimpan|selesai)$/.test(kp||""))state.cat=kp;
 if(MODE==="home")state.when="week";if(MODE==="gunung")state.cat="naikgunung";
-/* tautan dari panel pencarian: ?q=kata  ?kota=Bandung  ?prov=Jawa Barat */
+/* tautan dari panel pencarian (alamat dibuat rapi, huruf kecil dan tanda hubung):
+   ?q=blood+saga  ?artis=dewa-19  ?genre=k-pop  ?kota=bandung  ?prov=jawa-barat  ?kat=konser
+   Nama biasa (?kota=Bandung, ?prov=Jawa%20Barat) tetap diterima, jadi tautan lama tidak rusak. */
 var QP=new URLSearchParams(location.search);
-if(MODE!=="home"){if(QP.get("q"))state.q=QP.get("q").slice(0,80);var qk=QP.get("kota");if(qk&&window.IB_REGIONS){for(var pp in IB_REGIONS)if(IB_REGIONS[pp].indexOf(qk)>-1)state.city=qk}var qp=QP.get("prov");if(qp&&window.IB_REGIONS&&IB_REGIONS[qp])state.prov=qp;var qm=QP.get("macro");if(qm&&window.IB_MACRO&&IB_MACRO[qm])state.macro=qm;var qr=parseInt(QP.get("rad")||"0",10);if(qr>0)state.radiusKm=qr}
-if(!QP.get("kota")&&!QP.get("prov")&&!QP.get("macro")){try{var svLoc=JSON.parse(localStorage.getItem("gwm_loc")||"null");if(svLoc&&typeof svLoc==="object"){if(svLoc.city)state.city=svLoc.city;if(svLoc.prov)state.prov=svLoc.prov;if(svLoc.macro)state.macro=svLoc.macro;if(svLoc.radiusKm)state.radiusKm=+svLoc.radiusKm||0}}catch(e){}}
+function pick(map,v){var n=F.norm(v);if(!n)return"";for(var k in map)if(F.norm(k)===n)return k;return""}
+if(MODE!=="home"){if(QP.get("q"))state.q=QP.get("q").trim().replace(/\s+/g," ").slice(0,80);
+  var qk=QP.get("kota");if(qk&&window.IB_REGIONS){for(var pp in IB_REGIONS){var hit=IB_REGIONS[pp].filter(function(c){return F.norm(c)===F.norm(qk)})[0];if(hit){state.city=hit;break}}}
+  var qp=QP.get("prov");if(qp&&window.IB_REGIONS){var pk=pick(IB_REGIONS,qp);if(pk)state.prov=pk}
+  var qa=QP.get("artis")||QP.get("artist");if(qa)state.artist=F.norm(qa).slice(0,60);
+  var qg=QP.get("genre");if(qg)state.genre=F.norm(qg).slice(0,40);
+  var qm=QP.get("macro");if(qm&&window.IB_MACRO&&IB_MACRO[qm])state.macro=qm;var qr=parseInt(QP.get("rad")||"0",10);if(qr>0)state.radiusKm=qr}
+/* rapikan alamat di bilah browser: urutan tetap, spasi jadi +, nama wilayah jadi slug */
+function tidyUrl(){if(MODE==="home"||!history.replaceState)return;
+  if(!(QP.get("q")||QP.get("artis")||QP.get("artist")||QP.get("genre")||QP.get("kota")||QP.get("prov")))return;
+  var o=[],used={};function add(k,v){if(v!==""&&v!=null)o.push(k+"="+encodeURIComponent(v).replace(/%20/g,"+").replace(/%2C/g,","))}
+  var kt=QP.get("kat");if(kt)add("kat",kt);
+  if(state.artist)add("artis",F.slug(state.artist));if(state.genre)add("genre",F.slug(state.genre));
+  if(state.city!=="semua"&&QP.get("kota"))add("kota",F.slug(state.city));if(state.prov&&QP.get("prov"))add("prov",F.slug(state.prov));
+  if(state.macro)add("macro",state.macro);if(state.radiusKm)add("rad",state.radiusKm);if(state.q)add("q",state.q);
+  ["kat","artis","artist","genre","kota","prov","macro","rad","q"].forEach(function(k){used[k]=1});
+  QP.forEach(function(v,k){if(!used[k])add(k,v)});
+  var next=o.length?"?"+o.join("&"):"";if(next!==location.search)history.replaceState(null,"",location.pathname+next+location.hash)}
+tidyUrl();
+/* lokasi tersimpan tidak boleh menyempitkan hasil pencarian: kata, artis, atau genre dicari di seluruh Indonesia */
+var HAS_Q=!!(state.q||state.artist||state.genre);
+if(!HAS_Q&&!QP.get("kota")&&!QP.get("prov")&&!QP.get("macro")){try{var svLoc=JSON.parse(localStorage.getItem("gwm_loc")||"null");if(svLoc&&typeof svLoc==="object"){if(svLoc.city)state.city=svLoc.city;if(svLoc.prov)state.prov=svLoc.prov;if(svLoc.macro)state.macro=svLoc.macro;if(svLoc.radiusKm)state.radiusKm=+svLoc.radiusKm||0}}catch(e){}}
 try{if(localStorage.getItem("gwm_view")==="list")state.view="list"}catch(e){}
 function read(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
 function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
@@ -87,6 +110,7 @@ function locMatch(e){
 function base(e,noWhen){var qs=state.q.toLowerCase().split(/\s+/).filter(Boolean),h=hay(e);
   return locMatch(e)
    &&(noWhen||state.when==="semua"||(state.when==="live"?status(e).k==="live":status(e).n<=(state.when==="week"?7:30)))
+   &&(!state.artist||F.hasArtist(e,state.artist))&&(!state.genre||F.hasGenre(e,state.genre))
    &&(!state.inv||invN(e)>0)
    &&(state.price==="semua"||(state.price==="gratis"?gratis(e):paid(e)))
    &&(!state.q||(window.IB_EventMatch?IB_EventMatch(e,state.q):qs.every(function(w){return h.indexOf(w)>-1})))}
@@ -161,11 +185,18 @@ function tick(){var box=$("tick");if(MODE!=="home")return;
 /* chip "Hasil untuk ..." di atas daftar bila filter datang dari pencarian */
 var fchip=document.createElement("div");fchip.className="fchip";fchip.hidden=true;
 if($("list").parentNode&&$("list")!==DUM)$("list").parentNode.insertBefore(fchip,$("list"));
-function clearFilterUrl(){if(history.replaceState){var u=new URL(location.href);["q","prov"].forEach(function(k){u.searchParams.delete(k)});history.replaceState(null,"",u.pathname+u.search)}}
-function chip(){var parts=[];if(state.q)parts.push(tr("sx_filter_chip",{q:state.q}));if(state.prov)parts.push(tr("sx_filter_prov",{p:IB_PROV(state.prov)}));
+function clearFilterUrl(){if(history.replaceState){var u=new URL(location.href);["q","prov","artis","artist","genre"].forEach(function(k){u.searchParams.delete(k)});history.replaceState(null,"",u.pathname+u.search)}}
+var FLAB={};
+function facetLabel(kind,key){var ck=kind+"|"+key;if(FLAB[ck])return FLAB[ck];
+  state.events.some(function(e){return(kind==="a"?F.artists(e):F.genres(e)).some(function(x){if(x.k===key){FLAB[ck]=x.label;return true}})});
+  return FLAB[ck]||key.replace(/\b[a-z]/g,function(c){return c.toUpperCase()})}
+function chip(){var parts=[];if(state.q)parts.push(tr("sx_filter_chip",{q:state.q}));
+  if(state.artist)parts.push(tr("sx_filter_artist",{a:facetLabel("a",state.artist)}));
+  if(state.genre)parts.push(tr("sx_filter_genre",{g:facetLabel("g",state.genre)}));
+  if(state.prov)parts.push(tr("sx_filter_prov",{p:IB_PROV(state.prov)}));
   fchip.hidden=!parts.length;if(!parts.length)return;
   fchip.innerHTML='<span>'+esc(parts.join(" · "))+'</span><button type="button" id="fchipX">'+esc(tr("sx_filter_clear"))+'</button>';
-  $("fchipX").onclick=function(){state.q="";state.prov="";clearFilterUrl();render()}}
+  $("fchipX").onclick=function(){state.q="";state.prov="";state.artist="";state.genre="";clearFilterUrl();render()}}
 function render(){
   var l=list(),total=l.length,act=state.events.filter(isActive),pv=prov(state.city);
   if(MODE==="home")l=l.slice(0,state.limit);
@@ -188,7 +219,7 @@ function render(){
   var wxCity=state.city!=="semua"?state.city:(state.prov&&IB_REGIONS[state.prov]?IB_REGIONS[state.prov][0]:(state.macro&&window.IB_MACRO&&IB_MACRO[state.macro]?(IB_REGIONS[IB_MACRO[state.macro][0]]||[])[0]:"semua"));
   if(window.IB_Now)IB_Now.setCity(wxCity||"semua");
   document.dispatchEvent(new CustomEvent("ib:render"))}
-function reset(){state.limit=12;state.inv=false;var fb=$("fInv");if(fb){fb.setAttribute("aria-pressed","false");fb.classList.remove("on")}state.cat=MODE==="gunung"?"naikgunung":"semua";state.city="semua";state.when="semua";state.price="semua";state.sort="date";state.q="";state.prov="";state.macro="";state.radiusKm=0;
+function reset(){state.limit=12;state.inv=false;var fb=$("fInv");if(fb){fb.setAttribute("aria-pressed","false");fb.classList.remove("on")}state.cat=MODE==="gunung"?"naikgunung":"semua";state.city="semua";state.when="semua";state.price="semua";state.sort="date";state.q="";state.prov="";state.artist="";state.genre="";state.macro="";state.radiusKm=0;
   try{localStorage.removeItem("gwm_loc")}catch(e){}
   ["city","when","price","sort"].forEach(function(i){$(i).value=state[i]});clearFilterUrl();render()}
 /* ---- Aksi: simpan, bagikan, kalender, peta ---- */

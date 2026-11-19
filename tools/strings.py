@@ -518,6 +518,16 @@ J.update({
 })
 
 # ---- Pencarian autoscope (js/search.js) ----
+# Artis & genre di panel pencarian (js/search.js, js/app.js)
+J.update({
+"sx_t_artist": ("Artis", "Artists"), "sx_t_genre": ("Genre", "Genres"),
+"sx_artist": ("Artis", "Artist"), "sx_genre": ("Genre", "Genre"), "sx_lineup": ("Lineup", "Lineup"),
+"sx_filter_artist": ("Artis: {a}", "Artist: {a}"), "sx_filter_genre": ("Genre: {g}", "Genre: {g}"),
+"sx_try7": ("K-pop", "K-pop"), "sx_try8": ("Indie", "Indie"),
+"sx_t_blog": ("Artikel", "Articles"), "sx_t_post": ("Komunitas", "Community"), "sx_t_user": ("Akun", "Accounts"),
+"sx_user": ("Akun", "Account"), "sx_replies_n": ("{n} balasan", "{n} replies"), "sx_searching": ("Mencari…", "Searching…"),
+"sx_login_users": ("Masuk untuk mencari akun", "Sign in to search accounts"),
+})
 J.update({
 "sx_scope_all": ("Semua", "All"),
 "sx_partial": ("Tidak ada yang cocok dengan semua kata. Menampilkan yang cocok sebagian.", "Nothing matched every word. Showing partial matches."),
