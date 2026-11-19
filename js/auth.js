@@ -176,12 +176,12 @@ $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
     var b=$("phOk");b.disabled=true;msg(tr("processing"));holding=true;setAfter();
     function stop(m){holding=false;takeAfter();b.disabled=false;msg(m,"err")}
     call("verify-otp",{phone:full(),code:code,nickname:nick}).then(function(j){
-      if(!j.token_hash)return stop(j._s===429?T.many:j._s===400?T.wrong:T.lfail);
+      if(!j.token_hash)return stop(j._s===429?T.many:j._s===400?T.wrong:T.lfail+" [verify-otp "+j._s+(j.detail?": "+j.detail:j.error?": "+j.error:j.message?": "+j.message:"")+"]");
       return sb.auth.verifyOtp({token_hash:j.token_hash,type:"magiclink"}).then(function(r){
-        if(r.error)return stop(T.lfail);
+        if(r.error)return stop(T.lfail+" [auth: "+(r.error.message||r.error.code||"?")+"]");
         msg(tr("a_redirect"),"ok");
         logLocation(function(){holding=false;G.classList.remove("ph-on");if(!goAfter())show()})})
-    }).catch(function(){stop(T.lfail)})}
+    }).catch(function(){stop(T.lfail+" [network: verify-otp tidak terjangkau]")})}
   $("fPhone").onsubmit=function(e){e.preventDefault();if($("phS2").hidden)sendCode($("phSend"));else verify()};
   $("phNum").oninput=$("phCode").oninput=function(){msg("")};
   $("phOk").onclick=verify;
