@@ -40,7 +40,12 @@ function badgeOf(p){if(!window.IBOrig)return"";var ck=checks[p.id];return" · "+
 function curPaste(){var b=$("bgBody").value,len=b.length;if(!len||!window.IBOrig)return 0;var s=IBOrig.pastePct(b,chunks),pr=priorLen?Math.round(priorPct*Math.min(priorLen,len)/len):0;return Math.min(100,s+pr)}
 function orig(){if(!window.IBOrig||!$("bgOrig"))return;curRes=IBOrig.analyze({title:$("bgTitle").value,body:$("bgBody").value,isHtml:mode==="html",pasted:curPaste(),others:posts,selfId:editing});IBOrig.draw($("bgOrig"),curRes)}
 function origSoon(){clearTimeout(tm);tm=setTimeout(orig,450)}
-function load(){
+/* Tombol Lihat: bila halaman permanennya sudah dibuat sinkron (ada di blog/index.json) buka alamat blog/<kategori>/<alamat>;
+   bila belum (atau daftar tidak terbaca), buka 404.html?blog=... yang membaca tulisan langsung dari Supabase. Tidak bergantung pada host menyajikan 404.html. */
+var built=null;
+function loadBuilt(){if(built)return;built={};try{fetch("blog/index.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.posts){j.posts.forEach(function(x){built[x.k]=1});if(loaded)draw()}}).catch(function(){})}catch(e){}}
+function viewUrl(p){var k=p.category+"/"+p.slug;return built&&built[k]?"blog/"+esc(k):"404.html?blog="+encodeURIComponent(p.category)+"%2F"+encodeURIComponent(p.slug)}
+function load(){loadBuilt();
   var cols="id,title,slug,category,body,is_html,status,published_at,updated_at";
   function done(r,withX){if(r.error){msg(hint(r.error),"err");return}posts=r.data||[];loaded=true;
     if(!withX){checks={};draw();return}
@@ -51,7 +56,7 @@ function load(){
 function draw(){
   $("bgList").innerHTML=posts.length?posts.map(function(p){var pub=p.status==="published";
     return'<div class="it"><div class="ib"><b>'+esc(p.title)+'</b><div class="meta">'+esc(CN[p.category]||p.category)+" · "+(pub?"Terbit "+fd(p.published_at):"Draft")+" · "+p.body.length+' karakter · '+(p.is_html?"HTML":"Teks")+badgeOf(p)+'</div><div class="meta">blog/'+esc(p.category)+"/"+esc(p.slug)+'</div>'+
-    '<div class="bar"><button class="btn ghost" data-bg="edit" data-id="'+p.id+'" type="button">Edit</button><button class="btn ghost" data-bg="tog" data-id="'+p.id+'" type="button">'+(pub?"Jadikan draft":"Terbitkan")+'</button><button class="btn ghost" data-bg="del" data-id="'+p.id+'" type="button">Hapus</button>'+(pub?'<a class="btn ghost" href="blog/'+esc(p.category)+"/"+esc(p.slug)+'" target="_blank" rel="noopener">Lihat</a>':"")+"</div></div></div>"}).join(""):'<div class="empty">Belum ada tulisan. Ketuk "Tulisan baru".</div>'}
+    '<div class="bar"><button class="btn ghost" data-bg="edit" data-id="'+p.id+'" type="button">Edit</button><button class="btn ghost" data-bg="tog" data-id="'+p.id+'" type="button">'+(pub?"Jadikan draft":"Terbitkan")+'</button><button class="btn ghost" data-bg="del" data-id="'+p.id+'" type="button">Hapus</button>'+(pub?'<a class="btn ghost" href="'+viewUrl(p)+'" target="_blank" rel="noopener">Lihat</a>':"")+"</div></div></div>"}).join(""):'<div class="empty">Belum ada tulisan. Ketuk "Tulisan baru".</div>'}
 /* ---- form ---- */
 function setMode(m){mode=m;[].forEach.call(document.querySelectorAll("#bgMode button"),function(b){b.classList.toggle("on",b.dataset.m===m)});
   $("bgHelp").innerHTML=m==="html"?"Mode HTML. Tag yang diizinkan: p, br, h2-h4, ul, ol, li, strong, b, em, i, u, a (href), blockquote, code, pre, hr, table. Tag lain dibuang saat tayang.":
