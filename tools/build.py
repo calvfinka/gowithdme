@@ -8,7 +8,7 @@ import gen_dsk  # css/dsk.css dan css/dsk-b.css (mode "situs desktop" di HP) dib
 ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Alamat situs untuk canonical, hreflang, dan sitemap. Saat ini situs hidup di GitHub Pages.
 # Setelah domain .com aktif:  GWM_SITE=https://gowithdme.com python3 tools/build.py
-BASE=os.environ.get("GWM_SITE","https://calvfinka.github.io/gowithdme").rstrip("/")
+BASE=os.environ.get("GWM_SITE","https://gowithdme.com").rstrip("/")
 VER=os.environ.get("GWM_VER") or time.strftime("%Y%m%d%H%M")  # GWM_VER tetap -> build ulang tidak mengubah file (dipakai workflow)
 LANGS=["id","en"]; IDX={"id":0,"en":1}
 PAGES=["index","event","gunung","login","privacy","terms","copyright","about","ajukan","komunitas","teman","profil","bantuan","pesan"]
