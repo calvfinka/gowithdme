@@ -189,8 +189,8 @@ J = {
 "processing": ("Memproses…", "Processing…"),
 "a_bad": ("Email atau password salah.", "Wrong email or password."),
 "a_consent": ("Setujui kebijakan privasi dan pemakaian lokasi dahulu.", "Please accept the privacy policy and location use first."),
-"a_created": ("Akun dibuat.", "Account created."),
-"a_created_mail": ("Akun dibuat. Cek email untuk konfirmasi, lalu masuk.", "Account created. Check your email to confirm, then log in."),
+"a_created": ("Akun dibuat. Selamat datang!", "Account created. Welcome!"),
+"a_created_mail": ("Akun dibuat. Ketuk tautan konfirmasi di emailmu, kamu langsung masuk ke akun.", "Account created. Tap the confirmation link in your email and you go straight into your account."),
 "a_gredir": ("Mengarahkan ke Google…", "Redirecting to Google…"), "a_goff": ("Login Google belum diaktifkan di Supabase.", "Google login is not enabled in Supabase."),
 "a_needmail": ("Isi email dahulu.", "Enter your email first."), "a_resetsent": ("Tautan reset dikirim ke email.", "Reset link sent to your email."),
 "a_saved": ("Profil disimpan.", "Profile saved."), "a_nogps": ("Browser tidak mendukung GPS.", "This browser does not support GPS."),
@@ -903,3 +903,59 @@ S.update(SOCIAL_AUTH)
 J.update(SOCIAL_AUTH)
 
 
+
+# Teks halaman akun yang dipakai src/login.html dan js/auth.js (dipulihkan dari js/i18n.js karena hilang dari berkas ini).
+_ACCT = {
+  "acct_h": ("Pengaturan akun", "Account settings"),
+  "acct_sub": ("Kelola profil, privasi, dan akunmu di satu tempat.", "Manage your profile, privacy, and account in one place."),
+  "ac_title": ("Pengaturan akun — GWM", "Account settings — GWM"),
+  "ac_dirty": ("Ada perubahan yang belum disimpan.", "You have unsaved changes."),
+  "ac_leave": ("Buang perubahan yang belum disimpan?", "Discard your unsaved changes?"),
+  "ac_cur_email": ("Email atau nomor saat ini", "Current email or number"),
+  "pf_share_ok": ("Tautan profil disalin.", "Profile link copied."),
+  "ac_back": ("← Kembali ke profil", "← Back to profile"),
+  "ac_s_basic": ("Profil dasar", "Basics"),
+  "ac_s_about": ("Tentang & minat", "About & interests"),
+  "ac_s_priv": ("Privasi", "Privacy"),
+  "ac_s_acct": ("Email & keamanan", "Email & security"),
+  "ac_basic_sub": ("Nama dan kota yang tampil ke pengguna lain.", "The name and city other users see."),
+  "ac_about_sub": ("Ceritakan dirimu supaya mudah menemukan teman jalan.", "Tell others about yourself to find trip buddies."),
+  "ac_priv_sub": ("Atur siapa yang bisa melihat profil dan aktivitasmu.", "Control who can see your profile and activity."),
+  "ac_acct_sub": ("Ganti email dan cek lokasi untuk keamanan akun.", "Change your email and check location for account safety."),
+  "ac_links": ("Pintasan", "Shortcuts"),
+  "ac_view": ("Lihat profil", "View profile"),
+  "ac_after": ("Setelah disimpan, kamu kembali ke halaman profilmu.", "After saving, you return to your profile page."),
+}
+S.update(_ACCT); J.update(_ACCT)
+
+# Alur daftar akun: galat per kolom, panel "cek email", dan hasil tautan konfirmasi (js/signup-core.js + js/auth.js).
+_SIGNUP = {
+  "su_e_nick_need": ("Isi nama panggilan.", "Enter a nickname."),
+  "su_e_nick_short": ("Nama panggilan minimal 2 karakter.", "Nickname must be at least 2 characters."),
+  "su_e_email_need": ("Isi alamat email.", "Enter your email address."),
+  "su_e_email_bad": ("Format email belum benar. Contoh: nama@email.com", "That email doesn't look right. Example: name@email.com"),
+  "su_e_pass_need": ("Buat password dahulu.", "Create a password."),
+  "su_e_pass_short": ("Password minimal 8 karakter.", "Password must be at least 8 characters."),
+  "su_e_pass_weak": ("Password terlalu mudah ditebak. Campur huruf, angka, atau simbol.", "That password is too easy to guess. Mix letters, numbers or symbols."),
+  "su_e_consent": ("Centang persetujuan kebijakan privasi dan pemakaian lokasi untuk melanjutkan.", "Tick the privacy policy and location consent to continue."),
+  "su_e_fix": ("Ada {n} isian yang perlu diperbaiki. Periksa kolom yang ditandai merah.", "{n} field(s) need attention. Check the ones marked in red."),
+  "su_e_mail_rate": ("Batas pengiriman email konfirmasi tercapai. Tunggu beberapa menit lalu coba lagi.", "The confirmation email limit was reached. Wait a few minutes and try again."),
+  "su_e_rate": ("Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.", "Too many attempts. Wait a moment and try again."),
+  "su_e_off": ("Pendaftaran akun baru sedang ditutup. Coba lagi nanti atau hubungi kami.", "New sign-ups are currently closed. Try again later or contact us."),
+  "su_e_mail_fail": ("Akun belum bisa dibuat karena email konfirmasi gagal dikirim. Periksa alamat email, lalu coba lagi.", "We couldn't create the account because the confirmation email failed to send. Check the address and try again."),
+  "su_e_db": ("Akun belum bisa dibuat karena gangguan di server kami. Coba lagi sebentar lagi.", "We couldn't create the account because of a server problem. Please try again shortly."),
+  "su_e_generic": ("Pendaftaran belum berhasil. Coba lagi, atau hubungi kami bila terus berulang.", "Sign-up didn't go through. Try again, or contact us if it keeps happening."),
+  "su_sent_h": ("Cek email kamu", "Check your email"),
+  "su_sent_p": ("Kami mengirim tautan konfirmasi ke {e}. Ketuk tautan itu dan kamu langsung masuk ke akunmu, tanpa login lagi.", "We sent a confirmation link to {e}. Tap it and you go straight into your account, no need to log in again."),
+  "su_sent_hint": ("Belum ada? Cek folder spam atau promosi.", "Nothing yet? Check your spam or promotions folder."),
+  "su_resend": ("Kirim ulang email", "Resend email"),
+  "su_resend_n": ("Kirim ulang email ({n})", "Resend email ({n})"),
+  "su_resent": ("Email konfirmasi dikirim ulang. Cek kotak masuk kamu.", "Confirmation email sent again. Check your inbox."),
+  "su_change": ("Pakai email lain", "Use a different email"),
+  "su_confirming": ("Mengonfirmasi email…", "Confirming your email…"),
+  "su_welcome": ("Email terkonfirmasi. Selamat datang, {n}!", "Email confirmed. Welcome, {n}!"),
+  "su_l_expired": ("Tautan konfirmasi sudah kedaluwarsa. Kirim ulang email konfirmasi, atau masuk bila emailmu sudah terkonfirmasi.", "That confirmation link has expired. Resend the confirmation email, or log in if your email is already confirmed."),
+  "su_l_used": ("Tautan konfirmasi tidak valid atau sudah dipakai. Bila emailmu sudah terkonfirmasi, silakan masuk.", "That confirmation link is invalid or was already used. If your email is already confirmed, just log in."),
+  "su_l_bad": ("Tautan konfirmasi tidak bisa dipakai. Coba daftar lagi untuk mendapat email baru.", "That confirmation link can't be used. Sign up again to get a new email."),
+}
+S.update(_SIGNUP); J.update(_SIGNUP)

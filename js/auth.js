@@ -3,25 +3,91 @@ if(!sb){msg((!window.supabase?tr("a_lib"):!(window.IB_CONFIG&&IB_CONFIG.SUPABASE
 var mode="login",holding=false,AFTER="gwm_after";
 var OAUTH_NAMES={google:"Google",facebook:"Facebook",discord:"Discord",github:"GitHub"};
 /* Arah setelah masuk: ?next=... atau beranda. Disimpan di sessionStorage supaya tetap jalan setelah OAuth/email membawa pengguna kembali. */
-function setAfter(){try{sessionStorage.setItem(AFTER,JSON.stringify({to:safeNext("./"),t:Date.now()}))}catch(e){}}
+function setAfter(def){var to=safeNext(def===undefined?"./":def);if(to==null)return;try{sessionStorage.setItem(AFTER,JSON.stringify({to:to,t:Date.now()}))}catch(e){}}
 function takeAfter(){try{var v=JSON.parse(sessionStorage.getItem(AFTER)||"null");sessionStorage.removeItem(AFTER);return v&&Date.now()-v.t<6e5?v.to:null}catch(e){return null}}
 function goAfter(){var to=takeAfter();if(!to)return false;msg(tr("a_redirect"),"ok");setTimeout(function(){location.href=to},350);return true}
 function seg(m){mode=m;$("fLogin").hidden=m!=="login";$("fReg").hidden=m!=="reg";$("sLogin").classList.toggle("on",m==="login");$("sReg").classList.toggle("on",m==="reg");msg("")}
 $("sLogin").onclick=function(){seg("login")};$("sReg").onclick=function(){seg("reg")};
 $("fLogin").onsubmit=function(e){e.preventDefault();msg(tr("processing"));holding=true;setAfter();
   sb.auth.signInWithPassword({email:$("lEmail").value.trim(),password:$("lPass").value}).then(function(r){
-    if(r.error){holding=false;takeAfter();return msg(/not confirmed/i.test(r.error.message||"")?tr("a_unconfirmed"):tr("a_bad"),"err")}
+    if(r.error){holding=false;takeAfter();
+      if(/not confirmed/i.test(r.error.message||"")||r.error.code==="email_not_confirmed"){var em=$("lEmail").value.trim();msg("");savePending(em);showSent(em,tr("a_unconfirmed"),"err");return}
+      return msg(tr("a_bad"),"err")}
     msg(tr("a_redirect"),"ok");logLocation(function(){holding=false;goAfter()})})};
-$("fReg").onsubmit=function(e){e.preventDefault();
-  if(!$("rConsent").checked)return msg(tr("a_consent"),"err");
-  var nick=$("rNick").value.trim();
-  if(WF){var ck=WF.enforce(nick,{userId:"signup",userLabel:nick,context:"signup_nickname",lang:window.IB_LANG});if(!ck.ok)return msg(ck.message,"err")}
-  msg(tr("processing"));setAfter();
-  sb.auth.signUp({email:$("rEmail").value.trim(),password:$("rPass").value,options:{data:{nickname:nick},emailRedirectTo:location.href}}).then(function(r){
-    if(r.error){takeAfter();return msg(friendlyErr(r.error),"err")}
-    var us=r.data&&r.data.user;if(us&&us.identities&&us.identities.length===0){takeAfter();return msg(tr("a_exists"),"err")}
-    if(!r.data.session)takeAfter();
-    msg(r.data.session?tr("a_created"):tr("a_created_mail"),"ok")})};
+/* ---- Daftar akun: validasi per kolom, galat khusus, panel "cek email", dan masuk otomatis setelah konfirmasi ---- */
+var SC=window.IB_SignupCore,PEND="gwm_signup",ARR=SC.parseArrival((window.IB_ARRIVAL||{}).hash,(window.IB_ARRIVAL||{}).search),arrDone=false;
+var FIELDS={nick:["rNick","eNick"],email:["rEmail","eEmail"],pass:["rPass","ePass"],consent:["rConsent","eConsent"]};
+/* Tujuan setelah konfirmasi disimpan di localStorage: tautan email biasanya terbuka di tab baru, tempat sessionStorage kosong. */
+function savePending(email){try{localStorage.setItem(PEND,JSON.stringify({email:email,next:safeNext(null),t:Date.now()}))}catch(e){}}
+function readPending(){try{var v=JSON.parse(localStorage.getItem(PEND)||"null");return v&&Date.now()-v.t<864e5?v:null}catch(e){return null}}
+function takePending(){var v=readPending();try{localStorage.removeItem(PEND)}catch(e){}return v}
+function redirectUrl(){return location.origin+location.pathname}
+function fieldErr(name,key,raw){var f=FIELDS[name],i=$(f[0]),e=$(f[1]);
+  if(key||raw){e.textContent=raw||tr(key);e.hidden=false;i.setAttribute("aria-invalid","true")}
+  else{e.textContent="";e.hidden=true;i.removeAttribute("aria-invalid")}}
+function sum(t){var el=$("rSum");el.textContent=t||"";el.hidden=!t}
+function clearReg(){for(var k in FIELDS)fieldErr(k);sum("")}
+Object.keys(FIELDS).forEach(function(k){var i=$(FIELDS[k][0]);i.addEventListener(k==="consent"?"change":"input",function(){fieldErr(k);sum("")})});
+function focusField(k){var i=$(FIELDS[k][0]);if(i.focus)i.focus()}
+function signupFail(err){
+  var m=SC.mapError(err);msg("");
+  if(m.field){fieldErr(m.field,m.key);focusField(m.field)}
+  else{sum(tr(m.key));var el=$("rSum");if(el.scrollIntoView)el.scrollIntoView({block:"center"})}
+}
+$("fReg").onsubmit=function(e){e.preventDefault();clearReg();msg("");
+  var btn=this.querySelector('[type="submit"]'),nick=$("rNick").value.trim(),email=$("rEmail").value.trim();
+  var v=SC.validate({nick:nick,email:email,pass:$("rPass").value,consent:$("rConsent").checked});
+  if(v.ok&&WF){var ck=WF.enforce(nick,{userId:"signup",userLabel:nick,context:"signup_nickname",lang:window.IB_LANG});if(!ck.ok){v.ok=false;v.first="nick";v.errors.nick="_raw";v.raw=ck.message}}
+  if(!v.ok){
+    var n=0;for(var k in v.errors){n++;fieldErr(k,k==="nick"&&v.raw?null:v.errors[k],k==="nick"?v.raw:null)}
+    if(n>1)sum(tr("su_e_fix",{n:n}));
+    return focusField(v.first)}
+  btn.disabled=true;msg(tr("processing"));setAfter(null);
+  sb.auth.signUp({email:email,password:$("rPass").value,options:{data:{nickname:nick},emailRedirectTo:redirectUrl()}}).then(function(r){
+    btn.disabled=false;msg("");
+    if(r.error){takeAfter();return signupFail(r.error)}
+    var us=r.data&&r.data.user;
+    /* Supabase menjawab "sukses" untuk email yang sudah terdaftar, tetapi tanpa identities. */
+    if(us&&us.identities&&us.identities.length===0){takeAfter();return signupFail({code:"user_already_exists"})}
+    if(r.data&&r.data.session){msg(tr("a_created"),"ok");return}   /* konfirmasi email nonaktif: SIGNED_IN membawa ke akun */
+    takeAfter();savePending(email);showSent(email)
+  }).catch(function(err){btn.disabled=false;takeAfter();signupFail(err)})};
+
+/* Panel "cek email": kirim ulang dengan jeda 60 dtk, atau ganti alamat. */
+var reTimer=null;
+function smsg(t,type){var el=$("suMsg");el.textContent=t||"";el.hidden=!t;el.className="msg"+(type?" "+type:"")}
+function cooldown(){var b=$("suRe"),n=60;clearInterval(reTimer);b.disabled=true;b.textContent=tr("su_resend_n",{n:n});
+  reTimer=setInterval(function(){n--;if(n<=0){clearInterval(reTimer);b.disabled=false;b.textContent=tr("su_resend")}else b.textContent=tr("su_resend_n",{n:n})},1000)}
+function showSent(email,note,type){
+  var G=$("guest");G.classList.add("su-on");$("suSent").hidden=false;$("suTo").textContent=tr("su_sent_p",{e:email});$("suTo").dataset.email=email;
+  smsg(note||"",type);cooldown();$("suH").focus()}
+function hideSent(){clearInterval(reTimer);$("guest").classList.remove("su-on");$("suSent").hidden=true;smsg("")}
+$("suRe").onclick=function(){var em=$("suTo").dataset.email,b=this;if(!em)return;b.disabled=true;smsg(tr("processing"));
+  sb.auth.resend({type:"signup",email:em,options:{emailRedirectTo:redirectUrl()}}).then(function(r){
+    if(r.error){b.disabled=false;return smsg(tr(SC.mapError(r.error).key),"err")}
+    smsg(tr("su_resent"),"ok");cooldown()
+  }).catch(function(err){b.disabled=false;smsg(tr(SC.mapError(err).key),"err")})};
+$("suChg").onclick=function(){var em=$("suTo").dataset.email||"";hideSent();takePending();seg("reg");$("rEmail").value=em;$("rEmail").focus()};
+
+/* Hasil tautan konfirmasi: galat (kedaluwarsa / sudah dipakai) ditampilkan dengan bahasa jelas; sukses -> langsung ke akun. */
+function cleanUrl(){try{history.replaceState(null,"",location.pathname+location.search.replace(/[?&](error|error_code|error_description|code|type)=[^&]*/g,"").replace(/^&/,"?"))}catch(e){}}
+function welcome(){
+  if(arrDone)return;arrDone=true;
+  getMe().then(function(m){
+    if(!m)return false;
+    var pend=takePending(),to=(pend&&pend.next)||takeAfter(),nm=(m.profile&&m.profile.nickname)||(m.user.user_metadata&&m.user.user_metadata.nickname)||String(m.user.email||"").split("@")[0];
+    msg(tr("su_welcome",{n:nm}),"ok");
+    if(to)setTimeout(function(){location.href=to},1300);else show();
+    return true})}
+if(ARR.error){
+  cleanUrl();arrDone=true;
+  var pe=readPending(),ek=SC.arrivalErrorKey(ARR);
+  if(pe&&pe.email)showSent(pe.email,tr(ek),"err");else{seg("login");msg(tr(ek),"err")}
+}else if(ARR.confirmed){
+  msg(tr("su_confirming"));holding=true;cleanUrl();
+  /* Cadangan bila SIGNED_IN tidak datang (mis. sesi sudah ada): cek sesi, kalau tetap kosong beri tahu tautan tidak bisa dipakai. */
+  setTimeout(function(){if(arrDone)return;holding=false;getMe().then(function(m){if(m)return welcome();arrDone=true;seg("login");msg(tr("su_l_used"),"err")})},7000);
+}
 
 /* Login OAuth: Google, Facebook, Discord, GitHub */
 [].forEach.call(document.querySelectorAll("[data-oauth]"),function(btn){
@@ -136,6 +202,7 @@ $("fAll").onsubmit=function(e){e.preventDefault();var btn=this.querySelector('[t
   }).catch(function(err){btn.disabled=false;msg(friendlyErr(err),"err")})};
 sb.auth.onAuthStateChange(function(ev){
   if(ev==="PASSWORD_RECOVERY"){recovering=true;var mn0=document.querySelector("main.auth-pg");if(mn0)mn0.classList.remove("wide");$("guest").hidden=true;$("me").hidden=true;$("rec").hidden=false;msg(tr("a_recover"),"ok");return}
+  if(ev==="SIGNED_IN"&&ARR.confirmed&&!arrDone){holding=false;setTimeout(welcome,0);return}
   if(ev==="SIGNED_IN"&&!holding&&goAfter())return;
   show()});
 $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;

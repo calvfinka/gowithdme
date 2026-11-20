@@ -6,18 +6,18 @@
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="icon" href="../assets/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="../assets/apple-touch-icon.png"><link rel="manifest" href="../manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css?v=202611191341">
-<link rel="stylesheet" href="../css/adaptive.css?v=202611191341">
-<link rel="stylesheet" href="../css/naver.css?v=202611191341">
-<link rel="stylesheet" href="../css/dsk.css?v=202611191341">
-<link rel="stylesheet" href="../css/balance.css?v=202611191341">
-<link rel="stylesheet" href="../css/dsk-b.css?v=202611191341">
-<link rel="stylesheet" href="../css/polish.css?v=202611191341">
-<link rel="stylesheet" href="../css/portal-pro.css?v=202611191341">
-<script src="../js/theme.js?v=202611191341"></script>
-<script src="../js/adaptive.js?v=202611191341"></script>
+<link rel="stylesheet" href="../css/style.css?v=202611201830">
+<link rel="stylesheet" href="../css/adaptive.css?v=202611201830">
+<link rel="stylesheet" href="../css/naver.css?v=202611201830">
+<link rel="stylesheet" href="../css/dsk.css?v=202611201830">
+<link rel="stylesheet" href="../css/balance.css?v=202611201830">
+<link rel="stylesheet" href="../css/dsk-b.css?v=202611201830">
+<link rel="stylesheet" href="../css/polish.css?v=202611201830">
+<link rel="stylesheet" href="../css/portal-pro.css?v=202611201830">
+<script src="../js/theme.js?v=202611201830"></script>
+<script src="../js/adaptive.js?v=202611201830"></script>
 <title>Log in — GWM</title><meta name="robots" content="noindex">
-<link rel="stylesheet" href="../css/panel.css?v=202611191341">
+<link rel="stylesheet" href="../css/panel.css?v=202611201830">
 </head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
@@ -219,55 +219,107 @@
     <button class="btn ghost block" id="lMagic" type="button">Email me a login link</button>
     <p class="meta auth-note">No password: we email you a one-time link.</p>
   </form>
-  <form id="fReg" hidden>
-    <label class="f">Nickname<input id="rNick" type="text" maxlength="30" placeholder="e.g. Dago Hiker" required></label>
-    <label class="f">Email<input id="rEmail" type="email" autocomplete="email" placeholder="nama@email.com" required></label>
-    <label class="f">Password (min. 8 characters)<input id="rPass" type="password" minlength="8" autocomplete="new-password" placeholder="Create a password" required></label>
-    <label class="chk"><input id="rConsent" type="checkbox"> <span>I agree to the <a href="privacy" target="_blank" rel="noopener">privacy policy</a>, <a href="terms" target="_blank" rel="noopener">terms</a>, and the use of location for account security (Indonesian PDP Law). Precise location is never shown to other users.</span></label>
+  <form id="fReg" hidden novalidate>
+    <label class="f">Nickname<input id="rNick" type="text" maxlength="30" autocomplete="nickname" placeholder="e.g. Dago Hiker" aria-describedby="eNick" required><small class="f-err" id="eNick" role="alert" hidden></small></label>
+    <label class="f">Email<input id="rEmail" type="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="nama@email.com" aria-describedby="eEmail" required><small class="f-err" id="eEmail" role="alert" hidden></small></label>
+    <label class="f">Password (min. 8 characters)<input id="rPass" type="password" minlength="8" autocomplete="new-password" placeholder="Create a password" aria-describedby="ePass" required><small class="f-err" id="ePass" role="alert" hidden></small></label>
+    <label class="chk"><input id="rConsent" type="checkbox" aria-describedby="eConsent"> <span>I agree to the <a href="privacy" target="_blank" rel="noopener">privacy policy</a>, <a href="terms" target="_blank" rel="noopener">terms</a>, and the use of location for account security (Indonesian PDP Law). Precise location is never shown to other users.</span></label>
+    <small class="f-err chk-err" id="eConsent" role="alert" hidden></small>
+    <div class="msg err f-sum" id="rSum" role="alert" hidden></div>
     <button class="btn pri block" type="submit">Create account</button>
   </form>
+  <div class="su-sent" id="suSent" hidden>
+    <svg class="su-ico" width="40" height="40" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+    <h3 id="suH" tabindex="-1">Check your email</h3>
+    <p class="su-to" id="suTo"></p>
+    <p class="meta">Nothing yet? Check your spam or promotions folder.</p>
+    <div class="msg" id="suMsg" role="status" hidden></div>
+    <button class="btn ghost block" id="suRe" type="button" disabled>Resend email</button>
+    <p class="auth-links"><button class="lnk" id="suChg" type="button">Use a different email</button></p>
+  </div>
 </div>
 
-<div class="card auth-card" id="me" hidden>
-  <div class="ph">
-    <div class="av" id="av">?</div>
-    <div class="ph-meta">
-      <div class="ph-row">
-        <h3 id="nm">Name</h3>
-        <span class="badge ok" id="bv" hidden>✓ Verified</span>
-        <span class="badge adm" id="ba" hidden>Admin</span>
-      </div>
-      <div class="meta" id="em"></div>
-      <div class="uid-row"><code class="uid-tag mono" id="meUid">ID-GUEST</code></div>
+<div class="acct" id="me" hidden>
+  <div class="acct-top">
+    <a class="acct-back" id="pBack" href="profil">← Back to profile</a>
+    <h1 class="acct-h">Account settings</h1>
+    <p class="acct-sub">Manage your profile, privacy, and account in one place.</p>
+  </div>
+  <div class="acct-grid">
+    <aside class="acct-side">
+      <section class="card acct-id">
+        <div class="ph">
+          <div class="av" id="av">?</div>
+          <div class="ph-meta">
+            <div class="ph-row">
+              <h3 id="nm">Name</h3>
+              <span class="badge ok" id="bv" hidden>✓ Verified</span>
+              <span class="badge adm" id="ba" hidden>Admin</span>
+            </div>
+            <div class="meta acct-mail" id="em"></div>
+            <div class="uid-row"><code class="uid-tag mono" id="meUid">ID-GUEST</code> <button class="lnk acct-copy" id="bCopy" type="button">Copy ID</button></div>
+          </div>
+        </div>
+        <div class="st"><div><b id="sPosts">0</b>forum posts</div><div><b id="sJoined">0</b>invites joined</div><div><b id="sHosted">0</b>invites created</div></div>
+      </section>
+      <nav class="card acct-nav" id="acctNav" aria-label="Account settings">
+        <button type="button" class="on" data-go="s-basic"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg><span>Basics</span></button>
+        <button type="button" data-go="s-about" data-extra><svg class="i" aria-hidden="true"><use href="#i-users"/></svg><span>About & interests</span></button>
+        <button type="button" data-go="s-priv" data-extra><svg class="i" aria-hidden="true"><use href="#i-eye"/></svg><span>Privacy</span></button>
+        <button type="button" data-go="s-acct"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg><span>Email & security</span></button>
+      </nav>
+      <nav class="card acct-links" aria-label="Shortcuts">
+        <h4>Shortcuts</h4>
+        <a href="profil">View profile</a>
+        <a href="pesan">Inbox</a>
+        <a href="ajukan">Submit an event / open trip</a>
+        <a href="bantuan">Help</a>
+        <a id="lAdmin" href="../admin" hidden>Admin panel</a>
+        <button class="acct-out" id="bOut" type="button">Log out</button>
+      </nav>
+    </aside>
+    <div class="acct-main">
+      <form id="fAll" novalidate>
+        <section class="card acct-sec" id="s-basic">
+          <header class="acct-sh"><h2>Basics</h2><p>The name and city other users see.</p></header>
+          <div class="g2">
+            <label class="f">Nickname<input id="pNick" type="text" maxlength="30" autocomplete="nickname" placeholder="Name shown to other users"></label>
+            <label class="f">Home city<select id="pCity"></select></label>
+          </div>
+        </section>
+        <div id="fExtra" class="acct-extra" hidden>
+          <section class="card acct-sec" id="s-about">
+            <header class="acct-sh"><h2>About & interests</h2><p>Tell others about yourself to find trip buddies.</p></header>
+            <label class="f"><span class="f-hd">Bio (max. 200) <i class="cc" id="pBioN">0/200</i></span><textarea id="pBio" rows="4" maxlength="200" placeholder="Briefly: which concerts you like, where you hike. No links or phone numbers."></textarea></label>
+            <div class="f"><span class="f-hd">Interests (max. 8) <i class="cc" id="pIntN">0/8</i></span><div class="chips" id="pInt"></div></div>
+            <label class="f">Hiking level<select id="pLevel"></select></label>
+          </section>
+          <section class="card acct-sec" id="s-priv">
+            <header class="acct-sh"><h2>Profile privacy</h2><p>Control who can see your profile and activity.</p></header>
+            <label class="sw"><span>My profile can be opened by logged-in users</span><input id="pPublic" type="checkbox"></label>
+            <label class="sw"><span>Show the visitor list on my profile</span><input id="pShowV" type="checkbox"></label>
+            <label class="sw"><span>Record my visits to other people's profiles. If off, I won't appear in their visitor lists and my history is deleted.</span><input id="pLog" type="checkbox"></label>
+            <p class="meta">Full profiles can only be opened by logged-in users. Nickname, photo, and badge still show in the forum and invites.</p>
+          </section>
+        </div>
+        <div class="acct-bar">
+          <span class="acct-stat" id="pStat" role="status" aria-live="polite">After saving, you return to your profile page.</span>
+          <a class="btn ghost" id="pCancel" href="profil">Cancel</a>
+          <button class="btn pri" type="submit">Save profile</button>
+        </div>
+      </form>
+      <section class="card acct-sec" id="s-acct">
+        <header class="acct-sh"><h2>Email & security</h2><p>Change your email and check location for account safety.</p></header>
+        <form id="fMail">
+          <h3 class="kh">Change email</h3>
+          <label class="f">New email<input id="nEmail" type="email" autocomplete="email" placeholder="nama@email.com" required></label>
+          <button class="btn ghost" type="submit">Send confirmation</button>
+          <p class="meta">Your email changes after you tap the confirm button in the email. You may be asked to confirm from both the old and new address.</p>
+        </form>
+        <div class="acct-loc"><b>Location check</b><span class="meta" id="locSt">Not checked yet. Location is used to keep the community safe.</span><button class="btn ghost sm" id="bLoc" type="button">Allow &amp; check location</button></div>
+      </section>
     </div>
   </div>
-  <div class="st"><div><b id="sPosts">0</b>forum posts</div><div><b id="sJoined">0</b>invites joined</div><div><b id="sHosted">0</b>invites created</div></div>
-  <form id="fAll">
-    <h3 class="kh">Edit profile</h3>
-    <label class="f">Nickname<input id="pNick" type="text" maxlength="30" placeholder="Name shown to other users"></label>
-    <label class="f">Home city<select id="pCity"></select></label>
-    <div id="fExtra" hidden>
-      <h3 class="kh">About you</h3>
-      <label class="f">Bio (max. 200) <i class="cc" id="pBioN">0</i><textarea id="pBio" rows="3" maxlength="200" placeholder="Briefly: which concerts you like, where you hike. No links or phone numbers."></textarea></label>
-      <div class="f"><span>Interests (max. 8)</span><div class="chips" id="pInt"></div></div>
-      <label class="f">Hiking level<select id="pLevel"></select></label>
-      <h3 class="kh">Profile privacy</h3>
-      <label class="chk"><input id="pPublic" type="checkbox"> <span>My profile can be opened by logged-in users</span></label>
-      <label class="chk"><input id="pShowV" type="checkbox"> <span>Show the visitor list on my profile</span></label>
-      <label class="chk"><input id="pLog" type="checkbox"> <span>Record my visits to other people's profiles. If off, I won't appear in their visitor lists and my history is deleted.</span></label>
-      <p class="meta">Full profiles can only be opened by logged-in users. Nickname, photo, and badge still show in the forum and invites.</p>
-    </div>
-    <div class="row"><button class="btn pri" type="submit">Save profile</button><a class="btn ghost" id="pCancel" href="profil">Cancel</a></div>
-    <p class="meta" style="margin-top:8px">After saving, you return to your profile page.</p>
-  </form>
-  <form id="fMail" style="margin-top:18px">
-    <h3 class="kh">Change email</h3>
-    <label class="f">New email<input id="nEmail" type="email" autocomplete="email" placeholder="nama@email.com" required></label>
-    <button class="btn ghost" type="submit">Send confirmation</button>
-    <p class="meta" style="margin-top:8px">Your email changes after you tap the confirm button in the email. You may be asked to confirm from both the old and new address.</p>
-  </form>
-  <div class="msg" style="margin-top:14px"><b>Location check</b><br><span id="locSt">Not checked yet. Location is used to keep the community safe.</span><br><button class="btn ghost sm" id="bLoc" type="button" style="margin-top:6px">Allow &amp; check location</button></div>
-  <div class="row" style="margin-top:12px"><a class="btn" href="profil">Profile</a><a class="btn ghost" href="ajukan">Submit an event / open trip</a><a class="btn ghost" href="bantuan">Help</a><a class="btn ghost" id="lAdmin" href="../admin" hidden>Admin panel</a><button class="btn ghost" id="bOut" type="button">Log out</button></div>
 </div>
 <div class="card auth-card" id="rec" hidden>
   <h3>Set a new password</h3><p>Reset link accepted. Enter a new password for your account.</p>
@@ -276,6 +328,6 @@
 </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="../js/i18n.js?v=202611191341"></script><script src="../js/config.js?v=202611191341"></script><script src="../js/word-filter.js?v=202611191341"></script><script src="../js/supa.js?v=202611191341"></script><script src="../js/auth.js?v=202611191341"></script>
-<script src="../js/portal-core.js?v=202611191341"></script><script src="../js/monetize-core.js?v=202611191341"></script><script src="../js/events-src.js?v=202611191341"></script><script src="../js/regions.js?v=202611191341"></script><script src="../js/gunung-data.js?v=202611191341"></script><script src="../js/search-index.js?v=202611191341"></script><script src="../js/search.js?v=202611191341"></script><script src="../js/navauth.js?v=202611191341"></script><script src="../js/naver.js?v=202611191341"></script><script src="../js/portal-pro.js?v=202611191341"></script><script src="../js/track.js?v=202611191341"></script>
+<script src="../js/i18n.js?v=202611201830"></script><script src="../js/config.js?v=202611201830"></script><script src="../js/word-filter.js?v=202611201830"></script><script src="../js/supa.js?v=202611201830"></script><script src="../js/signup-core.js?v=202611201830"></script><script src="../js/auth.js?v=202611201830"></script>
+<script src="../js/portal-core.js?v=202611201830"></script><script src="../js/monetize-core.js?v=202611201830"></script><script src="../js/events-src.js?v=202611201830"></script><script src="../js/regions.js?v=202611201830"></script><script src="../js/gunung-data.js?v=202611201830"></script><script src="../js/search-index.js?v=202611201830"></script><script src="../js/search.js?v=202611201830"></script><script src="../js/navauth.js?v=202611201830"></script><script src="../js/naver.js?v=202611201830"></script><script src="../js/portal-pro.js?v=202611201830"></script><script src="../js/track.js?v=202611201830"></script>
 </body></html>

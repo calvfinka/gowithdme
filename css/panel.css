@@ -382,3 +382,15 @@ main.pg{padding-left:16px;padding-right:16px}
 .qa-ic{line-height:0}.qa-ic svg.i{width:22px;height:22px;stroke-width:1.8;color:var(--sun)}
 .kind button{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:left}
 .kind button svg.i{width:20px;height:20px;stroke-width:1.8;color:var(--mute);flex:none}.kind button.on svg.i{color:var(--sun)}
+
+/* Daftar akun: galat per kolom + panel "cek email" */
+.f-err{display:block;color:var(--err);font-size:12px;font-weight:600;line-height:1.35;margin-top:1px}.f-err[hidden]{display:none}
+.f input[aria-invalid="true"],.chk input[aria-invalid="true"]{border-color:var(--err);box-shadow:0 0 0 2px color-mix(in srgb,var(--err) 22%,transparent)}
+.chk input[aria-invalid="true"]{outline:2px solid var(--err);outline-offset:1px}
+.chk-err{margin:-6px 0 10px 26px}
+.f-sum{margin:0 0 10px}
+#guest.su-on>*:not(.auth-hd):not(.su-sent){display:none!important}
+.su-sent{text-align:center;padding:6px 0 2px}.su-sent[hidden]{display:none}
+.su-ico{color:var(--brand,var(--sun));margin:4px auto 6px;display:block}
+.su-sent h3{margin:0 0 6px;outline:none}.su-to{margin:0 0 8px;font-size:14px;overflow-wrap:anywhere}
+.su-sent .msg{text-align:left;margin:10px 0}.su-sent .auth-links{margin-top:10px}

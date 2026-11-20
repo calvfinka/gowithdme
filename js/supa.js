@@ -1,5 +1,7 @@
 if(/\.html$/.test(location.pathname))history.replaceState(null,"",location.pathname.replace(/index\.html$/,"").replace(/\.html$/,"")+location.search+location.hash);
 // Klien Supabase bersama + utilitas UI (msg/toast/esc/friendlyErr)
+/* Simpan alamat asli sebelum klien Supabase membersihkan #hash: auth.js membacanya untuk hasil tautan konfirmasi email (sukses atau galat). */
+window.IB_ARRIVAL={hash:location.hash,search:location.search};
 (function(){
   var C=window.IB_CONFIG||{};
   window.sb=(window.supabase&&C.SUPABASE_URL&&C.SUPABASE_ANON_KEY)?window.supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY):null;
@@ -33,6 +35,10 @@ if(/\.html$/.test(location.pathname))history.replaceState(null,"",location.pathn
       return tr("err_network")||"Koneksi bermasalah. Periksa internet lalu coba lagi.";
     if(/jwt|session|expired|invalid claim|not authenticated/i.test(raw)||code===401)
       return tr("err_session")||"Sesi berakhir. Silakan masuk kembali.";
+    if(/password should|weak password|known to be weak|easy to guess/i.test(raw))
+      return tr(/at least|characters/.test(raw)?"su_e_pass_short":"su_e_pass_weak")||"Password terlalu lemah.";
+    if(/email rate limit|over_email_send_rate_limit/i.test(raw+" "+code))
+      return tr("su_e_mail_rate")||"Batas pengiriman email tercapai. Tunggu beberapa menit.";
     if(/row-level security|rls|permission|policy|403|42501/i.test(raw)||code===403)
       return tr("err_perm")||"Anda tidak punya izin untuk tindakan ini.";
     if(/duplicate|unique|already exists|23505/i.test(raw))
