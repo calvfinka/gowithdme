@@ -18,8 +18,8 @@ S = {
 # --- meta ---
 "idx_title": ('GWM — Cari Teman Nonton Festival & Naik Gunung di Kotamu', 'GWM — Find Friends for Festivals & Hikes in Your City'),
 "idx_desc": ('Pergi sendiri? Cari teman nonton konser, festival, dan naik gunung di kotamu. Info event terbaru, ajakan barengan, dan komunitas per kota. Oleh Jurkon Studio.', 'Going solo? Find company for concerts, festivals, and hikes in your city. Latest event info, meet-up invites, and city communities. By Jurkon Studio.'),
-"og_title": ('GWM — Cari Teman Nonton & Naik Gunung', 'GWM — Find Friends for Festivals & Hikes'),
-"og_desc": ("Gas barengan, jangan sendirian. Info event dan teman seperjalanan di kotamu.", "Go together, don't go alone. Event info and travel buddies in your city."),
+"og_title": ('GWM — Teman Perjalanan untuk Konser, Festival & Pendakian', 'GWM — Travel Companions for Concerts, Festivals & Hikes'),
+"og_desc": ("Info event terbaru, ajakan barengan, dan komunitas per kota. Oleh Jurkon Studio.", "Latest event info, meet-up invites, and city communities. By Jurkon Studio."),
 "ev_title": ("Semua Event — GWM", "All Events — GWM"),
 "ev_desc": ("Semua event konser, pameran, dan naik gunung yang aktif, bisa disaring menurut kota, waktu, dan harga.",
             "All active concerts, expos, and hiking events, filterable by city, time, and price."),
