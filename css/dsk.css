@@ -133,6 +133,33 @@ html:where([data-dsk]) .oauth-grid{grid-template-columns:1fr}
 html:where([data-dsk]) .pf-head-wrap{padding:0 14px 16px}
 html:where([data-dsk]) .pf-actions{padding-top:8px;width:100%}
 html:where([data-dsk]) .pf-cover{height:106px}
+/* panel.css @479 */
+html:where([data-dsk]) .acct .g2{grid-template-columns:1fr}
+html:where([data-dsk]) .acct-bar{padding:8px 8px 8px 12px;border-radius:14px}
+html:where([data-dsk]) .acct-bar .btn{padding:0 16px}
+html:where([data-dsk]) .acct-stat{font-size:12px}
+html:where([data-dsk]) .acct-loc{grid-template-columns:1fr}
+html:where([data-dsk]) .acct-loc .btn{grid-column:1;grid-row:auto;justify-self:start}
+/* panel.css @900 */
+html:where([data-dsk]) .pf-dash-grid{gap:14px}
+html:where([data-dsk]) .pf-main{order:-1}
+html:where([data-dsk]) .pf-head-wrap{padding:0 16px 18px}
+/* panel.css @620 */
+html:where([data-dsk]) .pf-cover{height:104px}
+html:where([data-dsk]) .pf-av-ring{width:84px;height:84px}
+html:where([data-dsk]) .pf-top-row{margin-top:-40px;margin-bottom:12px}
+html:where([data-dsk]) .pf-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;padding-top:2px}
+html:where([data-dsk]) .pf-actions>.btn.pri{grid-column:1/-1;height:42px;font-size:14px}
+html:where([data-dsk]) .pf-actions .btn{width:100%;justify-content:center;padding:0 10px}
+html:where([data-dsk]) .pf-kpi{padding:14px}
+html:where([data-dsk]) .pf-kpi b{font-size:26px}
+html:where([data-dsk]) .pf-dash-bar{flex-direction:column;align-items:stretch}
+html:where([data-dsk]) .pf-search{max-width:none;width:100%;flex:none}
+html:where([data-dsk]) .pf-fav-thumb{width:76px;height:88px}
+html:where([data-dsk]) .pf-rail-card,html:where([data-dsk]) .pf-dash-card{padding:16px}
+/* panel.css @900 */
+html:where([data-dsk]) .pf-dash-grid{grid-template-columns:minmax(0,1fr)}
+html:where([data-dsk]) .pf-rail{min-width:0}
 /* bocoran aturan PC */
 html[data-dsk] .pnav{display:none}
 html[data-dsk] .topbar{grid-template-columns:auto minmax(0,1fr) auto}

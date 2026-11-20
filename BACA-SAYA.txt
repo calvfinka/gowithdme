@@ -1,4 +1,4 @@
 Cara deploy: ubah teks di tools/strings.py atau src/*.html, lalu jalankan  python3 tools/build.py
 (id/, en/, js/i18n.js, sitemap.xml, robots.txt dibuat otomatis). Setelah itu: git add -A && git commit && git push.
 
-Migrasi ke gowithdme.com: lihat AUDIT.md bagian "Saat pindah domain".
+Domain: gowithdme.com (sudah aktif). Email: halo@ / admin@ / personal@gowithdme.com, diatur di js/config.js (lihat README, bagian "Domain dan email").

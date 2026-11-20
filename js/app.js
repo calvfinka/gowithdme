@@ -306,7 +306,7 @@ $("dlg").onclick=function(ev){if(ev.target===this)this.close()};
 $("dlg").addEventListener("close",function(){if(history.replaceState){var u=new URL(location.href);if(u.searchParams.has("e")){u.searchParams.delete("e");history.replaceState(null,"",u.pathname+u.search)}}});
 $("login").onclick=function(ev){ev.preventDefault();location.href=this.getAttribute("href")||"login"};
 $("year").textContent=new Date().getFullYear();
-[].forEach.call(document.querySelectorAll("[data-mail]"),function(a){if(C.CONTACT_EMAIL)a.href="mailto:"+C.CONTACT_EMAIL});
+[].forEach.call(document.querySelectorAll("[data-mail]"),function(a){var k=a.getAttribute("data-mail"),m=k==="admin"?C.CONTACT_EMAIL_ADMIN:k==="personal"?C.CONTACT_EMAIL_PERSONAL:C.CONTACT_EMAIL;if(m){a.href="mailto:"+m;if(a.textContent.indexOf("@")>-1)a.textContent=m}});
 loadChips();
 window.IB_OpenEv=function(id){var e=byId(id);if(!e)return false;openEv(id)};
 /* API kecil untuk beranda portal (js/home.js). Tidak mengubah data, hanya membaca dan mengatur filter. */

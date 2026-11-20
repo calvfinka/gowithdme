@@ -2,7 +2,7 @@
 
 Portal info konser, festival, dan naik gunung, plus cari teman jalan dan komunitas per kota. Situs statis di **GitHub Pages** dengan backend **Supabase** (paket gratis). Dua bahasa: Indonesia (`/id/`) dan Inggris (`/en/`).
 
-Alamat sekarang: `https://calvfinka.github.io/gowithdme`. Domain `gowithdme.com` belum aktif (lihat "Pindah domain").
+Alamat situs: **https://gowithdme.com** (domain `.com` sudah dipakai). Alamat lama `calvfinka.github.io/gowithdme` hanya untuk uji coba; lihat "Domain dan email".
 
 ## Isi repo
 ```
@@ -29,7 +29,7 @@ File yang dibuat otomatis (jangan diedit): `id/`, `en/`, `js/i18n.js`, `js/searc
 2. **Kunci:** isi `js/config.js` (`SUPABASE_URL`, `SUPABASE_ANON_KEY`). Hanya kunci anon (publik) yang boleh ada di repo; semua akses dijaga RLS. **Jangan pernah** menaruh service role key di repo.
 3. **Login:** Supabase > Authentication > URL Configuration: Site URL = alamat situs, tambahkan Redirect URL `<alamat>/id/login` dan `<alamat>/en/login`. Login Google: aktifkan provider Google, lalu isi Client ID/Secret dan redirect URI `https://<proyek>.supabase.co/auth/v1/callback` di Google Cloud Console.
 4. **Admin pertama:** daftar di `/id/login`, lalu jalankan query `update profiles set role='admin' ...` (ada di akhir `schema_tahap2.sql`). Buka `/admin`.
-5. **GitHub Pages:** Settings > Pages > Deploy from branch (`main`, root). Settings > Actions > General > Workflow permissions: **Read and write**.
+5. **GitHub Pages:** Settings > Pages > Deploy from branch (`main`, root), isi Custom domain `gowithdme.com`. Settings > Actions > General > Workflow permissions: **Read and write**.
 6. **Bangun:** `python3 tools/gen_events.py && python3 tools/gen_blog.py && python3 tools/build.py`, lalu commit dan push.
 
 Uji lokal: `bash jalankan.sh` (membangun lalu melayani di port 8000 lewat `tools/serve.py`, yang meniru URL bersih dan 404.html GitHub Pages; buka `/id/`). Versi `?v=` dikunci ke commit terakhir sehingga build lokal tidak mengotori `git status`. Tes: `npm run lint` dan `npm test`.
@@ -80,11 +80,25 @@ Saklar di `js/config.js`: `EVENTS_SOURCE: "live"` (Supabase dulu, default) atau 
 ## Batas paket gratis Supabase
 2 proyek, database 500 MB, penyimpanan 1 GB, egress 5 GB/bulan, 50.000 pengguna aktif bulanan. Proyek dijeda setelah 7 hari tanpa aktivitas (ditangani Jaga aktif). Pertimbangkan Pro (±US$25/bulan) saat database mendekati 400 MB atau egress rutin di atas 70%.
 
-## Pindah domain
-1. Arahkan DNS ke GitHub Pages, lalu buat file `CNAME` berisi `gowithdme.com` (hanya setelah DNS siap).
-2. `GWM_SITE=https://gowithdme.com python3 tools/build.py`, lalu commit dan push.
-3. Perbarui Redirect URL Supabase dan origin Google OAuth ke domain baru.
-4. Pindah sebelum situs dikenal Google; mengalihkan dari `github.io` belakangan bisa menurunkan peringkat untuk sementara.
+## Domain dan email
+**Domain:** `gowithdme.com`. `tools/build.py` sudah memakai domain ini sebagai default untuk canonical, hreflang, dan sitemap, jadi cukup `python3 tools/build.py` (tanpa `GWM_SITE`). Isi `GWM_SITE` hanya bila ingin membangun untuk alamat lain.
+
+Checklist domain:
+1. DNS mengarah ke GitHub Pages dan file `CNAME` berisi `gowithdme.com`; aktifkan Enforce HTTPS di Settings > Pages.
+2. Supabase > Authentication > URL Configuration: Site URL `https://gowithdme.com`, Redirect URL `https://gowithdme.com/id/login` dan `https://gowithdme.com/en/login`.
+3. Google Cloud Console (OAuth): tambahkan `https://gowithdme.com` sebagai Authorized JavaScript origin.
+4. Bing/Naver/Google Search Console: verifikasi ulang properti untuk domain `.com` dan kirim `sitemap.xml`.
+
+**Email resmi** (diatur di `js/config.js`, dibaca oleh halaman lewat atribut `data-mail`):
+| Email | Dipakai untuk | Kunci config |
+|---|---|---|
+| `halo@gowithdme.com` | Kontak umum: Bantuan, Tentang, Syarat, order promosi, GWM Bot | `CONTACT_EMAIL` |
+| `admin@gowithdme.com` | Administrasi: pemberitahuan hak cipta / DMCA | `CONTACT_EMAIL_ADMIN` |
+| `personal@gowithdme.com` | Data pribadi: permintaan hak subjek data di Kebijakan Privasi | `CONTACT_EMAIL_PERSONAL` |
+
+Untuk mengganti email: ubah `js/config.js`, ubah teks di `src/*.body.html` (Tentang, Syarat, Privasi, Hak Cipta), lalu `python3 tools/build.py`. Pastikan MX dan kotak masuk ketiga alamat sudah aktif (atau di-forward) di penyedia email domain.
+
+Catatan: `@phone.jurkon.my.id` di `js/auth.js` bukan email kontak, melainkan alamat internal untuk akun login nomor HP di Supabase. Jangan diubah selama masih ada akun yang memakainya.
 
 ## Dokumen lain
 `AUDIT.md` (audit dan daftar perbaikan), `HEMAT-SUPABASE.md` (jaga aktif dan hemat egress), `supabase/DAFTAR_KONSER_PER_KOTA.md`, `BACA-SAYA.txt`, `data/BACA-SAYA.txt`.

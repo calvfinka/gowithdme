@@ -5,7 +5,7 @@ var tr=function(k,a){return(global.IB_T&&IB_T(k,a))||k};
 var LANG=function(){return global.IB_LANG==="en"?"en":"id"};
 var C=function(){return global.IB_CONFIG||{}};
 function KB(){
-  var L=LANG(),mail=C().CONTACT_EMAIL||"gowithdme@jurkon.my.id",wa=C().CONTACT_WA_LABEL||"0822 4356 2960";
+  var L=LANG(),mail=C().CONTACT_EMAIL||"halo@gowithdme.com",wa=C().CONTACT_WA_LABEL||"0822 4356 2960";
   return [
     {k:["daftar","sign up","register","akun baru","buat akun","signup"],a:{id:"Tekan Masuk → Daftar. Isi nama panggilan, email, dan password (min. 8 karakter), atau lanjut dengan Google.",en:"Tap Log in → Sign up. Enter nickname, email, and password (min. 8 characters), or continue with Google."},links:[{h:"login",t:L==="en"?"Log in":"Masuk"}]},
     {k:["lupa password","forgot","reset password","ganti password"],a:{id:"Di halaman Masuk, isi email lalu tekan “Lupa password?”. Cek juga folder spam.",en:"On Log in, enter email and press “Forgot password?”. Check spam too."},links:[{h:"login",t:L==="en"?"Log in":"Masuk"}]},

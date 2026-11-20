@@ -413,7 +413,7 @@
   function promoShowErr(res,key,args){res.hidden=false;res.className="promo-res err";res.textContent=tr(key,args)}
   function promoShowOk(res,okKey,code,msgTxt,synced){
     var waHref="https://wa.me/"+(C.CONTACT_WA||"6282243562960")+"?text="+encodeURIComponent(msgTxt);
-    var mailHref="mailto:"+(C.CONTACT_EMAIL||"gowithdme@jurkon.my.id")+"?subject="+encodeURIComponent("Order Promosi "+code)+"&body="+encodeURIComponent(msgTxt);
+    var mailHref="mailto:"+(C.CONTACT_EMAIL||"halo@gowithdme.com")+"?subject="+encodeURIComponent("Order Promosi "+code)+"&body="+encodeURIComponent(msgTxt);
     res.hidden=false;res.className="promo-res "+(synced?"ok":"warn");
     res.innerHTML='<p>'+esc(tr(okKey,{code:code}))+'</p><div class="promo-res-act"><a class="btn sm pri" target="_blank" rel="noopener noreferrer" href="'+esc(waHref)+'">'+esc(tr("promo_wa_send"))+'</a><a class="btn sm line" href="'+esc(mailHref)+'">'+esc(tr("promo_mail_send"))+'</a></div>';
   }

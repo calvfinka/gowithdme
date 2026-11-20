@@ -26,14 +26,15 @@ Diuji di Chromium headless (meniru GitHub Pages di subfolder `/gowithdme/`, URL 
 | 19 | `gwm-update.zip` dan `gwm-update-2.zip` (isinya identik dengan repo) ikut terbit publik | dihapus; `.gitignore` ditambah |
 
 ## Perlu kamu cek (tidak bisa saya verifikasi)
-1. **Supabase > Authentication > URL Configuration**: tambahkan `https://calvfinka.github.io/gowithdme/id/login` dan `…/en/login` (dan origin yang sama di Google Cloud OAuth). Selama domain .com belum aktif, login hanya jalan bila alamat ini terdaftar.
+1. **Supabase > Authentication > URL Configuration**: Site URL `https://gowithdme.com`, tambahkan `https://gowithdme.com/id/login` dan `…/en/login` (dan origin yang sama di Google Cloud OAuth).
 2. SQL untuk fitur ajakan (`invitations*`, view `invitations_public`, RPC `request_join`, `decide_member`, `leave_or_cancel`, `create_invitation`) serta `schema_tahap2/google/kota.sql` **tidak ada di repo**. Tanpa itu RLS admin dan ajakan tidak bisa diaudit. Simpan semuanya di `supabase/`.
 3. Edge Function `log-login` tidak ada di repo; privasi menjanjikan retensi log 90 hari.
-4. `halo@gowithdme.com` belum bisa menerima email sebelum domain dan MX aktif. Sementara, Bantuan, Privasi, dan Syarat memakai email alternatif; ganti `CONTACT_EMAIL` di `js/config.js` dan teks di `src/privacy.*.body.html` / `src/terms.*.body.html` setelah email domain aktif.
+4. Email resmi sudah dipindah ke domain `.com`: `halo@gowithdme.com` (umum, Bantuan/Tentang/Syarat), `admin@gowithdme.com` (hak cipta/DMCA), dan `personal@gowithdme.com` (permintaan data pribadi di Privasi). Pastikan MX dan kotak masuk ketiganya aktif sebelum dianggap selesai.
 5. Poster hotlink ke indonesia.travel dan jadwal.events: IP pengunjung ikut terkirim ke host itu, dan izin hak ciptanya belum jelas.
 6. Kartu statistik di halaman profil masih angka 0 tetap; `IB_SAMPLE` menampilkan event contoh bila Supabase gagal dimuat.
 
-## Saat pindah domain
+## Domain gowithdme.com (sudah aktif)
+Catatan arsip dari langkah pindah domain:
 1. DNS domain ke GitHub Pages, lalu buat file `CNAME` berisi `gowithdme.com`.
 2. `GWM_SITE=https://gowithdme.com python3 tools/build.py`, lalu commit dan push.
 3. Perbarui Redirect URL Supabase dan origin Google OAuth ke domain baru.

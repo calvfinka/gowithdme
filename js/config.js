@@ -4,7 +4,9 @@ window.IB_CONFIG = {
   SUPABASE_ANON_KEY: "sb_publishable_WEpourxfk4IKga2XyxKucQ_hkmxuJnY",
   EVENTS_SOURCE: "live",
   DEFAULT_CITY: "Bandung",
-  CONTACT_EMAIL: "gowithdme@jurkon.my.id",
+  CONTACT_EMAIL: "halo@gowithdme.com",          // umum: bantuan, tentang, order promosi, syarat
+  CONTACT_EMAIL_ADMIN: "admin@gowithdme.com",   // administrasi: hak cipta / DMCA
+  CONTACT_EMAIL_PERSONAL: "personal@gowithdme.com", // data pribadi: permintaan hak subjek data (privasi)
   CONTACT_WA: "6282243562960",
   CONTACT_WA_LABEL: "0822 4356 2960",
   OWNER_NAME: "Jurkon Studio",
