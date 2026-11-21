@@ -180,7 +180,7 @@ def top(p,cur,counts,bar=True):
 {navbar}"""
 def foot(p):
     v=f"?v={VER}" if VER else ""
-    return (f'<footer class="bl-foot wrap"><span>GWM oleh Jurkon Studio</span><a href="{p}id/bantuan">Bantuan</a><a href="{p}id/terms">Syarat</a><a href="{p}id/privacy">Privasi</a></footer>'
+    return (f'<footer class="bl-foot wrap"><span>GWM oleh Jurkon Studio</span><a href="{p}id/bantuan">Bantuan</a><a href="{p}id/template">Template</a><a href="{p}id/terms">Syarat</a><a href="{p}id/privacy">Privasi</a></footer>'
             f'<div class="bl-toast" id="blToast" role="status" aria-live="polite"></div><script src="{p}js/config.js"></script><script src="{p}js/word-filter.js"></script><script src="{p}js/blog-ui.js{v}"></script><script src="{p}js/blog-live.js{v}"></script></body></html>')
 def card(p,x):
     k=f'{x["category"]}/{x["slug"]}'; url=f'{p}blog/{k}'; c=x["category"]

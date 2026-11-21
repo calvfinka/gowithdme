@@ -11,7 +11,7 @@ ROOT=os.path.join(os.path.dirname(__file__),"..")
 BASE=os.environ.get("GWM_SITE","https://gowithdme.com").rstrip("/")
 VER=os.environ.get("GWM_VER") or time.strftime("%Y%m%d%H%M")  # GWM_VER tetap -> build ulang tidak mengubah file (dipakai workflow)
 LANGS=["id","en"]; IDX={"id":0,"en":1}
-PAGES=["index","event","gunung","login","privacy","terms","copyright","about","ajukan","komunitas","teman","profil","bantuan","pesan"]
+PAGES=["index","event","gunung","login","privacy","terms","copyright","template","about","ajukan","komunitas","teman","profil","bantuan","pesan"]
 NOINDEX=("login","ajukan","profil","pesan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
 APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
 def path(p): return "" if p=="index" else p
@@ -77,7 +77,7 @@ for l in LANGS:
         h=inc(open(f"{ROOT}/src/{p}.html",encoding="utf-8").read())
         h=h.replace("{{search}}",inc("{{>search}}"))
         h=h.replace("{{pgshare}}",'<button class="mm-share" id="pgShare" type="button"><svg class="i" aria-hidden="true"><use href="#i-share"/></svg>{{sh_aria}}</button>' if p in APP else "")
-        if p in("privacy","terms","copyright","about"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
+        if p in("privacy","terms","copyright","template","about"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
         sw=f'<a class="lang" href="../{o}/{path(p)}" data-sw="{o}" hreflang="{o}" lang="{o}" aria-label="{S["lang_label"][IDX[l]]}">{o.upper()}</a>'
         hl="" if p in NOINDEX else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
             +"".join(f'<link rel="alternate" hreflang="{x}" href="{BASE}/{x}/{path(p)}">' for x in LANGS)

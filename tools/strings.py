@@ -974,3 +974,9 @@ S.update(_AI); J.update(_AI)
 # ---- Pasang aplikasi (PWA) ----
 _PWA = {"nv_install": ("Pasang aplikasi", "Install app")}
 S.update(_PWA); J.update(_PWA)
+
+# ---- Halaman Template gratis ----
+_TPL = {"f_template": ("Template", "Templates"),
+"tpl_title": ("Template Gratis — GWM", "Free Templates — GWM"),
+"tpl_desc": ("Template Blogger dan WordPress gratis dari GWM, lengkap dengan lisensinya.", "Free Blogger and WordPress templates from GWM, with their license.")}
+S.update(_TPL); J.update(_TPL)
