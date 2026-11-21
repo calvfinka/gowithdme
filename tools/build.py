@@ -95,16 +95,41 @@ for l in LANGS:
         h=re.sub(r'(\.\./(?:js|css)/[\w.-]+\.(?:js|css))"',r'\1?v='+VER+'"',h)
         open(f"{ROOT}/{l}/{p}.html","w",encoding="utf-8").write(h)
 # ---- pengalih di root (tautan lama /event, /gunung, /login tetap jalan) ----
+# Pengalih memakai JavaScript, padahal perayap pratinjau (WhatsApp, Telegram, X, Facebook) dan sebagian bot TIDAK menjalankan JS.
+# Karena itu pengalih ikut memuat judul, deskripsi, dan tag OG/Twitter yang disalin dari halaman tujuannya (versi Indonesia),
+# sehingga tautan polos "gowithdme.com" tampil dengan gambar dan judul. Halaman formulir (NOINDEX) tetap polos + noindex.
+def _head_meta(p):
+    s=open(f"{ROOT}/id/{p}.html",encoding="utf-8").read()
+    tags=re.findall(r'<title>.*?</title>|<meta name="description"[^>]*>|<meta property="og:[^>]*>|<meta name="twitter:[^>]*>',s,re.S)
+    desc=re.search(r'<meta name="description" content="([^"]*)"',s)
+    return "".join(tags),(desc.group(1) if desc else "")
+STUB_CSS=("*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f6f8f7;color:#0d1110;"
+ "font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}"
+ "main{max-width:440px;text-align:center}img{border-radius:14px;box-shadow:0 8px 24px rgba(14,90,70,.25)}"
+ "h1{margin:20px 0 10px;font-size:22px;line-height:1.3;font-weight:700;letter-spacing:-.01em}"
+ "p{margin:0 0 28px;color:#4b5a55;font-size:15px}nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}"
+ "a{padding:12px 22px;border-radius:12px;border:1px solid #0e5a46;color:#0e5a46;text-decoration:none;font-weight:600;font-size:15px}"
+ "a.pri{background:#0e5a46;color:#fff}a:focus-visible{outline:3px solid #34d399;outline-offset:2px}"
+ "@media(prefers-color-scheme:dark){body{background:#0d1110;color:#eef3f1}p{color:#9db0a9}a{border-color:#34d399;color:#34d399}a.pri{background:#34d399;color:#05241a}}")
 for p in PAGES:
     t=path(p)
-    h=f'''<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GWM</title><meta name="robots" content="noindex,follow">
+    if p in NOINDEX: meta,desc,robots,canon="<title>GWM</title>","",'<meta name="robots" content="noindex,follow">',""
+    else:
+        meta,desc=_head_meta(p)
+        if "<title>" not in meta: meta="<title>GWM</title>"+meta
+        robots,canon="",f'<link rel="canonical" href="{BASE}/id/{t}">'  # sinyal ke mesin pencari: yang diindeks adalah halaman /id/, tautan masuk ke akar ikut terhitung
+        if 'property="og:site_name"' not in meta: meta+='<meta property="og:site_name" content="GWM"><meta property="og:type" content="website">'
+    ttl=re.search(r"<title>(.*?)</title>",meta,re.S); ttl=(ttl.group(1) if ttl else "GWM")
+    body=(f'<main><img src="assets/favicon.svg" width="56" height="56" alt="GWM"><h1>{ttl}</h1>'+(f"<p>{desc}</p>" if desc else "")+
+          f'<nav><a class="pri" href="id/{t}">Bahasa Indonesia</a><a href="en/{t}">English</a></nav></main>')
+    h=f'''<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0E5A46">
+{meta}{robots}{canon}
 <link rel="alternate" hreflang="id" href="{BASE}/id/{t}"><link rel="alternate" hreflang="en" href="{BASE}/en/{t}"><link rel="alternate" hreflang="x-default" href="{BASE}/id/{t}">
+<style>{STUB_CSS}</style>
 <script>(function(){{var l;try{{l=localStorage.getItem("ib_lang")}}catch(e){{}}
 if(l!=="id"&&l!=="en")l=/^id/i.test(navigator.language||"")?"id":"en";
 location.replace(l+"/{t}"+location.search+location.hash)}})()</script></head>
-<body style="font-family:sans-serif;text-align:center;padding:40px"><p>GWM</p>
-<p><a href="id/{t}">Bahasa Indonesia</a> · <a href="en/{t}">English</a></p></body></html>
+<body>{body}</body></html>
 '''
     open(f"{ROOT}/{p}.html","w",encoding="utf-8").write(h)
 # ---- halaman statis per event (data/events.json dari tools/gen_events.py): Event JSON-LD + teks yang bisa dibaca bot ----
