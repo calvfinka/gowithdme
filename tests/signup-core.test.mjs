@@ -48,3 +48,29 @@ test("parseArrival: tautan konfirmasi sukses, galat, dan halaman biasa", () => {
   assert.equal(SC.arrivalErrorKey(SC.parseArrival("#error=access_denied&error_description=Invalid+token", "")), "su_l_used");
   assert.equal(SC.arrivalErrorKey(SC.parseArrival("?error=server_error", "")), "su_l_bad");
 });
+
+test("nickIssue: menolak nama yang menyerupai pengelola, termasuk leetspeak dan spasi", () => {
+  for (const bad of ["admin", "Admin GWM", "4dm1n", "@dmin", "G W M", "gwm_fan", "GoWithDme", "Sistem", "moderator_x", "Jurkon Studio"]) {
+    assert.equal(SC.nickIssue(bad), "su_e_nick_reserved", bad);
+  }
+});
+
+test("nickIssue: menolak email, nomor HP, dan tautan sebagai nama publik", () => {
+  for (const bad of ["budi@gmail.com", "081234567890", "+62 812-3456-7890", "www.toko.com", "https://x.id/a", "budi.com"]) {
+    assert.equal(SC.nickIssue(bad), "su_e_nick_private", bad);
+  }
+});
+
+test("nickIssue: nama wajar tetap lolos (tanpa salah tolak)", () => {
+  for (const ok of ["Budi", "Rina Ayu", "Andi1999", "Siti Administrasi", "modern", "Kamu", "Dimas_Bdg", "Nonton Bareng"]) {
+    assert.equal(SC.nickIssue(ok), "", ok);
+  }
+});
+
+test("validate: nama terlarang menghasilkan galat di kolom nick dan memfokuskan kolom itu", () => {
+  const r = SC.validate({ nick: "Admin GWM", email: "a@b.co", pass: "12345678", consent: true });
+  assert.equal(r.ok, false);
+  assert.equal(r.errors.nick, "su_e_nick_reserved");
+  assert.equal(r.first, "nick");
+  assert.equal(SC.validate({ nick: "b@b.com", email: "a@b.co", pass: "12345678", consent: true }).errors.nick, "su_e_nick_private");
+});

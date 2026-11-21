@@ -134,6 +134,34 @@ function logLocation(done){
   },function(){$("locSt").textContent=tr("a_denied");clearTimeout(t);end()},{enableHighAccuracy:true,timeout:6000});
 }
 $("bLoc").onclick=function(){logLocation()};
+/* ---- Akun baru: minta kota sekali saja. Kota membuat daftar event langsung memakai kotamu (gwm_loc, dibaca app.js). ---- */
+function onbKey(id){return"gwm_onb_"+String(id).slice(0,12)}
+function onbSeen(id){try{return localStorage.getItem(onbKey(id))==="1"}catch(e){return false}}
+function onbMark(id){try{localStorage.setItem(onbKey(id),"1")}catch(e){}}
+function firstRun(m,nick){
+  var old=$("onb");
+  if(old&&old.parentNode)old.parentNode.removeChild(old);
+  var p=m.profile||{},age=Date.now()-new Date(m.user.created_at||0).getTime();
+  if(p.city_id||onbSeen(m.user.id)||!(age>=0&&age<7*864e5))return;
+  var top=document.querySelector("#me .acct-top");if(!top)return;
+  var box=document.createElement("section");box.className="card ok onb";box.id="onb";box.style.marginBottom="14px";
+  box.innerHTML='<h3>'+esc(tr("onb_t",{n:nick}))+'</h3><p class="meta">'+esc(tr("onb_p"))+'</p>'+
+    '<label class="f">'+esc(tr("onb_city"))+'<select id="onbCity"></select></label>'+
+    '<div class="row"><button class="btn pri sm" id="onbSave" type="button">'+esc(tr("onb_save"))+'</button><button class="btn ghost sm" id="onbSkip" type="button">'+esc(tr("onb_skip"))+'</button></div>';
+  top.parentNode.insertBefore(box,top.nextSibling);
+  var sel=$("onbCity");
+  loadCities(sel,true).then(function(){
+    $("onbSkip").onclick=function(){onbMark(m.user.id);box.parentNode.removeChild(box)};
+    $("onbSave").onclick=function(){
+      var id=sel.value;if(!id)return msg(tr("onb_pick"),"err");
+      var name=sel.options[sel.selectedIndex].text,b=this;b.disabled=true;
+      sb.from("profiles").update({city_id:id}).eq("id",m.user.id).then(function(r){
+        if(r.error){b.disabled=false;return msg(friendlyErr(r.error),"err")}
+        onbMark(m.user.id);
+        try{if(!localStorage.getItem("gwm_loc"))localStorage.setItem("gwm_loc",JSON.stringify({city:name,prov:"",macro:"",radiusKm:0}))}catch(e){}
+        $("pCity").value=id;
+        if(box.parentNode)box.parentNode.removeChild(box);
+        msg(tr("onb_done",{c:name}),"ok")})}})}
 var recovering=false;
 function show(){if(recovering||holding)return;getMe().then(function(m){
   $("guest").hidden=!!m;$("me").hidden=!m;var mn=document.querySelector("main.auth-pg");if(mn)mn.classList.toggle("wide",!!m);if(!m)return;document.title=tr("ac_title");
@@ -141,6 +169,7 @@ function show(){if(recovering||holding)return;getMe().then(function(m){
   $("av").textContent=p.avatar_url?"":n.charAt(0).toUpperCase();$("av").style.background=p.avatar_url?"center/cover url('"+p.avatar_url.replace(/'/g,"%27")+"')":"";$("nm").textContent=n;$("em").textContent=/@phone\.jurkon\.my\.id$/.test(m.user.email)?"+"+m.user.email.split("@")[0]:m.user.email;
   if($("meUid"))$("meUid").textContent=WF?WF.shortUid(m.user.id):("ID-"+String(m.user.id||"").slice(0,8).toUpperCase());
   $("bv").hidden=!p.verified;$("ba").hidden=p.role!=="admin";$("lAdmin").hidden=p.role!=="admin";
+  firstRun(m,n);
   if(dirty)return;
   $("pNick").value=p.nickname||"";loadCities($("pCity"),true).then(function(){$("pCity").value=p.city_id||"";setDirty(false)});
   loadExtra(m.user.id);
@@ -187,6 +216,8 @@ $("fAll").onsubmit=function(e){e.preventDefault();var btn=this.querySelector('[t
       var ck=WF.enforce([nick,bio],{userId:m.user.id,userLabel:nick,context:"profile_edit",lang:window.IB_LANG});
       if(!ck.ok){btn.disabled=false;msg(ck.message,"err");return null}
     }
+    var ni=(m.profile&&m.profile.role!=="admin"&&nick!==(m.profile.nickname||""))?SC.nickIssue(nick):"";
+    if(ni){btn.disabled=false;msg(tr(ni),"err");return null}
     return sb.from("profiles").update({nickname:nick,city_id:$("pCity").value||null}).eq("id",m.user.id);
   }).then(function(r){
     if(r===null)return;
@@ -260,6 +291,7 @@ $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
   function verify(){
     var code=$("phCode").value.replace(/\D/g,""),nick=$("phNick").value.trim();
     if(code.length!==6)return msg(T.wrong,"err");
+    if(nick&&SC.nickIssue(nick))return msg(tr(SC.nickIssue(nick)),"err");
     if(nick&&WF){var ck=WF.enforce(nick,{userId:"signup",userLabel:nick,context:"signup_nickname",lang:window.IB_LANG});if(!ck.ok)return msg(ck.message,"err")}
     var b=$("phOk");b.disabled=true;msg(tr("processing"));holding=true;setAfter();
     function stop(m){holding=false;takeAfter();b.disabled=false;msg(m,"err")}

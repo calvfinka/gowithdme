@@ -7,6 +7,31 @@
 })(typeof window !== "undefined" ? window : (typeof globalThis !== "undefined" ? globalThis : this), function(){
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+  /* Nama panggilan tampil publik (profil, forum, ajakan). Dua hal ditolak:
+     1) menyerupai pengelola ("admin", "GWM", "moderator", varian leetspeak seperti "4dm1n"), karena bisa dipakai menyamar;
+     2) berisi data pribadi (email, nomor HP, tautan), karena nama ini terbaca semua orang.
+     Hasil: "" bila aman, atau kunci teks galat. */
+  var LEET = { "0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "7": "t", "@": "a", "$": "s", "!": "i" };
+  var RESERVED_EXACT = ["admin", "administrator", "moderator", "mod", "staff", "support", "official", "system", "sistem", "owner", "cs", "customerservice", "helpdesk", "gwm", "gowithme", "gowithdme", "jurkon", "jurkonstudio"];
+  var RESERVED_EDGE = ["admin", "gwm", "gowithdme", "gowithme", "jurkon", "moderator"];
+  function compact(nick) {
+    var t = String(nick == null ? "" : nick).toLowerCase();
+    try { t = t.normalize("NFKD").replace(/[\u0300-\u036f]/g, ""); } catch (e) {}
+    return t.replace(/[0134578@$!]/g, function (c) { return LEET[c]; }).replace(/[^a-z]/g, "");
+  }
+  function nickIssue(nick) {
+    var raw = String(nick == null ? "" : nick).trim();
+    if (!raw) return "";
+    if (/\S+@\S+\.\S+/.test(raw) || /(https?:\/\/|www\.|\.(com|net|org|co|id|my\.id|xyz|me|io)(\/|\b))/i.test(raw) || raw.replace(/\D/g, "").length >= 9) return "su_e_nick_private";
+    var c = compact(raw);
+    if (RESERVED_EXACT.indexOf(c) > -1) return "su_e_nick_reserved";
+    for (var i = 0; i < RESERVED_EDGE.length; i++) {
+      var w = RESERVED_EDGE[i];
+      if (c.length > w.length && (c.slice(0, w.length) === w || c.slice(-w.length) === w) && c.indexOf("administrasi") < 0) return "su_e_nick_reserved";
+    }
+    return "";
+  }
+
   /* Hasil: { ok, errors: { nick|email|pass|consent: kunciTeks }, first: kolom pertama yang salah }.
      Urutan kolom mengikuti urutan tampilan formulir supaya fokus pindah ke kolom paling atas yang salah. */
   function validate(v){
@@ -14,6 +39,7 @@
     var errors = {}, nick = String(v.nick == null ? "" : v.nick).trim(), email = String(v.email == null ? "" : v.email).trim(), pass = String(v.pass == null ? "" : v.pass);
     if (!nick) errors.nick = "su_e_nick_need";
     else if (nick.length < 2) errors.nick = "su_e_nick_short";
+    else if (nickIssue(nick)) errors.nick = nickIssue(nick);
     if (!email) errors.email = "su_e_email_need";
     else if (!EMAIL_RE.test(email)) errors.email = "su_e_email_bad";
     if (!pass) errors.pass = "su_e_pass_need";
@@ -79,5 +105,5 @@
     return "su_l_bad";
   }
 
-  return { validate: validate, mapError: mapError, parseArrival: parseArrival, arrivalErrorKey: arrivalErrorKey, EMAIL_RE: EMAIL_RE };
+  return { validate: validate, nickIssue: nickIssue, mapError: mapError, parseArrival: parseArrival, arrivalErrorKey: arrivalErrorKey, EMAIL_RE: EMAIL_RE };
 });
