@@ -30,11 +30,11 @@ function score(e,q){var n=norm(q);if(!n)return 0;var words=n.split(" ").filter(B
     words.forEach(function(w){if(w.length<2)return;if(nk.indexOf(w)>-1||w.indexOf(nk)>-1)sc+=1.2})});return sc}
 function answer(q){var L=LANG(),list=KB(),best=null,bestSc=0;
   list.forEach(function(e){var s=score(e,q);if(s>bestSc){bestSc=s;best=e}});
-  if(!best||bestSc<1.5)return{text:L==="en"?"Try keywords like “sign up”, “invite”, “hiking”, or “contact”. Or browse the FAQ.":"Coba kata kunci seperti “daftar”, “ajakan”, “gunung”, atau “kontak”. Atau gulir FAQ.",links:[{h:"bantuan#faq",t:"FAQ"},{h:"bantuan#kontak",t:L==="en"?"Contact":"Kontak"}],low:true};
+  if(!best||bestSc<1.5)return{text:(L==="en"?"Try keywords like “sign up”, “invite”, “hiking”, or “contact”. Or browse the FAQ.":"Coba kata kunci seperti “daftar”, “ajakan”, “gunung”, atau “kontak”. Atau gulir FAQ.")+" "+tr("bot_ai_hint"),links:[{h:"https://ai.gowithdme.com/",t:tr("bot_ai"),ext:1},{h:"bantuan#faq",t:"FAQ"},{h:"bantuan#kontak",t:L==="en"?"Contact":"Kontak"}],low:true};
   return{text:best.a[L]||best.a.id,links:best.links||[],low:false}}
 function chips(){return LANG()==="en"?[{q:"How do I sign up?",label:"Sign up"},{q:"Find company / invites",label:"Invites"},{q:"Hiking & packing",label:"Hiking"},{q:"Community",label:"Community"},{q:"Contact",label:"Contact"}]:[{q:"Cara daftar akun",label:"Daftar"},{q:"Ajakan teman",label:"Ajakan"},{q:"Naik gunung & packing",label:"Gunung"},{q:"Komunitas",label:"Komunitas"},{q:"Hubungi GWM",label:"Kontak"}]}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-function renderLinks(links){if(!links||!links.length)return"";return'<div class="gwm-bot-links">'+links.map(function(l){return'<a class="btn ghost sm" href="'+esc(l.h)+'">'+esc(l.t)+"</a>"}).join("")+"</div>"}
+function renderLinks(links){if(!links||!links.length)return"";return'<div class="gwm-bot-links">'+links.map(function(l){return'<a class="btn ghost sm" href="'+esc(l.h)+'"'+(l.ext?' target="_blank" rel="noopener"':"")+">"+esc(l.t)+"</a>"}).join("")+"</div>"}
 function mount(root,opts){opts=opts||{};if(!root)return null;var L=LANG();
   var title=opts.title||(L==="en"?"GWM Guide":"Panduan GWM");
   var placeholder=opts.placeholder||(L==="en"?"Ask about events, invites, hiking…":"Tanya soal event, ajakan, gunung…");

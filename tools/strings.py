@@ -959,3 +959,14 @@ _SIGNUP = {
   "su_l_bad": ("Tautan konfirmasi tidak bisa dipakai. Coba daftar lagi untuk mendapat email baru.", "That confirmation link can't be used. Sign up again to get a new email."),
 }
 S.update(_SIGNUP); J.update(_SIGNUP)
+
+# ---- Tautan ke asisten AI (ai.gowithdme.com): menu, halaman Bantuan, dan cadangan bot panduan ----
+_AI = {
+"nv_ai": ("Asisten AI", "AI assistant"),
+"hp_ai_h": ("Tanya AI GoWithDME", "Ask GoWithDME AI"),
+"hp_ai_p": ("Asisten perencana perjalanan untuk gunung, konser, dan trip: itinerary, estimasi biaya, dan perlengkapan. Jawaban AI bisa keliru, jadi cek sumber resmi sebelum berangkat.", "A travel-planning assistant for hikes, concerts, and trips: itineraries, cost estimates, and gear. AI answers can be wrong, so check official sources before you go."),
+"hp_ai_btn": ("Buka asisten AI", "Open the AI assistant"),
+"bot_ai": ("Tanya AI", "Ask AI"),
+"bot_ai_hint": ("Mau jawaban lebih lengkap? Coba asisten AI.", "Want a fuller answer? Try the AI assistant."),
+}
+S.update(_AI); J.update(_AI)
