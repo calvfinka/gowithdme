@@ -29,6 +29,14 @@ function sum(t){var el=$("rSum");el.textContent=t||"";el.hidden=!t}
 function clearReg(){for(var k in FIELDS)fieldErr(k);sum("")}
 Object.keys(FIELDS).forEach(function(k){var i=$(FIELDS[k][0]);i.addEventListener(k==="consent"?"change":"input",function(){fieldErr(k);sum("")})});
 function focusField(k){var i=$(FIELDS[k][0]);if(i.focus)i.focus()}
+/* Saran perbaikan email (gmial.com -> gmail.com): tidak memblokir. Hanya muncul saat Daftar ditekan (bukan saat blur: hint yang muncul menggeser tombol dan ketukan meleset); kirim kedua kali dengan alamat yang sama dianggap disengaja. */
+function emailHint(sg){var h=$("hEmail");if(!h)return;h.textContent="";
+  if(!sg){h.hidden=true;return}
+  h.appendChild(document.createTextNode(tr("su_h_email",{e:sg})));
+  var b=document.createElement("button");b.type="button";b.textContent=tr("su_h_use");
+  b.onclick=function(ev){ev.preventDefault();$("rEmail").value=sg;delete $("rEmail").dataset.sgSeen;emailHint("");fieldErr("email");$("rEmail").focus()};
+  h.appendChild(b);h.hidden=false}
+$("rEmail").addEventListener("input",function(){emailHint("")});
 function signupFail(err){
   var m=SC.mapError(err);msg("");
   if(m.field){fieldErr(m.field,m.key);focusField(m.field)}
@@ -38,6 +46,8 @@ $("fReg").onsubmit=function(e){e.preventDefault();clearReg();msg("");
   var btn=this.querySelector('[type="submit"]'),nick=$("rNick").value.trim(),email=$("rEmail").value.trim();
   var v=SC.validate({nick:nick,email:email,pass:$("rPass").value,consent:$("rConsent").checked});
   if(v.ok&&WF){var ck=WF.enforce(nick,{userId:"signup",userLabel:nick,context:"signup_nickname",lang:window.IB_LANG});if(!ck.ok){v.ok=false;v.first="nick";v.errors.nick="_raw";v.raw=ck.message}}
+  if(v.ok){var sg=SC.suggestEmail(email),ri=$("rEmail");
+    if(sg&&ri.dataset.sgSeen!==email){ri.dataset.sgSeen=email;emailHint(sg);return focusField("email")}}
   if(!v.ok){
     var n=0;for(var k in v.errors){n++;fieldErr(k,k==="nick"&&v.raw?null:v.errors[k],k==="nick"?v.raw:null)}
     if(n>1)sum(tr("su_e_fix",{n:n}));
@@ -71,12 +81,25 @@ $("suChg").onclick=function(){var em=$("suTo").dataset.email||"";hideSent();take
 
 /* Hasil tautan konfirmasi: galat (kedaluwarsa / sudah dipakai) ditampilkan dengan bahasa jelas; sukses -> langsung ke akun. */
 function cleanUrl(){try{history.replaceState(null,"",location.pathname+location.search.replace(/[?&](error|error_code|error_description|code|type)=[^&]*/g,"").replace(/^&/,"?"))}catch(e){}}
+/* Server mengganti nama bentrok/terlarang (nick_make). Beri tahu sekali, lalu arahkan ke kolom nama, jangan diam-diam. */
+function driftKey(id){return"gwm_drift_"+String(id).slice(0,12)}
+function driftOf(m){
+  var t=m.user.user_metadata&&m.user.user_metadata.nickname,a=m.profile&&m.profile.nickname,age=Date.now()-new Date(m.user.created_at||0).getTime();
+  if(!t||!a||!(age>=0&&age<2*864e5)||!SC.nickDrift(t,a))return null;
+  try{if(localStorage.getItem(driftKey(m.user.id))==="1")return null}catch(e){}
+  return{t:String(t).trim(),a:a}}
+function driftShow(m,d){
+  try{localStorage.setItem(driftKey(m.user.id),"1")}catch(e){}
+  var t=tr("su_nick_changed",{t:d.t,a:d.a});msg(t,"ok");toast(t,9000);   /* msg "ok" hilang sendiri setelah 4,5 dtk; toast menahan lebih lama */
+  setTimeout(function(){var i=$("pNick");if(i&&i.scrollIntoView)i.scrollIntoView({block:"center",behavior:"smooth"});if(i&&i.focus)i.focus({preventScroll:true})},900)}
 function welcome(){
   if(arrDone)return;arrDone=true;
   getMe().then(function(m){
     if(!m)return false;
     var pend=takePending(),to=(pend&&pend.next)||takeAfter(),nm=(m.profile&&m.profile.nickname)||(m.user.user_metadata&&m.user.user_metadata.nickname)||String(m.user.email||"").split("@")[0];
+    var d=driftOf(m);
     msg(tr("su_welcome",{n:nm}),"ok");
+    if(d){show();setTimeout(function(){driftShow(m,d)},1400);return true}   /* tetap di halaman akun supaya pesan terbaca */
     if(to)setTimeout(function(){location.href=to},1300);else show();
     return true})}
 if(ARR.error){
@@ -170,6 +193,7 @@ function show(){if(recovering||holding)return;getMe().then(function(m){
   if($("meUid"))$("meUid").textContent=WF?WF.shortUid(m.user.id):("ID-"+String(m.user.id||"").slice(0,8).toUpperCase());
   $("bv").hidden=!p.verified;$("ba").hidden=p.role!=="admin";$("lAdmin").hidden=p.role!=="admin";
   firstRun(m,n);
+  var dr=driftOf(m);if(dr&&!ARR.confirmed)driftShow(m,dr);
   if(dirty)return;
   $("pNick").value=p.nickname||"";loadCities($("pCity"),true).then(function(){$("pCity").value=p.city_id||"";setDirty(false)});
   loadExtra(m.user.id);

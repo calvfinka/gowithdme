@@ -32,6 +32,66 @@
     return "";
   }
 
+
+  /* ---- Email: salah ketik domain umum + email sekali pakai ---- */
+  var MAIL_OK = ["gmail.com", "yahoo.com", "yahoo.co.id", "ymail.com", "outlook.com", "hotmail.com", "live.com", "msn.com", "icloud.com", "me.com", "proton.me", "protonmail.com", "mail.com", "email.com", "gmx.com", "zoho.com", "aol.com", "yandex.com"];
+  var MAIL_FIX = { "gmail.co": "gmail.com", "gmail.id": "gmail.com", "gmail.co.id": "gmail.com", "gmail.cim": "gmail.com", "gmail.vom": "gmail.com", "gmail.con": "gmail.com", "gmail.cm": "gmail.com", "gmai.com": "gmail.com", "gmial.com": "gmail.com", "gamil.com": "gmail.com", "yahoo.co": "yahoo.com", "yahoo.con": "yahoo.com", "yaho.com": "yahoo.com", "yahoo.id": "yahoo.co.id" };
+  var TEMP_MAIL = ["mailinator.com", "guerrillamail.com", "guerrillamail.net", "guerrillamail.org", "guerrillamail.biz", "guerrillamail.de", "sharklasers.com", "grr.la", "10minutemail.com", "10minutemail.net", "tempmail.com", "temp-mail.org", "temp-mail.io", "tempmail.net", "tempail.com", "tempr.email", "yopmail.com", "yopmail.fr", "yopmail.net", "trashmail.com", "trashmail.net", "throwawaymail.com", "dispostable.com", "getnada.com", "nada.email", "maildrop.cc", "fakeinbox.com", "mailnesia.com", "mohmal.com", "emailondeck.com", "burnermail.io", "moakt.com", "spam4.me", "mintemail.com", "discard.email", "tmpmail.org", "tmpmail.net", "mail.tm", "inboxkitten.com", "mytemp.email", "fakemail.net", "mailcatch.com", "tempinbox.com"];
+  function domainOf(email) { var i = String(email || "").trim().toLowerCase().lastIndexOf("@"); return i < 0 ? "" : String(email).trim().toLowerCase().slice(i + 1); }
+  /* Jarak edit (OSA): satu salah ketik, huruf tertukar, tertinggal, atau berlebih bernilai 1. */
+  function editDist(a, b) {
+    var m = a.length, n = b.length, d = [], i, j;
+    for (i = 0; i <= m; i++) { d[i] = [i]; }
+    for (j = 1; j <= n; j++) d[0][j] = j;
+    for (i = 1; i <= m; i++) for (j = 1; j <= n; j++) {
+      var c = a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1;
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + c);
+      if (i > 1 && j > 1 && a.charAt(i - 1) === b.charAt(j - 2) && a.charAt(i - 2) === b.charAt(j - 1)) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+    }
+    return d[m][n];
+  }
+  /* Alamat yang mungkin dimaksud ("" bila domain sudah benar atau tidak mirip apa pun). Hanya saran, tidak memblokir. */
+  function suggestEmail(email) {
+    var e = String(email || "").trim(), at = e.lastIndexOf("@");
+    if (at < 1 || !EMAIL_RE.test(e)) return "";
+    var dom = e.slice(at + 1).toLowerCase(), fix = "";
+    if (MAIL_OK.indexOf(dom) > -1) return "";
+    if (MAIL_FIX[dom]) fix = MAIL_FIX[dom];
+    else for (var i = 0; i < MAIL_OK.length; i++) if (dom.length >= 8 && editDist(dom, MAIL_OK[i]) === 1) { fix = MAIL_OK[i]; break; }
+    return fix ? e.slice(0, at + 1) + fix : "";
+  }
+  function isTempMail(email) {
+    var dom = domainOf(email);
+    if (!dom) return false;
+    for (var i = 0; i < TEMP_MAIL.length; i++) if (dom === TEMP_MAIL[i] || dom.slice(-TEMP_MAIL[i].length - 1) === "." + TEMP_MAIL[i]) return true;
+    return false;
+  }
+
+  /* ---- Password: terlalu umum, urutan/ulangan, atau memuat nama/email sendiri ---- */
+  var COMMON_PASS = ["password", "password1", "password12", "password123", "passw0rd", "12345678", "123456789", "1234567890", "11111111", "00000000", "123123123", "12341234", "qwertyui", "qwerty123", "qwertyuiop", "asdfghjk", "asdf1234", "abc12345", "abcd1234", "iloveyou", "letmein1", "admin123", "admin1234", "katasandi", "kata sandi", "sandi123", "rahasia", "rahasia123", "indonesia", "indonesia1", "indonesia123", "bismillah", "bismillah1", "sayangku", "gowithdme", "gowithdme1", "gowithdme123", "gwm12345", "gwm123456", "jurkon123"];
+  function seqPass(p) {
+    if (p.length < 6) return false;
+    var up = true, dn = true;
+    for (var i = 1; i < p.length; i++) { var x = p.charCodeAt(i) - p.charCodeAt(i - 1); if (x !== 1) up = false; if (x !== -1) dn = false; }
+    return up || dn;
+  }
+  /* "" bila lolos, atau kunci teks galat. */
+  function passIssue(pass, ctx) {
+    var p = String(pass == null ? "" : pass), low = p.toLowerCase(), c = ctx || {};
+    if (!p) return "";
+    if (COMMON_PASS.indexOf(low) > -1 || /^(.)\1+$/.test(p) || seqPass(low) || /^(.{1,3})\1+$/.test(p)) return "su_e_pass_weak";
+    var local = String(c.email || "").toLowerCase().split("@")[0].replace(/[^a-z0-9]/g, ""), nick = String(c.nick || "").toLowerCase().replace(/[^a-z0-9]/g, ""), flat = low.replace(/[^a-z0-9]/g, "");
+    if ((local.length >= 4 && flat.indexOf(local) > -1) || (nick.length >= 4 && flat.indexOf(nick) > -1)) return "su_e_pass_personal";
+    return "";
+  }
+
+  /* Nama yang diminta saat daftar vs nama yang akhirnya dipakai server (nick_make mengganti nama bentrok/terlarang). true bila berbeda. */
+  function nickNorm(n) { return String(n == null ? "" : n).replace(/\s+/g, " ").trim().slice(0, 30).toLowerCase(); }
+  function nickDrift(asked, actual) {
+    var a = nickNorm(asked), b = nickNorm(actual);
+    return !!a && !!b && a !== b;
+  }
+
   /* Hasil: { ok, errors: { nick|email|pass|consent: kunciTeks }, first: kolom pertama yang salah }.
      Urutan kolom mengikuti urutan tampilan formulir supaya fokus pindah ke kolom paling atas yang salah. */
   function validate(v){
@@ -42,8 +102,10 @@
     else if (nickIssue(nick)) errors.nick = nickIssue(nick);
     if (!email) errors.email = "su_e_email_need";
     else if (!EMAIL_RE.test(email)) errors.email = "su_e_email_bad";
+    else if (isTempMail(email)) errors.email = "su_e_email_temp";
     if (!pass) errors.pass = "su_e_pass_need";
     else if (pass.length < 8) errors.pass = "su_e_pass_short";
+    else if (passIssue(pass, { email: email, nick: nick })) errors.pass = passIssue(pass, { email: email, nick: nick });
     if (!v.consent) errors.consent = "su_e_consent";
     var order = ["nick", "email", "pass", "consent"], first = null;
     for (var i = 0; i < order.length; i++) if (errors[order[i]]) { first = order[i]; break; }
@@ -105,5 +167,5 @@
     return "su_l_bad";
   }
 
-  return { validate: validate, nickIssue: nickIssue, mapError: mapError, parseArrival: parseArrival, arrivalErrorKey: arrivalErrorKey, EMAIL_RE: EMAIL_RE };
+  return { validate: validate, nickIssue: nickIssue, suggestEmail: suggestEmail, isTempMail: isTempMail, passIssue: passIssue, nickDrift: nickDrift, mapError: mapError, parseArrival: parseArrival, arrivalErrorKey: arrivalErrorKey, EMAIL_RE: EMAIL_RE };
 });

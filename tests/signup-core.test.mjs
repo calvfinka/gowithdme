@@ -16,7 +16,7 @@ test("validate: format email, panjang password, dan nama panggilan", () => {
   assert.equal(SC.validate({ nick: "B", email: "a@b.co", pass: "12345678", consent: true }).errors.nick, "su_e_nick_short");
   for (const bad of ["budi", "budi@", "budi@x", "bu di@x.com", "@x.com"]) assert.equal(SC.validate({ nick: "Budi", email: bad, pass: "12345678", consent: true }).errors.email, "su_e_email_bad", bad);
   assert.equal(SC.validate({ nick: "Budi", email: "budi@x.com", pass: "1234567", consent: true }).errors.pass, "su_e_pass_short");
-  assert.equal(SC.validate({ nick: " Budi ", email: " budi@x.com ", pass: "12345678", consent: true }).ok, true);
+  assert.equal(SC.validate({ nick: " Budi ", email: " budi@x.com ", pass: "kopi-susu-9", consent: true }).ok, true);
 });
 
 test("mapError: galat Supabase -> kolom dan kunci teks", () => {
@@ -79,4 +79,47 @@ test("nickIssue: angka 8 dan huruf biasa tidak merusak normalisasi", () => {
   assert.equal(SC.nickIssue("Budi8"), "");
   assert.equal(SC.nickIssue("Ad8min"), "su_e_nick_reserved"); // angka disisipkan di tengah tidak menipu penyaring
   assert.equal(SC.nickIssue("8admin"), "su_e_nick_reserved");
+});
+
+test("suggestEmail: salah ketik domain umum disarankan, domain sah tidak diganggu", () => {
+  const s = SC.suggestEmail;
+  assert.equal(s("budi@gmial.com"), "budi@gmail.com");
+  assert.equal(s("budi@gmail.con"), "budi@gmail.com");
+  assert.equal(s("Budi@gmail.co"), "Budi@gmail.com");
+  assert.equal(s("budi@gmaill.com"), "budi@gmail.com");
+  assert.equal(s("budi@hotmal.com"), "budi@hotmail.com");
+  assert.equal(s("budi@yahoo.id"), "budi@yahoo.co.id");
+  for (const ok of ["budi@gmail.com", "budi@yahoo.co.id", "budi@mail.com", "budi@ymail.com", "budi@kampus.ac.id", "budi@perusahaan.co.id", "budi@gmx.com", "budi", "@gmail.com", ""]) assert.equal(s(ok), "", ok);
+});
+
+test("isTempMail / validate: email sekali pakai ditolak, termasuk subdomain", () => {
+  assert.equal(SC.isTempMail("a@mailinator.com"), true);
+  assert.equal(SC.isTempMail("a@x.mailinator.com"), true);
+  assert.equal(SC.isTempMail("a@notmailinator.com"), false);
+  assert.equal(SC.isTempMail("a@gmail.com"), false);
+  assert.equal(SC.validate({ nick: "Budi", email: "a@yopmail.com", pass: "kopi-susu-9", consent: true }).errors.email, "su_e_email_temp");
+});
+
+test("passIssue: umum, urutan, ulangan, dan memuat nama/email sendiri", () => {
+  const p = SC.passIssue;
+  for (const w of ["password", "12345678", "aaaaaaaa", "abcdefgh", "87654321", "abcabcabc", "GoWithDMe123", "Indonesia123"]) assert.equal(p(w), "su_e_pass_weak", w);
+});
+
+test("passIssue: kunci personal dan lolos", () => {
+  const p = SC.passIssue;
+  assert.equal(p("kalfin-2026", { nick: "Kalfin" }), "su_e_pass_personal");
+  assert.equal(p("xxbudisantoso1", { email: "budisantoso@gmail.com" }), "su_e_pass_personal");
+  assert.equal(p("kopi-susu-9", { nick: "Budi", email: "budi@x.com" }), "");
+  assert.equal(p("Sg7!rainbow"), "");
+  assert.equal(SC.validate({ nick: "Kalfin", email: "k@x.com", pass: "kalfin-2026", consent: true }).errors.pass, "su_e_pass_personal");
+  assert.equal(SC.validate({ nick: "Budi", email: "b@x.com", pass: "12345678", consent: true }).errors.pass, "su_e_pass_weak");
+});
+
+test("nickDrift: nama diganti server terdeteksi, rapikan spasi/huruf besar tidak dianggap beda", () => {
+  assert.equal(SC.nickDrift("Budi", "Budi4821"), true);
+  assert.equal(SC.nickDrift("admin", "Pengguna"), true);
+  assert.equal(SC.nickDrift("  Budi   Santoso ", "budi santoso"), false);
+  assert.equal(SC.nickDrift("", "Budi"), false);
+  assert.equal(SC.nickDrift("Budi", null), false);
+  assert.equal(SC.nickDrift("x".repeat(40), "x".repeat(30)), false);
 });
