@@ -975,6 +975,18 @@ _SIGNUP = {
 }
 S.update(_SIGNUP); J.update(_SIGNUP)
 
+# Bar bawah di HP (src/_tabbar.html): lima tujuan berdasarkan tugas, tanpa tombol tengah.
+_TABBAR = {
+  "tb_aria": ("Navigasi bawah", "Bottom navigation"),
+  "tb_events": ("Event", "Events"),
+  "tb_hike": ("Gunung", "Hiking"),
+  "tb_invites": ("Ajakan", "Invites"),
+  "tb_msgs": ("Pesan", "Messages"),
+  "tb_login": ("Masuk", "Log in"),
+  "tb_acct": ("Akun", "Account"),
+}
+S.update(_TABBAR)
+
 # ---- Tautan ke asisten AI (ai.gowithdme.com): menu, halaman Bantuan, dan cadangan bot panduan ----
 _AI = {
 "nv_ai": ("Asisten AI", "AI assistant"),

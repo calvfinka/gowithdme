@@ -167,3 +167,22 @@ html[data-tier="high"] .thumb{transition:box-shadow .25s}
   html[data-tier="high"] .tiles{gap:26px 20px}
   html[data-tier="high"] .tick{border-radius:14px}
 }
+
+/* ---- Bar bawah datar di HP: lima tujuan, menempel di dasar layar, tanpa tombol tengah ---- */
+.gtab{display:none}
+@media (max-width:640px){
+  .gtab{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:28;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .gtab a{position:relative;flex:1 1 0;min-width:0;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--mute);text-decoration:none;font-size:11px;font-weight:600;line-height:1.1;-webkit-tap-highlight-color:transparent}
+  .gtab a[hidden]{display:none}
+  .gtab svg.i{width:22px;height:22px}
+  .gtab a[aria-current="page"]{color:var(--brand)}
+  .gtab a[aria-current="page"]::before{content:"";position:absolute;top:-1px;left:28%;right:28%;height:2px;border-radius:0 0 2px 2px;background:var(--brand)}
+  .gtab .gdot{position:absolute;top:9px;left:calc(50% + 7px);width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--bg)}
+  .gtab .gl-in{display:none}.gtab .is-in .gl-out{display:none}.gtab .is-in .gl-in{display:inline}
+  body{padding-bottom:calc(56px + env(safe-area-inset-bottom,0px))}
+  html .totop{bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+  html #toast{bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+  html .kx-fab{bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+  html.gtab-off .gtab{display:none}
+  html.gtab-off body{padding-bottom:0}
+}

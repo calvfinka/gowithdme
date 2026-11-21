@@ -87,6 +87,12 @@
     var key=seg===""||seg==="index"||seg==="id"||seg==="en"?"home":seg;
     // menu aktif
     [].forEach.call(d.querySelectorAll(".pnav a[data-k]"),function(a){if(a.getAttribute("data-k")===key)a.setAttribute("aria-current","page")});
+    // bar bawah: tab aktif (komunitas ikut Ajakan; login ikut Akun) dan sembunyi saat keyboard layar terbuka
+    var gk={komunitas:"teman",login:"profil"}[key]||key;
+    [].forEach.call(d.querySelectorAll(".gtab a[data-k]"),function(a){if(a.getAttribute("data-k")===gk)a.setAttribute("aria-current","page")});
+    function typing(el){return !!el&&(el.tagName==="TEXTAREA"||el.tagName==="SELECT"||(el.tagName==="INPUT"&&!/^(checkbox|radio|button|submit|range|file|color)$/i.test(el.type||"")))}
+    d.addEventListener("focusin",function(e){if(typing(e.target))r.classList.add("gtab-off")});
+    d.addEventListener("focusout",function(){setTimeout(function(){if(!typing(d.activeElement))r.classList.remove("gtab-off")},120)});
     // lewati ke konten
     var main=d.querySelector("main.main")||d.querySelector(".page")||d.querySelector("main");
     if(main){if(!main.id)main.id="main";main.setAttribute("tabindex","-1");

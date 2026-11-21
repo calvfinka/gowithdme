@@ -30,6 +30,10 @@ if(acc){
   if(sp)sp.textContent=nick?nick.slice(0,14):(tr("nav_profile")||"Profil");
 }
 if(msgBtn)msgBtn.hidden=false;
+/* bar bawah HP: Pesan muncul, "Masuk" berubah jadi "Akun" */
+var gm=document.getElementById("gtabMsg"),ga=document.getElementById("gtabAcc"),gd=document.getElementById("gtabDot");
+if(gm)gm.hidden=false;
+if(ga){ga.href="profil";ga.classList.add("is-in")}
 
 var m=document.querySelector("#mm .mm-msg");
 var C=window.IB_CONFIG||{};
@@ -46,6 +50,7 @@ if(tok.access_token&&(!tok.expires_at||tok.expires_at*1000>Date.now())&&C.SUPABA
       var txt=n>99?"99+":String(n);
       if(m){var b=document.createElement("b");b.className="nb";b.textContent=txt;m.appendChild(b)}
       if(msgBadge){msgBadge.textContent=txt;msgBadge.hidden=false}
+      if(gd)gd.hidden=false;
       var ic=document.querySelector(".mm-ico");if(ic)ic.dataset.m="1";
     }
   }).catch(function(){});
