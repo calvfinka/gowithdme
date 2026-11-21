@@ -46,11 +46,8 @@ body.nv-home .tb-c .search{transition:opacity .2s}
 @media (max-width:640px){
   .tb-main{grid-template-columns:auto minmax(0,1fr) auto;gap:8px;padding-inline:12px}
   .tb-c{justify-content:flex-end}
-  .tb-loc{max-width:98px;padding:0 8px;height:34px;font-size:12px}
-  .tb-acc{width:34px;padding:0;justify-content:center}
-  .tb-acc span{display:none}
-  .tb-cta span{display:none}
-  .tb-cta{width:34px;padding:0;justify-content:center}
+  /* HP: bilah atas hanya logo, cari, dan menu. Kota, pesan, akun, dan Ajukan ada di dalam menu. */
+  .tb-loc,.tb-msg,.tb-acc,.tb-cta{display:none}
 }
 
 /* ---- Hero Quick Scope & Macro-Region Bar ---- */

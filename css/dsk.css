@@ -66,23 +66,6 @@ html:where([data-dsk]) .db{padding-bottom:calc(18px + env(safe-area-inset-bottom
 html:where([data-dsk]) .dp{height:min(calc(46*var(--vh)),300px)}
 /* adaptive.css @640 */
 html:where([data-dsk])[data-tier="mid"] .khero,html:where([data-dsk])[data-tier="high"] .khero{padding:16px;border-radius:16px}
-/* adaptive.css @640 */
-html:where([data-dsk]) .gtab{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:28;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
-html:where([data-dsk]) .gtab a{position:relative;flex:1 1 0;min-width:0;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--mute);text-decoration:none;font-size:11px;font-weight:600;line-height:1.1;-webkit-tap-highlight-color:transparent}
-html:where([data-dsk]) .gtab a[hidden]{display:none}
-html:where([data-dsk]) .gtab svg.i{width:22px;height:22px}
-html:where([data-dsk]) .gtab a[aria-current="page"]{color:var(--brand)}
-html:where([data-dsk]) .gtab a[aria-current="page"]::before{content:"";position:absolute;top:-1px;left:28%;right:28%;height:2px;border-radius:0 0 2px 2px;background:var(--brand)}
-html:where([data-dsk]) .gtab .gdot{position:absolute;top:9px;left:calc(50% + 7px);width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--bg)}
-html:where([data-dsk]) .gtab .gl-in{display:none}
-html:where([data-dsk]) .gtab .is-in .gl-out{display:none}
-html:where([data-dsk]) .gtab .is-in .gl-in{display:inline}
-html:where([data-dsk]) body{padding-bottom:calc(56px + env(safe-area-inset-bottom,0px))}
-html:where([data-dsk]) .totop{bottom:calc(68px + env(safe-area-inset-bottom,0px))}
-html:where([data-dsk]) #toast{bottom:calc(72px + env(safe-area-inset-bottom,0px))}
-html:where([data-dsk]) .kx-fab{bottom:calc(72px + env(safe-area-inset-bottom,0px))}
-html:where([data-dsk]).gtab-off .gtab{display:none}
-html:where([data-dsk]).gtab-off body{padding-bottom:0}
 /* naver.css @900 */
 html:where([data-dsk]){--svc:0px;--bh:56px}
 html:where([data-dsk]) .tb-main{gap:10px;padding-inline:14px}

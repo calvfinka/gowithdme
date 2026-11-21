@@ -975,17 +975,16 @@ _SIGNUP = {
 }
 S.update(_SIGNUP); J.update(_SIGNUP)
 
-# Bar bawah di HP (src/_tabbar.html): lima tujuan berdasarkan tugas, tanpa tombol tengah.
-_TABBAR = {
-  "tb_aria": ("Navigasi bawah", "Bottom navigation"),
-  "tb_events": ("Event", "Events"),
-  "tb_hike": ("Gunung", "Hiking"),
-  "tb_invites": ("Ajakan", "Invites"),
-  "tb_msgs": ("Pesan", "Messages"),
-  "tb_login": ("Masuk", "Log in"),
-  "tb_acct": ("Akun", "Account"),
+
+# Navigasi HP sederhana: pilih kota di menu, tiga tautan mulai di beranda.
+_NAVSIMPLE = {
+  "nv_city": ("Pilih kota", "Choose city"),
+  "nv_go_aria": ("Mulai dari sini", "Start here"),
+  "nv_go_event": ("Cari event", "Find events"),
+  "nv_go_hike": ("Naik gunung", "Go hiking"),
+  "nv_go_mate": ("Cari teman", "Find companions"),
 }
-S.update(_TABBAR)
+S.update(_NAVSIMPLE)
 
 # ---- Tautan ke asisten AI (ai.gowithdme.com): menu, halaman Bantuan, dan cadangan bot panduan ----
 _AI = {
