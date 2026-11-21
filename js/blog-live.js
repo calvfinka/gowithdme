@@ -44,6 +44,11 @@
     var h=dropTitle(renderBody(body,isHtml),title),kw=[],m=h.match(KW);
     if(m){h=h.slice(0,m.index);kw=plainOf(m[1]).split(",").map(function(k){return k.replace(/^[\s.]+|[\s.]+$/g,"")}).filter(function(k){return k.length>1&&k.length<=60}).slice(0,8)}
     return{html:h,kw:kw}}
+  function mergeTags(tags, kw){
+    var out = [], seen = {};
+    (tags || []).concat(kw || []).forEach(function(t){ t = String(t).replace(/\s+/g, " ").trim(); var k = t.toLowerCase(); if (t.length > 1 && t.length <= 60 && !seen[k]) { seen[k] = 1; out.push(t); } });
+    return out.slice(0, 8);
+  }
   function trimEx(t,n){n=n||155;if(t.length<=n)return t;var cut=t.slice(0,n),m,last=-1,re=/[.!?](?=\s|$)/g;
     while((m=re.exec(cut)))last=m.index+1;
     if(last>=90)return cut.slice(0,last);
@@ -72,6 +77,7 @@
     var main = document.querySelector("main.bl-main");
     if (!main) return;
     var key = p.category + "/" + p.slug, url = liveUrl(p), cn = CATS[p.category] || p.category, m = mins(p.body, p.is_html, p.title), pr = prep(p.body, p.is_html, p.title);
+    pr.kw = mergeTags(p.tags, pr.kw);
     document.title = p.title + " – Blog GWM";
     var stat = ROOT + "blog/" + p.category + "/" + p.slug, ex = trimEx(plainOf(pr.html));
     function sm(sel, attr, v){ var e = document.querySelector(sel); if (e) e.setAttribute(attr, v); }
@@ -152,7 +158,10 @@
   var H = { "apikey": KEY, "Authorization": "Bearer " + KEY },
       BASE = URL + "/rest/v1/blog_posts?status=eq.published";
   function jget(u){ return fetch(u, { headers: H }).then(function(r){ return r.ok ? r.json() : null; }); }
-  jget(BASE + "&select=id,title,slug,category,is_html,published_at&order=published_at.desc&limit=200").then(function(meta){
+  var LIST = "&order=published_at.desc&limit=200";
+  jget(BASE + "&select=id,title,slug,category,is_html,published_at,tags" + LIST).then(function(r){
+    return Array.isArray(r) ? r : jget(BASE + "&select=id,title,slug,category,is_html,published_at" + LIST);  /* kolom tags belum ada */
+  }).then(function(meta){
     /* galat/kuota Supabase habis atau daftar kosong: biarkan kartu hasil build, jangan dikosongkan */
     if (!Array.isArray(meta) || !meta.length) return;
     var q = new URLSearchParams(location.search), qCat = q.get("cat"), qSlug = q.get("post"),

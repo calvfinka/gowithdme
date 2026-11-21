@@ -10,10 +10,12 @@ def ambil(cols):
     q=urllib.parse.urlencode({"select":cols,"status":"eq.published","order":"published_at.desc","limit":"2000"},safe="*,")
     req=urllib.request.Request(f"{url}/rest/v1/blog_posts?{q}",headers={"apikey":key,"Authorization":"Bearer "+key})
     return json.load(urllib.request.urlopen(req,timeout=60))
-try: rows=ambil(BASE+",source_name,source_url")
-except urllib.error.HTTPError as e:
-    if e.code!=400: raise
-    rows=ambil(BASE)  # kolom sumber belum ada (supabase/schema_blog_orisinalitas.sql belum dijalankan)
+rows=None
+for extra in (",source_name,source_url,tags",",source_name,source_url",",tags",""):
+    try: rows=ambil(BASE+extra); break
+    except urllib.error.HTTPError as e:
+        if e.code!=400: raise  # 400 = kolom belum ada (schema_blog_orisinalitas.sql atau schema_blog_tags.sql belum dijalankan)
+if rows is None: raise SystemExit("gagal mengambil blog_posts")
 os.makedirs(ROOT+"/data",exist_ok=True)
 json.dump(rows,open(ROOT+"/data/posts.json","w",encoding="utf-8"),ensure_ascii=False,indent=1)
 print(len(rows),"tulisan ->","data/posts.json")

@@ -114,6 +114,13 @@ def pull_keywords(h):
     if not m: return h,[]
     kw=[k.strip(" .") for k in plain(m.group(1)).split(",")]
     return h[:m.start()],[k for k in kw if 1<len(k)<=60][:8]
+def merge_tags(tags,kw,n=8):
+    """Tag dari panel admin (kolom tags) didahulukan, lalu baris 'Kata kunci:' di isi tulisan; tanpa duplikat (huruf besar/kecil diabaikan), maks. n."""
+    out=[];seen=set()
+    for t in list(tags or [])+list(kw or []):
+        t=re.sub(r"\s+"," ",str(t)).strip()
+        if 1<len(t)<=60 and t.lower() not in seen: seen.add(t.lower()); out.append(t)
+    return out[:n]
 def slugify(t):
     s=re.sub(r"[^a-z0-9]+","-",t.lower()).strip("-")[:48].strip("-")
     return s or "bagian"
@@ -235,7 +242,7 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
         if not o: return f'<span class="bl-pn-e {cls}"></span>'
         arrow=ic(icon)
         return f'<a class="bl-pn-a {cls}" href="{p}blog/{o["category"]}/{o["slug"]}" rel="{"prev" if left else "next"}"><small>{arrow if left else ""}{lab}{arrow if not left else ""}</small><b>{esc(o["title"])}</b><span>{esc(CATNAME[o["category"]])}</span></a>'
-    kwm=f'<meta name="keywords" content="{esc(", ".join(x["_kw"]))}">' if x.get("_kw") else ""
+    kwm=(f'<meta name="keywords" content="{esc(", ".join(x["_kw"]))}">'+"".join(f'<meta property="article:tag" content="{esc(t)}">' for t in x["_kw"])) if x.get("_kw") else ""
     tags=('<p class="bl-tags" aria-label="Topik terkait">'+"".join(f'<a href="{p}blog/?q={_u(t)}" rel="nofollow">{esc(t)}</a>' for t in x["_kw"])+'</p>') if x.get("_kw") else ""
     return (head(p,f"{x['title']} – Blog GWM",ex,canon,BASE,kwm+ld,"article")+top(p,k,counts,False)+
       f'<div class="bl-prog" id="blProg" aria-hidden="true"><i></i></div>'
@@ -276,7 +283,7 @@ def build(ROOT,BASE,posts):
     ok=[]
     for x in posts:
         if x.get("category") not in CATNAME or not re.match(r"^[a-z0-9]+(-[a-z0-9]+)*$",x.get("slug") or "") or not x.get("title") or not x.get("body"): print("lewati tulisan tidak valid:",x.get("slug")); continue
-        h,x["_kw"]=pull_keywords(render(x)); x["_html"]=add_ids(h); x["_ex"]=excerpt(x["_html"]); x["_m"]=mins(x["_html"]); x["_canon"]=f"{BASE}/blog/{x['category']}/{x['slug']}"; ok.append(x)
+        h,kw=pull_keywords(render(x)); x["_kw"]=merge_tags(x.get("tags"),kw); x["_html"]=add_ids(h); x["_ex"]=excerpt(x["_html"]); x["_m"]=mins(x["_html"]); x["_canon"]=f"{BASE}/blog/{x['category']}/{x['slug']}"; ok.append(x)
     ok.sort(key=lambda x:x.get("published_at") or "",reverse=True)
     counts={}
     for x in ok: counts[x["category"]]=counts.get(x["category"],0)+1
