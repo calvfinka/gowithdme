@@ -1,8 +1,8 @@
 # Sinkron otomatis: ambil event dan blog terbit dari Supabase, bangun ulang situs, commit bila ada perubahan.
-# Jalan tiap jam (cadangan), segera setelah event/blog terbit (supabase/auto_sinkron.sql), atau manual: tab Actions > "Sinkron konten" > Run workflow.
+# Jalan sehari sekali (cadangan), segera setelah event/blog terbit (supabase/auto_sinkron.sql), atau manual: tab Actions > "Sinkron konten" > Run workflow.
 name: Sinkron konten
 on:
-  schedule: [{cron: "7 * * * *"}]
+  schedule: [{cron: "7 21 * * *"}]  # 04.07 WIB, cadangan sekali sehari; pemicu utama tetap dari Supabase
   workflow_dispatch:
 permissions:
   contents: write
@@ -27,7 +27,7 @@ jobs:
         run: |
           git config user.name "gwm-bot"; git config user.email "gwm-bot@users.noreply.github.com"
           git add -A
-          if git diff --cached --quiet; then echo "changed=false" >> $GITHUB_OUTPUT; else git commit -m "Sinkron konten"; git push; echo "changed=true" >> $GITHUB_OUTPUT; fi
+          if git diff --cached --quiet; then echo "changed=false" >> $GITHUB_OUTPUT; else git commit -m "Sinkron konten"; git pull --rebase --autostash; git push; echo "changed=true" >> $GITHUB_OUTPUT; fi
       - name: Minta GitHub Pages membangun ulang
         if: steps.commit.outputs.changed == 'true'
         env: {GH_TOKEN: "${{ github.token }}"}
