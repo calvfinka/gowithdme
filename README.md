@@ -20,7 +20,7 @@ assets/              ikon, og-image, poster/ (poster yang disimpan di repo)
 .github/workflows/   sinkron.yml (tiap jam + otomatis saat terbit), jaga-aktif.yml (harian)
 admin.html           Panel Admin (satu bahasa, /admin)
 ```
-File yang dibuat otomatis (jangan diedit): `id/`, `en/`, `js/i18n.js`, `js/search-index.js`, `css/dsk.css`, `css/dsk-b.css`, `sitemap.xml`, `robots.txt`, `blog/`.
+File yang dibuat otomatis (jangan diedit): `id/`, `en/`, `js/i18n.js`, `js/search-index.js`, `css/dsk.css`, `css/dsk-b.css`, `sitemap.xml`, `robots.txt`, `sw.js`, `blog/`.
 
 ## Pasang dari nol
 1. **Supabase:** buat proyek. Di SQL Editor jalankan berkas `supabase/` **berurutan** (semuanya aman diulang):
@@ -102,3 +102,12 @@ Catatan: `@phone.jurkon.my.id` di `js/auth.js` bukan email kontak, melainkan ala
 
 ## Dokumen lain
 `AUDIT.md` (audit dan daftar perbaikan), `HEMAT-SUPABASE.md` (jaga aktif dan hemat egress), `supabase/DAFTAR_KONSER_PER_KOTA.md`, `BACA-SAYA.txt`, `data/BACA-SAYA.txt`.
+
+## Offline dan pasang aplikasi (PWA)
+`src/sw.js` (template) dibuat menjadi `/sw.js` oleh `tools/build.py`; `js/pwa.js` mendaftarkannya dari semua halaman aplikasi dan blog; `offline.html` tampil bila halaman belum tersimpan dan tidak ada sinyal.
+- Halaman: jaringan dulu (batas 4 detik bila sudah ada salinan), lalu salinan, lalu `offline.html`. Maks 40 halaman disimpan.
+- CSS/JS/gambar satu domain: salinan dulu, diperbarui di belakang layar. File `.json` (data event): jaringan dulu.
+- Tidak disentuh: Supabase, cuaca, `/login`, `/admin`, permintaan POST. Pustaka Supabase (versi dikunci) disimpan agar situs tetap jalan offline.
+- Cache dinamai dengan `VER` build; saat versi berganti, cache lama dibuang otomatis.
+- Tombol "Pasang aplikasi" ada di menu dan hanya muncul bila browser mengizinkan. Penanda "offline" muncul di bawah layar saat sinyal hilang.
+- Tes: `npm test` (`tests/sw.test.mjs`). Bila `sw.js` bermasalah di produksi: hapus `js/pwa.js` dari `src/_head.html` dan `tools/blog.py`, bangun ulang, lalu sebarkan versi `sw.js` yang memanggil `self.registration.unregister()`.

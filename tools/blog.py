@@ -163,7 +163,7 @@ def head(p,title,desc,canon,BASE,extra="",otype="website"):
 <meta property="og:type" content="{otype}"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{esc(canon)}"><meta property="og:image" content="{BASE}/assets/og-image.png"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="{p}assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="{p}assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="{p}js/theme.js"></script><link rel="stylesheet" href="{p}css/style.css"><link rel="stylesheet" href="{p}css/blog.css{v}">{extra}</head>"""
+<script src="{p}js/theme.js"></script><script src="{p}js/pwa.js{v}" defer></script><link rel="stylesheet" href="{p}css/style.css"><link rel="stylesheet" href="{p}css/blog.css{v}">{extra}</head>"""
 def top(p,cur,counts,bar=True):
     tot=sum(counts.values())
     chip=lambda href,name,icon,n,on: f'<a href="{href}"'+(' aria-current="page"' if on else '')+f'>{ic(icon)}<span>{esc(name)}</span>'+(f'<i>{n}</i>' if n else '')+'</a>'

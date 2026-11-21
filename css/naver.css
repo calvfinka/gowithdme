@@ -45,11 +45,12 @@ body.mm-open{overflow:hidden}
 .mm-g section{display:grid;align-content:start;gap:1px;padding:4px 0 8px;border-bottom:1px solid var(--line)}
 .mm-g section:last-child{border-bottom:0}
 .mm-g h3{font-size:11.5px;font-weight:700;color:var(--faint);margin:10px 0 4px;padding:0 6px;letter-spacing:.04em}
-.mm-g a,.mm-g .mm-share,.mm-g #ajMy{display:flex;align-items:center;gap:10px;width:100%;padding:6px;border:0;border-radius:10px;background:none;color:inherit;font:600 13.5px/1.3 var(--f);text-align:left;cursor:pointer}
-.mm-g a:hover,.mm-g a:focus-visible,.mm-g .mm-share:hover,.mm-g #ajMy:hover{background:var(--sel);color:var(--brand)}
+.mm-g a,.mm-g .mm-share,.mm-g #ajMy,.mm-g #mmInstall{display:flex;align-items:center;gap:10px;width:100%;padding:6px;border:0;border-radius:10px;background:none;color:inherit;font:600 13.5px/1.3 var(--f);text-align:left;cursor:pointer}
+.mm-g a:hover,.mm-g a:focus-visible,.mm-g .mm-share:hover,.mm-g #ajMy:hover,.mm-g #mmInstall:hover{background:var(--sel);color:var(--brand)}
 .mm-g .i{width:28px;height:28px;padding:6px;border-radius:8px;background:var(--side);color:var(--brand);flex:none}
 .mm-g a:hover .i{background:var(--bg)}
 .mm-g #pgShare{display:flex}
+.mm-g #mmInstall[hidden]{display:none}
 .mm-g #ajMy{position:relative}
 .mm-g #ajMy .ajn,.mm-g .mm-msg .nb{position:static;margin-left:auto;transform:none}
 .mm-g #ajMy[hidden]{display:none}

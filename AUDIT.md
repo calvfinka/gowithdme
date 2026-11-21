@@ -82,3 +82,15 @@ Diuji di Chromium headless (33 halaman × PC & HP, URL bersih, Supabase dan Open
 | 6 | `404.html`: game lama sederhana | Game baru (±3 KB tambahan, tanpa gambar/pustaka): pegunungan paralaks, matahari naik, pendaki beranimasi, lompat **dan merunduk** (burung muncul setelah 250 mdpl), penanda gunung yang dilewati, jeda otomatis saat tab disembunyikan, skor tertinggi tersimpan, teks Inggris di alamat `/en/`, layar tinggi-lebar mengikuti ukuran (HP) |
 
 Catatan: alur login/Google/RLS asli tetap belum teruji (Supabase asli tidak dapat diakses saat pengujian); poin "Perlu kamu cek" di atas masih berlaku.
+
+## Perubahan 21 November 2026 — sistem offline & PWA
+**Temuan audit:** tidak ada service worker (situs tidak bisa dibuka tanpa sinyal, tidak bisa dipasang sebagai aplikasi, tiap kunjungan ulang mengunduh ulang CSS/JS), padahal pengguna naik gunung sering di area tanpa sinyal. Aset sendiri sudah ramping (poster total 1,6 MB, terbesar 143 KB).
+| Bagian | Perubahan |
+|--------|-----------|
+| `src/sw.js` → `/sw.js` | Strategi per jenis permintaan (halaman, aset, data, pustaka). Redirect dibersihkan sebelum disimpan, halaman offline divalidasi, jumlah salinan dibatasi, cache versi lama dibuang. Tidak menyentuh Supabase, cuaca, login, admin, POST |
+| `offline.html` | Halaman offline dua bahasa (mengikuti alamat yang diminta), tanpa CSS/JS luar, dengan daftar halaman yang pernah dibuka |
+| `js/pwa.js` | Pendaftaran, tombol "Pasang aplikasi" di menu, penanda offline |
+| `manifest.webmanifest` | `id`, kategori, dan pintasan (Event, Naik gunung, Bantuan) |
+| `tests/sw.test.mjs` | 17 tes logika service worker; juga diuji di Chromium (daftar, simpan, server dimatikan, halaman tersimpan tetap tampil) |
+**Catatan:** `sw.js` hanya berubah saat `src/` berubah, jadi pembaruan konten dari Supabase tidak memicu unduhan ulang aset.
+

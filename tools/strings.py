@@ -970,3 +970,7 @@ _AI = {
 "bot_ai_hint": ("Mau jawaban lebih lengkap? Coba asisten AI.", "Want a fuller answer? Try the AI assistant."),
 }
 S.update(_AI); J.update(_AI)
+
+# ---- Pasang aplikasi (PWA) ----
+_PWA = {"nv_install": ("Pasang aplikasi", "Install app")}
+S.update(_PWA); J.update(_PWA)

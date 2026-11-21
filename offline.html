@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id" data-gwm-offline><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex"><meta name="theme-color" content="#0E5A46">
+<title>Offline — GWM</title>
+<style>
+:root{color-scheme:light dark;--bg:#fff;--tx:#14201b;--mu:#5b6a63;--ln:#e3e9e6;--br:#0E5A46;--bt:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1512;--tx:#e8efeb;--mu:#93a39b;--ln:#25322c;--br:#3fb08a;--bt:#06130e}}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:420px;width:100%}h1{font-size:24px;margin:0 0 8px;letter-spacing:-.02em}p{color:var(--mu);margin:0 0 20px}
+.ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:var(--br);color:var(--bt);margin-bottom:18px}
+.ic svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.row{display:flex;gap:10px;flex-wrap:wrap}a.b,button{font:600 15px/1 inherit;font-family:inherit;padding:12px 18px;border-radius:12px;border:1px solid var(--ln);background:none;color:var(--tx);text-decoration:none;cursor:pointer}
+button.p{background:var(--br);border-color:var(--br);color:var(--bt)}
+h2{font-size:13px;color:var(--mu);margin:28px 0 8px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+ul{list-style:none;margin:0;padding:0;border:1px solid var(--ln);border-radius:14px;overflow:hidden}li+li{border-top:1px solid var(--ln)}
+li a{display:block;padding:12px 14px;color:var(--tx);text-decoration:none;font-weight:500;word-break:break-word}li a:active{background:var(--ln)}
+[hidden]{display:none!important}
+</style></head><body><main>
+<div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 8.8a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 19.5h.01"/><path d="M3 3l18 18"/></svg></div>
+<h1 id="t"></h1><p id="d"></p>
+<div class="row"><button class="p" id="r" type="button"></button><a class="b" id="h" href="./"></a></div>
+<section id="s" hidden><h2 id="sh"></h2><ul id="l"></ul></section>
+<script>
+(function(){
+var l,pm=(location.pathname+"/").match(/\/(id|en)\//);
+if(pm)l=pm[1];else{try{l=localStorage.getItem("ib_lang")}catch(e){}}
+if(l!=="id"&&l!=="en")l=/^id/i.test(navigator.language||"")?"id":"en";
+var T={id:{t:"Kamu sedang offline",d:"Halaman ini belum tersimpan di perangkatmu. Sambungkan internet lalu coba lagi.",r:"Coba lagi",h:"Ke beranda",s:"Pernah kamu buka",home:"Beranda"},
+en:{t:"You're offline",d:"This page isn't saved on your device yet. Connect to the internet and try again.",r:"Try again",h:"Go home",s:"Opened before",home:"Home"}}[l];
+document.documentElement.lang=l;document.title=T.t+" — GWM";
+function $(i){return document.getElementById(i)}
+$("t").textContent=T.t;$("d").textContent=T.d;$("r").textContent=T.r;$("h").textContent=T.h;$("h").href=l+"/";$("sh").textContent=T.s;
+$("r").onclick=function(){location.reload()};
+if(!window.caches)return;
+caches.keys().then(function(ks){
+  return Promise.all(ks.filter(function(k){return k.indexOf("gwm-pages-")===0}).map(function(k){return caches.open(k).then(function(c){return c.keys()})}));
+}).then(function(all){
+  var seen={},out=[];
+  all.forEach(function(a){a.forEach(function(r){var p=new URL(r.url).pathname;if(p.indexOf("/"+l+"/")!==0||seen[p])return;seen[p]=1;out.push(p)})});
+  out=out.reverse().slice(0,8);if(!out.length)return;
+  out.forEach(function(p){
+    var n=decodeURIComponent(p.split("/").filter(Boolean).pop()||"").replace(/\.html$/,"").replace(/-/g," ");
+    if(!n||n===l)n=T.home;
+    var li=document.createElement("li"),a=document.createElement("a");a.href=p;a.textContent=n;li.appendChild(a);$("l").appendChild(li);
+  });
+  $("s").hidden=false;
+}).catch(function(){});
+})();
+</script></main></body></html>

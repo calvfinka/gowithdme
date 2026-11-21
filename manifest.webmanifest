@@ -1,6 +1,7 @@
 {
   "name": "GWM — Go With Me",
   "short_name": "GWM",
+  "id": "gwm",
   "description": "Info konser, festival & naik gunung, plus teman jalan di kotamu.",
   "start_url": "./",
   "scope": "./",
@@ -26,6 +27,46 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "categories": [
+    "entertainment",
+    "travel",
+    "lifestyle"
+  ],
+  "shortcuts": [
+    {
+      "name": "Event",
+      "short_name": "Event",
+      "url": "id/event",
+      "icons": [
+        {
+          "src": "assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Naik gunung",
+      "short_name": "Gunung",
+      "url": "id/gunung",
+      "icons": [
+        {
+          "src": "assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Bantuan",
+      "short_name": "Bantuan",
+      "url": "id/bantuan",
+      "icons": [
+        {
+          "src": "assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
