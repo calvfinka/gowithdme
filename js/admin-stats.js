@@ -28,7 +28,7 @@ function daily(rows,k1,k2,l1,l2){var W=640,H=150,pl=34,pb=20,pt=8,w=W-pl,h=H-pb-
     o+='<g><title>'+dm(r.d)+": "+n(r[k1])+" "+l1+(k2?", "+n(r[k2])+" "+l2:"")+'</title><rect x="'+(x+g/2)+'" y="'+(pt+h-a)+'" width="'+Math.max(1,bw-g)+'" height="'+Math.max(0,a)+'" class="b1"/>'+
       (k2?'<rect x="'+(x+g/2)+'" y="'+(pt+h-b)+'" width="'+Math.max(1,bw-g)+'" height="'+Math.max(0,b)+'" class="b2"/>':"")+"</g>"});
   var step=rows.length>45?15:rows.length>14?7:1;
-  rows.forEach(function(r,i){if(i%step===0||i===rows.length-1)o+='<text x="'+(pl+i*bw+bw/2)+'" y="'+(H-5)+'" text-anchor="middle">'+dm(r.d)+"</text>"});
+  rows.forEach(function(r,i){if((i%step===0&&(rows.length-1-i>=step/2||i===rows.length-1))||i===rows.length-1)o+='<text x="'+(pl+i*bw+bw/2)+'" y="'+(H-5)+'" text-anchor="middle">'+dm(r.d)+"</text>"});
   var tot=rows.reduce(function(s,r){return s+r[k1]},0);
   return'<div class="ch"><svg viewBox="0 0 '+W+" "+H+'" role="img" aria-label="Diagram harian '+esc(l1)+": total "+tot+'">'+o+'</svg></div><p class="lg"><i class="b1"></i>'+esc(l1)+(k2?' <i class="b2"></i>'+esc(l2):"")+"</p>"}
 function hours(a){var mx=Math.max.apply(null,a.concat([1])),best=a.indexOf(Math.max.apply(null,a));
