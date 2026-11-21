@@ -14,8 +14,6 @@
 .tpl-chg{margin-top:8px;font-size:13px;color:var(--mute)}
 .tpl-chg summary{cursor:pointer;color:var(--brand);font-weight:600;min-height:32px;display:flex;align-items:center}
 .tpl-chg ul{margin:4px 0 0;padding-left:18px}
-.tpl-shot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;aspect-ratio:16/9;border:2px dashed var(--line);border-radius:16px;background:var(--side);color:var(--mute);text-decoration:none;text-align:center;padding:16px}
-.tpl-shot b{color:var(--brand)}
 .tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
 .tpl-3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
 .tpl-card{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--bg)}
@@ -31,3 +29,7 @@
 .tpl code{background:var(--field);padding:1px 6px;border-radius:6px;font-family:var(--mono);font-size:.9em;word-break:break-word}
 .tpl-more a{display:inline-block;padding:6px 0}
 @media(max-width:480px){.tpl-btn{flex:1 1 100%}}
+.tpl-shots{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:640px}
+.tpl-fig{margin:0}
+.tpl-fig img{display:block;width:100%;height:auto;aspect-ratio:900/1598;border-radius:14px;border:1px solid var(--line);background:var(--side)}
+.tpl-fig figcaption{margin-top:6px;font-size:13px;color:var(--mute);text-align:center}
