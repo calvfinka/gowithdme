@@ -74,3 +74,9 @@ test("validate: nama terlarang menghasilkan galat di kolom nick dan memfokuskan 
   assert.equal(r.first, "nick");
   assert.equal(SC.validate({ nick: "b@b.com", email: "a@b.co", pass: "12345678", consent: true }).errors.nick, "su_e_nick_private");
 });
+
+test("nickIssue: angka 8 dan huruf biasa tidak merusak normalisasi", () => {
+  assert.equal(SC.nickIssue("Budi8"), "");
+  assert.equal(SC.nickIssue("Ad8min"), "su_e_nick_reserved"); // angka disisipkan di tengah tidak menipu penyaring
+  assert.equal(SC.nickIssue("8admin"), "su_e_nick_reserved");
+});

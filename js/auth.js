@@ -230,7 +230,10 @@ $("fAll").onsubmit=function(e){e.preventDefault();var btn=this.querySelector('[t
     if(r&&r.error)throw r.error;
     setDirty(false);msg(tr("pe_saved_go"),"ok");var to=safeNext("profil");if(to==="profil")to="profil?saved=1";
     setTimeout(function(){location.href=to},700)
-  }).catch(function(err){btn.disabled=false;msg(friendlyErr(err),"err")})};
+  }).catch(function(err){btn.disabled=false;
+    /* nama sudah dipakai orang lain (indeks unik profiles_nickname_ci dari supabase/patch_pengguna_baru.sql) */
+    var taken=err&&(err.code==="23505"||/profiles_nickname_ci/.test(String(err.message||"")));
+    msg(taken?tr("pe_nick_taken"):friendlyErr(err),"err")})};
 sb.auth.onAuthStateChange(function(ev){
   if(ev==="PASSWORD_RECOVERY"){recovering=true;var mn0=document.querySelector("main.auth-pg");if(mn0)mn0.classList.remove("wide");$("guest").hidden=true;$("me").hidden=true;$("rec").hidden=false;msg(tr("a_recover"),"ok");return}
   if(ev==="SIGNED_IN"&&ARR.confirmed&&!arrDone){holding=false;setTimeout(welcome,0);return}

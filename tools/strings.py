@@ -936,6 +936,7 @@ _SIGNUP = {
   "su_e_nick_private": ("Jangan pakai email, nomor HP, atau tautan sebagai nama panggilan, karena namanya tampil publik.", "Please don't use an email, phone number, or link as your nickname, because it is shown publicly."),
   "onb_t": ("Satu langkah lagi, {n}", "One more step, {n}"),
   "onb_p": ("Pilih kotamu supaya event dan ajakan di kotamu tampil lebih dulu. Bisa diubah kapan saja di Kota domisili.", "Pick your city so events and invites near you show up first. You can change it any time under Home city."),
+  "pe_nick_taken": ("Nama panggilan ini sudah dipakai. Coba tambahkan angka atau nama belakang.", "That nickname is already taken. Try adding a number or a surname."),
   "onb_city": ("Kota domisili", "Home city"),
   "onb_save": ("Simpan kota", "Save city"),
   "onb_skip": ("Lewati dulu", "Skip for now"),

@@ -17,7 +17,7 @@
   function compact(nick) {
     var t = String(nick == null ? "" : nick).toLowerCase();
     try { t = t.normalize("NFKD").replace(/[\u0300-\u036f]/g, ""); } catch (e) {}
-    return t.replace(/[0134578@$!]/g, function (c) { return LEET[c]; }).replace(/[^a-z]/g, "");
+    return t.replace(/[013457@$!]/g, function (c) { return LEET[c]; }).replace(/[^a-z]/g, "");
   }
   function nickIssue(nick) {
     var raw = String(nick == null ? "" : nick).trim();
