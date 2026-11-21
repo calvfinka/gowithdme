@@ -244,3 +244,34 @@ html[data-tier] .nv-rail .now{grid-template-columns:minmax(0,1fr) !important;col
 .btn.buddy-d{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .btn.buddy-d .i{width:18px;height:18px;margin-right:6px;vertical-align:-3px}
 @media (pointer:coarse){.buddy{min-height:38px}}
+
+
+/* ---- Zona ketuk kartu event: "Cari teman" berdiri sendiri, tanpa sorotan biru satu kartu ---- */
+.tile,.r,.tk{-webkit-tap-highlight-color:transparent}
+.tile:active{background:var(--side)}
+.tile:has(.buddy:active,.fav:active){background:transparent}
+.buddy,.fav,.rf{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.buddy{position:relative;margin-top:6px}
+.buddy::after{content:"";position:absolute;inset:-6px -6px -4px -2px}  /* area ketuk diperluas: ketukan meleset tidak membuka pratinjau */
+.buddy:active{background:var(--brand);color:var(--brand-ink);transform:scale(.97)}
+.fav:active,.rf:active{transform:scale(.92)}
+
+/* ---- Pratinjau event: tombol tutup, aksi utama menempel di bawah, tampilan lebar di desktop ---- */
+.dx{position:absolute;top:10px;right:10px;z-index:3;width:40px;height:40px;border:0;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;font:400 26px/1 var(--f);cursor:pointer;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.dx:hover,.dx:focus-visible{background:rgba(0,0,0,.8)}
+.db .pact{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;position:sticky;bottom:0;z-index:2;padding:12px 0 calc(8px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,transparent,var(--bg) 14px)}
+.db .pact .btn{flex:1 1 140px;justify-content:center;text-align:center;min-height:44px}
+.db .row{margin-top:6px}
+@media (max-width:640px){
+  .dp .badge{bottom:14px}
+  .db{padding-top:14px}
+  .db h2{font-size:21px}
+}
+@media (min-width:900px){
+  dialog#dlg:has(#dBody>.dp){width:min(980px,calc(92*var(--vw)));max-height:calc(90*var(--vh))}
+  #dBody:has(>.dp){display:grid;grid-template-columns:minmax(300px,42%) minmax(0,1fr);align-items:start}
+  #dBody:has(>.dp)>.dp,#dBody:has(>.dp)>.dp.pf{position:sticky;top:0;height:min(calc(90*var(--vh)),760px);border-radius:14px 0 0 14px}
+  #dBody:has(>.dp)>.db{padding:26px 28px 22px}
+  #dBody:has(>.dp)>.db h2{font-size:26px}
+  .db .pact .btn{flex:0 1 auto;min-width:150px}
+}

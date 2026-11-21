@@ -252,16 +252,17 @@ function openEv(id,buddy){
   var rawTicket=safeUrl(e.ticket_url);
   var tixUrl=rawTicket&&window.IB_MonetizeCore?IB_MonetizeCore.buildPartnerTicketUrl(rawTicket,e.slug||e.id,C&&C.MONETIZE&&C.MONETIZE.AFFILIATE):rawTicket;
   var areas=(e.city&&window.IB_AREAS&&IB_AREAS[e.city])?IB_AREAS[e.city]:null;
-  $("dBody").innerHTML='<div class="dp'+(e.poster_url?' pf':'')+'" style="'+posterStyle(e,1)+'">'+deco(e)+badge(e)+featBadge(e)+'</div><div class="db"><h2>'+esc(ttl(e))+'</h2><ul class="dm">'+
+  $("dBody").innerHTML='<div class="dp'+(e.poster_url?' pf':'')+'" style="'+posterStyle(e,1)+'">'+deco(e)+badge(e)+featBadge(e)+'<button class="dx" type="button" id="dX" aria-label="'+esc(tr("close"))+'">&times;</button></div><div class="db"><h2>'+esc(ttl(e))+'</h2><ul class="dm">'+
    '<li>'+ic("cal")+'<span>'+p.full+(multi?esc(tr("to"))+dparts(e.end_date).full:'')+'</span></li>'+
    '<li>'+ic("pin")+'<span>'+esc(e.venue||e.city)+(e.city&&e.venue!==e.city?', '+esc(e.city):'')+'</span></li>'+
    '<li>'+ic("tag")+'<span>'+esc(e.price_label||tr("price_tbd"))+'</span></li>'+
    '<li>'+ic(CICON[e.category]||"mic")+'<span>'+esc(CAT[e.category]||e.category)+(inf?' · '+esc(inf):'')+'</span></li>'+
    (e.organizer||e.quota?'<li>'+ic("note")+'<span>'+(e.organizer?esc(tr("organizer"))+': '+esc(e.organizer):'')+(e.organizer&&e.quota?' · ':'')+(e.quota?esc(tr("quota"))+': '+esc(e.quota)+' '+esc(tr("aj_people")):'')+'</span></li>':'')+
    '</ul>'+(areas?'<p class="meta"><b>'+esc(tr("ev_areas_lbl",{c:e.city}))+'</b> '+esc(areas.join(" · "))+'</p>':'')+(e.is_community?'<p class="meta"><span class="cmty">'+esc(tr("community"))+'</span> '+esc(tr("community_note"))+'</p>':'')+
-   (e.lineup?'<p><b>'+tr("lineup")+'</b> '+esc(e.lineup)+'</p>':'')+'<p>'+esc(dsc(e)||tr("nodesc"))+'</p><div class="row">'
+   (e.lineup?'<p><b>'+tr("lineup")+'</b> '+esc(e.lineup)+'</p>':'')+'<p>'+esc(dsc(e)||tr("nodesc"))+'</p><div class="pact">'
    +'<button class="btn buddy-d" type="button" id="dBuddy">'+ic("users")+tr("buddy_btn_d")+'</button>'
-   +(tixUrl?'<a class="btn" id="dTicketLink" target="_blank" rel="noopener noreferrer" href="'+esc(tixUrl)+'">'+tr("ticket")+'</a>':'<span class="btn line" style="opacity:.6">'+tr("noticket")+'</span>')
+   +(tixUrl?'<a class="btn" id="dTicketLink" target="_blank" rel="noopener noreferrer" href="'+esc(tixUrl)+'">'+tr("ticket")+'</a>':'<span class="btn line" style="opacity:.6">'+tr("noticket")+'</span>') 
+   +'</div><div class="row">'
    +(waDigits(e.contact_wa)?'<a class="btn" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+waDigits(e.contact_wa)+'?text='+encodeURIComponent(tr("wa_hello",{t:ttl(e)}))+'">'+tr("wa_contact")+'</a>':'')
    +(igHandle(e.source_ig)?'<a class="btn line" target="_blank" rel="noopener noreferrer" href="https://instagram.com/'+encodeURIComponent(igHandle(e.source_ig))+'">'+tr("source")+esc(igHandle(e.source_ig))+'</a>':'')
    +'<a class="btn line" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((e.venue||"")+" "+(e.city||""))+'">'+ic("pin")+tr("map")+'</a>'
@@ -269,7 +270,7 @@ function openEv(id,buddy){
    +'<button class="btn line" type="button" id="close">'+tr("close")+'</button></div><div id="ajk" class="ajk"></div><div id="fe" class="fe"></div></div>';
   $("dlg").showModal();
   if(history.replaceState){var u=new URL(location.href);u.searchParams.set("e",e.slug||e.id);u.searchParams.delete("teman");history.replaceState(null,"",u.pathname+u.search)}
-  $("close").onclick=function(){$("dlg").close()};
+  $("close").onclick=function(){$("dlg").close()};$("dX").onclick=function(){$("dlg").close()};
   $("dIcs").onclick=function(){ics(e)};$("dShare").onclick=function(){share(e)};$("dBuddy").onclick=goBuddy;if(buddy)goBuddy();
   var tl=$("dTicketLink");if(tl&&tl!==DUM)tl.onclick=function(){try{var n=+localStorage.getItem("gwm_aff_clicks")||0;localStorage.setItem("gwm_aff_clicks",String(n+1))}catch(ex){}};
   if(window.IB_Ajakan)IB_Ajakan.mount(e,$("ajk"));else $("ajk").innerHTML='<p class="meta">'+tr("aj_off")+'</p>';
