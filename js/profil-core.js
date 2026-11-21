@@ -55,7 +55,7 @@
       if (ev && ev.id != null) eventsById[String(ev.id)] = ev;
     });
 
-    var merged = {};
+    var merged = {}, covered = {};
     function put(item){
       if (!item || !item.date) return;
       var end = item.endDate || item.date;
@@ -71,13 +71,16 @@
       }
     }
 
-    hostedInvites.forEach(function(inv){
+    // Kunci per AJAKAN (bukan per event): dua ajakan di event yang sama tetap dua kartu, dan ajakan yang
+    // sama muncul sebagai host sekaligus anggota hanya sekali (host menang lewat rank).
+    function fromInvite(inv, relation){
       if (!inv) return;
       var ev = inv.event_id ? eventsById[String(inv.event_id)] : null;
       var date = (ev && ev.event_date) || inv.when_date || (inv.created_at ? String(inv.created_at).slice(0, 10) : "");
       if (!date) return;
+      if (ev) covered["ev:" + (ev.slug || ev.id)] = true;
       put({
-        key: ev ? ("ev:" + (ev.slug || ev.id)) : ("inv:" + inv.id),
+        key: "inv:" + (inv.id != null ? inv.id : relation + ":" + (inv.title || date)),
         title: ev ? ev.title : inv.title,
         subtitle: inv.title !== (ev && ev.title) ? inv.title : "",
         date: date,
@@ -85,32 +88,16 @@
         city: (ev && ev.city) || inv.city || "",
         category: (ev && ev.category) || inv.niche || "meetup",
         venue: (ev && ev.venue) || inv.meeting_point || "",
-        href: inv.id ? ("teman?i=" + encodeURIComponent(inv.id)) : (ev && ev.slug ? ("e/" + encodeURIComponent(ev.slug)) : "event"),
-        relation: "host"
+        href: inv.id ? ("teman?i=" + encodeURIComponent(inv.id)) : (relation === "host" && ev && ev.slug ? ("e/" + encodeURIComponent(ev.slug)) : (relation === "host" ? "event" : "teman")),
+        relation: relation
       });
-    });
-
-    joinedInvites.forEach(function(inv){
-      if (!inv) return;
-      var ev = inv.event_id ? eventsById[String(inv.event_id)] : null;
-      var date = (ev && ev.event_date) || inv.when_date || (inv.created_at ? String(inv.created_at).slice(0, 10) : "");
-      if (!date) return;
-      put({
-        key: ev ? ("ev:" + (ev.slug || ev.id)) : ("inv:" + inv.id),
-        title: ev ? ev.title : inv.title,
-        subtitle: inv.title !== (ev && ev.title) ? inv.title : "",
-        date: date,
-        endDate: (ev && ev.end_date) || date,
-        city: (ev && ev.city) || inv.city || "",
-        category: (ev && ev.category) || inv.niche || "meetup",
-        venue: (ev && ev.venue) || inv.meeting_point || "",
-        href: inv.id ? ("teman?i=" + encodeURIComponent(inv.id)) : "teman",
-        relation: "joined"
-      });
-    });
+    }
+    hostedInvites.forEach(function(inv){ fromInvite(inv, "host"); });
+    joinedInvites.forEach(function(inv){ fromInvite(inv, "joined"); });
 
     savedEvents.forEach(function(ev){
       if (!ev || !ev.event_date) return;
+      if (covered["ev:" + (ev.slug || ev.id)]) return; // sudah tampil lewat ajakan milik/diikuti pengguna
       put({
         key: "ev:" + (ev.slug || ev.id),
         title: ev.title,
@@ -161,34 +148,39 @@
         excerpt: i.note ? String(i.note).slice(0, 120) : (i.meeting_point || ""),
         city: i.city || "",
         kind: i.niche || "meetup",
-        filled: +i.filled || 1,
+        filled: i.filled == null || isNaN(+i.filled) ? 1 : Math.max(0, +i.filled), // 0 dari server dipercaya; kosong = tuan rumah saja
         capacity: +i.capacity || 4,
         createdAt: i.created_at || "",
         href: "teman?i=" + encodeURIComponent(i.id || "")
       });
     });
 
-    return out.sort(function(a, b){
-      return (a.createdAt || "") < (b.createdAt || "") ? 1 : -1;
-    });
+    return out.map(function(x, i){ return { x: x, i: i }; }).sort(function(a, b){
+      var p = a.x.createdAt || "", q = b.x.createdAt || "";
+      return p === q ? a.i - b.i : (p < q ? 1 : -1); // seri -> urutan asli (stabil, komparator konsisten)
+    }).map(function(w){ return w.x; });
   }
 
+  function fold(v){
+    var t = String(v == null ? "" : v).toLowerCase();
+    try { t = t.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); } catch (e) {}
+    return t.replace(/[^a-z0-9]+/g, " ").trim();
+  }
+
+  // Semua kata pencarian harus ada (urutan bebas, boleh di kolom berbeda), tanpa beda huruf besar/aksen.
+  // "bandung konser" menemukan event konser di Bandung; "fourtwnty" menemukan lewat line-up.
   function filterDashboardItems(items, query){
     var list = Array.isArray(items) ? items : [];
-    var q = String(query || "").trim().toLowerCase();
-    if (!q) return list;
+    var toks = fold(query).split(" ").filter(Boolean);
+    if (!toks.length) return list;
     return list.filter(function(item){
-      var hay = [
-        item.title,
-        item.subtitle,
-        item.city,
-        item.venue,
-        item.category,
-        item.excerpt,
-        item.kind,
-        item.genre
-      ].filter(Boolean).join(" ").toLowerCase();
-      return hay.indexOf(q) > -1;
+      if (!item) return false;
+      var hay = " " + fold([
+        item.title, item.title_en, item.subtitle, item.city, item.venue, item.category,
+        item.excerpt, item.kind, item.genre, item.lineup, item.organizer, item.mountain
+      ].filter(Boolean).join(" ")) + " ";
+      for (var i = 0; i < toks.length; i++) if (hay.indexOf(toks[i]) < 0) return false;
+      return true;
     });
   }
 

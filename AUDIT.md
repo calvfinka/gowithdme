@@ -94,3 +94,23 @@ Catatan: alur login/Google/RLS asli tetap belum teruji (Supabase asli tidak dapa
 | `tests/sw.test.mjs` | 17 tes logika service worker; juga diuji di Chromium (daftar, simpan, server dimatikan, halaman tersimpan tetap tampil) |
 **Catatan:** `sw.js` hanya berubah saat `src/` berubah, jadi pembaruan konten dari Supabase tidak memicu unduhan ulang aset.
 
+
+## Perubahan 21 November 2026 (2) — siap-offline sejak kunjungan pertama
+**Temuan audit:** service worker hanya menyimpan halaman yang *pernah dibuka*. Pengguna yang membuka beranda lalu kehilangan sinyal di kaki gunung melihat "Kamu sedang offline" saat menekan Event/Naik gunung/Bantuan. Font Google juga tidak disimpan, sehingga teks offline jatuh ke font sistem.
+| Bagian | Perubahan |
+|--------|-----------|
+| `tools/build.py` | Membuat daftar "cangkang offline" (beranda, Event, Naik gunung, Bantuan × ID/EN + semua CSS/JS dengan `?v=` identik + `data/events.json`, ±660 KB) dan menyisipkannya ke `sw.js` (`var PRE`) |
+| `src/sw.js` | Saat dipasang, cangkang diunduh di belakang layar (6 paralel, per berkas gagal = dilewati, tidak menggagalkan pemasangan). Halaman disimpan di cache `CORE` (tidak terkena batas 40 halaman) dan dipakai sebagai salinan cadangan navigasi (`lookup`). Font Google (`fonts.googleapis.com` / `fonts.gstatic.com`) ikut disimpan |
+| `tests/sw.test.mjs` | +7 tes (total 52): unduh cangkang, berkas gagal, balasan non-HTML ditolak, buka halaman belum-pernah-dikunjungi saat offline, aset offline, tidak terpangkas, font |
+Diuji di Chromium: hanya `/id/` dikunjungi, jaringan dimatikan, lalu `/id/event`, `/id/gunung?x=1`, `/en/bantuan` terbuka penuh dengan CSS; halaman di luar cangkang (`/id/about`) tetap jatuh ke halaman offline. 0 galat JS.
+**Catatan:** `fonts.googleapis.com` dimuat tanpa CORS sehingga disimpan sebagai respons *opaque* (kuota browser menghitungnya lebih besar dari ukuran aslinya; hanya 1 berkas).
+
+## Perubahan 21 November 2026 (3) — logika dasbor profil (`js/profil-core.js`)
+Catatan lama "kartu statistik profil angka 0 tetap" sudah tidak berlaku (angka dihitung dari data). Audit logika modul murni dasbor menemukan 4 bug, dibuktikan dengan input tepi sebelum diperbaiki:
+| # | Bug | Perbaikan |
+|---|-----|-----------|
+| 1 | Dua ajakan milik pengguna di event yang sama digabung jadi satu kartu (kunci per event; ajakan kedua hilang) | Kunci per **ajakan** (`inv:<id>`); event tersimpan hanya disembunyikan bila event itu sudah diwakili ajakan |
+| 2 | Pencarian dasbor memakai frasa utuh: "bandung konser" tidak menemukan apa pun, aksen/line-up tidak dicari | Semua kata harus cocok (lintas kolom, urutan bebas), tanpa beda huruf/aksen; kolom `lineup`, `title_en`, `organizer`, `mountain` ikut dicari |
+| 3 | `filled: 0` dari server ditampilkan "1" (`+x \|\| 1`) | Hanya nilai kosong yang jadi 1; 0 dihormati |
+| 4 | Komparator urutan aktivitas tidak pernah mengembalikan 0 (urutan seri bisa terbalik/tak konsisten) | Urutan stabil: seri mengikuti urutan asli |
+Tes: 6 tes baru (total 58 lulus), lint lulus.

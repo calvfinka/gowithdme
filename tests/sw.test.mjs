@@ -185,3 +185,74 @@ test("batas jumlah salinan halaman (40)", async () => {
   for (let i = 0; i < 45; i++) await fire(e, O + "/id/e/ev-" + i, { mode: "navigate" });
   assert.ok((await e.cache("gwm-pages-T1").keys()).length <= 40);
 });
+
+/* ---- cangkang offline (precache saat pasang) ---- */
+const SRC_PRE = SRC.replace(/var PRE = .*?; \/\*PRE\*\//, 'var PRE = {"pages":["id/","id/event"],"assets":["css/a.css?v=T1","js/a.js?v=T1"],"data":["data/events.json"]}; /*PRE*/');
+function setupPre(net) {
+  const e = setup(net); // objek env dasar (handlers dari SRC tanpa cangkang)
+  const store = e.store, handlers = {}, state = { skipped: false, claimed: false };
+  const self = { addEventListener: (t, f) => { handlers[t] = f; }, registration: { scope: O + "/" }, location: new URL(O + "/sw.js"),
+    skipWaiting: async () => { state.skipped = true; }, clients: { claim: async () => { state.claimed = true; } } };
+  const ctx = vm.createContext({ self, caches: e.caches, Response, Request, URL, Promise, Headers,
+    setTimeout: (f, ms) => setTimeout(f, ms >= 1000 ? 5 : ms), fetch: async (r) => net(typeof r === "string" ? r : r.url) });
+  vm.runInContext(SRC_PRE, ctx);
+  return { ...e, handlers, state };
+}
+const shellNet = (u) => {
+  if (u.endsWith("/offline")) return mk(OFFLINE, { type: "basic" });
+  if (/\.css|\.js/.test(u)) return mk("ASET:" + u, { type: "basic", ct: "text/css" });
+  if (u.endsWith("events.json")) return mk('[{"x":1}]', { type: "basic", ct: "application/json" });
+  return mk("HAL:" + u, { type: "basic" });
+};
+test("install: cangkang diunduh (halaman -> CORE, aset -> STATIC, data -> DATA)", async () => {
+  const e = setupPre(shellNet);
+  await e.handlers.install({ waitUntil: (p) => (e.p = p) }); await e.p;
+  assert.ok(e.state.skipped);
+  assert.equal(await (await e.cache("gwm-core-T1").match(O + "/id/event")).text(), "HAL:" + O + "/id/event");
+  assert.ok(await e.cache("gwm-static-T1").match(O + "/css/a.css?v=T1"));
+  assert.ok(await e.cache("gwm-data-T1").match(O + "/data/events.json"));
+});
+test("install: satu berkas cangkang gagal/404 tidak menggagalkan pemasangan", async () => {
+  const e = setupPre((u) => (u.endsWith("a.js?v=T1") ? mk("x", { status: 404 }) : u.endsWith("/id/event") ? down() : shellNet(u)));
+  await e.handlers.install({ waitUntil: (p) => (e.p = p) });
+  await assert.doesNotReject(e.p);
+  assert.ok(e.state.skipped);
+  assert.ok(await e.cache("gwm-core-T1").match(O + "/id/"));
+  assert.equal(await e.cache("gwm-core-T1").match(O + "/id/event"), undefined);
+});
+test("install: balasan HTML palsu (bukan html / bukan same-origin) tidak disimpan sebagai halaman", async () => {
+  const e = setupPre((u) => (u.endsWith("/id/") ? mk("{}", { type: "basic", ct: "application/json" }) : shellNet(u)));
+  await e.handlers.install({ waitUntil: (p) => (e.p = p) }); await e.p;
+  assert.equal(await e.cache("gwm-core-T1").match(O + "/id/"), undefined);
+});
+test("offline sejak awal: halaman cangkang yang belum pernah dibuka tetap tampil (bukan halaman offline)", async () => {
+  let on = true;
+  const e = setupPre((u) => (on ? shellNet(u) : down()));
+  await e.handlers.install({ waitUntil: (p) => (e.p = p) }); await e.p;
+  on = false;
+  const { res } = await fire(e, O + "/id/event?kat=konser", { mode: "navigate" });
+  assert.equal(await res.text(), "HAL:" + O + "/id/event");
+});
+test("offline: aset cangkang dilayani dari STATIC", async () => {
+  let on = true;
+  const e = setupPre((u) => (on ? shellNet(u) : down()));
+  await e.handlers.install({ waitUntil: (p) => (e.p = p) }); await e.p;
+  on = false;
+  assert.equal(await (await fire(e, O + "/css/a.css?v=T1")).res.text(), "ASET:" + O + "/css/a.css?v=T1");
+});
+test("cangkang tidak ikut dipangkas oleh batas halaman (40)", async () => {
+  const e = setupPre(shellNet);
+  await e.handlers.install({ waitUntil: (p) => (e.p = p) }); await e.p;
+  for (let i = 0; i < 45; i++) await fire(e, O + "/id/e/ev-" + i, { mode: "navigate" });
+  assert.ok(await e.cache("gwm-core-T1").match(O + "/id/event"));
+});
+test("font Google: salinan dulu, jalan offline", async () => {
+  let on = true;
+  const e = setup(() => (on ? mk("FONT", { type: "cors" }) : down()));
+  for (const u of ["https://fonts.gstatic.com/s/x.woff2", "https://fonts.googleapis.com/css2?family=X"]) {
+    assert.ok((await fire(e, u)).handled, u);
+  }
+  on = false;
+  assert.equal(await (await fire(e, "https://fonts.gstatic.com/s/x.woff2")).res.text(), "FONT");
+  assert.equal(await (await fire(e, "https://fonts.googleapis.com/css2?family=X")).res.text(), "FONT");
+});

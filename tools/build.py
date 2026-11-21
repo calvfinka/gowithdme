@@ -189,5 +189,18 @@ open(ROOT+"/sitemap.xml","w",encoding="utf-8").write('<?xml version="1.0" encodi
 pre=urlparse(BASE).path.rstrip("/")
 open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login","ajukan","id/ajukan","en/ajukan","profil","id/profil","en/profil","pesan","id/pesan","en/pesan"))+f"Sitemap: {BASE}/sitemap.xml\n")
 # ---- sw.js: service worker (offline + cepat). VER ikut build, jadi cache versi lama dibuang otomatis ----
-open(ROOT+"/sw.js","w",encoding="utf-8").write(open(ROOT+"/src/sw.js",encoding="utf-8").read().replace("__VER__",VER))
+# cangkang offline: halaman utama dua bahasa + semua CSS/JS (dengan ?v= yang sama persis dengan yang diminta halaman) + data event.
+# Diunduh service worker saat dipasang, jadi situs langsung bisa dibuka tanpa sinyal tanpa menunggu tiap halaman dikunjungi.
+SHELL_PAGES=["index","event","gunung","bantuan"]
+pre_pages,pre_assets=[],[]
+for l in LANGS:
+    for p in SHELL_PAGES:
+        pre_pages.append(f"{l}/{path(p)}")
+        for a in re.findall(r'(?:href|src)="\.\./((?:css|js)/[^"]+)"',open(f"{ROOT}/{l}/{p}.html",encoding="utf-8").read()):
+            if a not in pre_assets: pre_assets.append(a)
+pre_assets+=[x for x in ("assets/favicon.svg",) if os.path.exists(f"{ROOT}/{x}")]
+PRE=json.dumps({"pages":pre_pages,"assets":pre_assets,"data":["data/events.json"] if os.path.exists(ROOT+"/data/events.json") else []},separators=(",",":"))
+sw=open(ROOT+"/src/sw.js",encoding="utf-8").read().replace("__VER__",VER)
+sw,n=re.subn(r"var PRE = .*?; /\*PRE\*/",lambda m:"var PRE = "+PRE+"; /*PRE*/",sw); assert n==1
+open(ROOT+"/sw.js","w",encoding="utf-8").write(sw)
 print("selesai ->",BASE,"|",len(EV),"event statis,",len(POSTS),"tulisan blog")

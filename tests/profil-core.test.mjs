@@ -67,3 +67,50 @@ test("filterDashboardItems performs case-insensitive filtering across title, cit
   assert.equal(PC.filterDashboardItems(items, "prau")[0].city, "Wonosobo");
   assert.equal(PC.filterDashboardItems(items, "").length, 2);
 });
+
+/* ---- sesi 2: logika dasbor ---- */
+test("dua ajakan di event yang sama tetap dua kartu; event tersimpan yang sama tidak dobel", () => {
+  const events = [{ id: "e1", slug: "s1", title: "Senja", event_date: "2026-12-01" }];
+  const up = PC.buildUpcomingEvents({
+    today: "2026-11-21", events, savedEvents: events,
+    hostedInvites: [{ id: "i1", event_id: "e1", title: "Barengan A" }, { id: "i2", event_id: "e1", title: "Barengan B" }]
+  });
+  assert.deepEqual(up.map((x) => x.href).sort(), ["teman?i=i1", "teman?i=i2"]);
+  assert.ok(up.every((x) => x.relation === "host"));
+});
+test("ajakan yang sama sebagai host dan anggota hanya satu kartu (host menang)", () => {
+  const inv = { id: "i1", title: "X", when_date: "2026-12-01" };
+  const up = PC.buildUpcomingEvents({ today: "2026-11-21", hostedInvites: [inv], joinedInvites: [inv] });
+  assert.equal(up.length, 1);
+  assert.equal(up[0].relation, "host");
+});
+test("ajakan sendiri yang event-nya sudah lewat tidak muncul; event tersimpan lain tetap", () => {
+  const events = [{ id: "old", slug: "old", title: "Lama", event_date: "2026-11-01" }, { id: "n", slug: "n", title: "Baru", event_date: "2026-12-01" }];
+  const up = PC.buildUpcomingEvents({ today: "2026-11-21", events, savedEvents: events, hostedInvites: [{ id: "i", event_id: "old", title: "T" }] });
+  assert.deepEqual(up.map((x) => x.title), ["Baru"]);
+});
+test("event multi-hari yang sedang berlangsung masih tampil", () => {
+  const e = { id: "m", slug: "m", title: "Festival", event_date: "2026-11-20", end_date: "2026-11-22" };
+  assert.equal(PC.buildUpcomingEvents({ today: "2026-11-22", events: [e], savedEvents: [e] }).length, 1);
+  assert.equal(PC.buildUpcomingEvents({ today: "2026-11-23", events: [e], savedEvents: [e] }).length, 0);
+});
+test("filterDashboardItems: semua kata harus cocok (lintas kolom), tanpa beda aksen, juga line-up", () => {
+  const items = [
+    { title: "Senja Akustik", city: "Bandung", category: "konser", venue: "Dago", lineup: "Fourtwnty" },
+    { title: "Pendakian Prau", city: "Wonosobo", category: "naikgunung" }
+  ];
+  assert.equal(PC.filterDashboardItems(items, "bandung konser").length, 1);
+  assert.equal(PC.filterDashboardItems(items, "konser wonosobo").length, 0);
+  assert.equal(PC.filterDashboardItems(items, "SÉNJA").length, 1);
+  assert.equal(PC.filterDashboardItems(items, "fourtwnty")[0].city, "Bandung");
+  assert.equal(PC.filterDashboardItems(items, "  ").length, 2);
+  assert.equal(PC.filterDashboardItems(null, "x").length, 0);
+});
+test("buildCommunityActivities: filled=0 dihormati, kosong=1, urutan seri stabil", () => {
+  const a = PC.buildCommunityActivities({ hostedInvites: [
+    { id: "a", filled: 0, capacity: 5, created_at: "2026-11-01" }, { id: "b", created_at: "2026-11-01" }, { id: "c", created_at: "2026-11-01" }
+  ] });
+  assert.deepEqual(a.map((x) => x.id), ["a", "b", "c"]);
+  assert.equal(a[0].filled, 0);
+  assert.equal(a[1].filled, 1);
+});
