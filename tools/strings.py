@@ -1041,6 +1041,10 @@ _SINCE = {
 }
 S.update(_SINCE); J.update(_SINCE)
 
+# ---- Saran otomatis di formulir (js/suggest.js) ----
+_SUG = {"sg_list": ("Saran", "Suggestions")}
+S.update(_SUG); J.update(_SUG)
+
 # ---- Masa percobaan akun baru: galat ramah + catatan awal (js/probation-core.js) ----
 _PROB = {
 "pb_msg": ("Akun baru dibatasi {n} {what} selama 48 jam pertama. Coba lagi besok. {tip}", "New accounts are limited to {n} {what} during the first 48 hours. Try again tomorrow. {tip}"),

@@ -114,5 +114,15 @@ $("mine").onclick=function(ev){var b=ev.target.closest("[data-a]");if(!b)return;
     posterUrl=e.poster_url||"";pv(posterUrl);$("ccDesc").textContent=$("a_desc").value.length;scrollTo({top:0,behavior:"smooth"});msg(tr("sj_reused"),"ok")})};
 
 if($("year"))$("year").textContent=new Date().getFullYear();
-getMe().then(function(m){me=m;$("guest").hidden=!!m;$("wrap").hidden=!m;if(!m)return;fillSelects();setKind("konser");loadMine()});
+/* ---- saran otomatis dari event yang sudah ada: lokasi/basecamp (didahulukan yang sekota), penyelenggara, line-up ---- */
+var EV=[];
+function cityName(){var s=$("a_city");return s&&s.value&&s.selectedOptions&&s.selectedOptions[0]?s.selectedOptions[0].textContent:""}
+function sugg(){
+  var SC=window.IB_SuggestCore,SG=window.IB_Suggest;if(!SC||!SG||!window.IB_loadEvents)return;
+  IB_loadEvents().then(function(r){EV=r||[]}).catch(function(){});
+  SG.bind($("a_venue"),{city:cityName,items:function(){return SC.collect(EV,function(e){return e.venue},function(e){return(e.category==="naikgunung")===(kind==="naikgunung")},function(e){return e.city})}});
+  SG.bind($("a_org"),{items:function(){return SC.collect(EV,function(e){return e.organizer})}});
+  SG.bind($("a_lineup"),{multi:true,min:1,items:function(){var F=window.IB_Facets;return SC.collect(EV,function(e){return F?F.artists(e).map(function(a){return a.label}):[]},function(e){return!!e.lineup})}});
+}
+getMe().then(function(m){me=m;$("guest").hidden=!!m;$("wrap").hidden=!m;if(!m)return;fillSelects();setKind("konser");loadMine();sugg()});
 })();
