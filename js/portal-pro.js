@@ -10,6 +10,8 @@
   var INIT_HASH=(location.hash||"").replace(/^#/,"");
 
   function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+  /* teks cadangan bila kamus (js/i18n.js) belum dibangun ulang: tr() mengembalikan kuncinya */
+  function trf(k,id,en,p){var t=tr(k,p);if(t&&t!==k)return t;var x=L==="en"?en:id;return p&&p.n!=null?x.replace("{n}",p.n):x}
   function pv(p){return window.IB_PROV?window.IB_PROV(p):p}
   function activeEvents(){return window.IB_Api?IB_Api.events().filter(IB_Api.isActive):[]}
 
@@ -82,15 +84,16 @@
       '<button type="button" class="lqb-exp" id="qbarExplorer" title="38 '+esc(tr("loc_prov_h"))+' · 120+" aria-label="38 '+esc(tr("loc_prov_h"))+' · 120+"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg></button>';
     qb.innerHTML='<div class="lqb-row">'+row+'</div><div class="lqb-more" id="qbarPanel" hidden></div>';
     var rowEl=qb.firstChild,tog=$("qbarMore");
-    tog.textContent=tr("loc_more",{n:order.length});  /* ukur dengan label terpanjang */
+    tog.textContent="+"+order.length;  /* ukur dengan label terpanjang; label pendek supaya wilayahmu tetap muat */
     var hid=fitRow(rowEl,"[data-fit]");
     if(!hid.length){tog.hidden=true;return}
-    tog.textContent=qbOpen?tr("loc_less"):tr("loc_more",{n:hid.length});
+    var full=qbOpen?trf("loc_less","Ringkas","Show less"):trf("loc_more","Wilayah lain +{n}","More regions +{n}",{n:hid.length});
+    tog.textContent=qbOpen?"\u2212":"+"+hid.length;tog.title=full;tog.setAttribute("aria-label",full);
     if(qbOpen){
       var panel=$("qbarPanel"),names=hid.map(function(b){return b.dataset.qmacro}),h="";
-      [["java","loc_grp_java"],["out","loc_grp_out"]].forEach(function(g){
+      [["java","loc_grp_java","Jawa & Bali","Java & Bali"],["out","loc_grp_out","Luar Jawa","Outside Java"]].forEach(function(g){
         var ms=names.filter(function(m){return macroGroup(m)===g[0]});
-        if(ms.length)h+='<div class="lqb-grp"><span class="lqb-gl">'+esc(tr(g[1]))+'</span>'+ms.map(function(m){return btn(m)}).join("")+'</div>';
+        if(ms.length)h+='<div class="lqb-grp"><span class="lqb-gl">'+esc(trf(g[1],g[2],g[3]))+'</span>'+ms.map(function(m){return btn(m)}).join("")+'</div>';
       });
       panel.innerHTML=h;panel.hidden=false;
     }
@@ -310,7 +313,7 @@
   /* ---- Berita & Panduan Blog Tab ---- */
   var BLOG_CAT_LABELS={berita:"Berita","panduan-konser":"Panduan Konser","tips-gunung":"Tips Gunung",wisata:"Wisata",opini:"Opini",review:"Review",komunitas:"Komunitas"};
   /* nama niche mengikuti bahasa halaman (kamus blog_c_*); kategori lain memakai nama bawaan */
-  function blogCatLabel(c){var k="blog_c_"+String(c).replace(/-/g,"_"),t=tr(k);return t&&t!==k?t:(BLOG_CAT_LABELS[c]||c||"Blog")}
+  function blogCatLabel(c){var k="blog_c_"+String(c).replace(/-/g,"_"),t=tr(k);if(t&&t!==k)return t;var EN={"panduan-konser":"Concert Guides","tips-gunung":"Hiking Tips",komunitas:"Community"};return L==="en"&&EN[c]?EN[c]:(BLOG_CAT_LABELS[c]||c||"Blog")}
   var BLOG_SHOW=6,blogAll=false;
   function stripHtml(s){return String(s||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim()}
   /* Sumber tab: tulisan yang admin terbitkan di Supabase (langsung, jadi hasil panel admin ikut berubah di beranda).
@@ -367,7 +370,7 @@
         '<h3>'+esc(p.title)+'</h3><p>'+esc(excerpt)+'</p>'+
         '<div class="bc-foot"><button type="button" class="lnk" data-bopen="'+blogPosts.indexOf(p)+'">'+esc(tr("blog_read"))+' →</button><a class="lnk" href="../blog/'+esc(p.category||"berita")+'/'+esc(p.slug)+'">URL</a></div>'+
       '</article>';
-    }).join("")+(more?'<div class="nv-more" style="grid-column:1/-1"><button type="button" class="btn line" data-bmore="1">'+esc(tr("blog_more",{n:more}))+'</button></div>':"");
+    }).join("")+(more?'<div class="nv-more" style="grid-column:1/-1"><button type="button" class="btn line" data-bmore="1">'+esc(trf("blog_more","Lihat {n} lagi","Show {n} more",{n:more}))+'</button></div>':"");
     grid.onclick=function(e){
       if(e.target.closest("[data-bmore]")){blogAll=true;renderBlog();return}
       if(e.target.closest("a"))return;
