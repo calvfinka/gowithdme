@@ -236,3 +236,14 @@ dialog.locd{width:min(860px,calc(95*var(--vw)));padding:0;background:var(--bg);c
   .locd-f{padding:10px 16px}
   .est-grid{grid-template-columns:1fr}
 }
+
+/* ===== Menu hamburger gaya Naver: tiap grup jadi kartu, judul + jumlah item, isi 2 kolom (urut A-Z lewat js/naver.js) ===== */
+.mm .mm-g{padding:6px 0 2px}
+.mm .mm-g section{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:2px 6px;margin:0 0 10px;padding:0 8px 8px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+.mm .mm-g section:last-child{border:1px solid var(--line)}
+.mm .mm-g h3{grid-column:1/-1;display:flex;align-items:center;gap:6px;margin:0 -8px 6px;padding:10px 12px;background:var(--side);color:var(--ink);font-size:14px;font-weight:700;letter-spacing:0;text-transform:none}
+.mm .mm-g h3 .mm-n{color:var(--brand);font-weight:700}
+.mm .mm-g h3 .mm-n[hidden]{display:none}
+.mm .mm-g a,.mm .mm-g .mm-share,.mm .mm-g #ajMy,.mm .mm-g #mmInstall,.mm .mm-g #mmLoc{min-height:44px;gap:8px;padding:6px 4px;font-size:13.5px;line-height:1.25}
+.mm .mm-g .i{width:28px;height:28px;padding:6px}
+.mm .mm-g a[hidden],.mm .mm-g button[hidden]{display:none}
