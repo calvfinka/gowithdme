@@ -6,8 +6,7 @@ html:where([data-dsk]) .tb-main{grid-template-columns:auto minmax(0,1fr) auto;ga
 html:where([data-dsk]) .tb-c{justify-content:flex-end}
 html:where([data-dsk]) .tb-loc,html:where([data-dsk]) .tb-msg,html:where([data-dsk]) .tb-acc,html:where([data-dsk]) .tb-cta{display:none}
 /* portal-pro.css @740 */
-html:where([data-dsk]) .loc-qbar{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding:2px 4px}
-html:where([data-dsk]) .loc-qbar::-webkit-scrollbar{display:none}
+html:where([data-dsk]) .loc-qbar .lqb-row{justify-content:flex-start}
 /* portal-pro.css @860 */
 html:where([data-dsk]) .promo-wrap{grid-template-columns:1fr}
 /* portal-pro.css @900 */
