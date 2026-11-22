@@ -259,14 +259,34 @@ function fit(){var Z=window.GWM_Z||1,tbB=topEdge()/Z,vv=window.visualViewport,vh
   if(shown){ar=r;top=r.bottom+6;scrim.style.top="0px"}
   else{var hs=document.querySelector(".tb-main .search"),hr=hs&&sr(hs.getBoundingClientRect(),Z);
     var hsOn=hs&&hr.width>0&&getComputedStyle(hs).visibility!=="hidden";ar=hsOn?hr:(r&&r.width>0?r:(hr&&hr.width>0?hr:null));top=(tbB||52)+6;scrim.style.top=(tbB||52)+"px"}
-  top=Math.min(top,Math.max(8,vh-220));
-  panel.style.top=top+"px";panel.style.maxHeight=Math.max(220,vh-top-12)+"px";
+  var vo=vv?vv.offsetTop/Z:0;top=Math.min(top,Math.max(8,vh+vo-220));
+  panel.style.top=top+"px";panel.style.maxHeight=Math.max(220,vh+vo-top-12)+"px";
   if(ar&&vw>640){var w=Math.min(Math.max(ar.width,360),vw-16),l=Math.min(Math.max(8,ar.left),vw-w-8);
     panel.style.left=l+"px";panel.style.width=w+"px";panel.style.transform="none"}
   else{panel.style.left=panel.style.width=panel.style.transform=""}}
-var fitRaf=0;function fitSoon(){if(!open||fitRaf)return;fitRaf=requestAnimationFrame(function(){fitRaf=0;if(open)fit()})}
-function setOpen(v){if(open===v)return;open=v;panel.hidden=scrim.hidden=!v;inp.setAttribute("aria-expanded",v?"true":"false");
-  if(v){fit();loadData();run();remoteSoon();fitSoon();setTimeout(fitSoon,120);setTimeout(fitSoon,350)}else{active=-1;inp.removeAttribute("aria-activedescendant")}}
+var fitRaf=0;function fitSoon(){if(!open||settling||fitRaf)return;fitRaf=requestAnimationFrame(function(){fitRaf=0;if(open)fit()})}
+/* Buka/tutup dengan transisi. Kelas "in" memicu animasi; elemen baru di-hidden setelah animasi keluar selesai. */
+var reduceM=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches,hideT=0,settling=false,narrowQ=window.matchMedia?matchMedia("(max-width:900px)"):{matches:false};
+function showIn(){requestAnimationFrame(function(){requestAnimationFrame(function(){if(!open)return;scrim.classList.add("in");if(!settling)panel.classList.add("in")})})}
+function setOpen(v){if(open===v)return;open=v;clearTimeout(hideT);inp.setAttribute("aria-expanded",v?"true":"false");
+  if(v){panel.hidden=scrim.hidden=false;fit();loadData();run();remoteSoon();showIn();fitSoon();setTimeout(fitSoon,120);setTimeout(fitSoon,350)}
+  else{active=-1;inp.removeAttribute("aria-activedescendant");settling=false;panel.classList.remove("in");scrim.classList.remove("in");
+    hideT=setTimeout(function(){if(!open)panel.hidden=scrim.hidden=true},reduceM?0:200)}}
+/* Di layar sempit: gulir halus supaya kotak cari berada tepat di bawah header (ruang daftar maksimal di atas papan ketik),
+   lalu panel muncul setelah gulir berhenti. Panel tidak mengejar posisi selama gulir, jadi tidak lompat-lompat. */
+function alignDelta(){var box=inp.closest("[data-sxanchor]");if(!box||!narrowQ.matches)return 0;
+  var Z=window.GWM_Z||1,r=box.getBoundingClientRect();if(!r.height)return 0;
+  var d=r.top-(topEdge()+12*Z),de=document.documentElement,maxDown=Math.max(0,de.scrollHeight-window.innerHeight-window.pageYOffset);
+  d=d>0?Math.min(d,maxDown):Math.max(d,-window.pageYOffset);return Math.abs(d)<6?0:d}
+function alignOpen(){var d=alignDelta();
+  if(!d){setOpen(true);return}
+  settling=true;setOpen(true);
+  try{window.scrollBy({top:d,left:0,behavior:reduceM?"auto":"smooth"})}catch(e){window.scrollBy(0,d)}
+  var last=-1,still=0,t0=performance.now();
+  (function wait(){if(!open||!settling)return;
+    var y=window.pageYOffset;still=y===last?still+1:0;last=y;
+    if(still>=4||performance.now()-t0>900){settling=false;fit();panel.classList.add("in");return}
+    requestAnimationFrame(wait)})()}
 
 function itemHtml(r,toks,i){var d=r.d,meta="";
   if(d.type==="event")meta='<span class="sxm'+(d.st.k==="live"?" on":"")+'">'+esc(d.dm)+'<small>'+esc(d.st.k==="live"?d.st.l:d.st.k==="soon"?d.st.l:"")+'</small></span>';
@@ -335,11 +355,11 @@ function remember(){var q=parse(inp.value).q.trim();if(norm(q).length<2)return;
 var tm;
 function syncVals(){EXTRA.concat([inp0]).forEach(function(o){if(o&&o!==inp)o.value=inp.value})}
 function onInput(){clearTimeout(tm);syncVals();tm=setTimeout(function(){if(!open)setOpen(true);else run();remoteSoon()},50)}
-function onFocus(){setOpen(true)}
-function submit(){var q=inp.value.trim();if(!q){inp.focus();return}
+function onFocus(){if(open||settling)return;alignOpen()}
+function submit(){var q=inp.value.trim();if(!q){kf(inp);return}
   if(open&&active>-1&&items[active]){items[active].click();return}
   var p=parse(q),t=(p.q||q).trim();remember();
-  if(p.scope==="user"){inp.focus();return}
+  if(p.scope==="user"){kf(inp);return}
   location.href=p.scope==="blog"?"../blog/"+(norm(t)?"?q="+qenc(t):""):p.scope==="post"?"komunitas":p.scope==="artist"&&norm(t)?"event?artis="+sl(t):p.scope==="genre"&&norm(t)?"event?genre="+sl(t):(p.scope==="mtn"?"gunung":"event")+"?q="+qenc(t)}
 function onKey(e){var k=e.key;
   if(k==="ArrowDown"){e.preventDefault();if(!open)setOpen(true);else setActive(active<items.length-1?active+1:0)}
@@ -347,6 +367,8 @@ function onKey(e){var k=e.key;
   else if(k==="Enter"){e.preventDefault();submit()}
   else if(k==="Escape"){if(open){e.preventDefault();setOpen(false)}else if(inp.value){inp.value="";syncVals()}}
 }
+/* Fokus tanpa gulir otomatis: memfokuskan input di header lengket membuat browser melompat ke atas halaman. */
+function kf(el){try{el.focus({preventScroll:true})}catch(e){el.focus()}}
 function use(el){if(inp===el)return;if(open)setOpen(false);inp=el;inp.setAttribute("aria-controls","sxList")}
 function bind(el,extra){if(extra)EXTRA.push(el);
   el.addEventListener("input",function(){use(el);onInput()});
@@ -359,7 +381,7 @@ var hero=document.getElementById("gq2");if(hero){hero.setAttribute("aria-control
 function visible(el){var r=el.getBoundingClientRect();return r.height>0&&r.top>=topEdge()-1&&r.bottom<=window.innerHeight}
 document.addEventListener("keydown",function(e){
   var t=e.target,typing=t&&(/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)||t.isContentEditable);
-  if((e.key==="/"&&!typing&&!e.ctrlKey&&!e.metaKey&&!e.altKey)||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k")){e.preventDefault();var f=hero&&visible(hero)?hero:inp0;f.focus();f.select()}});
+  if((e.key==="/"&&!typing&&!e.ctrlKey&&!e.metaKey&&!e.altKey)||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k")){e.preventDefault();var f=hero&&visible(hero)?hero:inp0;kf(f);f.select()}});
 panel.addEventListener("mousedown",function(e){e.preventDefault()});
 scrim.addEventListener("click",function(){setOpen(false)});
 document.addEventListener("focusin",function(e){if(open&&e.target!==inp&&!panel.contains(e.target))setOpen(false)});
@@ -371,8 +393,8 @@ if(window.visualViewport){window.visualViewport.addEventListener("resize",functi
 window.addEventListener("pageshow",function(e){if(e.persisted)setOpen(false)});
 panel.addEventListener("click",function(e){
   var c=e.target.closest("[data-clr]");if(c){e.preventDefault();write("gwm_recent_q",[]);run();return}
-  var s=e.target.closest("[data-s]");if(s){e.preventDefault();scopeSel=s.dataset.s;run();inp.focus();return}
-  var q=e.target.closest("[data-q]");if(q){e.preventDefault();inp.value=q.dataset.q;scopeSel="all";run();inp.focus();return}
+  var s=e.target.closest("[data-s]");if(s){e.preventDefault();scopeSel=s.dataset.s;run();kf(inp);return}
+  var q=e.target.closest("[data-q]");if(q){e.preventDefault();inp.value=q.dataset.q;scopeSel="all";run();kf(inp);return}
   var a=e.target.closest("a.sxr");if(!a)return;
   remember();
   if(a.dataset.ev&&window.IB_OpenEv){var ok=window.IB_OpenEv(a.dataset.ev);if(ok!==false){e.preventDefault();setOpen(false);return}}

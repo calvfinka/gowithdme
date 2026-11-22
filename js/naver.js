@@ -70,7 +70,7 @@ if(mm){
 d.addEventListener("click",function(e){
   var g=e.target.closest&&e.target.closest(".tb-main .search .sxgo");if(!g)return;
   var i=g.parentNode.querySelector("input");
-  if(i&&i.getBoundingClientRect().width<8){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();i.focus()}
+  if(i&&i.getBoundingClientRect().width<8){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();try{i.focus({preventScroll:true})}catch(x){i.focus()}}
 },true);
 
 /* ---- beranda: kotak cari header tersembunyi selama kotak besar terlihat ---- */
