@@ -1018,3 +1018,16 @@ _EMPTY = {
 "ct_e_create": ("Buat ajakan pertama", "Create the first invite"),
 }
 S.update(_EMPTY); J.update(_EMPTY)
+
+# ---- "Baru sejak kunjunganmu" di beranda (js/since-core.js + js/home.js) ----
+_SINCE = {
+"sn_msg": ("{n} event baru sejak kunjunganmu terakhir ({w}).", "{n} new events since your last visit ({w})."),
+"sn_msg1": ("1 event baru sejak kunjunganmu terakhir ({w}).", "1 new event since your last visit ({w})."),
+"sn_city": ("{c} di {city}.", "{c} in {city}."),
+"sn_today": ("hari ini", "today"),
+"sn_yest": ("kemarin", "yesterday"),
+"sn_days": ("{n} hari lalu", "{n} days ago"),
+"sn_link": ("Lihat yang terbaru", "See the newest"),
+}
+S.update(_SINCE); J.update(_SINCE)
+

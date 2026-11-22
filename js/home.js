@@ -119,8 +119,24 @@ function recentBind(){var ul=$("nvRecL");if(!ul)return;
   $("nvRecClr").onclick=function(){wr(VK,[]);recent()};
   d.addEventListener("ib:open",function(e){var id=String(e.detail.id),L=rd(VK,[]).filter(function(x){return String(x)!==id});L.unshift(id);wr(VK,L.slice(0,8));recent()})}
 
+/* ---------- baru sejak kunjunganmu (hanya di perangkat ini, tanpa server) ---------- */
+var SEEN="gwm_home_seen",BASE="gwm_home_base";
+function since(){var box=$("sinceBox"),C=window.IB_SinceCore;if(!box||!C||!A)return;
+  var now=Date.now(),seen=0,sb=0,city="";
+  try{seen=localStorage.getItem(SEEN);sb=sessionStorage.getItem(BASE)}catch(e){}
+  var base=C.baseline(seen,sb,now);
+  try{localStorage.setItem(SEEN,String(now));if(base&&!sb)sessionStorage.setItem(BASE,String(base))}catch(e){}
+  if(!base)return;
+  try{var loc=JSON.parse(localStorage.getItem("gwm_loc")||"null");city=loc&&loc.city||""}catch(e){}
+  var w=C.whenLabel(base,now);if(!w)return;
+  var r=C.countNew(A.events(),base,A.isActive,city);if(!r.total)return;
+  var wt=w.k==="today"?tr("sn_today"):w.k==="yesterday"?tr("sn_yest"):tr("sn_days",{n:w.n});
+  var t=tr(r.total===1?"sn_msg1":"sn_msg",{n:r.total,w:wt});
+  if(r.city&&r.city<r.total)t+=" "+tr("sn_city",{c:r.city,city:city});
+  $("sinceTxt").textContent=t;box.hidden=false}
+
 function init(){A=window.IB_Api;if(!A)return;
-  trendBind();bannerBind();tabsBind();recentBind();greet();dots();
+  trendBind();bannerBind();tabsBind();recentBind();greet();dots();since();
   paint();
   d.addEventListener("ib:render",function(){tabs();badges()});}
 function paint(){trend();banner();badges();tabs();recent()}

@@ -22,6 +22,7 @@ if(MODE!=="home"){if(QP.get("q"))state.q=QP.get("q").trim().replace(/\s+/g," ").
   var qp=QP.get("prov");if(qp&&window.IB_REGIONS){var pk=pick(IB_REGIONS,qp);if(pk)state.prov=pk}
   var qa=QP.get("artis")||QP.get("artist");if(qa)state.artist=F.norm(qa).slice(0,60);
   var qg=QP.get("genre");if(qg)state.genre=F.norm(qg).slice(0,40);
+  if(QP.get("sort")==="new")state.sort="new";
   var qm=QP.get("macro");if(qm&&window.IB_MACRO&&IB_MACRO[qm])state.macro=qm;var qr=parseInt(QP.get("rad")||"0",10);if(qr>0)state.radiusKm=qr}
 /* rapikan alamat di bilah browser: urutan tetap, spasi jadi +, nama wilayah jadi slug */
 function tidyUrl(){if(MODE==="home"||!history.replaceState)return;
@@ -336,7 +337,7 @@ window.IB_Api={ready:false,
   savedN:function(){return state.events.filter(function(e){return isActive(e)&&isSaved(e.id)}).length},
   purl:purl,status:status,dparts:dparts,ttl:ttl,rng:rng,kind:kind,posterStyle:posterStyle,deco:deco,isActive:isActive,byId:byId,open:openEv,
   today:today,days:days,where:where,esc:esc,gratis:gratis};
-load().then(function(){IB_Api.ready=true;buildCities();if(MODE==="home"&&!state.events.some(function(e){return isActive(e)&&status(e).k==="live"})){$("note").hidden=false}render();
+load().then(function(){IB_Api.ready=true;buildCities();if($("sort")!==DUM)$("sort").value=state.sort;if(MODE==="home"&&!state.events.some(function(e){return isActive(e)&&status(e).k==="live"})){$("note").hidden=false}render();
   document.dispatchEvent(new CustomEvent("ib:ready"));
   var qs=new URLSearchParams(location.search),want=qs.get("e");if(want){var w=state.events.filter(function(x){return String(x.slug)===want||String(x.id)===want})[0];if(w)openEv(w.id,qs.get("teman")==="1")}});
 })();

@@ -40,3 +40,5 @@
 .tm-home-a{display:flex;gap:8px;flex-wrap:wrap}
 /* <main class="tm"> bentrok dengan gaya waktu .tm (style.css): teks tidak boleh nowrap/terpotong */
 main.tm{white-space:normal;overflow:visible;text-overflow:clip}
+.since{font-size:14px;color:var(--mute);margin:12px 16px 0;line-height:1.5;text-align:center}
+.since a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:2px}
