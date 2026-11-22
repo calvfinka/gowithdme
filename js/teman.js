@@ -25,7 +25,10 @@ function dfmt(d){try{return new Date(d+"T00:00:00").toLocaleDateString(LOC,{day:
 function nlabel(n){return NIDS.indexOf(n)>-1?tr("ct_n_"+n):""}
 function tlabel(t){return tr("ct_t_"+t)}
 
-var st={rows:[],me:null,mem:[],con:[],got:{},city:rd(CK,""),mode:"near",niche:[],tag:[],shown:12,focus:QS.get("i")||"",ready:false,nosql:false};
+var CC=window.IB_CityCore,KNOWN=CC?CC.names(REG):[];
+/* Kota awal: pilihan terakhir di sini, lalu kota beranda (gwm_loc), lalu kota profil (dicari sekali setelah login). */
+function pickCity(profile){if(!CC)return{city:rd(CK,"")==="*"?"":rd(CK,""),needProfile:false};return CC.pick({tcity:rd(CK,""),loc:rd("gwm_loc",""),profile:profile||""},KNOWN)}
+var st={rows:[],me:null,mem:[],con:[],got:{},city:pickCity().city,profDone:false,mode:"near",niche:[],tag:[],shown:12,focus:QS.get("i")||"",ready:false,nosql:false};
 (QS.get("n")||"").split(",").forEach(function(n){if(NIDS.indexOf(n)>-1&&st.niche.indexOf(n)<0)st.niche.push(n)});
 
 /* ---------- aturan jangkauan + urutan ---------- */
@@ -50,7 +53,11 @@ function list(){
 /* ---------- data ---------- */
 function load(){return sb.from("invitations_public").select("*").order("created_at",{ascending:false}).limit(300).then(function(r){
   st.rows=r.data||[];st.nosql=st.rows.length>0&&!("reach" in st.rows[0]);st.ready=true},function(){st.ready=true})}
-function session(){return sb.auth.getSession().then(function(r){st.me=r.data.session&&r.data.session.user||null},function(){})}
+function profileCity(){if(!st.me||st.profDone||!pickCity().needProfile){st.profDone=true;return Promise.resolve()}
+  st.profDone=true;
+  return sb.from("profiles").select("city_id").eq("id",st.me.id).maybeSingle().then(function(r){var id=r.data&&r.data.city_id;if(!id)return;
+    return sb.from("cities").select("name").eq("id",id).maybeSingle().then(function(c){var n=c.data&&c.data.name;if(n)st.city=pickCity(n).city})}).then(null,function(){})}
+function session(){return sb.auth.getSession().then(function(r){st.me=r.data.session&&r.data.session.user||null},function(){}).then(profileCity)}
 function ensure(ids,cb){if(!st.me){cb();return}
   var need=ids.filter(function(id){return!st.got[id]});if(!need.length){cb();return}
   var m=sb.from("invitation_members").select("invitation_id,user_id,status,message,profiles(nickname)").in("invitation_id",need),
@@ -174,7 +181,7 @@ function bind(){
   $("tmTags").onclick=function(e){var b=e.target.closest("button[data-t]");if(!b)return;var t=b.dataset.t,k=st.tag.indexOf(t);
     if(k>-1)st.tag.splice(k,1);else st.tag.push(t);st.shown=12;draw()};
   var cs=$("tmCity");cs.innerHTML=cityOpts(st.city,tr("ct_city_all"));
-  cs.onchange=function(){st.city=cs.value;wr(CK,st.city);st.shown=12;draw()};
+  cs.onchange=function(){st.city=cs.value;wr(CK,CC?CC.store(st.city):st.city||"*");st.shown=12;draw()};
   [].forEach.call(document.querySelectorAll("#tmMode button"),function(b){b.onclick=function(){st.mode=b.dataset.m;
     [].forEach.call(document.querySelectorAll("#tmMode button"),function(x){x.setAttribute("aria-pressed",x===b)});st.shown=12;draw()}});
   $("tmNew").onclick=openForm;
@@ -210,6 +217,6 @@ function init(){
   if(!$("tmList"))return;
   if(!sb){var m=$("msg");if(m){m.textContent=tr("aj_off");m.hidden=false}return}
   bind();
-  Promise.all([session(),load()]).then(draw)}
+  Promise.all([session(),load()]).then(function(){var cs=$("tmCity");if(cs&&cs.value!==st.city)cs.value=st.city;draw()})}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
