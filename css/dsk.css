@@ -80,6 +80,7 @@ html:where([data-dsk]) .nv-apps-in::-webkit-scrollbar{display:none}
 html:where([data-dsk]) .app:nth-child(8n+1),html:where([data-dsk]) .app:nth-child(8n+2){scroll-snap-align:start}
 html:where([data-dsk]) .nv-dots{display:flex}
 html:where([data-dsk]) .ap-ic{width:46px;height:46px}
+html:where([data-dsk]) .nv-apps-in{-webkit-overflow-scrolling:touch}
 /* naver.css @1100 */
 html:where([data-dsk]) .nv-cols{grid-template-columns:minmax(0,1fr);grid-template-areas:"ban" "rail" "feed"}
 html:where([data-dsk]) .nv-rail{position:static;grid-template-columns:minmax(0,1fr)}

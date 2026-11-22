@@ -37,4 +37,4 @@
   .nv-home .nv-hero{padding-top:26px}
   .nv-apps{margin-top:16px}
 }
-@media (prefers-reduced-motion:reduce){.nv-hero .search.nvs,.app,.nvc,.btn{transition:none}}
+@media (prefers-reduced-motion:reduce){.nv-hero .search.nvs,.app,.nvc,.btn,.ap-ic,.ap-ic .i{transition:none}}
