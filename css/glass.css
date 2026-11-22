@@ -1,0 +1,115 @@
+/* GWM — keseimbangan terang/gelap + aksen putih + kaca transparan (glass).
+   Dimuat PALING AKHIR di <head> (setelah portal-pro.css). Hanya menimpa warna permukaan, garis, bayangan, dan blur;
+   ukuran, jarak, dan tata letak tidak berubah. Perangkat tier "low" tidak memakai blur (hemat baterai). */
+
+/* ---------- token: satu set nama, dua nilai ---------- */
+:root{
+  --gl:rgba(255,255,255,.60);          /* permukaan kaca biasa (kartu, chip) */
+  --gl-2:rgba(255,255,255,.80);        /* kaca lebih padat (bilah atas, panel menu) */
+  --gl-h:rgba(14,90,70,.06);           /* pita judul kartu */
+  --gl-bd:rgba(14,90,70,.14);          /* garis tepi: hijau sangat tipis di terang */
+  --gl-hi:rgba(255,255,255,.95);       /* pantulan putih di tepi atas */
+  --gl-sh:0 8px 28px rgba(14,60,46,.09),0 1px 2px rgba(14,60,46,.06);
+  --gl-sh-lg:0 22px 60px rgba(14,60,46,.18);
+  --gl-tint:rgba(14,90,70,.10);        /* tint aksen untuk hover */
+  --gl-scrim:rgba(20,30,26,.22);
+  --gl-blur:blur(18px) saturate(1.5);
+  --gl-glow-a:rgba(79,201,164,.20);    /* cahaya ambient hijau */
+  --gl-glow-b:rgba(255,106,51,.12);    /* cahaya ambient oranye */
+  --gl-ink-hi:#0B3D30;                 /* judul kartu: hijau tua pekat (kontras di terang) */
+}
+:root[data-theme="dark"]{
+  --gl:rgba(255,255,255,.055);
+  --gl-2:rgba(30,32,34,.66);
+  --gl-h:rgba(255,255,255,.05);
+  --gl-bd:rgba(255,255,255,.13);       /* tepi putih tipis di gelap */
+  --gl-hi:rgba(255,255,255,.16);
+  --gl-sh:0 10px 30px rgba(0,0,0,.38),0 1px 2px rgba(0,0,0,.4);
+  --gl-sh-lg:0 24px 64px rgba(0,0,0,.6);
+  --gl-tint:rgba(79,201,164,.14);
+  --gl-scrim:rgba(0,0,0,.42);
+  --gl-blur:blur(20px) saturate(1.35);
+  --gl-glow-a:rgba(79,201,164,.14);
+  --gl-glow-b:rgba(255,106,51,.10);
+  --gl-ink-hi:#FFFFFF;                 /* aksen putih murni untuk judul di gelap */
+}
+
+/* ---------- latar ambient: bercak cahaya lembut supaya kaca punya sesuatu untuk "dibiaskan" ---------- */
+html:not([data-tier="low"])::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(60vmax 44vmax at 8% -6%,var(--gl-glow-a),transparent 62%),
+    radial-gradient(50vmax 38vmax at 100% 6%,var(--gl-glow-b),transparent 60%),
+    radial-gradient(60vmax 40vmax at 50% 110%,var(--gl-glow-a),transparent 65%)}
+
+/* ---------- bilah atas ---------- */
+html .topbar,html[data-tier] .topbar{background:var(--gl-2);border-bottom:1px solid var(--gl-bd);box-shadow:inset 0 -1px 0 var(--gl-hi)}
+
+/* ---------- kotak pencarian ---------- */
+html .search.nvs{background:var(--gl-2);border-color:var(--brand);box-shadow:inset 0 1px 0 var(--gl-hi),0 6px 22px color-mix(in srgb,var(--brand) 14%,transparent)}
+html .search.nvs:focus-within{box-shadow:inset 0 1px 0 var(--gl-hi),0 0 0 4px color-mix(in srgb,var(--brand) 20%,transparent)}
+html .search.nvs .sxgo{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 12px color-mix(in srgb,var(--brand) 35%,transparent)}
+
+/* ---------- kartu & permukaan ---------- */
+html .nvc,html .nv-apps,html .nv-tr-bar,html .tm-home,html .nv-rail .nvc{
+  background:var(--gl);border:1px solid var(--gl-bd);box-shadow:inset 0 1px 0 var(--gl-hi),var(--gl-sh)}
+html .nv-tr-bar{box-shadow:inset 0 1px 0 var(--gl-hi)}
+html .nv-tr-list{background:var(--gl-2);border-color:var(--gl-bd);box-shadow:inset 0 1px 0 var(--gl-hi),var(--gl-sh-lg)}
+html .nv-tr-list li:hover,html .app:hover{background:var(--gl-tint)}
+html .nvc h3,html .tm-home h2,html .nv-apps .ap-n{color:var(--gl-ink-hi)}
+html .nvc-recent li button:hover{background:var(--gl-tint)}
+html .nvc-login .quick a{background:var(--gl-h);box-shadow:inset 0 0 0 1px var(--gl-bd)}
+
+/* ---------- ikon aplikasi: tetap berwarna, ditambah pantulan putih ---------- */
+html .nv-apps-in .ap-ic{box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 0 0 1px rgba(255,255,255,.12),0 6px 14px color-mix(in srgb,var(--brand) 28%,transparent)}
+html .ap-ic{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 12px color-mix(in srgb,var(--brand) 22%,transparent)}
+html .nv-dots i{background:color-mix(in srgb,var(--ink) 16%,transparent)}
+html .nv-dots i.on{background:var(--brand)}
+
+/* ---------- chip, filter, tombol garis ---------- */
+html .nv-flt button,html .kchip,html .mfilters a,html .mfilters button,html .sxc button,html .sxtry button{
+  background:var(--gl);border:1px solid var(--gl-bd);box-shadow:inset 0 1px 0 var(--gl-hi);color:var(--ink)}
+html .nv-flt button:hover,html .kchip:hover,html .mfilters a:hover{background:var(--gl-tint)}
+html .nv-flt button[aria-pressed="true"],html .kchip[aria-pressed="true"],html .kchip.on{background:var(--ink);color:var(--bg);border-color:var(--ink);box-shadow:0 4px 14px color-mix(in srgb,var(--ink) 25%,transparent)}
+html .btn.line{background:var(--gl);border:1px solid var(--gl-bd);box-shadow:inset 0 1px 0 var(--gl-hi)}
+html .btn.line:hover{background:var(--gl-tint)}
+html .btn.pri{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 6px 16px color-mix(in srgb,var(--brand) 30%,transparent)}
+html .ico-btn{background:var(--gl);border:1px solid var(--gl-bd);box-shadow:inset 0 1px 0 var(--gl-hi)}
+html .ico-btn:hover{background:var(--gl-tint)}
+
+/* ---------- tab kategori yang menempel ---------- */
+html .nv-tabs{background:var(--gl-2);box-shadow:inset 0 -1px 0 var(--gl-bd)}
+
+/* ---------- panel menu hamburger ---------- */
+html .mm-bg{background:var(--gl-scrim)}
+html .mm-in{background:var(--gl-2);border:1px solid var(--gl-bd);box-shadow:inset 0 1px 0 var(--gl-hi),var(--gl-sh-lg)}
+html .mm-h{background:transparent}
+html .mm-g section,html .mm .mm-g section{background:var(--gl);border:1px solid var(--gl-bd);box-shadow:inset 0 1px 0 var(--gl-hi)}
+html .mm-g section h3{background:var(--gl-h);color:var(--gl-ink-hi);border-bottom:1px solid var(--gl-bd)}
+html .mm-g a:hover,html .mm-g a:focus-visible,html .mm-g .mm-share:hover,html .mm-g #ajMy:hover,html .mm-g #mmInstall:hover,html .mm-g #mmLoc:hover{background:var(--gl-tint)}
+html .mm .mm-g section .i{box-shadow:inset 0 1px 0 rgba(255,255,255,.38),0 3px 8px color-mix(in srgb,var(--brand) 25%,transparent)}
+html .mm-foot{border-top:1px solid var(--gl-bd)}
+
+/* ---------- blur hanya di perangkat yang kuat (tier low = tanpa blur, latar solid) ---------- */
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  html:not([data-tier="low"]) .topbar,
+  html:not([data-tier="low"]) .nv-tabs,
+  html:not([data-tier="low"]) .mm-in,
+  html:not([data-tier="low"]) .nv-tr-list,
+  html:not([data-tier="low"]) .search.nvs{-webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur)}
+  html:not([data-tier="low"]) .nvc,
+  html:not([data-tier="low"]) .nv-apps,
+  html:not([data-tier="low"]) .nv-tr-bar,
+  html:not([data-tier="low"]) .tm-home,
+  html:not([data-tier="low"]) .mm-g section,
+  html:not([data-tier="low"]) .nv-flt button,
+  html:not([data-tier="low"]) .kchip,
+  html:not([data-tier="low"]) .btn.line,
+  html:not([data-tier="low"]) .ico-btn{-webkit-backdrop-filter:blur(12px) saturate(1.3);backdrop-filter:blur(12px) saturate(1.3)}
+  html:not([data-tier="low"]) .mm-bg{-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+}
+/* tier low / browser tanpa blur: kaca jadi solid agar teks tetap terbaca */
+html[data-tier="low"]{--gl:var(--side);--gl-2:var(--bg)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  :root{--gl:var(--side);--gl-2:var(--bg)}
+}
+@media (prefers-reduced-transparency:reduce){:root,:root[data-theme="dark"]{--gl:var(--side);--gl-2:var(--bg)}}
