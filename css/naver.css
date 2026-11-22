@@ -109,7 +109,9 @@ html[data-tier="high"] .nv-hero h1{background:linear-gradient(100deg,var(--ink) 
 .nv-tr-list li:hover{background:var(--sel)}
 .nv-tr-list a{padding:8px 8px}
 .nv-tr-list li:nth-child(-n+3) a b{color:var(--accent)}
-.kchips.nv-ch{justify-content:center;flex-wrap:wrap;overflow:visible;padding:0}
+.kchips.nv-ch{justify-content:center;flex-wrap:nowrap;overflow:hidden;padding:0}
+.kchips.nv-ch>*{flex:none}
+.kchips.nv-ch [hidden]{display:none!important}
 .kchips.nv-ch:empty{display:none}
 
 /* pintasan layanan */

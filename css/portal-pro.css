@@ -62,10 +62,17 @@ body.nv-home .tb-c .search{transition:opacity .2s}
 .loc-qbar button[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
 .loc-qbar .lqb-exp{border-style:dashed;color:var(--brand);border-color:color-mix(in srgb,var(--brand) 45%,var(--line))}
 .loc-qbar .lqb-exp .i{width:15px;height:15px}
-@media (max-width:740px){
-  .loc-qbar{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding:2px 4px}
-  .loc-qbar::-webkit-scrollbar{display:none}
-}
+.loc-qbar{display:block}
+.loc-qbar .lqb-row{display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;gap:6px;overflow:hidden;padding:2px}
+.loc-qbar .lqb-row>*{flex:none}
+.loc-qbar [hidden]{display:none!important}
+.loc-qbar .lqb-tog{border-style:dashed}
+.loc-qbar .lqb-exp{width:31px;padding:0;justify-content:center}
+.loc-qbar .lqb-more{margin:8px 0 0;display:flex;flex-direction:column;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--side)}
+.loc-qbar .lqb-more[hidden]{display:none}
+.loc-qbar .lqb-grp{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.loc-qbar .lqb-gl{flex-basis:100%;font:700 11px/1 var(--f);letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
+@media (max-width:740px){.loc-qbar .lqb-row{justify-content:flex-start}}
 
 /* ---- Location Scope Bar & Partner Meta ---- */
 .loc-scopebar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:9px 12px;margin-bottom:10px;border:1px solid var(--line);border-radius:10px;background:var(--side);font-size:13px}
