@@ -236,7 +236,7 @@ _dates=[x for x in _dates if x]
 _LMTAG=f"<lastmod>{max(_dates)}</lastmod>" if _dates else ""
 open(ROOT+"/sitemap.xml","w",encoding="utf-8").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+"".join(rows).replace("@@LM@@",_LMTAG)+"</urlset>\n")
 pre=urlparse(BASE).path.rstrip("/")
-open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login","ajukan","id/ajukan","en/ajukan","profil","id/profil","en/profil","pesan","id/pesan","en/pesan"))+f"Sitemap: {BASE}/sitemap.xml\n")
+open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("login","id/login","en/login","ajukan","id/ajukan","en/ajukan","profil","id/profil","en/profil","pesan","id/pesan","en/pesan"))+f"Sitemap: {BASE}/sitemap.xml\n")
 
 # ---- sw.js: service worker (offline + cepat). VER ikut build, jadi cache versi lama dibuang otomatis ----
 # cangkang offline: halaman utama dua bahasa + semua CSS/JS (dengan ?v= yang sama persis dengan yang diminta halaman) + data event.
