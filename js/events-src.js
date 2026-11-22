@@ -13,7 +13,7 @@ function live(){var h={apikey:C.SUPABASE_ANON_KEY,Authorization:"Bearer "+C.SUPA
   return jget(C.SUPABASE_URL+"/rest/v1/events?select="+COLS+"&status=eq.published&order=event_date.asc",h)}
 function stat(){return jget(STATIC)}
 /* satu bentuk baris untuk kedua sumber: Supabase memberi cities:{name}, data/events.json sudah memberi city */
-function norm(rows){return rows.map(function(r){if(r.cities){r.city=r.cities.name}delete r.cities;return r})}
+function norm(rows){var L=window.IB_Lineup;return rows.map(function(r){if(r.cities){r.city=r.cities.name}delete r.cities;if(L&&r.lineup)r.lineup=L.clean(r.lineup);return r})}
 function cached(){try{var s=JSON.parse(sessionStorage.getItem(KEY)||"null");if(s&&Date.now()-s.t<TTL&&Array.isArray(s.d))return s.d}catch(e){}return null}
 function keep(d){try{sessionStorage.setItem(KEY,JSON.stringify({t:Date.now(),d:d}))}catch(e){}}
 function copy(d){return d.map(function(x){var y={},k;for(k in x)y[k]=x[k];return y})}
