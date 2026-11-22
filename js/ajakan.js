@@ -7,12 +7,18 @@ function toast(m){var t=document.getElementById("toast");if(!t)return;t.textCont
 /* Dialog kecil pengganti alert/prompt/confirm. o: {title,text,input:{ph,min,max},ok,no} -> Promise(true | teks | null) */
 function ask(o){return new Promise(function(res){
   var d=document.createElement("dialog");d.className="aqd";
-  d.innerHTML='<form method="dialog" class="aqf"><h3>'+esc(o.title||"")+'</h3>'+(o.text?'<p>'+esc(o.text)+'</p>':'')+
+  d.innerHTML='<form method="dialog" class="aqf"><h3>'+esc(o.title||"")+'</h3>'+(o.text?'<p>'+esc(o.text)+'</p>':'')+(o.list?'<ul>'+o.list.map(function(t){return'<li>'+esc(t)+'</li>'}).join('')+'</ul>':'')+
    (o.input?'<textarea name="v" rows="3" maxlength="'+(o.input.max||200)+'"'+(o.input.min?' required minlength="'+o.input.min+'"':'')+' placeholder="'+esc(o.input.ph||"")+'"></textarea>':'')+
    '<div class="row"><button class="btn ghost sm" value="no" formnovalidate>'+esc(o.no||tr("aj_no"))+'</button><button class="btn sm" value="ok">'+esc(o.ok||tr("aj_yes"))+'</button></div></form>';
   document.body.appendChild(d);
   d.addEventListener("close",function(){var v=d.querySelector("textarea"),ok=d.returnValue==="ok";res(ok?(v?v.value.trim():true):null);d.remove()});
   d.showModal();var t=d.querySelector("textarea");if(t)t.focus()})}
+/* Tips aman: sekali per browser, sebelum permintaan gabung pertama. Mengembalikan Promise<boolean> (true = lanjut). */
+function gate(){var SC=window.IB_SafetyCore,raw=null;if(!SC)return Promise.resolve(true);
+  try{raw=localStorage.getItem(SC.KEY)}catch(e){}
+  if(!SC.needed(raw))return Promise.resolve(true);
+  return ask({title:tr("sf_h"),list:SC.TIPS.map(function(k){return tr(k)}),ok:tr("sf_ok")}).then(function(v){
+    if(!v)return false;try{localStorage.setItem(SC.KEY,SC.VERSION)}catch(e){}return true})}
 function run(p,okMsg,after){return p.then(function(r){if(r.error){toast((window.IB_ErrText?IB_ErrText(r.error):r.error.message)||tr("aj_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("aj_err"));return false})}
 /* e (opsional): setelah login, pengguna dikembalikan ke event ini dan formulir ajakan dibuka (?teman=1, dibaca app.js). */
 function needLogin(e){toast(tr("aj_needlogin"));var nx=e?"?next="+encodeURIComponent((e.category==="naikgunung"?"gunung":"event")+"?e="+encodeURIComponent(e.slug||e.id)+"&teman=1"):"";setTimeout(function(){location.href="login"+nx},900)}
@@ -72,9 +78,9 @@ function draw(e,box,me,L,M,C,soc,mineInt){
     if(x==="new"){var f=box.querySelector("form.nw");f.hidden=!f.hidden;return}
     if(x==="edit"){var ef=box.querySelector('form.ed[data-i="'+i+'"]');if(ef)ef.hidden=!ef.hidden;return}
     if(x==="interest")return run(sb.rpc("set_interest",{p_event:e.id,p_on:!mineInt}),tr(mineInt?"aj_interest_off":"aj_interest_added"),again);
-    if(x==="join")return ask({title:tr("aj_msg_h"),input:{ph:tr("aj_msg_ph"),max:200},ok:tr("aj_send")}).then(function(v){if(v===null)return;
+    if(x==="join")return gate().then(function(go){if(!go)return;return ask({title:tr("aj_msg_h"),input:{ph:tr("aj_msg_ph"),max:200},ok:tr("aj_send")}).then(function(v){if(v===null)return;
       if(window.IB_WordFilter&&v){var wf=IB_WordFilter.enforce(v,{userId:me&&me.id,userLabel:(me&&(me.user_metadata&&me.user_metadata.full_name||me.email))||"Anggota",context:"invitation_join"});if(!wf.ok)return toast(wf.message)}
-      run(sb.rpc("request_join",{p_inv:i,p_msg:v}),tr("aj_sent"),again)});
+      run(sb.rpc("request_join",{p_inv:i,p_msg:v}),tr("aj_sent"),again)})});
     if(x==="ok"||x==="no")return run(sb.rpc("decide_member",{p_inv:i,p_user:b.dataset.u,p_ok:x==="ok"}),null,again);
     if(x==="cancel")return ask({title:tr("aj_cancel"),text:tr("aj_sure_cancel")}).then(function(v){if(v)run(sb.rpc("leave_or_cancel",{p_inv:i}),tr("aj_cancelled"),again)});
     if(x==="leave")return ask({title:tr("aj_leave"),text:tr("aj_sure_leave")}).then(function(v){if(v)run(sb.rpc("leave_or_cancel",{p_inv:i}),tr("aj_left"),again)});

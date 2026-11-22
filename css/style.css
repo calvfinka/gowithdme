@@ -288,6 +288,7 @@ dialog.shr{width:min(380px,calc(92*var(--vw)))}
 
 /* ---- ajakan: dialog kecil, filter, badge, Ajakan saya ---- */
 dialog.aqd{width:min(380px,calc(92*var(--vw)))}.aqf,.amb{padding:16px}.aqf h3,.amb h3{font-size:16px;margin:0 0 8px}.aqf p{margin:0 0 10px;color:var(--ink)}
+.aqf ul{margin:0 0 12px;padding-left:20px}.aqf li{margin:0 0 8px;line-height:1.5}
 .aqf textarea{width:100%;box-sizing:border-box;margin-bottom:10px;font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .aqf .row,.amb>.row{display:flex;gap:8px;justify-content:flex-end}
 .aji{margin:0 0 10px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}

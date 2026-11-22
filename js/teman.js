@@ -129,12 +129,18 @@ function draw(){
 /* ---------- dialog kecil ---------- */
 function ask(o){return new Promise(function(res){
   var d=document.createElement("dialog");d.className="aqd";
-  d.innerHTML='<form method="dialog" class="aqf"><h3>'+esc(o.title||"")+'</h3>'+(o.text?'<p>'+esc(o.text)+'</p>':'')+
+  d.innerHTML='<form method="dialog" class="aqf"><h3>'+esc(o.title||"")+'</h3>'+(o.text?'<p>'+esc(o.text)+'</p>':'')+(o.list?'<ul>'+o.list.map(function(t){return'<li>'+esc(t)+'</li>'}).join('')+'</ul>':'')+
    (o.input?'<textarea name="v" rows="3" maxlength="'+(o.input.max||200)+'"'+(o.input.min?' required minlength="'+o.input.min+'"':'')+' placeholder="'+esc(o.input.ph||"")+'"></textarea>':'')+
    '<div class="row"><button class="btn ghost sm" value="no" formnovalidate>'+esc(o.no||tr("aj_no"))+'</button><button class="btn sm" value="ok">'+esc(o.ok||tr("aj_yes"))+'</button></div></form>';
   document.body.appendChild(d);
   d.addEventListener("close",function(){var v=d.querySelector("textarea"),ok=d.returnValue==="ok";res(ok?(v?v.value.trim():true):null);d.remove()});
   d.showModal();var t=d.querySelector("textarea");if(t)t.focus()})}
+/* Tips aman: sekali per browser, sebelum permintaan gabung pertama. Mengembalikan Promise<boolean> (true = lanjut). */
+function gate(){var SC=window.IB_SafetyCore,raw=null;if(!SC)return Promise.resolve(true);
+  try{raw=localStorage.getItem(SC.KEY)}catch(e){}
+  if(!SC.needed(raw))return Promise.resolve(true);
+  return ask({title:tr("sf_h"),list:SC.TIPS.map(function(k){return tr(k)}),ok:tr("sf_ok")}).then(function(v){
+    if(!v)return false;try{localStorage.setItem(SC.KEY,SC.VERSION)}catch(e){}return true})}
 
 /* ---------- formulir ajakan bebas ---------- */
 function openForm(){
@@ -194,9 +200,9 @@ function bind(){
     var again=function(){reload();if(window.IB_AjakanBadge)window.IB_AjakanBadge()};
     if(x==="share"){var ij=st.rows.filter(function(z){return z.id===i})[0];
       if(ij&&window.IB_Share){var u=new URL(location.href);u.search="";u.searchParams.set("i",i);IB_Share.open({title:ij.title,text:tr("aj_share_text",{t:ij.title,e:ij.event_title||nlabel(ij.niche)||"GWM"}),url:u.toString()})}return}
-    if(x==="join")return ask({title:tr("aj_msg_h"),input:{ph:tr("aj_msg_ph"),max:200},ok:tr("aj_send")}).then(function(v){if(v===null)return;
+    if(x==="join")return gate().then(function(go){if(!go)return;return ask({title:tr("aj_msg_h"),input:{ph:tr("aj_msg_ph"),max:200},ok:tr("aj_send")}).then(function(v){if(v===null)return;
       if(window.IB_WordFilter&&v){var wf=IB_WordFilter.enforce(v,{userId:st.me&&st.me.id,userLabel:(st.me&&(st.me.user_metadata&&st.me.user_metadata.full_name||st.me.email))||"Anggota",context:"teman_join"});if(!wf.ok)return toast(wf.message)}
-      run(sb.rpc("request_join",{p_inv:i,p_msg:v}),tr("aj_sent"),again)});
+      run(sb.rpc("request_join",{p_inv:i,p_msg:v}),tr("aj_sent"),again)})});
     if(x==="ok"||x==="no")return run(sb.rpc("decide_member",{p_inv:i,p_user:b.dataset.u,p_ok:x==="ok"}),null,again);
     if(x==="cancel")return ask({title:tr("aj_cancel"),text:tr("aj_sure_cancel")}).then(function(v){if(v)run(sb.rpc("leave_or_cancel",{p_inv:i}),tr("aj_cancelled"),again)});
     if(x==="leave")return ask({title:tr("aj_leave"),text:tr("aj_sure_leave")}).then(function(v){if(v)run(sb.rpc("leave_or_cancel",{p_inv:i}),tr("aj_left"),again)});
