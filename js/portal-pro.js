@@ -282,8 +282,9 @@
   }
   function renderBlog(){
     var grid=$("blogGrid"),catsEl=$("blogCats");if(!grid||!blogPosts)return;
-    var cats=["semua"];
-    blogPosts.forEach(function(p){if(p.category&&cats.indexOf(p.category)<0)cats.push(p.category)});
+    var BT=window.IB_BlogTab,all=BT?BT.keep(blogPosts):blogPosts;
+    var cats=["semua"].concat(BT?BT.topics(all):[]);
+    if(cats.indexOf(blogCat)<0)blogCat="semua";
     if(catsEl){
       catsEl.innerHTML=cats.map(function(c){
         var lbl=c==="semua"?tr("blog_cat_all"):(BLOG_CAT_LABELS[c]||c);
@@ -291,7 +292,7 @@
       }).join("");
       catsEl.onclick=function(e){var b=e.target.closest("[data-bc]");if(!b)return;blogCat=b.dataset.bc;renderBlog()};
     }
-    var list=blogPosts.filter(function(p){return blogCat==="semua"||p.category===blogCat});
+    var list=all.filter(function(p){return blogCat==="semua"||p.category===blogCat});
     if(!list.length){grid.innerHTML='<div class="empty"><b>'+esc(tr("blog_empty"))+'</b></div>';return}
     grid.innerHTML=list.map(function(p,idx){
       var txt=stripHtml(p.body),excerpt=txt.slice(0,140).replace(/\s+\S*$/,"")+"…";
