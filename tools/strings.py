@@ -1078,3 +1078,23 @@ _PROB = {
 }
 S.update(_PROB); J.update(_PROB)
 
+
+# --- halaman /statistik (hanya dibangun bila data/statistik.json berstatus aktif) ---
+_STAT={
+"st_title": ("Statistik konser — GWM", "Concert stats — GWM"),
+"st_desc": ("Kota, artis, dan penyelenggara yang paling sering muncul di event konser dan festival yang tercatat di GWM.", "The cities, artists, and organizers that appear most often in the concerts and festivals listed on GWM."),
+"st_h": ("Statistik konser", "Concert stats"),
+"st_p": ("Siapa dan di mana yang paling ramai di GWM.", "Who and where is busiest on GWM."),
+"st_t_kota": ("Kota", "Cities"), "st_t_artis": ("Artis", "Artists"), "st_t_eo": ("Penyelenggara", "Organizers"),
+"st_events": ("event", "events"), "st_next": ("akan datang", "upcoming"), "st_cities": ("kota", "cities"),
+"st_all_prov": ("Lihat semua provinsi", "See all provinces"), "st_all_artis": ("Lihat semua artis", "See all artists"), "st_all_eo": ("Lihat semua penyelenggara", "See all organizers"),
+"st_prov_h": ("Provinsi", "Provinces"), "st_back": ("Kembali", "Back"), "st_ticket": ("Tiket", "Tickets"),
+"st_in": ("Tampil di event GWM", "Appears at GWM events"), "st_org_in": ("Penyelenggara event di GWM", "Organizer of GWM events"),
+"st_note": ("Dihitung dari event terverifikasi yang tercatat di GWM, bukan seluruh konser di Indonesia. Diperbarui {d}.", "Based on verified events listed on GWM, not every concert in Indonesia. Updated {d}."),
+"st_loading": ("Memuat statistik…", "Loading stats…"),
+"st_off": ("Statistik belum tersedia.", "Stats are not available yet."),
+"st_noscript": ("Halaman ini membutuhkan JavaScript untuk menampilkan statistik.", "This page needs JavaScript to show the stats."),
+"nv_stats": ("Statistik konser", "Concert stats"),
+"sx_p_stats": ("Statistik konser", "Concert stats"),
+}
+S.update(_STAT); J.update(_STAT)

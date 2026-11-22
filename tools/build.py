@@ -12,6 +12,14 @@ BASE=os.environ.get("GWM_SITE","https://gowithdme.com").rstrip("/")
 VER=os.environ.get("GWM_VER") or time.strftime("%Y%m%d%H%M")  # GWM_VER tetap -> build ulang tidak mengubah file (dipakai workflow)
 LANGS=["id","en"]; IDX={"id":0,"en":1}
 PAGES=["index","event","gunung","login","privacy","terms","copyright","template","about","ajukan","komunitas","teman","profil","bantuan","pesan"]
+# halaman /statistik hanya ada bila data/statistik.json berstatus aktif (sakelar 'publik' di Supabase); selain itu tidak dibangun dan file lamanya dihapus
+try: STAT_ON=bool(json.load(open(ROOT+"/data/statistik.json",encoding="utf-8")).get("aktif"))
+except Exception: STAT_ON=False
+if STAT_ON: PAGES.append("statistik")
+else:
+    for _f in ("id/statistik.html","en/statistik.html","statistik.html"):
+        if os.path.exists(f"{ROOT}/{_f}"): os.remove(f"{ROOT}/{_f}")
+STAT_LINK='<a href="statistik"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg>{{nv_stats}}</a>'
 NOINDEX=("login","ajukan","profil","pesan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
 APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
 def path(p): return "" if p=="index" else p
@@ -65,6 +73,7 @@ SX_PAGES=[
  ("deals","./#deals","nv_deals","page","deals mitra partner afiliasi tiket sewa gear outdoor shuttle promo"),
  ("promo","./#promo","nv_promo","page","pasang iklan promosi sponsor banner sorotan kota monetisasi event"),
 ]
+if STAT_ON: SX_PAGES.append(("stats","statistik","sx_p_stats","page","statistik ranking kota artis penyelenggara promotor konser stats ranking cities artists organizers"))
 sx={"pages":[{"k":k,"h":h,"t":[J[tk][0],J[tk][1]],"type":ty,"kw":kw} for k,h,tk,ty,kw in SX_PAGES],
     "faq":[{"n":n,"q":[plain(S[f"fq{n}_q"][0]),plain(S[f"fq{n}_q"][1])],"a":[plain(S[f"fq{n}_a"][0]),plain(S[f"fq{n}_a"][1])]} for n in range(1,14)]}
 sx["prov"]=PROV_EN
@@ -76,6 +85,7 @@ for l in LANGS:
     for p in PAGES:
         h=inc(open(f"{ROOT}/src/{p}.html",encoding="utf-8").read())
         h=h.replace("{{search}}",inc("{{>search}}"))
+        h=h.replace("{{stat_link}}",STAT_LINK if STAT_ON else "")
         h=h.replace("{{pgshare}}",'<button class="mm-share" id="pgShare" type="button"><svg class="i" aria-hidden="true"><use href="#i-share"/></svg>{{sh_aria}}</button>' if p in APP else "")
         if p in("privacy","terms","copyright","template","about"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
         sw=f'<a class="lang" href="../{o}/{path(p)}" data-sw="{o}" hreflang="{o}" lang="{o}" aria-label="{S["lang_label"][IDX[l]]}">{o.upper()}</a>'
