@@ -55,7 +55,7 @@ var MID=["januari","februari","maret","april","mei","juni","juli","agustus","sep
 var CATKW={konser:"konser musik festival gig live concert music",naikgunung:"naik gunung pendakian hiking open trip trekking camping mountain",pameran:"pameran expo exhibition seni art",festival:"festival musik seni fest",komedi:"komedi stand up comedy open mic lawak",seminar:"seminar konferensi talkshow workshop conference talk",meetup:"meetup komunitas trivia nobar mahjong gathering",lainnya:"teater pertunjukan pameran properti lainnya other"};
 var CATIC={konser:"mic",naikgunung:"mtn",pameran:"bag",festival:"ticket",komedi:"chat",seminar:"note",meetup:"users",lainnya:"cal"};
 var PGIC={home:"home",events:"cal",hike:"mtn",invite:"users",comm:"users",submit:"plus",help:"help",contact:"help",terms:"note",privacy:"note",login:"users",profile:"users",saved:"heart",done:"clock",concert:"mic",expo:"bag",hiking:"mtn",deals:"store",promo:"megaphone"};
-var TYPES=["event","artist","genre","place","mtn","blog","post","user","page","faq"],CAP=4,CAP_OTHER=3;
+var TYPES=["event","artist","genre","place","mtn","blog","post","user","page","faq"],CAP=5,CAP_OTHER=3,MAXROWS=8;
 
 /* ---------- tanggal (zona WIB) ---------- */
 function today(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta"}).format(new Date())}
@@ -304,7 +304,7 @@ function itemHtml(r,toks,i){var d=r.d,meta="";
   if(lm)sub=tr("sx_lineup")+": "+d.lu;
   if(d.type==="mtn")sub=provName(d.prov)+(d.mdpl&&d.n?" · "+d.mdpl.toLocaleString(tr("numloc"))+" "+tr("mdpl"):"");
   return'<a class="sxr" role="option" id="sxo'+i+'" aria-selected="false" href="'+esc(d.href)+'" data-i="'+i+'"'+(d.evId?' data-ev="'+esc(d.evId)+'"':"")+'>'
-    +(d.type==="user"?'<span class="sxi av" aria-hidden="true">'+esc(d.init)+'</span>':'<span class="sxi">'+ic(d.icon)+'</span>')+'<span class="sxt"><b>'+hl(d.title,toks)+(d.verified?' <i class="sxv" aria-label="Verified">✓</i>':"")+'</b><small>'+(d.type==="faq"||d.type==="post"||lm?hl(sub,toks):esc(sub))+'</small></span>'+meta+'</a>'}
+    +(d.type==="user"?'<span class="sxi av" aria-hidden="true">'+esc(d.init)+'</span>':'<span class="sxi">'+ic("search")+'</span>')+'<span class="sxt"><b>'+hl(d.title,toks)+(d.verified?' <i class="sxv" aria-label="Verified">✓</i>':"")+'</b><small>'+(d.type==="faq"||d.type==="post"||lm?hl(sub,toks):esc(sub))+'</small></span>'+meta+'<span class="sxfill" data-q="'+esc(d.title)+'" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 17 7 7M7 15V7h8"/></svg></span></a>'}
 function actHtml(icon,label,href,i,extra){return'<a class="sxr act" role="option" id="sxo'+i+'" aria-selected="false" href="'+esc(href)+'" data-i="'+i+'"'+(extra||"")+'><span class="sxi">'+ic(icon)+'</span><span class="sxt"><b>'+esc(label)+'</b></span></a>'}
 
 function trendDocs(){return DOCS.event.filter(function(d){return d.st.k!=="past"}).sort(function(a,b){return(a.st.k==="live"?0:1)-(b.st.k==="live"?0:1)||(a.date<b.date?-1:a.date>b.date?1:0)}).slice(0,5)}
@@ -314,10 +314,9 @@ function renderEmpty(){
     rec.map(function(q,i){return'<a class="sxr" role="option" id="sxo'+i+'" aria-selected="false" href="#" data-q="'+esc(q)+'" data-i="'+i+'"><span class="sxi">'+ic("clock")+'</span><span class="sxt"><b>'+esc(q)+'</b></span></a>'}).join("")}
   if(tr5.length){h+='<div class="sxg"><span>'+esc(tr("nv_trend_h"))+'</span></div>'+tr5.map(function(d,n){var i=base+n;
     return'<a class="sxr" role="option" id="sxo'+i+'" aria-selected="false" href="'+esc(d.href)+'" data-i="'+i+'" data-ev="'+esc(d.evId)+'"><span class="sxi rk'+(n<3?' top':'')+'">'+(n+1)+'</span><span class="sxt"><b>'+esc(d.title)+'</b><small>'+esc(d.sub)+'</small></span><span class="sxm'+(d.st.k==="live"?" on":"")+'">'+esc(d.dm)+'<small>'+esc(d.st.k==="live"?d.st.l:d.st.k==="soon"?d.st.l:"")+'</small></span></a>'}).join("")}
-  h+='<div class="sxg"><span>'+esc(tr("sx_try"))+'</span></div><div class="sxtry">'+[1,2,3,4,5,6,7,8].map(function(n){var t=tr("sx_try"+n);return'<button type="button" data-q="'+esc(t)+'">'+esc(t)+'</button>'}).join("")+'</div>';
   elList.innerHTML=h;elChips.hidden=true;elLive.textContent="";items=[].slice.call(elList.querySelectorAll("a.sxr"));setActive(-1)}
 
-function run(){var raw=inp.value;lastQ=raw;
+function run(){var raw=inp.value;lastQ=raw;panel.classList.toggle("sxq",!!raw.trim());
   if(!raw.trim()){scopeSel="all";renderEmpty();return}
   var r=search(raw,scopeSel);
   if(r.empty){renderEmpty();return}
@@ -336,7 +335,7 @@ function run(){var raw=inp.value;lastQ=raw;
   order=eff==="all"?TYPES.filter(function(t){return r.tot[t]}).sort(function(a,b){return r.res[b][0].s-r.res[a][0].s}):[eff];
   if(r.partial)h+='<div class="sxn">'+esc(tr("sx_partial"))+'</div>';
   order.forEach(function(t){var list=r.res[t];if(!list.length)return;
-    var cap=eff==="all"?(t==="event"?CAP:CAP_OTHER):30,shown=list.slice(0,cap);
+    var cap=eff==="all"?Math.min(t==="event"?CAP:CAP_OTHER,MAXROWS-i):30;if(cap<=0)return;var shown=list.slice(0,cap);
     h+='<div class="sxg" role="presentation"><span>'+esc(tr("sx_t_"+t))+'</span>'+(eff==="all"&&list.length>shown.length?'<button type="button" data-s="'+t+'">'+esc(tr("sx_more",{n:list.length-shown.length}))+'</button>':"")+'</div>';
     shown.forEach(function(x){h+=itemHtml(x,r.toks,i++)})});
   if(r.tot.event&&!r.partial&&(eff==="all"||eff==="event"))h+=actHtml("search",tr("sx_all_events",{q:r.q}),"event?q="+qenc(r.q),i++);

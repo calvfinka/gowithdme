@@ -391,3 +391,37 @@ a.kpost{display:block;color:inherit;text-decoration:none}a.kpost:hover{border-co
 
 .badge.feat{background:linear-gradient(135deg,#0E5A46,#1a8a6a);color:#fff;font-weight:600;letter-spacing:.02em}
 
+
+/* ---- panel pencarian ala Naver: satu daftar saran, tanpa tab/kotak/tanggal ----
+   Awalan "html .sxp" sengaja dipakai supaya menang atas balance.css, glass.css, naver.css yang dimuat belakangan. */
+html .sxp{border:0;border-radius:16px;box-shadow:0 10px 32px rgba(0,0,0,.2)}
+html .sxp .sxc,html .sxp .sxf{display:none}
+html .sxp .sxl{padding:6px 0 8px}
+html .sxp .sxr{grid-template-columns:24px minmax(0,1fr) auto;gap:14px;padding:11px 18px;min-height:46px;border-radius:0}
+html .sxp .sxr:hover,html .sxp .sxr[aria-selected="true"]{background:var(--sel)}
+html .sxp .sxi,html .sxp .sxr:hover .sxi,html .sxp .sxr[aria-selected="true"] .sxi{width:24px;height:24px;border-radius:0;background:none;color:var(--faint)}
+html .sxp .sxi .i{width:18px;height:18px}
+html .sxp .sxi.av,html .sxp .sxr:hover .sxi.av,html .sxp .sxr[aria-selected="true"] .sxi.av{border-radius:50%;background:var(--brand);color:var(--brand-ink,#fff);font-size:11px}
+html .sxp .sxi.rk,html .sxp .sxi.rk.top{background:none;color:var(--faint);font-size:14px;font-weight:600}
+html .sxp .sxt b{font-size:16px;font-weight:700}
+html .sxp .sxt small,html .sxp .sxm{display:none}
+/* seperti Naver: bagian yang sudah diketik normal, sisanya tebal */
+html .sxp mark{background:none;color:inherit;font-weight:400;padding:0}
+/* judul grup hanya muncul di keadaan kosong (terakhir dicari / segera hadir) */
+html .sxp .sxg{padding:12px 18px 4px;font-size:12.5px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--faint)}
+html .sxp.sxq .sxg{display:none}
+html .sxp .sxr.act{margin:0;border:0}
+html .sxp .sxr.act .sxt b{font-size:15px;font-weight:600;color:var(--brand)}
+/* panah isi kotak (↖) di ujung kanan tiap saran */
+html .sxp .sxfill{display:grid;place-items:center;width:30px;height:30px;margin-right:-6px;border-radius:50%;color:var(--faint);cursor:pointer}
+html .sxp .sxfill:hover{color:var(--ink);background:var(--hover)}
+html .sxp .sxfill svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:none){html .sxp .sxfill{width:38px;height:38px}}
+
+/* ---- kotak cari kecil di header: garis tipis netral, tanpa lingkaran hijau dan badge "/" ----
+   Berlaku untuk desktop, tablet, dan HP (di HP kotak tetap berupa ikon yang melebar saat diketuk). */
+html body .tb-main .search.nvs{border-width:1px;border-color:var(--line);box-shadow:none}
+html body .tb-main .search.nvs:focus-within{border-width:1px;border-color:var(--ink);box-shadow:none}
+html body .tb-main .search.nvs .sxk{display:none}
+html body .tb-main .search.nvs .sxgo{border:0;background:none;box-shadow:none;filter:none;color:var(--mute)}
+html body .tb-main .search.nvs .sxgo:hover,html body .tb-main .search.nvs:focus-within .sxgo{background:none;color:var(--ink);filter:none}

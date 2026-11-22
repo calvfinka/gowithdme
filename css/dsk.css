@@ -39,7 +39,7 @@ html:where([data-dsk]) .logo .w{display:none}
 /* style.css @640 */
 html:where([data-dsk]) .khero h1{font-size:26px}
 /* style.css @640 */
-html:where([data-dsk]) .sxp{left:8px;right:8px;width:auto;transform:none;border-radius:12px}
+html:where([data-dsk]) .sxp{left:8px;right:8px;width:auto;transform:none;border-radius:14px}
 /* adaptive.css @900 */
 html:where([data-dsk]) .mfilters,html:where([data-dsk]) .kchips{scroll-snap-type:x proximity}
 html:where([data-dsk]) .mfilters>*,html:where([data-dsk]) .kchips>*{scroll-snap-align:start}
