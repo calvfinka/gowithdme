@@ -10,19 +10,11 @@ if(mm){
   var btns=[].slice.call(d.querySelectorAll(".js-mm")),last=null,anc=null;
   function place(){var b=d.querySelector(".tb-main .mm-ico");if(!b||!b.offsetParent)b=anc||btns[0];if(!b)return;var Z=window.GWM_Z||1;var pn=mm.querySelector(".mm-in"),w=pn?pn.offsetWidth:400,vw=(d.documentElement.clientWidth||window.innerWidth)/Z;mm.style.setProperty("--mml",Math.max(8,Math.min(Math.round(b.getBoundingClientRect().left/Z),Math.round(vw-w-8)))+"px")}
   function top(){var t=d.querySelector(".topbar");return t?Math.max(0,Math.round(t.getBoundingClientRect().bottom/(window.GWM_Z||1)))+8:64}
-  /* urut A-Z di tiap grup + jumlah item terlihat di judul grup (gaya kartu Naver) */
+  /* urutan menu mengikuti susunan di markup; angka jumlah item di judul grup tidak dipakai lagi (hapus sisa badge lama bila ada) */
   function tidy(){
-    var col;try{col=new Intl.Collator(d.documentElement.lang||undefined,{sensitivity:"base",numeric:true})}catch(e){col=null}
-    function key(el){return(el.textContent||"").replace(/\s+/g," ").replace(/\d+\s*$/,"").trim()}
     [].forEach.call(mm.querySelectorAll(".mm-g section"),function(sec){
       var h=sec.querySelector("h3");if(!h)return;
-      var it=[].filter.call(sec.children,function(c){return c!==h&&(c.tagName==="A"||c.tagName==="BUTTON")});
-      it.map(function(el,i){return{el:el,i:i,k:key(el)}})
-        .sort(function(a,b){var r=col?col.compare(a.k,b.k):(a.k<b.k?-1:a.k>b.k?1:0);return r||a.i-b.i})
-        .forEach(function(o){sec.appendChild(o.el)});
-      var n=it.filter(function(el){return el.offsetParent!==null}).length,b=h.querySelector(".mm-n");
-      if(!b){b=d.createElement("b");b.className="mm-n";h.appendChild(b)}
-      b.textContent=n;b.hidden=!n
+      var b=h.querySelector(".mm-n");if(b)b.remove()
     })}
   function setOpen(v){
     if(v===!mm.hidden)return;
