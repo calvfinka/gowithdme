@@ -413,3 +413,5 @@ body.bl{overflow-x:clip;padding-bottom:calc(84px + env(safe-area-inset-bottom,0p
 @media(prefers-reduced-motion:reduce){.bl-panel{transition:none;transform:none}}
 
 .bl-top{background:color-mix(in srgb,var(--bg) 97%,transparent)}
+
+.bl-box[hidden],.bl-tp{display:none!important}
