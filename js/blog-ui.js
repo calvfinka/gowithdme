@@ -95,16 +95,18 @@ function initList(){
     x.addEventListener("click",function(){q.value="";run();q.focus()});
     var pre=new URLSearchParams(location.search).get("q");if(pre){q.value=pre;run()}
     document.addEventListener("keydown",function(e){if(e.key==="/"&&!/input|textarea/i.test((e.target.tagName||""))){e.preventDefault();q.focus()}})}
-  /* terpopuler: sidebar + strip HP */
+  /* populer: skor = dibaca + 3 x suka + 2 x komentar; tampil mulai dari 1 tulisan yang punya skor. Sidebar (#blPopular) dan strip di HP (#blStrip). */
   Promise.all([loadStats(),loadIdx()]).then(function(r){
     var S=r[0],L=r[1];paint(S);if(!S||!L.length)return;
-    var top=L.filter(function(p){return S[p.k]&&S[p.k].v>=MINV}).sort(function(a,b){return S[b.k].v-S[a.k].v||b.d.localeCompare(a.d)}).slice(0,5);
-    if(top.length<3)return;
-    var ol=$("#blPop .bl-rank");
-    if(ol){popHead(ol);ol.innerHTML=top.map(function(p){return'<li data-k="'+esc(p.k)+'"><a href="'+ROOT+'blog/'+p.k+'"><b>'+esc(p.t)+'</b><span>'+esc(CN[p.c]||p.c)+' · <i><b>'+nf(S[p.k].v)+'</b> dibaca</i></span></a></li>'}).join("")}
+    var sc=function(k){var s=S[k];return s?s.v+3*s.l+2*s.c:0};
+    var pop=L.filter(function(p){return sc(p.k)>0}).sort(function(a,b){return sc(b.k)-sc(a.k)||b.d.localeCompare(a.d)}).slice(0,5);
+    if(!pop.length)return;
+    var note=function(p){var s=S[p.k];return s.v>=MINV?' · <i><b>'+nf(s.v)+'</b> dibaca</i>':(s.l?' · <i><b>'+nf(s.l)+'</b> suka</i>':"")};
+    var box=$("#blPopular"),ol=box&&$(".bl-rank",box);
+    if(ol){ol.innerHTML=pop.map(function(p){return'<li data-k="'+esc(p.k)+'"><a href="'+ROOT+'blog/'+p.k+'"><b>'+esc(p.t)+'</b><span>'+esc(CN[p.c]||p.c)+note(p)+'</span></a></li>'}).join("");box.hidden=false}
     var strip=$("#blStrip");
-    if(strip&&!/\/blog\/[a-z-]+\/$/.test(location.pathname)){strip.hidden=false;
-      strip.innerHTML=top.map(function(p){return'<a class="bl-c-'+esc(p.c)+'" href="'+ROOT+'blog/'+p.k+'"><small>'+ic("flame")+'Populer</small><b>'+esc(p.t)+'</b><span>'+nf(S[p.k].v)+' dibaca · '+p.m+' mnt</span></a>'}).join("")}})}
+    if(strip&&pop.length>=2&&!/\/blog\/[a-z-]+\/$/.test(location.pathname)){strip.hidden=false;
+      strip.innerHTML=pop.map(function(p){return'<a class="bl-c-'+esc(p.c)+'" href="'+ROOT+'blog/'+p.k+'"><small>'+ic("flame")+'Populer</small><b>'+esc(p.t)+'</b><span>'+esc(CN[p.c]||p.c)+' · '+p.m+' mnt</span></a>'}).join("")}})}
 /* ---- artikel ---- */
 function initArticle(root){
   root=root||$("#blArt");if(!root)return;
