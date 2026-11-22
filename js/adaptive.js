@@ -1,4 +1,4 @@
-/* GWM — tampilan adaptif.
+/* GoWithDME — tampilan adaptif.
    1) Membaca kemampuan perangkat (RAM, inti CPU, hemat data, GPU software, gerakan dikurangi) lalu memasang
       <html data-tier="low|mid|high" data-dev="phone|tablet|desktop" data-motion="full|reduce">.
    2) Setelah halaman tampil, mengukur frame-rate singkat; kalau patah-patah, tingkat diturunkan satu level (satu sesi).

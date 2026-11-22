@@ -238,7 +238,7 @@ function ics(e){var f=function(s){return s.replace(/-/g,"")},n=new Date(endOf(e)
   var t=function(s){return String(s||"").replace(/[\\;,]/g,"\\$&").replace(/\r?\n/g,"\\n")};
   var fold=function(l){var o=[];while(l.length>70){o.push(l.slice(0,70));l=" "+l.slice(70)}o.push(l);return o.join("\r\n")};
   var loc=[e.venue,e.city].filter(Boolean).join(", "),tk=safeUrl(e.ticket_url);
-  var b=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//GWM//"+window.IB_LANG.toUpperCase(),"BEGIN:VEVENT","UID:"+e.id+"@gowithdme.com","DTSTAMP:"+new Date().toISOString().replace(/[-:]|\.\d+/g,""),"DTSTART;VALUE=DATE:"+f(e.event_date),"DTEND;VALUE=DATE:"+n.toISOString().slice(0,10).replace(/-/g,""),"SUMMARY:"+t(ttl(e))]
+  var b=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//GoWithDME//"+window.IB_LANG.toUpperCase(),"BEGIN:VEVENT","UID:"+e.id+"@gowithdme.com","DTSTAMP:"+new Date().toISOString().replace(/[-:]|\.\d+/g,""),"DTSTART;VALUE=DATE:"+f(e.event_date),"DTEND;VALUE=DATE:"+n.toISOString().slice(0,10).replace(/-/g,""),"SUMMARY:"+t(ttl(e))]
    .concat(loc?["LOCATION:"+t(loc)]:[],["DESCRIPTION:"+t(dsc(e)||"")],tk?["URL:"+tk]:[],["END:VEVENT","END:VCALENDAR"]).map(fold).join("\r\n");
   var u=URL.createObjectURL(new Blob([b],{type:"text/calendar;charset=utf-8"})),a=document.createElement("a");
   a.href=u;a.download=(ttl(e)||"event").replace(/\W+/g,"-").replace(/^-+|-+$/g,"")+".ics";if(a.download===".ics")a.download="event.ics";

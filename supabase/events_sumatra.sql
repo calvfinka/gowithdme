@@ -1,7 +1,7 @@
--- GWM: event Sumatra yang belum ada di situs (data per 17 Nov 2026). Jalankan di Supabase > SQL Editor.
+-- GoWithDME: event Sumatra yang belum ada di situs (data per 17 Nov 2026). Jalankan di Supabase > SQL Editor.
 -- Prasyarat: schema.sql, schema_tahap2.sql, schema_admin.sql, schema_kota.sql sudah dijalankan.
 -- Aman dijalankan ulang. Sumber: infokonser.id (tautan di kolom ticket_url) dan akun @infokonsermedan_. Cek ulang jadwal/harga di penjual tiket.
--- Harga NULL = belum diumumkan (tampil "Info menyusul"). Poster NULL = tampil gradien GWM; unggah poster resmi lewat admin.
+-- Harga NULL = belum diumumkan (tampil "Info menyusul"). Poster NULL = tampil gradien GoWithDME; unggah poster resmi lewat admin.
 -- Kota baru (Jambi, Karimun, Dharmasraya) juga sudah ditambahkan di js/regions.js.
 
 insert into provinces(name) values ('Jambi') on conflict (name) do nothing;

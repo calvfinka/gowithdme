@@ -1,4 +1,4 @@
-/* GWM Super-Portal Pro: 38-Province Location Explorer (+Radius & Basecamps),
+/* GoWithDME Super-Portal Pro: 38-Province Location Explorer (+Radius & Basecamps),
    Multi-Stream Portal Tabs (Events, Hiking, Blog, Deals & Partners),
    Monetization Calculator & Ad Booking Hub, Regional Pulse & Native Spotlight. */
 (function(){
@@ -514,7 +514,7 @@
       }
       var synced=!err&&r&&r.data&&r.data.code;
       var code=synced?String(r.data.code):MC.buildPromoOrderCode(city,selTier);
-      var msgTxt="Halo GWM! Order Promosi "+code+(synced?"":" (belum tercatat di server)")+"\nBrand/EO: "+f.org.trim()+"\nEvent: "+f.title.trim()+"\nPaket: "+(PROMO_PKG_ID[selTier]||selTier)+" ("+weeks+" minggu · "+city+")\nEstimasi Investasi: "+MC.formatRupiah(est.totalCostIdr)+"\nWA: "+v.wa+(f.note.trim()?"\nCatatan: "+f.note.trim():"");
+      var msgTxt="Halo GoWithDME! Order Promosi "+code+(synced?"":" (belum tercatat di server)")+"\nBrand/EO: "+f.org.trim()+"\nEvent: "+f.title.trim()+"\nPaket: "+(PROMO_PKG_ID[selTier]||selTier)+" ("+weeks+" minggu · "+city+")\nEstimasi Investasi: "+MC.formatRupiah(est.totalCostIdr)+"\nWA: "+v.wa+(f.note.trim()?"\nCatatan: "+f.note.trim():"");
       try{
         var prev=JSON.parse(localStorage.getItem("gwm_promo_orders")||"[]");
         prev.unshift({code:code,org:f.org.trim(),title:f.title.trim(),wa:v.wa,note:f.note.trim(),tier:selTier,city:city,weeks:weeks,totalIdr:est.totalCostIdr,synced:!!synced,createdAt:new Date().toISOString()});

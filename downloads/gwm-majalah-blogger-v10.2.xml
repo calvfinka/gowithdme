@@ -17,9 +17,9 @@
   <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap' rel='stylesheet'/>
   <b:skin><![CDATA[
 /*
-  GWM Majalah v10.2 - Template Blogger untuk blog berita dan majalah
-  (c) GWM (gowithdme.com), dibuat oleh Jurkon Studio. Gratis dipakai untuk situs pribadi dan komersial.
-  Kredit "Template oleh GWM" di footer harus tetap ada. Dilarang dijual ulang.
+  GoWithDME Majalah v10.2 - Template Blogger untuk blog berita dan majalah
+  (c) GoWithDME (gowithdme.com), dibuat oleh Jurkon Studio. Gratis dipakai untuk situs pribadi dan komersial.
+  Kredit "Template oleh GoWithDME" di footer harus tetap ada. Dilarang dijual ulang.
   Gaya mengikuti halaman blog gowithdme.com (mode terang).
 */
 :root{
@@ -467,7 +467,7 @@ html.bl-at-on body{padding-bottom:64vh}
 <b:section class='cfg' id='cfg' name='1. Pengaturan (jangan dihapus)' maxwidgets='1' showaddelement='false'>
   <b:widget id='HTML2' locked='false' title='Pengaturan Tampilan' type='HTML' version='2' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='content'># PENGATURAN TAMPILAN - GWM Majalah
+      <b:widget-setting name='content'># PENGATURAN TAMPILAN - GoWithDME Majalah
 # Ubah kata setelah titik dua, lalu klik Simpan dan muat ulang blog.
 # Baris berawalan tanda pagar (#) hanya catatan. Nilai yang salah ketik otomatis memakai bawaan.
 # Susunan blok lain (urutan gadget sidebar, menu topik, menu info, logo, gambar hero,
@@ -1043,8 +1043,8 @@ warna-aksen:
         <span class='bl-mm-lang' id='blLangW'><span>Bahasa:</span><button aria-label='Ganti bahasa' id='blLang' type='button'>ID</button></span>
       </div>
       <p class='bl-mm-cr'>
-        <span>&#169; <span class='gwm-yr'></span> <data:blog.title/> &#183; <a href='https://gowithdme.com/' rel='sponsored noopener' target='_blank'>Template oleh GWM</a></span>
-        <a aria-hidden='true' class='bl-mm-wm' href='https://gowithdme.com/' rel='sponsored noopener' tabindex='-1' target='_blank'>GWM</a>
+        <span>&#169; <span class='gwm-yr'></span> <data:blog.title/> &#183; <a href='https://gowithdme.com/' rel='sponsored noopener' target='_blank'>Template oleh GoWithDME</a></span>
+        <a aria-hidden='true' class='bl-mm-wm' href='https://gowithdme.com/' rel='sponsored noopener' tabindex='-1' target='_blank'>GoWithDME</a>
       </p>
     </div>
   </div>
@@ -1055,7 +1055,7 @@ warna-aksen:
   <b:section class='footer-extra' id='footer-extra' name='13. Blok tambahan footer' showaddelement='true'>
   </b:section>
   <span>&#169; <span class='gwm-yr' id='gwm-year'></span> <data:blog.title/>. <span>Hak cipta dilindungi.</span></span>
-  <span class='credit'><a href='https://gowithdme.com/' rel='sponsored noopener' target='_blank'>Template oleh GWM</a></span>
+  <span class='credit'><a href='https://gowithdme.com/' rel='sponsored noopener' target='_blank'>Template oleh GoWithDME</a></span>
 </footer>
 
 <script>
@@ -1328,7 +1328,7 @@ warna-aksen:
       'Lebih baru':'Newer','Lebih lama':'Older','Bagikan':'Share','Salin':'Copy','Kembali ke atas':'Back to top','Bagikan tulisan':'Share post',
       'Daftar isi':'Contents','Baca juga':'Read more','Komentar':'Comments','Tulis atau baca komentar':'Write or read comments',
       'Kecilkan teks':'Decrease text size','Besarkan teks':'Increase text size','Ukuran teks':'Text size','Topik terkait':'Related topics',
-      'Breadcrumb':'Breadcrumb','Samping':'Sidebar','Hak cipta dilindungi.':'All rights reserved.','Template oleh GWM':'Template by GWM',
+      'Breadcrumb':'Breadcrumb','Samping':'Sidebar','Hak cipta dilindungi.':'All rights reserved.','Template oleh GoWithDME':'Template by GoWithDME',
       'Ganti tema terang/gelap':'Switch light/dark theme','Bahasa:':'Language:','Ganti bahasa':'Switch language'};
     var SC='.bl-top,.bl-cats,.bl-mm,.bl-hero,.bl-tp,.bl-bar,.bl-pg,.side,.bl-dock,.bl-foot,.bl-bc,.bl-by,.bl-share,.bl-toc-m,.bl-rel,.bl-cm';
     var SKIP='.bl-rank,.bl-topics-l,.bl-toc ol,.bl-toc-m ol,.widget-content,.bl-tile b,.bl-mm-g a[data-lb]';

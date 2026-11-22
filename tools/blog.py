@@ -13,7 +13,7 @@ CATS=[("berita","Berita","Kabar dan sorotan terkini dari berbagai bidang."),
       ("panduan-konser","Panduan Konser","Panduan dan tips menonton konser dan festival."),
       ("tips-gunung","Tips Gunung","Persiapan, keselamatan, dan tips naik gunung."),
       ("review","Review","Ulasan konser, festival, produk, tempat, dan pengalaman."),
-      ("komunitas","Komunitas","Cerita dan info dari komunitas GWM.")]
+      ("komunitas","Komunitas","Cerita dan info dari komunitas GoWithDME.")]
 CATNAME={c[0]:c[1] for c in CATS}
 # Kelompok niche: dipakai "Jelajahi topik" dan sidebar. Kategori yang belum terdaftar di sini tetap tampil di kelompok "Lainnya".
 GROUPS=[("Kabar & Opini",["berita","opini"]),("Hiburan & Gaya Hidup",["hiburan","review","gaya-hidup"]),
@@ -177,10 +177,10 @@ def top(p,cur,counts,bar=True):
     chip=lambda href,name,icon,n,on: f'<a href="{href}"'+(' aria-current="page"' if on else '')+f'>{ic(icon)}<span>{esc(name)}</span>'+(f'<i>{n}</i>' if n else '')+'</a>'
     chips=chip(f"{p}blog/","Semua","grid",tot,cur=="")+"".join(chip(f"{p}blog/{k}/",n,k,counts.get(k,0),cur==k) for k,n,_ in CATS if counts.get(k,0) or cur==k)
     navbar=(f'<div class="bl-panel" id="blPanel" aria-hidden="true"><div class="wrap"><form class="bl-qs" role="search" action="#" onsubmit="return false"><label class="sr" for="blQs">Cari tulisan</label>{ic("search")}<input id="blQs" type="search" placeholder="Cari tulisan…" autocomplete="off" enterkeyhint="search" tabindex="-1"></form><nav class="bl-cats" aria-label="Kategori blog">{chips}</nav></div></div>') if bar else ""
-    return f"""<body class="bl">{SPRITE}<div class="bl-clockbar" role="group" aria-label="Tanggal dan jam sekarang"><div class="wrap"><span class="bl-tick" aria-hidden="true"></span><time id="blClock" datetime=""><span data-d></span><span class="bl-ck-t"><span data-t></span> <small data-z></small></span></time></div></div><header class="bl-top"><div class="wrap"><a class="logo" href="{p}id/"><img src="{p}assets/favicon.svg" alt="" width="24" height="24">GWM</a><span class="sp"></span><a class="bl-l" href="{p}blog/">Blog</a><a class="bl-l" href="{p}id/event">Event</a><a class="bl-l" href="{p}id/gunung">Gunung</a><a class="bl-l" href="{p}id/komunitas">Komunitas</a><button type="button" class="bl-ib" id="theme" aria-label="Ganti tema terang/gelap">{ic("moon","i i-moon")}{ic("sun","i i-sun")}</button></div>{navbar}</header>"""
+    return f"""<body class="bl">{SPRITE}<div class="bl-clockbar" role="group" aria-label="Tanggal dan jam sekarang"><div class="wrap"><span class="bl-tick" aria-hidden="true"></span><time id="blClock" datetime=""><span data-d></span><span class="bl-ck-t"><span data-t></span> <small data-z></small></span></time></div></div><header class="bl-top"><div class="wrap"><a class="logo" href="{p}id/"><img src="{p}assets/favicon.svg" alt="" width="24" height="24">GoWithDME</a><span class="sp"></span><a class="bl-l" href="{p}blog/">Blog</a><a class="bl-l" href="{p}id/event">Event</a><a class="bl-l" href="{p}id/gunung">Gunung</a><a class="bl-l" href="{p}id/komunitas">Komunitas</a><button type="button" class="bl-ib" id="theme" aria-label="Ganti tema terang/gelap">{ic("moon","i i-moon")}{ic("sun","i i-sun")}</button></div>{navbar}</header>"""
 def foot(p):
     v=f"?v={VER}" if VER else ""
-    return (f'<footer class="bl-foot wrap"><span>GWM oleh Jurkon Studio</span><a href="{p}id/bantuan">Bantuan</a><a href="{p}id/template">Template</a><a href="{p}id/terms">Syarat</a><a href="{p}id/privacy">Privasi</a></footer>'
+    return (f'<footer class="bl-foot wrap"><span>GoWithDME oleh Jurkon Studio</span><a href="{p}id/bantuan">Bantuan</a><a href="{p}id/template">Template</a><a href="{p}id/terms">Syarat</a><a href="{p}id/privacy">Privasi</a></footer>'
             f'<div class="bl-toast" id="blToast" role="status" aria-live="polite"></div><script src="{p}js/config.js"></script><script src="{p}js/word-filter.js"></script><script src="{p}js/clock-core.js{v}"></script><script src="{p}js/blog-clock.js{v}" defer></script><script src="{p}js/panel-core.js{v}"></script><script src="{p}js/blog-panel.js{v}" defer></script><script src="{p}js/blog-ui.js{v}"></script><script src="{p}js/blog-live.js{v}"></script></body></html>')
 def card(p,x):
     k=f'{x["category"]}/{x["slug"]}'; url=f'{p}blog/{k}'; c=x["category"]
@@ -197,7 +197,7 @@ def side_in(p,posts,counts,cur,pop=True):
     return ((f'<section class="bl-box" id="blPopular" hidden><h3>{ic("flame")}<span>Populer</span></h3><ol class="bl-rank"></ol></section>' if pop else "")
             +(f'<section class="bl-box" id="blPop"><h3>{ic("flame")}<span>Tulisan terbaru</span></h3><ol class="bl-rank">{popl}</ol></section>' if popl and pop else "")
             +(f'<section class="bl-box bl-topics-box"><h3>{ic("grid")}Topik</h3><ul class="bl-topics-l">{topics}</ul></section>' if topics else "")
-            +f'<section class="bl-box bl-promo"><h3>Cari tontonan atau pendakian?</h3><p>Lihat jadwal konser, festival, dan open trip terbaru di GWM.</p><a class="btn" href="{p}id/event">Lihat event</a> <a class="btn line" href="{p}id/gunung">Gunung</a></section>')
+            +f'<section class="bl-box bl-promo"><h3>Cari tontonan atau pendakian?</h3><p>Lihat jadwal konser, festival, dan open trip terbaru di GoWithDME.</p><a class="btn" href="{p}id/event">Lihat event</a> <a class="btn line" href="{p}id/gunung">Gunung</a></section>')
 def side(p,posts,counts,cur): return '<aside class="bl-side" aria-label="Samping">'+side_in(p,posts,counts,cur)+'</aside>'
 def listing(p,cur,posts,BASE,allp,counts):
     name=CATNAME.get(cur,"Blog"); desc=next((d for k,n,d in CATS if k==cur),"Cerita, kabar, dan tips seputar hiburan, wisata, petualangan, gaya hidup, teknologi, dan banyak lagi.")
@@ -206,12 +206,12 @@ def listing(p,cur,posts,BASE,allp,counts):
     feed="".join(card(p,x) for x in shown) or '<p class="bl-empty">Belum ada tulisan di sini.</p>'
     ntopic=sum(1 for k,_,_ in CATS if counts.get(k))
     topics=""  # "Jelajahi topik" dihapus: daftar Topik di samping sudah cukup
-    ld=ldj({"@context":"https://schema.org","@type":"CollectionPage","name":f"{name} – Blog GWM","url":canon,"inLanguage":"id"})
+    ld=ldj({"@context":"https://schema.org","@type":"CollectionPage","name":f"{name} – Blog GoWithDME","url":canon,"inLanguage":"id"})
     hero=(f'<header class="bl-hero bl-c-{cur or "all"}"><div><h1>{esc(name)}</h1><p class="bl-sub">{esc(desc)}</p>'
           f'<p class="bl-kpi"><span><b>{len(posts)}</b> tulisan</span>'+(f'<span><b>{ntopic}</b> topik</span>' if cur=="" else "")+'<span class="bl-sv" hidden><b data-tv></b> kali dibaca</span></p></div>'
           f'<form class="bl-q" role="search" id="blQ" action="#" onsubmit="return false"><label class="sr" for="blQi">Cari tulisan</label>{ic("search")}<input id="blQi" type="search" placeholder="Cari tulisan, topik, atau kata kunci…" autocomplete="off" enterkeyhint="search"><button type="button" class="bl-ib" id="blQx" hidden aria-label="Hapus pencarian">{ic("x")}</button></form></header>')
     bar=(f'<div class="bl-bar"><h2 class="bl-h2" id="blH">{"Tulisan terbaru" if cur=="" else "Semua tulisan"}</h2><div class="bl-seg" role="group" aria-label="Urutkan"><button type="button" class="on" data-sort="new" aria-pressed="true">Terbaru</button><button type="button" data-sort="pop" aria-pressed="false" hidden>Terpopuler</button></div></div>')
-    return (head(p,f"{name} – Blog GWM",desc,canon,BASE,ld)+top(p,cur,counts)+
+    return (head(p,f"{name} – Blog GoWithDME",desc,canon,BASE,ld)+top(p,cur,counts)+
         f'<main class="wrap bl-main">{hero}<div class="bl-pop-strip" id="blStrip" hidden></div>{topics}'
         f'<div class="bl-grid"><div class="bl-col">{bar}<div class="bl-list bl-feed" id="blFeed">{feed}</div><div class="bl-list" id="blRes" hidden></div><p class="bl-empty" id="blNone" hidden>Tidak ada tulisan yang cocok. Coba kata kunci lain.</p>'
         +(f'<p class="bl-note">Menampilkan {len(shown)} tulisan terbaru. Pilih topik di atas untuk melihat semuanya.</p>' if cur=="" and len(posts)>len(shown) else "")+
@@ -226,8 +226,8 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
     ld=ldj({"@context":"https://schema.org","@graph":[
       {"@type":"BlogPosting","headline":x["title"],"description":ex,"inLanguage":"id","articleSection":CATNAME[k],"mainEntityOfPage":canon,"url":canon,"timeRequired":f"PT{m}M","wordCount":len(plain(x["_html"]).split()),
        "datePublished":x.get("published_at"),**({"keywords":", ".join(x["_kw"])} if x.get("_kw") else {}),"dateModified":x.get("updated_at") or x.get("published_at"),
-       "author":{"@type":"Organization","name":"GWM (GoWithDme)","url":f"{BASE}/id/"},
-       "publisher":{"@type":"Organization","name":"GWM (GoWithDme)","logo":{"@type":"ImageObject","url":f"{BASE}/assets/icon-512.png"}}},
+       "author":{"@type":"Organization","name":"GoWithDME","url":f"{BASE}/id/"},
+       "publisher":{"@type":"Organization","name":"GoWithDME","logo":{"@type":"ImageObject","url":f"{BASE}/assets/icon-512.png"}}},
       {"@type":"BreadcrumbList","itemListElement":[
         {"@type":"ListItem","position":1,"name":"Blog","item":f"{BASE}/blog/"},
         {"@type":"ListItem","position":2,"name":CATNAME[k],"item":f"{BASE}/blog/{k}/"},
@@ -240,14 +240,14 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
         return f'<a class="bl-pn-a {cls}" href="{p}blog/{o["category"]}/{o["slug"]}" rel="{"prev" if left else "next"}"><small>{arrow if left else ""}{lab}{arrow if not left else ""}</small><b>{esc(o["title"])}</b><span>{esc(CATNAME[o["category"]])}</span></a>'
     kwm=(f'<meta name="keywords" content="{esc(", ".join(x["_kw"]))}">'+"".join(f'<meta property="article:tag" content="{esc(t)}">' for t in x["_kw"])) if x.get("_kw") else ""
     tags=('<p class="bl-tags" aria-label="Topik terkait">'+"".join(f'<a href="{p}blog/?q={_u(t)}" rel="nofollow">{esc(t)}</a>' for t in x["_kw"])+'</p>') if x.get("_kw") else ""
-    return (head(p,f"{x['title']} – Blog GWM",ex,canon,BASE,kwm+ld,"article")+top(p,k,counts,False)+
+    return (head(p,f"{x['title']} – Blog GoWithDME",ex,canon,BASE,kwm+ld,"article")+top(p,k,counts,False)+
       f'<div class="bl-prog" id="blProg" aria-hidden="true"><i></i></div>'
       f'<main class="wrap bl-main bl-art-wrap"><div class="bl-grid bl-grid-a">'
       f'<article class="bl-art bl-c-{k}" id="blArt" data-k="{key}" data-title="{esc(x["title"])}" data-url="{esc(canon)}">'
       f'<nav class="bl-bc" aria-label="Breadcrumb"><a href="{p}blog/">Blog</a><span>›</span><a href="{p}blog/{k}/">{esc(CATNAME[k])}</a></nav>'
       f'<a class="bl-badge" href="{p}blog/{k}/">{ic(k)}{esc(CATNAME[k])}</a>'
       f'<h1>{esc(x["title"])}</h1>'
-      f'<div class="bl-by"><span class="bl-av" aria-hidden="true">G</span><div><b>Redaksi GWM</b><span><time datetime="{esc((x.get("published_at") or "")[:10])}">{fdate(x.get("published_at"))}</time> · {m} menit baca</span></div></div>'
+      f'<div class="bl-by"><span class="bl-av" aria-hidden="true">G</span><div><b>Redaksi GoWithDME</b><span><time datetime="{esc((x.get("published_at") or "")[:10])}">{fdate(x.get("published_at"))}</time> · {m} menit baca</span></div></div>'
       f'<p class="bl-stats"><span class="bl-s bl-sv" hidden>{ic("eye")}<b data-v></b> dibaca</span><span class="bl-s bl-sc" hidden>{ic("chat")}<b data-c></b> komentar</span><span class="bl-s bl-sl" hidden>{ic("heart")}<b data-l></b> suka</span></p>'
       f'<div class="bl-share" role="group" aria-label="Bagikan tulisan"><span class="bl-sl-t">{ic("share")}Bagikan</span>{shr}<button type="button" class="bl-sb bl-sb-cp" data-copy>{ic("link")}Salin tautan</button><button type="button" class="bl-sb bl-sb-nat" data-native hidden>Lainnya…</button>'
       f'<span class="sp"></span><span class="bl-fs" role="group" aria-label="Ukuran teks">{ic("type")}<button type="button" data-fs="-1" aria-label="Kecilkan teks">A−</button><button type="button" data-fs="1" aria-label="Besarkan teks">A+</button></span></div>'

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id" data-gwm-offline><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex"><meta name="theme-color" content="#0E5A46">
-<title>Offline — GWM</title>
+<title>Offline — GoWithDME</title>
 <style>
 :root{color-scheme:light dark;--bg:#fff;--tx:#14201b;--mu:#5b6a63;--ln:#e3e9e6;--br:#0E5A46;--bt:#fff}
 @media(prefers-color-scheme:dark){:root{--bg:#0e1512;--tx:#e8efeb;--mu:#93a39b;--ln:#25322c;--br:#3fb08a;--bt:#06130e}}
@@ -27,7 +27,7 @@ if(pm)l=pm[1];else{try{l=localStorage.getItem("ib_lang")}catch(e){}}
 if(l!=="id"&&l!=="en")l=/^id/i.test(navigator.language||"")?"id":"en";
 var T={id:{t:"Kamu sedang offline",d:"Halaman ini belum tersimpan di perangkatmu. Sambungkan internet lalu coba lagi.",r:"Coba lagi",h:"Ke beranda",s:"Pernah kamu buka",home:"Beranda"},
 en:{t:"You're offline",d:"This page isn't saved on your device yet. Connect to the internet and try again.",r:"Try again",h:"Go home",s:"Opened before",home:"Home"}}[l];
-document.documentElement.lang=l;document.title=T.t+" — GWM";
+document.documentElement.lang=l;document.title=T.t+" — GoWithDME";
 function $(i){return document.getElementById(i)}
 $("t").textContent=T.t;$("d").textContent=T.d;$("r").textContent=T.r;$("h").textContent=T.h;$("h").href=l+"/";$("sh").textContent=T.s;
 $("r").onclick=function(){location.reload()};

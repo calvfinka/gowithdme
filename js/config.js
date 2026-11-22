@@ -12,7 +12,7 @@ window.IB_CONFIG = {
   OWNER_NAME: "Jurkon Studio",
   OWNER_LEGAL: "Jurkon Studio",
   COPYRIGHT_YEAR: "2026",
-  SITE_NAME: "GWM (Go With Me)",
+  SITE_NAME: "GoWithDME",
   FEATURED_ENABLED: true,
   FEATURED_LABEL_ID: "Disorot",
   FEATURED_LABEL_EN: "Featured",

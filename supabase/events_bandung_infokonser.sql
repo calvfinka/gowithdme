@@ -1,11 +1,11 @@
--- GWM: 12 link infokonser.id (13 baris event; Ruang Riang = 2 kota). Jalankan di Supabase > SQL Editor.
+-- GoWithDME: 12 link infokonser.id (13 baris event; Ruang Riang = 2 kota). Jalankan di Supabase > SQL Editor.
 -- Prasyarat: schema.sql, schema_tahap2.sql, schema_kota.sql, schema_admin.sql sudah dijalankan.
 -- v2: SEMUA kolom form admin terisi (tanggal selesai, harga, genre, line-up, poster, link, sumber IG).
 -- Aman dijalankan ulang: bagian INSERT melewati slug yang sudah ada, bagian UPDATE di bawahnya
 -- menimpa baris yang sudah terlanjur masuk dari versi pertama.
 -- Status = 'draft' supaya bisa dicek dulu di admin.
 -- Data per 16 Nov 2026, sumber: infokonser.id (+ KiosTix / whatsnewindonesia untuk BOOMFEST & KICKFEST).
--- BOOMFEST: poster = banner GWM -> salin posters/boomfest-bandung-2026.jpg ke assets/posters/ di repo.
+-- BOOMFEST: poster = banner GoWithDME -> salin posters/boomfest-bandung-2026.jpg ke assets/posters/ di repo.
 
 insert into events(title,slug,category,city_id,venue,event_date,end_date,price_label,genre,lineup,description,poster_url,ticket_url,source_ig,status)
 select v.title,v.slug,v.category,c.id,v.venue,v.d::date,v.e::date,v.price,v.genre,v.lineup,v.descr,v.poster,v.ticket,v.ig,'draft'

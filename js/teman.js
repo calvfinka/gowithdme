@@ -199,7 +199,7 @@ function bind(){
     if(x==="login")return needLogin();
     var again=function(){reload();if(window.IB_AjakanBadge)window.IB_AjakanBadge()};
     if(x==="share"){var ij=st.rows.filter(function(z){return z.id===i})[0];
-      if(ij&&window.IB_Share){var u=new URL(location.href);u.search="";u.searchParams.set("i",i);IB_Share.open({title:ij.title,text:tr("aj_share_text",{t:ij.title,e:ij.event_title||nlabel(ij.niche)||"GWM"}),url:u.toString()})}return}
+      if(ij&&window.IB_Share){var u=new URL(location.href);u.search="";u.searchParams.set("i",i);IB_Share.open({title:ij.title,text:tr("aj_share_text",{t:ij.title,e:ij.event_title||nlabel(ij.niche)||"GoWithDME"}),url:u.toString()})}return}
     if(x==="join")return gate().then(function(go){if(!go)return;return ask({title:tr("aj_msg_h"),input:{ph:tr("aj_msg_ph"),max:200},ok:tr("aj_send")}).then(function(v){if(v===null)return;
       if(window.IB_WordFilter&&v){var wf=IB_WordFilter.enforce(v,{userId:st.me&&st.me.id,userLabel:(st.me&&(st.me.user_metadata&&st.me.user_metadata.full_name||st.me.email))||"Anggota",context:"teman_join"});if(!wf.ok)return toast(wf.message)}
       run(sb.rpc("request_join",{p_inv:i,p_msg:v}),tr("aj_sent"),again)})});

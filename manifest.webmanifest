@@ -1,6 +1,6 @@
 {
-  "name": "GWM — Go With Me",
-  "short_name": "GWM",
+  "name": "GoWithDME — Go With Me",
+  "short_name": "GoWithDME",
   "id": "gwm",
   "description": "Info konser, festival & naik gunung, plus teman jalan di kotamu.",
   "start_url": "./",

@@ -29,6 +29,6 @@ class H(http.server.SimpleHTTPRequestHandler):
 
 socketserver.TCPServer.allow_reuse_address = True
 with socketserver.ThreadingTCPServer(("0.0.0.0", PORT), functools.partial(H, directory=ROOT)) as s:
-    print(f"GWM lokal: http://localhost:{PORT}/id/  (Ctrl+C untuk berhenti)")
+    print(f"GoWithDME lokal: http://localhost:{PORT}/id/  (Ctrl+C untuk berhenti)")
     try: s.serve_forever()
     except KeyboardInterrupt: pass

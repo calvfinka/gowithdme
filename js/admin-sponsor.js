@@ -41,7 +41,7 @@
   }
 
   function card(r){
-    var wa=r.contact_wa?'<a class="btn pri sm" href="https://wa.me/'+esc(r.contact_wa)+'?text='+encodeURIComponent("Halo, saya dari GWM soal pesanan promosi "+(r.order_code||"")+" ("+(r.event_title||"")+").")+'" target="_blank" rel="noopener noreferrer">Chat WhatsApp</a>':"";
+    var wa=r.contact_wa?'<a class="btn pri sm" href="https://wa.me/'+esc(r.contact_wa)+'?text='+encodeURIComponent("Halo, saya dari GoWithDME soal pesanan promosi "+(r.order_code||"")+" ("+(r.event_title||"")+").")+'" target="_blank" rel="noopener noreferrer">Chat WhatsApp</a>':"";
     var mail=r.contact_email?'<a href="mailto:'+esc(r.contact_email)+'">'+esc(r.contact_email)+'</a>':"";
     var chips=[PKG[r.package]||r.package,r.city,r.weeks?r.weeks+" minggu":""].filter(Boolean).map(function(c){return'<span class="sp-chip">'+esc(c)+'</span>'}).join("")+
       (r.est_total_idr!=null?'<span class="sp-chip money">Estimasi '+esc(rp(r.est_total_idr))+'</span>':"");

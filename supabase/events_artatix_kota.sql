@@ -1,4 +1,4 @@
--- GWM: 13 event mendatang dari Artatix (artatix.co.id), tersebar di banyak kota. Jalankan di Supabase > SQL Editor.
+-- GoWithDME: 13 event mendatang dari Artatix (artatix.co.id), tersebar di banyak kota. Jalankan di Supabase > SQL Editor.
 -- Data per 17 Nov 2026 dari halaman event resmi Artatix (judul, tanggal, venue, harga "mulai dari", poster, penyelenggara).
 -- Prasyarat: schema.sql, schema_tahap2.sql, schema_admin.sql, schema_kota.sql sudah dijalankan.
 -- Aman dijalankan ulang: yang sudah ada diperbarui sesuai file ini. Status = published (bisa ditarik lewat tombol "Tarik" di admin).

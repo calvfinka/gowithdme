@@ -1,4 +1,4 @@
--- GWM: perbarui event Soundrenaline Sana Sini Bandung (line-up lengkap + jadwal Day 1).
+-- GoWithDME: perbarui event Soundrenaline Sana Sini Bandung (line-up lengkap + jadwal Day 1).
 -- Sumber: soundrenaline.id/bandung (dilihat 18 Nov 2026). Jalankan di Supabase > SQL Editor. Aman dijalankan ulang.
 -- Hanya mengubah line-up dan deskripsi; judul, tanggal, poster, tiket, dan status tidak disentuh.
 

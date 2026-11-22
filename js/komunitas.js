@@ -77,7 +77,7 @@ function city(name){
     if(!c0)return home();
     st.city=name;st.cities=A;st.q="";$("kQ").value="";lsSet("gwm_kota",name);
     $("kHome").hidden=true;$("kCity").hidden=false;$("kFab").hidden=false;
-    document.title=tr("k_city_h",{c:name})+" — GWM";
+    document.title=tr("k_city_h",{c:name})+" — GoWithDME";
     $("kTitle").textContent=tr("k_city_h",{c:name});$("kSub").textContent=tr("k_city_p",{c:name});$("kSafe").textContent=tr("k_safety");
     $("kSwitch").innerHTML=A.map(function(c){return'<option value="'+esc(c.city)+'"'+(c.city===name?' selected':'')+'>'+esc(c.city)+'</option>'}).join("");
     $("kEvents").href="event?kota="+encodeURIComponent(name);$("kEvT").textContent=tr("kx_events",{c:name});$("kEvD").textContent=tr("kx_events_d");

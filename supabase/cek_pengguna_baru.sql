@@ -1,4 +1,4 @@
--- GWM: pengecek patch_pengguna_baru.sql. Hanya MEMBACA, aman dijalankan kapan saja di Supabase > SQL Editor.
+-- GoWithDME: pengecek patch_pengguna_baru.sql. Hanya MEMBACA, aman dijalankan kapan saja di Supabase > SQL Editor.
 -- Jalankan tiap blok terpisah (blok A sebelum patch, blok B-D sesudah patch).
 
 -- ============ A. SEBELUM patch: prasyarat dan cadangan ============

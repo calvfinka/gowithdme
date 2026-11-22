@@ -1,4 +1,4 @@
--- GWM: Enamore Intimate Show Bandung (29 Nov 2026, Spill N Bites, Purnawarman).
+-- GoWithDME: Enamore Intimate Show Bandung (29 Nov 2026, Spill N Bites, Purnawarman).
 -- Jalankan di Supabase > SQL Editor. Aman dijalankan ulang (slug sama = data diperbarui, tidak dobel).
 -- Sumber: IG @devastated____page + halaman tiket Snaptix. Link tiket dibersihkan dari parameter pelacak (utm/fbclid).
 

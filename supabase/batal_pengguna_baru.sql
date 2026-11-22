@@ -1,4 +1,4 @@
--- GWM: membatalkan SEBAGIAN patch_pengguna_baru.sql bila ada masalah. Jalankan di Supabase > SQL Editor.
+-- GoWithDME: membatalkan SEBAGIAN patch_pengguna_baru.sql bila ada masalah. Jalankan di Supabase > SQL Editor.
 -- Aman dijalankan ulang. Tidak menghapus data apa pun.
 
 -- 1. Cabut masa percobaan 48 jam (batas harian akun baru). Ini yang paling mungkin mengganggu pengguna.

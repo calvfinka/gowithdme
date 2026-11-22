@@ -1,4 +1,4 @@
-/* Fungsi murni untuk alur daftar akun GWM: validasi kolom, pemetaan galat server -> kunci teks, dan pembacaan tautan konfirmasi email.
+/* Fungsi murni untuk alur daftar akun GoWithDME: validasi kolom, pemetaan galat server -> kunci teks, dan pembacaan tautan konfirmasi email.
    Bisa dijalankan di browser maupun Node (lihat tests/signup-core.test.mjs). */
 (function(root, factory){
   var api = factory();
@@ -8,7 +8,7 @@
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   /* Nama panggilan tampil publik (profil, forum, ajakan). Dua hal ditolak:
-     1) menyerupai pengelola ("admin", "GWM", "moderator", varian leetspeak seperti "4dm1n"), karena bisa dipakai menyamar;
+     1) menyerupai pengelola ("admin", "GoWithDME", "moderator", varian leetspeak seperti "4dm1n"), karena bisa dipakai menyamar;
      2) berisi data pribadi (email, nomor HP, tautan), karena nama ini terbaca semua orang.
      Hasil: "" bila aman, atau kunci teks galat. */
   var LEET = { "0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "7": "t", "@": "a", "$": "s", "!": "i" };

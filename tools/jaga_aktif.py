@@ -54,7 +54,7 @@ if ringkas:
 
 if gagal == len(CEK):
     print("\nSupabase tidak menjawab. Penyebab paling umum: proyek gratis DIJEDA (tidak ada aktivitas 7 hari).\n"
-          "Buka https://supabase.com/dashboard > proyek GWM > tombol 'Restore project'. Data tetap aman.")
+          "Buka https://supabase.com/dashboard > proyek GoWithDME > tombol 'Restore project'. Data tetap aman.")
     sys.exit(1)
 if gagal:
     print("\nSebagian cek gagal. Proyek hidup, tetapi periksa tabel/RLS yang gagal di atas.")

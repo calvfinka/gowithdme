@@ -1,4 +1,4 @@
--- GWM monetisasi & discovery (aman diulang)
+-- GoWithDME monetisasi & discovery (aman diulang)
 alter table events
   add column if not exists is_featured boolean not null default false,
   add column if not exists featured_until date,

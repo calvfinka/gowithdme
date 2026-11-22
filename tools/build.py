@@ -94,8 +94,8 @@ for l in LANGS:
             +f'<link rel="alternate" hreflang="x-default" href="{BASE}/id/{path(p)}">')
         if p=="index":
             ld={"@context":"https://schema.org","@graph":[
-                {"@type":"WebSite","name":"GWM (GoWithDme)","url":f"{BASE}/{l}/","inLanguage":l},
-                {"@type":"Organization","name":"GWM (GoWithDme)","url":f"{BASE}/{l}/","logo":f"{BASE}/assets/icon-512.png","founder":{"@type":"Organization","name":"Jurkon Studio"}}]}
+                {"@type":"WebSite","name":"GoWithDME","url":f"{BASE}/{l}/","inLanguage":l},
+                {"@type":"Organization","name":"GoWithDME","url":f"{BASE}/{l}/","logo":f"{BASE}/assets/icon-512.png","founder":{"@type":"Organization","name":"Jurkon Studio"}}]}
             hl+='<script type="application/ld+json">'+json.dumps(ld,ensure_ascii=False).replace("</","<\\/")+'</script>'
         h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl).replace("{{og_img}}",f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png")
         h=re.sub(r"\{\{(\w+)\}\}",lambda m:S[m.group(1)][IDX[l]],h)
@@ -123,14 +123,14 @@ STUB_CSS=("*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;p
  "@media(prefers-color-scheme:dark){body{background:#0d1110;color:#eef3f1}p{color:#9db0a9}a{border-color:#34d399;color:#34d399}a.pri{background:#34d399;color:#05241a}}")
 for p in PAGES:
     t=path(p)
-    if p in NOINDEX: meta,desc,robots,canon="<title>GWM</title>","",'<meta name="robots" content="noindex,follow">',""
+    if p in NOINDEX: meta,desc,robots,canon="<title>GoWithDME</title>","",'<meta name="robots" content="noindex,follow">',""
     else:
         meta,desc=_head_meta(p)
-        if "<title>" not in meta: meta="<title>GWM</title>"+meta
+        if "<title>" not in meta: meta="<title>GoWithDME</title>"+meta
         robots,canon="",f'<link rel="canonical" href="{BASE}/id/{t}">'  # sinyal ke mesin pencari: yang diindeks adalah halaman /id/, tautan masuk ke akar ikut terhitung
-        if 'property="og:site_name"' not in meta: meta+='<meta property="og:site_name" content="GWM"><meta property="og:type" content="website">'
-    ttl=re.search(r"<title>(.*?)</title>",meta,re.S); ttl=(ttl.group(1) if ttl else "GWM")
-    body=(f'<main><img src="assets/favicon.svg" width="56" height="56" alt="GWM"><h1>{ttl}</h1>'+(f"<p>{desc}</p>" if desc else "")+
+        if 'property="og:site_name"' not in meta: meta+='<meta property="og:site_name" content="GoWithDME"><meta property="og:type" content="website">'
+    ttl=re.search(r"<title>(.*?)</title>",meta,re.S); ttl=(ttl.group(1) if ttl else "GoWithDME")
+    body=(f'<main><img src="assets/favicon.svg" width="56" height="56" alt="GoWithDME"><h1>{ttl}</h1>'+(f"<p>{desc}</p>" if desc else "")+
           f'<nav><a class="pri" href="id/{t}">Bahasa Indonesia</a><a href="en/{t}">English</a></nav></main>')
     h=f'''<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0E5A46">
 {meta}{robots}{canon}
@@ -149,8 +149,8 @@ EV=[]
 if os.path.exists(ROOT+"/data/events.json"):
     EV=[e for e in json.load(open(ROOT+"/data/events.json",encoding="utf-8")) if e.get("slug") and e.get("title") and e.get("event_date")]
 CAT={"id":{"konser":"Konser","pameran":"Pameran","naikgunung":"Naik Gunung","festival":"Festival","komedi":"Komedi","seminar":"Seminar & Konferensi","meetup":"Meetup","lainnya":"Lainnya"},"en":{"konser":"Concert","pameran":"Exhibition","naikgunung":"Hiking","festival":"Festival","komedi":"Comedy","seminar":"Seminars & Conferences","meetup":"Meetup","lainnya":"Other"}}
-TX={"id":{"open":"Buka di GWM","tix":"Beli tiket / info resmi","all":"Semua event","when":"Tanggal","where":"Lokasi","price":"Harga","lineup":"Pengisi acara","note":"Cek ulang jadwal dan harga di kanal resmi penyelenggara sebelum membeli tiket."},
-    "en":{"open":"Open in GWM","tix":"Tickets / official info","all":"All events","when":"Date","where":"Location","price":"Price","lineup":"Line-up","note":"Please re-check schedule and price on the organizer's official channel before buying tickets."}}
+TX={"id":{"open":"Buka di GoWithDME","tix":"Beli tiket / info resmi","all":"Semua event","when":"Tanggal","where":"Lokasi","price":"Harga","lineup":"Pengisi acara","note":"Cek ulang jadwal dan harga di kanal resmi penyelenggara sebelum membeli tiket."},
+    "en":{"open":"Open in GoWithDME","tix":"Tickets / official info","all":"All events","when":"Date","where":"Location","price":"Price","lineup":"Line-up","note":"Please re-check schedule and price on the organizer's official channel before buying tickets."}}
 MON={"id":["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"],"en":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]}
 def fdate(l,d):
     y,m,dd=map(int,d[:10].split("-")); return f"{dd} {MON[l][m-1]} {y}"
@@ -189,13 +189,13 @@ def ev_page(l,e):
     btn=f'<a class="b" href="../event?e={esc(e["slug"])}">{t["open"]}</a>'+(f' <a class="b l" href="{esc(e["ticket_url"])}" rel="noopener nofollow" target="_blank">{t["tix"]}</a>' if e.get("ticket_url") else "")
     return f"""<!DOCTYPE html>
 <html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(title)} – GWM</title><meta name="description" content="{esc((cat+' · '+where+' · '+fdate(l,sd)+'. '+desc)[:300])}">
+<title>{esc(title)} – GoWithDME</title><meta name="description" content="{esc((cat+' · '+where+' · '+fdate(l,sd)+'. '+desc)[:300])}">
 <link rel="canonical" href="{u}"><link rel="alternate" hreflang="{l}" href="{u}"><link rel="alternate" hreflang="{o}" href="{BASE}/{o}/e/{e['slug']}"><link rel="alternate" hreflang="x-default" href="{BASE}/id/e/{e['slug']}">
 <meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc[:200])}"><meta property="og:image" content="{esc(img)}"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <style>body{{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}}main{{max-width:720px;margin:0 auto;padding:20px 16px 48px}}img{{max-width:100%;border-radius:14px;display:block}}h1{{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}}.c{{color:#0E5A46;font-weight:600;font-size:.9rem}}dl{{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0}}dt{{font-weight:600}}dd{{margin:0}}.b{{display:inline-block;background:#0E5A46;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin:4px 6px 4px 0}}.b.l{{background:#fff;color:#0E5A46;border:1px solid #0E5A46}}small{{color:#5b6a63}}nav a{{color:#0E5A46}}@media(prefers-color-scheme:dark){{body{{background:#101613;color:#e8efeb}}.b.l{{background:transparent;color:#7fd1b4;border-color:#7fd1b4}}.c,nav a{{color:#7fd1b4}}small{{color:#9bb0a6}}}}</style>
 {ldj(ld)}</head><body><main>
-<nav><a href="../">GWM</a> › <a href="../event">{t["all"]}</a></nav>
+<nav><a href="../">GoWithDME</a> › <a href="../event">{t["all"]}</a></nav>
 {f'<img src="{esc(pimg)}" alt="{esc(title)}" loading="eager">' if pimg else ""}
 <div class="c">{esc(cat)}{(" · "+esc(e["genre"])) if e.get("genre") else ""}</div>
 <h1>{esc(title)}</h1><dl>{dl}</dl><p>{esc(desc)}</p><p>{btn}</p><p><small>{t["note"]}</small></p>

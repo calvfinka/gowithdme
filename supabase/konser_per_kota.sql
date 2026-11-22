@@ -1,4 +1,4 @@
--- GWM: DAFTAR KONSER PER KOTA (v3) - tanpa duplikat, lengkap dengan harga, poster, dan link tiket.
+-- GoWithDME: DAFTAR KONSER PER KOTA (v3) - tanpa duplikat, lengkap dengan harga, poster, dan link tiket.
 -- Jalankan di Supabase > SQL Editor > New query > tempel seluruh isi file ini > Run.
 -- Prasyarat: schema.sql, schema_tahap2.sql, schema_admin.sql, schema_kota.sql, schema_komunitas.sql sudah pernah dijalankan.
 -- AMAN DIJALANKAN BERULANG KALI: tidak membuat baris ganda.

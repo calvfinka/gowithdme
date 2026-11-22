@@ -1,4 +1,4 @@
--- GWM: sinkron otomatis begitu event atau blog diterbitkan/diubah (tanpa menunggu jadwal workflow).
+-- GoWithDME: sinkron otomatis begitu event atau blog diterbitkan/diubah (tanpa menunggu jadwal workflow).
 -- Cara kerja: tabel events dan blog_posts memicu fungsi kick_sinkron(), yang memanggil GitHub API untuk menjalankan
 -- workflow "Sinkron konten". Halaman statis terbit sekitar 2-4 menit kemudian. Jadwal tiap jam di sinkron.yml tetap jalan sebagai cadangan.
 -- Jalankan di Supabase > SQL Editor SETELAH schema_blog.sql dan schema.sql. Aman dijalankan ulang.

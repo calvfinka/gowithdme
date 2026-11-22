@@ -1,4 +1,4 @@
--- GWM: merapikan kolom events.lineup yang tersimpan sebagai literal array, mis. {NPD,Perunggu,"Nadin Amizah"}.
+-- GoWithDME: merapikan kolom events.lineup yang tersimpan sebagai literal array, mis. {NPD,Perunggu,"Nadin Amizah"}.
 -- Jalankan di Supabase > SQL Editor, blok demi blok. Aman dijalankan ulang. Tampilan di situs sudah dirapikan oleh js/lineup-core.js,
 -- SQL ini merapikan datanya sendiri (supaya pencarian, halaman statis, dan data/events.json juga bersih).
 

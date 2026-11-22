@@ -16,6 +16,7 @@
   --gl-blur:blur(18px) saturate(1.5);
   --gl-glow-a:rgba(79,201,164,.20);    /* cahaya ambient hijau */
   --gl-glow-b:rgba(255,106,51,.12);    /* cahaya ambient oranye */
+  --gl-menu:#FBFDFC;                     /* panel menu: kaca hampir padat supaya isi halaman tidak tembus */
   --gl-ink-hi:#0B3D30;                 /* judul kartu: hijau tua pekat (kontras di terang) */
 }
 :root[data-theme="dark"]{
@@ -31,6 +32,7 @@
   --gl-blur:blur(20px) saturate(1.35);
   --gl-glow-a:rgba(79,201,164,.14);
   --gl-glow-b:rgba(255,106,51,.10);
+  --gl-menu:#181B1A;
   --gl-ink-hi:#FFFFFF;                 /* aksen putih murni untuk judul di gelap */
 }
 
@@ -84,7 +86,7 @@ html .nv-tabs{background:var(--gl-2);box-shadow:inset 0 -1px 0 var(--gl-bd)}
 
 /* ---------- panel menu hamburger ---------- */
 html .mm-bg{background:var(--gl-scrim)}
-html .mm-in{background:var(--gl-2);border:1px solid var(--gl-bd);box-shadow:inset 0 1px 0 var(--gl-hi),var(--gl-sh-lg)}
+html .mm-in{background:var(--gl-menu);border:1px solid var(--gl-bd);box-shadow:inset 0 1px 0 var(--gl-hi),var(--gl-sh-lg)}
 html .mm-h{background:color-mix(in srgb,var(--bg) 94%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 html .mm-g section,html .mm .mm-g section{background:var(--gl);border:1px solid var(--gl-bd);box-shadow:inset 0 1px 0 var(--gl-hi)}
 html .mm-g section h3{background:var(--gl-h);color:var(--gl-ink-hi);border-bottom:1px solid var(--gl-bd)}
@@ -106,11 +108,11 @@ html .mm-foot{border-top:1px solid var(--gl-bd)}
   html:not([data-tier="low"]) .mm-bg{-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 }
 /* tier low / browser tanpa blur: kaca jadi solid agar teks tetap terbaca */
-html[data-tier="low"]{--gl:var(--side);--gl-2:var(--bg)}
+html[data-tier="low"]{--gl:var(--side);--gl-2:var(--bg);--gl-menu:var(--bg)}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  :root{--gl:var(--side);--gl-2:var(--bg)}
+  :root{--gl:var(--side);--gl-2:var(--bg);--gl-menu:var(--bg)}
 }
-@media (prefers-reduced-transparency:reduce){:root,:root[data-theme="dark"]{--gl:var(--side);--gl-2:var(--bg)}}
+@media (prefers-reduced-transparency:reduce){:root,:root[data-theme="dark"]{--gl:var(--side);--gl-2:var(--bg);--gl-menu:var(--bg)}}
 
 /* ---------- ilustrasi ikon aplikasi (simbol #ig-*, warna ikut tema lewat variabel) ---------- */
 :root{--ig-g1:#1FA37D;--ig-g2:#0B5A45;--ig-o1:#FF8A55;--ig-o2:#E4501A;--ig-y:#F5B416;--ig-sep:#fff;

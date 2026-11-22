@@ -7,8 +7,8 @@ S = {
 "nav_mountain": ("Gunung", "Hiking"),
 "login_btn": ("Masuk", "Log in"),
 "back_home": ("← Beranda", "← Home"),
-"f_poster": ("© <span id=\"year\"></span> GWM · Jurkon Studio. Poster dan hak cipta milik penyelenggara.",
-             "© <span id=\"year\"></span> GWM · Jurkon Studio. Posters and copyrights belong to their organizers."),
+"f_poster": ("© <span id=\"year\"></span> GoWithDME · Jurkon Studio. Poster dan hak cipta milik penyelenggara.",
+             "© <span id=\"year\"></span> GoWithDME · Jurkon Studio. Posters and copyrights belong to their organizers."),
 "f_terms": ("Syarat &amp; Ketentuan", "Terms &amp; Conditions"),
 "f_privacy": ("Kebijakan Privasi", "Privacy Policy"),
 "f_contact": ("Kontak", "Contact"),
@@ -16,20 +16,20 @@ S = {
 "f_copyright": ("Hak Cipta", "Copyright"),
 "lang_label": ("Ganti bahasa", "Change language"),
 # --- meta ---
-"idx_title": ('GWM — Cari Teman Nonton Festival & Naik Gunung di Kotamu', 'GWM — Find Friends for Festivals & Hikes in Your City'),
+"idx_title": ('GoWithDME — Cari Teman Nonton Festival & Naik Gunung di Kotamu', 'GoWithDME — Find Friends for Festivals & Hikes in Your City'),
 "idx_desc": ('Pergi sendiri? Cari teman nonton konser, festival, dan naik gunung di kotamu. Info event terbaru, ajakan barengan, dan komunitas per kota. Oleh Jurkon Studio.', 'Going solo? Find company for concerts, festivals, and hikes in your city. Latest event info, meet-up invites, and city communities. By Jurkon Studio.'),
-"og_title": ('GWM — Teman Perjalanan untuk Konser, Festival & Pendakian', 'GWM — Travel Companions for Concerts, Festivals & Hikes'),
+"og_title": ('GoWithDME — Teman Perjalanan untuk Konser, Festival & Pendakian', 'GoWithDME — Travel Companions for Concerts, Festivals & Hikes'),
 "og_desc": ("Info event terbaru, ajakan barengan, dan komunitas per kota. Oleh Jurkon Studio.", "Latest event info, meet-up invites, and city communities. By Jurkon Studio."),
-"ev_title": ("Semua Event — GWM", "All Events — GWM"),
+"ev_title": ("Semua Event — GoWithDME", "All Events — GoWithDME"),
 "ev_desc": ("Semua event konser, pameran, dan naik gunung yang aktif, bisa disaring menurut kota, waktu, dan harga.",
             "All active concerts, expos, and hiking events, filterable by city, time, and price."),
-"gn_title": ("Niche Gunung — GWM", "Mountain Hiking — GWM"),
+"gn_title": ("Niche Gunung — GoWithDME", "Mountain Hiking — GoWithDME"),
 "gn_desc": ("Open trip dan jadwal naik gunung, checklist packing, dan kalkulator patungan.", "Open trips and hiking schedules, packing checklist, and cost-split calculator."),
-"lg_title": ("Masuk — GWM", "Log in — GWM"),
-"pv_title": ("Kebijakan Privasi — GWM", "Privacy Policy — GWM"),
-"pv_desc": ("Kebijakan Privasi GWM oleh Jurkon Studio.", "GWM Privacy Policy by Jurkon Studio."),
-"tm_title": ("Syarat & Ketentuan — GWM", "Terms & Conditions — GWM"),
-"tm_desc": ("Syarat & Ketentuan GWM oleh Jurkon Studio.", "GWM Terms & Conditions by Jurkon Studio."),
+"lg_title": ("Masuk — GoWithDME", "Log in — GoWithDME"),
+"pv_title": ("Kebijakan Privasi — GoWithDME", "Privacy Policy — GoWithDME"),
+"pv_desc": ("Kebijakan Privasi GoWithDME oleh Jurkon Studio.", "GoWithDME Privacy Policy by Jurkon Studio."),
+"tm_title": ("Syarat & Ketentuan — GoWithDME", "Terms & Conditions — GoWithDME"),
+"tm_desc": ("Syarat & Ketentuan GoWithDME oleh Jurkon Studio.", "GoWithDME Terms & Conditions by Jurkon Studio."),
 # --- beranda ---
 "all_cities": ("Semua kota", "All cities"),
 "hero_h": ("Gas barengan, jangan sendirian.", "Go together, don't go alone."),
@@ -50,7 +50,7 @@ S = {
 "cta2_p": ("Konser, pameran, dan pendakian, disaring per kota, waktu, dan harga.", "Concerts, expos, and hikes, filtered by city, time, and price."),
 "cta3_h": ("⛰️ Niche gunung", "⛰️ Mountain hiking"),
 "cta3_p": ("Open trip, checklist packing, dan kalkulator patungan.", "Open trips, packing checklist, and cost-split calculator."),
-"why_h": ("Kenapa GWM?", "Why GWM?"),
+"why_h": ("Kenapa GoWithDME?", "Why GoWithDME?"),
 "why_p": ("Satu tempat untuk info event, perlengkapan, dan teman perjalanan.", "One place for event info, gear, and travel buddies."),
 "f1_h": ("Info terkurasi", "Curated info"),
 "f1_p": ("Event konser dan pendakian per kota dengan kredit ke sumber resmi.", "Concerts and hikes by city, with credit to official sources."),
@@ -62,7 +62,7 @@ S = {
 "ev_h": ("Semua event", "All events"),
 "ev_p": ("Saring menurut kategori, kota, waktu, dan harga.", "Filter by category, city, time, and price."),
 "search_ph": ("Cari event, kota, atau gunung", "Search events, cities, or mountains"),
-"search_aria": ("Cari di seluruh GWM", "Search all of GWM"),
+"search_aria": ("Cari di seluruh GoWithDME", "Search all of GoWithDME"),
 "aria_city": ("Kota", "City"), "aria_when": ("Waktu", "Time"), "aria_price": ("Harga", "Price"), "aria_sort": ("Urutan", "Sort"),
 "w_all": ("Semua waktu", "Any time"), "w_live": ("Berlangsung sekarang", "Happening now"), "w_30": ("30 hari ke depan", "Next 30 days"),
 "p_all": ("Semua harga", "Any price"), "p_free": ("Gratis", "Free"), "p_paid": ("Berbayar", "Paid"),
@@ -110,7 +110,7 @@ S = {
 "lg_loc_btn": ("Izinkan &amp; cek lokasi", "Allow &amp; check location"),
 "lg_admin": ("Panel admin", "Admin panel"),
 "lg_out": ("Keluar", "Log out"),
-# --- GWM Compact ---
+# --- GoWithDME Compact ---
 "theme_aria": ("Ganti tema terang atau gelap", "Switch light or dark theme"),
 "nav_aria": ("Navigasi", "Navigation"), "nav_browse": ("Jelajahi", "Browse"), "nav_city": ("Kota", "City"), "nav_mine": ("Milikmu", "Yours"),
 "now_aria": ("Tanggal, waktu, dan cuaca", "Date, time, and weather"), "aria_kind": ("Jenis event", "Event type"),
@@ -120,12 +120,12 @@ S = {
 "lg_rec_h": ("Buat password baru", "Set a new password"),
 "lg_rec_p": ("Tautan reset berhasil. Isi password baru untuk akunmu.", "Reset link accepted. Enter a new password for your account."),
 "lg_rec_btn": ("Simpan password baru", "Save new password"),
-"cr_title": ("Hak Cipta & Kepemilikan — GWM", "Copyright & Ownership — GWM"),
+"cr_title": ("Hak Cipta & Kepemilikan — GoWithDME", "Copyright & Ownership — GoWithDME"),
 "cr_desc": ("Pemilik situs, hak cipta, dan cara mengajukan penghapusan.", "Site owner, copyright, and takedown process."),
-"ab_title": ("Tentang GWM & Jurkon Studio", "About GWM & Jurkon Studio"),
+"ab_title": ("Tentang GoWithDME & Jurkon Studio", "About GoWithDME & Jurkon Studio"),
 "ab_desc": ("Pemilik, model kerja sama, dan kontak.", "Owner, partnership model, and contact."),
 "hp_bot_h": ("Panduan cepat", "Quick guide"),
-"hp_bot_p": ("Tanya asisten GWM — jawaban disesuaikan fitur situs.", "Ask the GWM guide — answers matched to site features."),
+"hp_bot_p": ("Tanya asisten GoWithDME — jawaban disesuaikan fitur situs.", "Ask the GoWithDME guide — answers matched to site features."),
 }
 # ---- Teks dinamis untuk JavaScript (j_*) ----
 J = {
@@ -149,7 +149,7 @@ J = {
 "g_live": ("Sedang berlangsung", "Happening now"), "g_soon": ("7 hari ke depan", "Next 7 days"), "g_next": ("Akan datang", "Upcoming"),
 "sv_rm": ("Dihapus dari tersimpan", "Removed from saved"), "sv_add": ("Disimpan di perangkat ini", "Saved on this device"), "sv_label": ("Simpan event", "Save event"),
 "ics_ok": ("Berkas kalender diunduh", "Calendar file downloaded"),
-"share_text": ("{t} di {c} — info di GWM", "{t} in {c} — details on GWM"),
+"share_text": ("{t} di {c} — info di GoWithDME", "{t} in {c} — details on GoWithDME"),
 "copied": ("Tautan disalin", "Link copied"), "copy_manual": ("Salin alamat situs dari browser", "Copy the page address from your browser"),
 "price_tbd": ("Info menyusul", "Price info coming soon"), "to": (" s/d ", " to "), "lineup": ("Line-up:", "Line-up:"),
 "nodesc": ("Deskripsi belum tersedia.", "Description not available yet."),
@@ -220,9 +220,9 @@ J = {
 "err_rate": ("Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.", "Too many attempts. Wait a moment and try again."),
 "err_upload": ("Gagal mengunggah berkas. Pastikan format & ukuran sesuai.", "Upload failed. Check the file format and size."),
 "err_timeout": ("Permintaan kehabisan waktu. Coba lagi.", "The request timed out. Try again."),
-"cr_title": ("Hak Cipta & Kepemilikan — GWM", "Copyright & Ownership — GWM"),
+"cr_title": ("Hak Cipta & Kepemilikan — GoWithDME", "Copyright & Ownership — GoWithDME"),
 "cr_desc": ("Pemilik situs, hak cipta, dan cara mengajukan penghapusan.", "Site owner, copyright, and takedown process."),
-"ab_title": ("Tentang GWM & Jurkon Studio", "About GWM & Jurkon Studio"),
+"ab_title": ("Tentang GoWithDME & Jurkon Studio", "About GoWithDME & Jurkon Studio"),
 "ab_desc": ("Pemilik, model kerja sama, dan kontak.", "Owner, partnership model, and contact."),
 "sx_p_copyright": ("Hak Cipta", "Copyright"),
 "sx_p_about": ("Tentang", "About"),
@@ -230,7 +230,7 @@ J = {
 "f_copyright": ("Hak Cipta", "Copyright"),
 "f_about": ("Tentang", "About"),
 "hp_bot_h": ("Panduan cepat", "Quick guide"),
-"hp_bot_p": ("Tanya asisten GWM — jawaban disesuaikan fitur situs.", "Ask the GWM guide — answers matched to site features."),
+"hp_bot_p": ("Tanya asisten GoWithDME — jawaban disesuaikan fitur situs.", "Ask the GoWithDME guide — answers matched to site features."),
 
 }
 PROV_EN = {
@@ -246,7 +246,7 @@ PROV_EN = {
 S.update({
 "sh_aria": ("Bagikan halaman ini", "Share this page"),
 "lg_submit": ("Ajukan event / open trip", "Submit an event / open trip"),
-"sb_title": ("Ajukan Event & Open Trip — GWM", "Submit an Event or Open Trip — GWM"),
+"sb_title": ("Ajukan Event & Open Trip — GoWithDME", "Submit an Event or Open Trip — GoWithDME"),
 "sb_h": ("Ajukan event atau open trip", "Submit an event or open trip"),
 "sb_p": ("Isi formulir di bawah. Pengajuanmu diperiksa admin dulu, lalu tampil publik di kalender event atau halaman gunung.",
          "Fill in the form below. An admin reviews your submission first, then it appears publicly in the event calendar or the hiking page."),
@@ -285,13 +285,13 @@ S.update({
 })
 J.update({
 "n_submit": ("Ajukan", "Submit"),
-"share_text2": ("{t} — info di GWM", "{t} — details on GWM"),
-"share_page": ("{t} — cek di GWM", "{t} — check it out on GWM"),
+"share_text2": ("{t} — info di GoWithDME", "{t} — details on GoWithDME"),
+"share_page": ("{t} — cek di GoWithDME", "{t} — check it out on GoWithDME"),
 "copy_link": ("Salin tautan", "Copy link"), "share_more": ("Aplikasi lain…", "More apps…"),
-"aj_share_text": ("Ikut barengan: {t} (di {e}) — GWM", "Join us: {t} (at {e}) — GWM"),
+"aj_share_text": ("Ikut barengan: {t} (di {e}) — GoWithDME", "Join us: {t} (at {e}) — GoWithDME"),
 "organizer": ("Penyelenggara", "Organizer"), "quota": ("Kuota", "Quota"),
-"community": ("Komunitas", "Community"), "community_note": ("Diajukan komunitas dan disetujui admin GWM. Cek ulang info ke penyelenggara sebelum membayar.", "Submitted by the community and approved by GWM admins. Double-check with the organizer before paying."),
-"wa_contact": ("Hubungi penyelenggara", "Contact organizer"), "wa_hello": ("Halo, saya lihat {t} di GWM. Apakah masih ada slot?", "Hi, I saw {t} on GWM. Are slots still available?"),
+"community": ("Komunitas", "Community"), "community_note": ("Diajukan komunitas dan disetujui admin GoWithDME. Cek ulang info ke penyelenggara sebelum membayar.", "Submitted by the community and approved by GoWithDME admins. Double-check with the organizer before paying."),
+"wa_contact": ("Hubungi penyelenggara", "Contact organizer"), "wa_hello": ("Halo, saya lihat {t} di GoWithDME. Apakah masih ada slot?", "Hi, I saw {t} on GoWithDME. Are slots still available?"),
 "sj_drop": ("Tarik poster ke sini atau ketuk untuk memilih (JPG/PNG/WebP, maks. 2 MB)", "Drop a poster here or tap to choose (JPG/PNG/WebP, max 2 MB)"),
 "sj_l_depart": ("Tanggal berangkat", "Departure date"), "sj_l_return": ("Tanggal pulang", "Return date"),
 "sj_l_start": ("Tanggal mulai", "Start date"), "sj_l_end": ("Tanggal selesai", "End date"),
@@ -339,8 +339,8 @@ J.update({
 "aj_closed": ("Ditutup", "Closed"), "aj_err": ("Terjadi kesalahan. Coba lagi.", "Something went wrong. Try again."),
 })
 S.update({
-"kom_title": ("Komunitas — Cari Teman Nonton Festival & Naik Gunung | GWM", "Community — Find Friends for Festivals & Hikes | GWM"),
-"kom_desc": ("Komunitas GWM per kota: cari teman nonton konser dan naik gunung, tanya info, dan bagi tips bareng sesama pengunjung.", "GWM community by city: find friends for concerts and hikes, ask questions, and share tips with fellow goers."),
+"kom_title": ("Komunitas — Cari Teman Nonton Festival & Naik Gunung | GoWithDME", "Community — Find Friends for Festivals & Hikes | GoWithDME"),
+"kom_desc": ("Komunitas GoWithDME per kota: cari teman nonton konser dan naik gunung, tanya info, dan bagi tips bareng sesama pengunjung.", "GoWithDME community by city: find friends for concerts and hikes, ask questions, and share tips with fellow goers."),
 "kom_h": ("Komunitas", "Community"),
 "kom_p": ("Pergi sendiri bukan berarti harus sendirian. Pilih kotamu, cari teman jalan, dan tanya info sebelum berangkat.", "Going solo doesn't mean going alone. Pick your city, find company, and ask around before you go."),
 "kom_rules_h": ("Aturan main", "Ground rules"),
@@ -417,9 +417,9 @@ J.update({
 "k_gone": ("Kiriman ini sudah tidak tersedia.", "This post is no longer available."),
 })
 J.update({"buddy_btn": ("Cari teman", "Find buddies"), "buddy_btn_d": ("Cari teman jalan", "Find a buddy"), "buddy_aria": ("Cari teman untuk event ini", "Find a buddy for this event")})  # tombol ajakan di kartu dan detail event
-J.update({"pf_title": ("Profil — GWM", "Profile — GWM")})  # dipakai js/profil.js (gerbang tamu), bukan hanya <title>
+J.update({"pf_title": ("Profil — GoWithDME", "Profile — GoWithDME")})  # dipakai js/profil.js (gerbang tamu), bukan hanya <title>
 S.update({
-"pf_title": ("Profil — GWM", "Profile — GWM"),
+"pf_title": ("Profil — GoWithDME", "Profile — GoWithDME"),
 "pe_h": ("Tentang kamu", "About you"),
 "pe_bio": ("Bio (maks. 200)", "Bio (max. 200)"),
 "pe_bio_ph": ("Ceritakan singkat: suka konser apa, sering naik gunung ke mana. Tanpa tautan atau nomor telepon.", "Briefly: which concerts you like, where you hike. No links or phone numbers."),
@@ -460,8 +460,8 @@ S.update({
 "pe_edit_h": ("Edit profil", "Edit profile"),
 "pe_cancel": ("Batal", "Cancel"),
 "pe_after": ("Setelah disimpan, kamu kembali ke halaman profilmu.", "After saving, you return to your profile page."),
-"hp_title": ("Bantuan & FAQ — GWM", "Help & FAQ — GWM"),
-"hp_desc": ("Jawaban untuk pertanyaan umum soal akun, event, ajakan, dan keamanan, plus cara menghubungi GWM.", "Answers to common questions about accounts, events, invites, and safety, plus how to contact GWM."),
+"hp_title": ("Bantuan & FAQ — GoWithDME", "Help & FAQ — GoWithDME"),
+"hp_desc": ("Jawaban untuk pertanyaan umum soal akun, event, ajakan, dan keamanan, plus cara menghubungi GoWithDME.", "Answers to common questions about accounts, events, invites, and safety, plus how to contact GoWithDME."),
 "hp_h": ("Bantuan", "Help"),
 "hp_p": ("Cari jawaban cepat di FAQ, atau hubungi kami langsung.", "Find a quick answer in the FAQ, or contact us directly."),
 "hp_contact_h": ("Hubungi kami", "Contact us"),
@@ -506,7 +506,7 @@ S.update({
 "fq11_q": ("Apa tips aman bertemu teman baru?", "Any tips for meeting new people safely?"),
 "fq11_a": ("Bertemu di tempat ramai, beri tahu teman atau keluarga rencanamu, jangan bagikan data sensitif, dan sepakati pembagian biaya sebelum berangkat. Percayai instingmu dan batalkan kalau tidak nyaman.", "Meet in a busy place, tell a friend or family member your plan, don't share sensitive data, and agree on cost sharing before you go. Trust your instincts and cancel if something feels off."),
 "hp_g_misc": ("Lainnya", "Other"),
-"fq12_q": ("Poster saya dipakai di GWM. Bagaimana meminta perubahan atau penghapusan?", "My poster is used on GWM. How can I ask for a change or removal?"),
+"fq12_q": ("Poster saya dipakai di GoWithDME. Bagaimana meminta perubahan atau penghapusan?", "My poster is used on GoWithDME. How can I ask for a change or removal?"),
 "fq12_a": ("Tulis ke email kami dengan nama event dan tautan halamannya. Kami akan mengubah atau menghapus konten yang kamu miliki haknya.", "Write to our email with the event name and page link. We will change or remove content you hold the rights to."),
 "fq13_q": ("Dari mana data cuaca berasal?", "Where does the weather data come from?"),
 "fq13_a": ("Dari Open-Meteo. Ini perkiraan dan bisa berubah. Alamat IP-mu ikut terkirim ke layanan itu saat cuaca dimuat, seperti dijelaskan di Kebijakan Privasi.", "From Open-Meteo. It is a forecast and may change. Your IP address is sent to that service when the weather loads, as described in the Privacy Policy."),
@@ -518,9 +518,9 @@ J.update({
 "pe_saved_go": ("Profil disimpan. Membuka profilmu…", "Profile saved. Opening your profile…"),
 "n_help": ("Bantuan", "Help"),
 "hp_copied": ("Tersalin", "Copied"),
-"hp_subject": ("Bantuan GWM", "GWM help"),
-"hp_body": ("Halo GWM,\n\nNama panggilan:\nMasalah / pertanyaan:\n", "Hi GWM,\n\nNickname:\nIssue / question:\n"),
-"hp_wa_msg": ("Halo GWM, saya butuh bantuan soal: ", "Hi GWM, I need help with: "),
+"hp_subject": ("Bantuan GoWithDME", "GoWithDME help"),
+"hp_body": ("Halo GoWithDME,\n\nNama panggilan:\nMasalah / pertanyaan:\n", "Hi GoWithDME,\n\nNickname:\nIssue / question:\n"),
+"hp_wa_msg": ("Halo GoWithDME, saya butuh bantuan soal: ", "Hi GoWithDME, I need help with: "),
 })
 
 # ---- Pencarian autoscope (js/search.js) ----
@@ -565,7 +565,7 @@ J.update({
 "sx_p_home": ("Beranda", "Home"), "sx_p_events": ("Semua event", "All events"), "sx_p_mtn": ("Niche gunung", "Mountain hiking"),
 "sx_p_invite": ("Ajakan barengan", "Meet-up invites"),
 "sx_p_comm": ("Komunitas", "Community"), "sx_p_submit": ("Ajukan event atau open trip", "Submit an event or open trip"),
-"sx_p_help": ("Bantuan dan FAQ", "Help and FAQ"), "sx_p_contact": ("Kontak GWM", "Contact GWM"),
+"sx_p_help": ("Bantuan dan FAQ", "Help and FAQ"), "sx_p_contact": ("Kontak GoWithDME", "Contact GoWithDME"),
 "sx_p_terms": ("Syarat dan Ketentuan", "Terms and Conditions"), "sx_p_privacy": ("Kebijakan Privasi", "Privacy Policy"),
 "sx_p_login": ("Masuk atau daftar", "Log in or sign up"), "sx_p_profile": ("Profilku", "My profile"),
 "sx_p_saved": ("Event tersimpan", "Saved events"), "sx_p_done": ("Event selesai", "Ended events"),
@@ -576,7 +576,7 @@ J.update({
 
 # --- Sesi 3: pesan antar pengguna + header sadar-login ---
 S.update({
-"ms_title": ("Pesan — GWM", "Messages — GWM"),
+"ms_title": ("Pesan — GoWithDME", "Messages — GoWithDME"),
 "ms_desc": ("Kirim pesan, gambar, dan voice note antar pengguna. Semua pesan hilang dalam 10 menit.", "Send messages, images and voice notes between users. Everything disappears after 10 minutes."),
 })
 J.update({
@@ -619,7 +619,7 @@ S.update({
 # --- Gaya portal (terinspirasi Naver): menu layanan, mega menu, pintasan, banner, tab topik, panel kanan ---
 NV = {
 "nv_all": ("Semua layanan", "All services"), "nv_menu": ("Menu", "Menu"), "nv_close": ("Tutup", "Close"), "nv_go": ("Cari", "Search"),
-"nv_svc": ("Layanan GWM", "GWM services"),
+"nv_svc": ("Layanan GoWithDME", "GoWithDME services"),
 "nv_g_explore": ("Jelajahi", "Explore"), "nv_g_together": ("Bareng & komunitas", "Together & community"),
 "nv_g_tools": ("Alat naik gunung", "Hiking tools"), "nv_g_me": ("Akunku", "My account"), "nv_g_info": ("Info & bantuan", "Info & help"),
 "nv_events": ("Semua event", "All events"), "nv_concert": ("Konser & festival", "Concerts & festivals"), "nv_expo": ("Pameran", "Expos"),
@@ -629,7 +629,7 @@ NV = {
 "nv_pack": ("Checklist packing", "Packing checklist"), "nv_split": ("Kalkulator patungan", "Cost splitter"),
 "nv_profile": ("Profilku", "My profile"), "nv_login": ("Masuk atau daftar", "Log in or sign up"),
 "nv_help": ("Bantuan & FAQ", "Help & FAQ"), "nv_contact": ("Kontak", "Contact"),
-"mm_copy": ("© <span class=\"yr\"></span> GWM · Jurkon Studio", "© <span class=\"yr\"></span> GWM · Jurkon Studio"),
+"mm_copy": ("© <span class=\"yr\"></span> GoWithDME · Jurkon Studio", "© <span class=\"yr\"></span> GoWithDME · Jurkon Studio"),
 "nv_theme": ("Ganti tema terang/gelap", "Switch light/dark theme"), "nv_lang": ("Bahasa", "Language"),
 "nv_trend_h": ("Segera hadir", "Coming up"), "nv_trend_open": ("Buka daftar segera hadir", "Open the coming-up list"),
 "nv_trend_empty": ("Belum ada event aktif", "No active events yet"), "nv_live": ("LIVE", "LIVE"),
@@ -647,13 +647,13 @@ NV = {
 "nv_h_live": ("Sedang berlangsung", "Happening now"), "nv_h_week": ("Dalam 7 hari ke depan", "In the next 7 days"),
 "nv_h_month": ("Dalam 30 hari ke depan", "In the next 30 days"), "nv_h_any": ("Semua event aktif", "All active events"),
 "nv_more": ("Lihat {n} event lagi", "Show {n} more events"),
-"nv_r_login_h": ("Masuk ke GWM", "Join GWM"), "nv_r_login_p": ("Simpan favorit, ikut ajakan barengan, dan kirim pesan.", "Save favorites, join meet-ups, and send messages."),
+"nv_r_login_h": ("Masuk ke GoWithDME", "Join GoWithDME"), "nv_r_login_p": ("Simpan favorit, ikut ajakan barengan, dan kirim pesan.", "Save favorites, join meet-ups, and send messages."),
 "nv_r_signup": ("Daftar", "Sign up"), "nv_r_hi": ("Halo, {n}!", "Hi, {n}!"), "nv_r_hi2": ("Halo!", "Hi there!"),
 "nv_r_me_p": ("Lanjutkan di profil, pesan, atau ajakan barengan.", "Pick up in your profile, messages, or meet-ups."),
-"nv_r_stats_h": ("Hari ini di GWM", "Today on GWM"), "nv_r_now_h": ("Tanggal & cuaca", "Date & weather"),
+"nv_r_stats_h": ("Hari ini di GoWithDME", "Today on GoWithDME"), "nv_r_now_h": ("Tanggal & cuaca", "Date & weather"),
 "nv_r_recent_h": ("Terakhir dilihat", "Recently viewed"), "nv_r_clear": ("Hapus", "Clear"),
 "nv_r_recent_empty": ("Event yang kamu buka akan muncul di sini.", "Events you open will appear here."),
-"nv_hero_aria": ("Cari di GWM", "Search GWM"),
+"nv_hero_aria": ("Cari di GoWithDME", "Search GoWithDME"),
 }
 S.update(NV); J.update(NV)
 
@@ -680,7 +680,7 @@ ML = {
 }
 S.update(ML)
 J.update({
-"a_magic_sent": ("Link masuk dikirim. Buka emailmu lalu ketuk tombol Masuk ke GWM.", "Login link sent. Open your email and tap the button."),
+"a_magic_sent": ("Link masuk dikirim. Buka emailmu lalu ketuk tombol Masuk ke GoWithDME.", "Login link sent. Open your email and tap the button."),
 "a_magic_none": ("Email ini belum terdaftar. Daftar dulu lewat tab Daftar.", "This email is not registered yet. Sign up first using the Sign up tab."),
 "ce_same": ("Email baru sama dengan email sekarang.", "The new email is the same as your current one."),
 "ce_sent": ("Konfirmasi dikirim. Cek email baru (dan email lama bila diminta) lalu ketuk tombol konfirmasi.", "Confirmation sent. Check your new email (and the old one if asked) and tap the confirm button."),
@@ -723,7 +723,7 @@ J.update({
 "ct_tag_max": ("Maksimal 3 tag.", "Up to 3 tags."),
 })
 S.update({
-"ct_title": ("Cari Teman Bareng — GWM", "Find Company — GWM"),
+"ct_title": ("Cari Teman Bareng — GoWithDME", "Find Company — GoWithDME"),
 "ct_desc": ("Cari teman untuk konser, naik gunung, olahraga, kuliner, belajar, dan banyak lagi. Ajakan per kota, provinsi, seluruh Indonesia, atau online.", "Find company for concerts, hikes, sports, food, study, and more. Invites by city, province, all Indonesia, or online."),
 "ct_h": ("Cari teman bareng", "Find company"),
 "ct_p": ("Ajakan dari event maupun ajakan bebas. Pilih satu atau beberapa niche, lalu atur seberapa jauh jangkauannya.", "Invites from events and free-form invites. Pick one or more niches, then choose how far you want to reach."),
@@ -783,18 +783,18 @@ PORTAL_PRO = {
 "blog_min": ("{n} mnt baca", "{n} min read"),
 "blog_empty": ("Belum ada artikel di kategori ini.", "No articles in this category yet."),
 "deals_h": ("Deals Resmi, Perlengkapan & Mitra Komunitas", "Official Deals, Gear & Community Partners"),
-"deals_p": ("Katalog mitra tiket, penyewaan gear gunung, shuttle barengan, dan program Pro Host yang terintegrasi dengan sistem patungan dan afiliasi GWM.", "Curated ticket partners, outdoor gear rentals, shared shuttles, and Pro Host tools wired with affiliate tracking."),
-"deals_note": ("Tautan tiket & mitra menyertakan parameter rujukan GWM secara transparan tanpa menaikkan harga resmi penonton.", "Partner links include transparent GWM referral tags without increasing official ticket prices."),
+"deals_p": ("Katalog mitra tiket, penyewaan gear gunung, shuttle barengan, dan program Pro Host yang terintegrasi dengan sistem patungan dan afiliasi GoWithDME.", "Curated ticket partners, outdoor gear rentals, shared shuttles, and Pro Host tools wired with affiliate tracking."),
+"deals_note": ("Tautan tiket & mitra menyertakan parameter rujukan GoWithDME secara transparan tanpa menaikkan harga resmi penonton.", "Partner links include transparent GoWithDME referral tags without increasing official ticket prices."),
 "deals_clicks": ("{n} klik mitra dari perangkat ini", "{n} partner clicks on this device"),
 "promo_h": ("Promosikan Event, Brand, atau Open Trip Kamu", "Promote Your Event, Brand, or Open Trip"),
-"promo_p": ("Hitung estimasi jangkauan iklan di portal GWM (38 provinsi, 120+ kota), pilih paket penempatan, dan ajukan slot sponsor secara langsung.", "Estimate campaign reach across 38 provinces & 120+ cities, compare placement tiers, and book featured portal slots."),
+"promo_p": ("Hitung estimasi jangkauan iklan di portal GoWithDME (38 provinsi, 120+ kota), pilih paket penempatan, dan ajukan slot sponsor secara langsung.", "Estimate campaign reach across 38 provinces & 120+ cities, compare placement tiers, and book featured portal slots."),
 "promo_tier_h": ("1. Pilih Paket Penempatan", "1. Choose Placement Tier"),
 "promo_tier_free": ("Listing Komunitas", "Community Listing"),
 "promo_tier_free_d": ("Masuk direktori kota · 1 tautan tiket/WA", "Listed in city directory · 1 ticket/WA link"),
 "promo_tier_city": ("Sorotan Kota (City Spotlight)", "City Spotlight"),
-"promo_tier_city_d": ("Prioritas feed kota & radius · Label Partner · Ringkasan hasil dari tim GWM", "City & radius priority · Partner badge · Results summary from the GWM team"),
+"promo_tier_city_d": ("Prioritas feed kota & radius · Label Partner · Ringkasan hasil dari tim GoWithDME", "City & radius priority · Partner badge · Results summary from the GoWithDME team"),
 "promo_tier_nat": ("Banner Nasional (Portal Utama)", "National Banner (Portal Hero)"),
-"promo_tier_nat_d": ("Carousel utama · Prioritas seluruh 38 provinsi · Ringkasan hasil dari tim GWM", "Hero carousel · All 38 provinces priority · Results summary from the GWM team"),
+"promo_tier_nat_d": ("Carousel utama · Prioritas seluruh 38 provinsi · Ringkasan hasil dari tim GoWithDME", "Hero carousel · All 38 provinces priority · Results summary from the GoWithDME team"),
 "promo_city_h": ("Kota / Wilayah Target", "Target City / Region"),
 "promo_dur_h": ("Durasi Tayang", "Campaign Duration"),
 "promo_est_h": ("Estimasi Jangkauan & Investasi", "Estimated Reach & Investment"),
@@ -808,16 +808,16 @@ PORTAL_PRO = {
 "promo_wa": ("Nomor WhatsApp Aktif", "Active WhatsApp Number"),
 "promo_note": ("Catatan / Tautan Tiket", "Notes / Ticket Link"),
 "promo_btn": ("Buat Kode Order & Ajukan", "Generate Order Code & Request"),
-"promo_ok": ("Permintaan diterima. Kode order: {code}. Tim GWM akan menghubungi WhatsApp kamu. Ingin lebih cepat? Konfirmasi lewat WhatsApp atau Email di bawah.", "Request received. Order code: {code}. The GWM team will contact you on WhatsApp. Want it faster? Confirm via WhatsApp or Email below."),
+"promo_ok": ("Permintaan diterima. Kode order: {code}. Tim GoWithDME akan menghubungi WhatsApp kamu. Ingin lebih cepat? Konfirmasi lewat WhatsApp atau Email di bawah.", "Request received. Order code: {code}. The GoWithDME team will contact you on WhatsApp. Want it faster? Confirm via WhatsApp or Email below."),
 "promo_err_req": ("Isi nama penyelenggara, judul kampanye, dan nomor WhatsApp aktif terlebih dahulu.", "Please fill in organizer name, campaign title, and an active WhatsApp number first."),
 "promo_wa_send": ("Konfirmasi via WhatsApp", "Confirm via WhatsApp"),
 "promo_mail_send": ("Kirim via Email", "Send via Email"),
-"promo_est_note": ("*Perkiraan dari asumsi tetap GWM, bukan data historis dan bukan jaminan hasil. Hasil sebenarnya bisa lebih rendah atau lebih tinggi.", "*Estimate based on fixed GWM assumptions, not historical data and not a guarantee. Actual results may be lower or higher."),
+"promo_est_note": ("*Perkiraan dari asumsi tetap GoWithDME, bukan data historis dan bukan jaminan hasil. Hasil sebenarnya bisa lebih rendah atau lebih tinggi.", "*Estimate based on fixed GoWithDME assumptions, not historical data and not a guarantee. Actual results may be lower or higher."),
 "promo_err_name": ("Nama penyelenggara minimal 2 huruf.", "Organizer name must be at least 2 characters."),
 "promo_err_title": ("Judul event/kampanye minimal 2 huruf.", "Event/campaign title must be at least 2 characters."),
 "promo_err_wa": ("Nomor WhatsApp tidak valid. Pakai nomor seluler Indonesia, mis. 0812xxxxxxxx.", "Invalid WhatsApp number. Use an Indonesian mobile number, e.g. 0812xxxxxxxx."),
 "promo_sending": ("Mengirim…", "Sending…"),
-"promo_ok_offline": ("Permintaan belum bisa masuk ke server GWM (koneksi bermasalah). Kode cadangan: {code}. Kirim lewat WhatsApp atau Email di bawah agar tim GWM menerimanya.", "Your request could not reach the GWM server (connection problem). Backup code: {code}. Please send it via WhatsApp or Email below so the GWM team receives it."),
+"promo_ok_offline": ("Permintaan belum bisa masuk ke server GoWithDME (koneksi bermasalah). Kode cadangan: {code}. Kirim lewat WhatsApp atau Email di bawah agar tim GoWithDME menerimanya.", "Your request could not reach the GoWithDME server (connection problem). Backup code: {code}. Please send it via WhatsApp or Email below so the GoWithDME team receives it."),
 "promo_err_server": ("Permintaan ditolak server: {why}", "The server rejected the request: {why}"),
 "promo_err_rate": ("Terlalu banyak permintaan dari kontak ini. Coba lagi satu jam lagi atau hubungi kami lewat WhatsApp.", "Too many requests from this contact. Try again in an hour or reach us on WhatsApp."),
 "promo_partner_badge": ("Partner", "Partner"),
@@ -830,7 +830,7 @@ PORTAL_PRO = {
 "sb_f5": ("5. Paket Promosi & Jangkauan (Opsional)", "5. Promotion & Reach Tier (Optional)"),
 "sb_promo_tier": ("Pilih Penempatan", "Placement Tier"),
 "sb_promo_est": ("Perkiraan tayangan mingguan: {imp} · Klik: {clk} (asumsi, bukan jaminan)", "Est. weekly impressions: {imp} · Clicks: {clk} (assumption, not a guarantee)"),
-"sb_promo_note": ("Tim GWM akan menghubungi WhatsApp/Email Anda bila memilih paket Sorotan Kota atau Banner Nasional.", "GWM team will reach out via WhatsApp/Email if you pick City Spotlight or National Banner."),
+"sb_promo_note": ("Tim GoWithDME akan menghubungi WhatsApp/Email Anda bila memilih paket Sorotan Kota atau Banner Nasional.", "GoWithDME team will reach out via WhatsApp/Email if you pick City Spotlight or National Banner."),
 "sx_scope_all": ("Semua", "All"),
 "sx_t_event": ("Event", "Events"),
 "sx_t_place": ("Wilayah", "Places"),
@@ -868,7 +868,7 @@ SOCIAL_AUTH = {
   "pf_b_comm": ("Kontributor Forum", "Forum Voice"),
   "pf_b_buddy": ("Partner Jalan", "Trip Buddy"),
   "pf_b_hiker": ("Pendaki", "Hiker"),
-  "pf_b_member": ("Anggota GWM", "GWM Member"),
+  "pf_b_member": ("Anggota GoWithDME", "GoWithDME Member"),
   "pf_share": ("Bagikan Profil", "Share Profile"),
   "pf_about_h": ("Tentang & Bio", "About & Bio"),
   "pf_int_h": ("Minat & Skena", "Interests & Scenes"),
@@ -918,7 +918,7 @@ J.update(SOCIAL_AUTH)
 _ACCT = {
   "acct_h": ("Pengaturan akun", "Account settings"),
   "acct_sub": ("Kelola profil, privasi, dan akunmu di satu tempat.", "Manage your profile, privacy, and account in one place."),
-  "ac_title": ("Pengaturan akun — GWM", "Account settings — GWM"),
+  "ac_title": ("Pengaturan akun — GoWithDME", "Account settings — GoWithDME"),
   "ac_dirty": ("Ada perubahan yang belum disimpan.", "You have unsaved changes."),
   "ac_leave": ("Buang perubahan yang belum disimpan?", "Discard your unsaved changes?"),
   "ac_cur_email": ("Email atau nomor saat ini", "Current email or number"),
@@ -942,7 +942,7 @@ S.update(_ACCT); J.update(_ACCT)
 _SIGNUP = {
   "su_e_nick_need": ("Isi nama panggilan.", "Enter a nickname."),
   "su_e_nick_short": ("Nama panggilan minimal 2 karakter.", "Nickname must be at least 2 characters."),
-  "su_e_nick_reserved": ("Nama ini menyerupai pengelola GWM (misalnya admin atau GWM). Pilih nama panggilan lain.", "This name looks like a GWM staff name (for example admin or GWM). Please pick another nickname."),
+  "su_e_nick_reserved": ("Nama ini menyerupai pengelola GoWithDME (misalnya admin atau GoWithDME). Pilih nama panggilan lain.", "This name looks like a GoWithDME staff name (for example admin or GoWithDME). Please pick another nickname."),
   "su_e_nick_private": ("Jangan pakai email, nomor HP, atau tautan sebagai nama panggilan, karena namanya tampil publik.", "Please don't use an email, phone number, or link as your nickname, because it is shown publicly."),
   "onb_t": ("Satu langkah lagi, {n}", "One more step, {n}"),
   "onb_p": ("Pilih kotamu supaya event dan ajakan di kotamu tampil lebih dulu. Bisa diubah kapan saja di Kota domisili.", "Pick your city so events and invites near you show up first. You can change it any time under Home city."),
@@ -956,7 +956,7 @@ _SIGNUP = {
   "onb_geo_note": ("Lokasi hanya dipakai di perangkatmu untuk menebak kota. Tidak disimpan.", "Your location is only used on your device to guess a city. It is not saved."),
   "onb_geo_wait": ("Mencari kotamu...", "Finding your city..."),
   "onb_geo_found": ("Terdeteksi: {c}. Cek lalu simpan.", "Detected: {c}. Check it, then save."),
-  "onb_geo_unlisted": ("Kamu terdeteksi di {c}, tapi komunitasnya belum ada di GWM.", "You seem to be in {c}, but it isn't on GWM yet."),
+  "onb_geo_unlisted": ("Kamu terdeteksi di {c}, tapi komunitasnya belum ada di GoWithDME.", "You seem to be in {c}, but it isn't on GoWithDME yet."),
   "onb_geo_notify": ("Kabari saya saat dibuka", "Tell me when it opens"),
   "onb_geo_notified": ("Oke, kamu akan dikabari saat {c} dibuka. Pilih kota terdekat untuk sementara, atau lewati.", "Got it, we'll tell you when {c} opens. Pick a nearby city for now, or skip."),
   "onb_geo_near": ("Pakai {c} (terdekat)", "Use {c} (nearest)"),
@@ -1025,9 +1025,9 @@ S.update(_PWA); J.update(_PWA)
 
 # ---- Halaman Template gratis ----
 _TPL = {"f_template": ("Template", "Templates"),
-"tpl_title": ("Template Blogger Gratis GWM Majalah | Unduh + Demo", "Free Blogger Magazine Template | GWM, Download + Demo"),
+"tpl_title": ("Template Blogger Gratis GoWithDME Majalah | Unduh + Demo", "Free Blogger Magazine Template | GoWithDME, Download + Demo"),
 "tpl_desc": ("Template Blogger gratis bergaya majalah untuk blog berita dan opini. Mode gelap, dua bahasa, Mode Atur. Unduh XML gratis dan lihat demo.", "Free magazine-style Blogger template for news and opinion blogs. Dark mode, two languages, Setup Mode. Download the XML free and see the demo."),
-"tpl_ogt": ("Template Blogger Gratis: GWM Majalah", "Free Blogger Template: GWM Magazine"),
+"tpl_ogt": ("Template Blogger Gratis: GoWithDME Majalah", "Free Blogger Template: GoWithDME Magazine"),
 "tpl_loc": ("id_ID", "en_US"),
 "tpl_og": ("https://gowithdme.com/assets/og-template.png", "https://gowithdme.com/assets/og-template-en.png")}
 S.update(_TPL); J.update(_TPL)
@@ -1081,16 +1081,16 @@ S.update(_PROB); J.update(_PROB)
 
 # --- halaman /statistik (hanya dibangun bila data/statistik.json berstatus aktif) ---
 _STAT={
-"st_title": ("Statistik konser — GWM", "Concert stats — GWM"),
-"st_desc": ("Kota, artis, dan penyelenggara yang paling sering muncul di event konser dan festival yang tercatat di GWM.", "The cities, artists, and organizers that appear most often in the concerts and festivals listed on GWM."),
+"st_title": ("Statistik konser — GoWithDME", "Concert stats — GoWithDME"),
+"st_desc": ("Kota, artis, dan penyelenggara yang paling sering muncul di event konser dan festival yang tercatat di GoWithDME.", "The cities, artists, and organizers that appear most often in the concerts and festivals listed on GoWithDME."),
 "st_h": ("Statistik konser", "Concert stats"),
-"st_p": ("Siapa dan di mana yang paling ramai di GWM.", "Who and where is busiest on GWM."),
+"st_p": ("Siapa dan di mana yang paling ramai di GoWithDME.", "Who and where is busiest on GoWithDME."),
 "st_t_kota": ("Kota", "Cities"), "st_t_artis": ("Artis", "Artists"), "st_t_eo": ("Penyelenggara", "Organizers"),
 "st_events": ("event", "events"), "st_next": ("akan datang", "upcoming"), "st_cities": ("kota", "cities"),
 "st_all_prov": ("Lihat semua provinsi", "See all provinces"), "st_all_artis": ("Lihat semua artis", "See all artists"), "st_all_eo": ("Lihat semua penyelenggara", "See all organizers"),
 "st_prov_h": ("Provinsi", "Provinces"), "st_back": ("Kembali", "Back"), "st_ticket": ("Tiket", "Tickets"),
-"st_in": ("Tampil di event GWM", "Appears at GWM events"), "st_org_in": ("Penyelenggara event di GWM", "Organizer of GWM events"),
-"st_note": ("Dihitung dari event terverifikasi yang tercatat di GWM, bukan seluruh konser di Indonesia. Diperbarui {d}.", "Based on verified events listed on GWM, not every concert in Indonesia. Updated {d}."),
+"st_in": ("Tampil di event GoWithDME", "Appears at GoWithDME events"), "st_org_in": ("Penyelenggara event di GoWithDME", "Organizer of GoWithDME events"),
+"st_note": ("Dihitung dari event terverifikasi yang tercatat di GoWithDME, bukan seluruh konser di Indonesia. Diperbarui {d}.", "Based on verified events listed on GoWithDME, not every concert in Indonesia. Updated {d}."),
 "st_loading": ("Memuat statistik…", "Loading stats…"),
 "st_off": ("Statistik belum tersedia.", "Stats are not available yet."),
 "st_noscript": ("Halaman ini membutuhkan JavaScript untuk menampilkan statistik.", "This page needs JavaScript to show the stats."),

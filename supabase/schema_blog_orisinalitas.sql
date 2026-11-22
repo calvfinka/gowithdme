@@ -1,4 +1,4 @@
--- GWM: sumber tulisan + hasil pemeriksa orisinalitas blog. Jalankan di Supabase > SQL Editor.
+-- GoWithDME: sumber tulisan + hasil pemeriksa orisinalitas blog. Jalankan di Supabase > SQL Editor.
 -- Prasyarat: schema_blog.sql dan schema_tahap2.sql (fungsi is_admin()) sudah dijalankan. Aman dijalankan ulang.
 
 -- Sumber tulisan: tampil publik di akhir artikel (boleh kosong)

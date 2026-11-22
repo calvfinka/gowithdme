@@ -9,7 +9,7 @@ if(!window.sb)return fail("Layanan belum siap. Muat ulang halaman.");
 function cats(list){var h='<a href="arsip"'+(!k?' aria-current="page"':"")+'>Semua</a>'+list.map(function(c){return'<a href="'+url({k:c.koleksi})+'"'+(k===c.koleksi?' aria-current="page"':"")+">"+esc(c.koleksi)+" · "+c.jumlah+"</a>"}).join("");document.getElementById("arCats").innerHTML=h}
 function card(r){return'<article class="bl-card"><h2><a href="'+url({k:r.koleksi,b:r.slug})+'">'+esc(r.title)+'</a></h2><p class="bl-meta"><span>'+esc(r.koleksi)+"</span>"+(r.published_at?" · "+fd(r.published_at):"")+"</p><p>"+esc(r.ringkasan||"")+"</p></article>"}
 async function list(){
-  document.title=(q?q+" – ":"")+"Arsip Blog – GWM";
+  document.title=(q?q+" – ":"")+"Arsip Blog – GoWithDME";
   var qq=sb.from("arsip_blog").select("title,slug,koleksi,ringkasan,published_at",{count:"exact"}).eq("jenis","post");
   if(k)qq=qq.eq("koleksi",k);if(l)qq=qq.contains("labels",[l]);
   var s=q.replace(/[,()%*\\]/g," ").trim();if(s)qq=qq.or("title.ilike.%"+s+"%,ringkasan.ilike.%"+s+"%");
@@ -25,7 +25,7 @@ async function read(){
   var r=await qq.limit(1);
   if(r.error)return fail("Gagal memuat tulisan.");
   var p=r.data&&r.data[0];if(!p)return fail("Tulisan tidak ditemukan.");
-  document.title=p.title+" – Arsip Blog GWM";
+  document.title=p.title+" – Arsip Blog GoWithDME";
   var kr=await sb.from("arsip_komentar").select("penulis,body,published_at").eq("koleksi",p.koleksi).eq("post_src_id",p.src_id).order("published_at").limit(300);
   var ks=kr.data||[];
   main.innerHTML='<p class="bl-bc"><a href="arsip">Arsip</a> › <a href="'+url({k:p.koleksi})+'">'+esc(p.koleksi)+"</a></p><h1>"+esc(p.title)+'</h1><p class="bl-meta">'+(p.penulis?esc(p.penulis)+" · ":"")+fd(p.published_at)+"</p>"+

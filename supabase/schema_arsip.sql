@@ -1,4 +1,4 @@
--- GWM: Arsip Blog (impor dari Blogger/Blogspot). Aman dijalankan ulang.
+-- GoWithDME: Arsip Blog (impor dari Blogger/Blogspot). Aman dijalankan ulang.
 -- Prasyarat: schema_tahap2.sql (fungsi is_admin()). Dijalankan otomatis oleh: bash tools/arsip_setup.sh
 create table if not exists arsip_blog(
   id uuid primary key default gen_random_uuid(),

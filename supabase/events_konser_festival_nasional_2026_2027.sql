@@ -1,5 +1,5 @@
 -- =============================================================================
--- GWM: Konser & Festival nasional (isi wilayah yang masih sepi + festival)
+-- GoWithDME: Konser & Festival nasional (isi wilayah yang masih sepi + festival)
 -- Tidak bentrok slug dengan events yang sudah ada di production
 -- Poster unik: assets/posters/<slug>.jpg (satu URL per event)
 -- Harga detail (bukan "Info menyusul")

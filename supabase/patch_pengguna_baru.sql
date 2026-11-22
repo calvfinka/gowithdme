@@ -1,4 +1,4 @@
--- GWM patch: pengaman akun baru di sisi server. Jalankan SEKALI di Supabase > SQL Editor. Aman dijalankan ulang.
+-- GoWithDME patch: pengaman akun baru di sisi server. Jalankan SEKALI di Supabase > SQL Editor. Aman dijalankan ulang.
 -- ISI:
 --   1. Aturan nama panggilan di server: tolak nama yang menyerupai pengelola, serta email / nomor HP / tautan.
 --   2. Nama panggilan unik (tanpa membedakan huruf besar-kecil). Nama kembar lama diberi akhiran, nama baru yang bentrok diberi angka.
@@ -66,7 +66,7 @@ declare iss text;
 begin
   if new.nickname is not distinct from old.nickname or coalesce(old.role,'user')='admin' then return new; end if;
   iss:=nick_issue(new.nickname);
-  if iss='reserved' then raise exception 'Nama ini menyerupai pengelola GWM. Pilih nama panggilan lain.'; end if;
+  if iss='reserved' then raise exception 'Nama ini menyerupai pengelola GoWithDME. Pilih nama panggilan lain.'; end if;
   if iss='private' then raise exception 'Jangan pakai email, nomor HP, atau tautan sebagai nama panggilan.'; end if;
   return new;
 end $$;

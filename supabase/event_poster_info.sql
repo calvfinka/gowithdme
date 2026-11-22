@@ -1,6 +1,6 @@
--- GWM: lengkapi poster + info semua event mendatang dan TERBITKAN. Jalankan di Supabase > SQL Editor.
+-- GoWithDME: lengkapi poster + info semua event mendatang dan TERBITKAN. Jalankan di Supabase > SQL Editor.
 -- Jalankan SETELAH events_mendatang.sql. Aman dijalankan ulang.
--- poster_url: URL gambar resmi (Visit Indonesia / Jadwal Event) bila ada; selain itu banner buatan GWM di assets/posters/ (pengganti sementara).
+-- poster_url: URL gambar resmi (Visit Indonesia / Jadwal Event) bila ada; selain itu banner buatan GoWithDME di assets/posters/ (pengganti sementara).
 -- Ganti dengan poster resmi lewat admin bila sudah ada izin penyelenggara.
 update events e set
   poster_url=v.poster, ticket_url=v.ticket, price_label=v.price, lineup=coalesce(v.lineup,e.lineup),

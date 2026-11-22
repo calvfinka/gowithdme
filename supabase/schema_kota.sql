@@ -1,4 +1,4 @@
--- GWM: tambah kota-kota besar, kategori Pameran, dan kolom teks Inggris.
+-- GoWithDME: tambah kota-kota besar, kategori Pameran, dan kolom teks Inggris.
 -- Jalankan di Supabase > SQL Editor. Aman dijalankan ulang.
 
 insert into categories values ('pameran','Pameran') on conflict do nothing;

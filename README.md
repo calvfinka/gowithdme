@@ -1,4 +1,4 @@
-# GWM (Go With Me) — oleh Jurkon Studio
+# GoWithDME — oleh Jurkon Studio
 
 Portal info konser, festival, dan naik gunung, plus cari teman jalan dan komunitas per kota. Situs statis di **GitHub Pages** dengan backend **Supabase** (paket gratis). Dua bahasa: Indonesia (`/id/`) dan Inggris (`/en/`).
 
@@ -74,8 +74,8 @@ Saklar di `js/config.js`: `EVENTS_SOURCE: "live"` (Supabase dulu, default) atau 
 - Semua tulis lewat fungsi RPC dan policy RLS; panel admin dijaga RLS, bukan JavaScript.
 - Pencatat kunjungan (`js/track.js`): tanpa cookie dan tanpa IP; Do Not Track dan Global Privacy Control dihormati; data dihapus setelah 400 hari. Dijelaskan di Kebijakan Privasi (`src/privacy.*.body.html`).
 - Log lokasi login butuh persetujuan eksplisit dan kebijakan privasi (UU PDP).
-- Poster milik penyelenggara: minta izin dan cantumkan sumber. Poster buatan GWM adalah pengganti sementara.
-- Aturan GitHub Pages melarang pemakaian untuk bisnis/transaksi komersial. Bila GWM mulai menghasilkan uang, pertimbangkan Cloudflare Pages atau Netlify dari repo yang sama.
+- Poster milik penyelenggara: minta izin dan cantumkan sumber. Poster buatan GoWithDME adalah pengganti sementara.
+- Aturan GitHub Pages melarang pemakaian untuk bisnis/transaksi komersial. Bila GoWithDME mulai menghasilkan uang, pertimbangkan Cloudflare Pages atau Netlify dari repo yang sama.
 
 ## Batas paket gratis Supabase
 2 proyek, database 500 MB, penyimpanan 1 GB, egress 5 GB/bulan, 50.000 pengguna aktif bulanan. Proyek dijeda setelah 7 hari tanpa aktivitas (ditangani Jaga aktif). Pertimbangkan Pro (±US$25/bulan) saat database mendekati 400 MB atau egress rutin di atas 70%.
@@ -92,7 +92,7 @@ Checklist domain:
 **Email resmi** (diatur di `js/config.js`, dibaca oleh halaman lewat atribut `data-mail`):
 | Email | Dipakai untuk | Kunci config |
 |---|---|---|
-| `halo@gowithdme.com` | Kontak umum: Bantuan, Tentang, Syarat, order promosi, GWM Bot | `CONTACT_EMAIL` |
+| `halo@gowithdme.com` | Kontak umum: Bantuan, Tentang, Syarat, order promosi, GoWithDME Bot | `CONTACT_EMAIL` |
 | `admin@gowithdme.com` | Administrasi: pemberitahuan hak cipta / DMCA | `CONTACT_EMAIL_ADMIN` |
 | `personal@gowithdme.com` | Data pribadi: permintaan hak subjek data di Kebijakan Privasi | `CONTACT_EMAIL_PERSONAL` |
 

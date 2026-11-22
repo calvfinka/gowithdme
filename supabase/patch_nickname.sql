@@ -1,4 +1,4 @@
--- GWM patch: nama panggilan yang diisi saat daftar sebelumnya diabaikan (profil selalu memakai awalan email).
+-- GoWithDME patch: nama panggilan yang diisi saat daftar sebelumnya diabaikan (profil selalu memakai awalan email).
 -- Jalankan sekali di Supabase > SQL Editor. Aman dijalankan ulang.
 -- Catatan: bila schema_google.sql atau schema_tahap2.sql sudah mengubah fungsi handle_new_user() dengan logika tambahan,
 -- gabungkan dulu isinya; fungsi di bawah hanya mengisi id, nickname, dan avatar_url.

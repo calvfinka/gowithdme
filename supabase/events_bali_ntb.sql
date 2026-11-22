@@ -1,8 +1,8 @@
--- GWM sesi 1: Bali dan Nusa Tenggara (data per 17 Nov 2026). Jalankan di Supabase > SQL Editor.
+-- GoWithDME sesi 1: Bali dan Nusa Tenggara (data per 17 Nov 2026). Jalankan di Supabase > SQL Editor.
 -- Prasyarat: schema.sql, schema_tahap2.sql, schema_admin.sql, schema_kota.sql sudah dijalankan.
 -- Aman dijalankan ulang. Sumber: Dinas Pariwisata Bali (disparda.baliprov.go.id), RRI, kalender event Lombok (lihat ticket_url).
 -- Ketiga event ini festival budaya/pariwisata, bukan konser berbayar, jadi dimasukkan ke kategori 'pameran'.
--- Harga NULL = belum diumumkan (tampil "Info menyusul"). Poster NULL = tampil gradien GWM; unggah poster resmi lewat admin.
+-- Harga NULL = belum diumumkan (tampil "Info menyusul"). Poster NULL = tampil gradien GoWithDME; unggah poster resmi lewat admin.
 -- Kota baru (Lombok Barat, Lombok Tengah) juga sudah ditambahkan di js/regions.js.
 
 insert into cities(province_id,name,slug)

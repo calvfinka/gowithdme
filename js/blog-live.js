@@ -78,11 +78,11 @@
     if (!main) return;
     var key = p.category + "/" + p.slug, url = liveUrl(p), cn = CATS[p.category] || p.category, m = mins(p.body, p.is_html, p.title), pr = prep(p.body, p.is_html, p.title);
     pr.kw = mergeTags(p.tags, pr.kw);
-    document.title = p.title + " – Blog GWM";
+    document.title = p.title + " – Blog GoWithDME";
     var stat = ROOT + "blog/" + p.category + "/" + p.slug, ex = trimEx(plainOf(pr.html));
     function sm(sel, attr, v){ var e = document.querySelector(sel); if (e) e.setAttribute(attr, v); }
     sm('meta[name="description"]', "content", ex); sm('link[rel="canonical"]', "href", stat);
-    sm('meta[property="og:title"]', "content", p.title + " – Blog GWM"); sm('meta[property="og:description"]', "content", ex);
+    sm('meta[property="og:title"]', "content", p.title + " – Blog GoWithDME"); sm('meta[property="og:description"]', "content", ex);
     sm('meta[property="og:url"]', "content", stat); sm('meta[property="og:type"]', "content", "article");
     document.body.classList.add("bl-reading");
     shown = location.pathname + location.search;
@@ -92,7 +92,7 @@
     main.innerHTML = '<div class="bl-grid bl-grid-a"><article class="bl-art bl-c-'+esc(p.category)+'" id="blArt" data-k="'+esc(key)+'" data-title="'+esc(p.title)+'" data-url="'+esc(url)+'">' +
       '<nav class="bl-bc"><a href="'+ROOT+'blog/">Blog</a><span>›</span><a href="'+ROOT+'blog/'+esc(p.category)+'/">'+esc(cn)+'</a></nav>' +
       '<a class="bl-badge" href="'+ROOT+'blog/'+esc(p.category)+'/">'+ic(p.category)+esc(cn)+'</a><h1>'+esc(p.title)+'</h1>' +
-      '<div class="bl-by"><span class="bl-av" aria-hidden="true">G</span><div><b>Redaksi GWM</b><span>'+fd(p.published_at)+' · '+m+' menit baca</span></div></div>' +
+      '<div class="bl-by"><span class="bl-av" aria-hidden="true">G</span><div><b>Redaksi GoWithDME</b><span>'+fd(p.published_at)+' · '+m+' menit baca</span></div></div>' +
       '<p class="bl-stats"><span class="bl-s bl-sv" hidden>'+ic("eye")+'<b data-v></b> dibaca</span><span class="bl-s bl-sc" hidden>'+ic("chat")+'<b data-c></b> komentar</span><span class="bl-s bl-sl" hidden>'+ic("heart")+'<b data-l></b> suka</span></p>' +
       '<div class="bl-share" role="group" aria-label="Bagikan tulisan"><span class="bl-sl-t">'+ic("share")+'Bagikan</span>'+shr+'<button type="button" class="bl-sb bl-sb-cp" data-copy>'+ic("link")+'Salin tautan</button><button type="button" class="bl-sb bl-sb-nat" data-native hidden>Lainnya…</button><span class="sp"></span><span class="bl-fs" role="group" aria-label="Ukuran teks">'+ic("type")+'<button type="button" data-fs="-1" aria-label="Kecilkan teks">A−</button><button type="button" data-fs="1" aria-label="Besarkan teks">A+</button></span></div>' +
       '<details class="bl-toc-m" id="blTocM" hidden><summary>'+ic("list")+'Daftar isi</summary><ol></ol></details>' +

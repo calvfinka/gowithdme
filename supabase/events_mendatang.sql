@@ -1,8 +1,8 @@
--- GWM: event mendatang (data per 16 Nov 2026). Jalankan di Supabase > SQL Editor.
+-- GoWithDME: event mendatang (data per 16 Nov 2026). Jalankan di Supabase > SQL Editor.
 -- Prasyarat: schema.sql, schema_tahap2.sql, schema_admin.sql, schema_kota.sql sudah dijalankan.
 -- Aman dijalankan ulang (slug yang sudah ada dilewati).
 -- Sumber: berita & situs resmi/penjual tiket (lihat kolom ticket_url dan deskripsi). Cek ulang jadwal/harga sebelum tayang.
--- poster_url hanya diisi bila ada URL gambar yang benar-benar ditemukan; sisanya NULL (tampil gradien GWM).
+-- poster_url hanya diisi bila ada URL gambar yang benar-benar ditemukan; sisanya NULL (tampil gradien GoWithDME).
 -- Poster milik penyelenggara: minta izin, atau unggah poster sendiri lewat admin (bucket "posters").
 
 -- Kota tambahan (juga tambahkan di js/regions.js)

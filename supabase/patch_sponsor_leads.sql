@@ -1,4 +1,4 @@
--- GWM: formulir "Promote" -> tabel sponsorship_leads -> tab "Sponsor" di admin.
+-- GoWithDME: formulir "Promote" -> tabel sponsorship_leads -> tab "Sponsor" di admin.
 -- Aman dijalankan berulang. Jalankan SETELAH schema_monetisasi.sql dan schema_tahap2.sql (butuh is_admin()).
 -- Tabel tetap tertutup untuk aplikasi (RLS menolak semua); pengunjung hanya lewat submit_sponsor_lead,
 -- admin hanya lewat admin_list_sponsor_leads / admin_update_sponsor_lead.
@@ -79,7 +79,7 @@ begin
   end if;
 
   -- kode order dibuat server, acak, dan dijamin unik
-  v_pref := 'GWM-' || coalesce(nullif(left(upper(regexp_replace(coalesce(v_city, ''), '[^a-zA-Z]', '', 'g')), 3), ''), 'IDN')
+  v_pref := 'GoWithDME-' || coalesce(nullif(left(upper(regexp_replace(coalesce(v_city, ''), '[^a-zA-Z]', '', 'g')), 3), ''), 'IDN')
             || '-' || case v_pkg when 'national_portal' then 'NAT' when 'city_spotlight' then 'CTY' else 'FRE' end || '-';
   loop
     v_code := v_pref || upper(substr(md5(random()::text || clock_timestamp()::text), 1, 6));

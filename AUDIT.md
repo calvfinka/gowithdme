@@ -1,4 +1,4 @@
-# Audit GWM — 16 November 2026
+# Audit GoWithDME — 16 November 2026
 
 Diuji di Chromium headless (meniru GitHub Pages di subfolder `/gowithdme/`, URL bersih tanpa `.html`, jam dikunci ke WIB). Supabase, Open-Meteo, dan Google memakai **data tiruan**, jadi alur login/Google/RLS asli belum teruji. Semua perbaikan dibuat lewat `src/`, `tools/` dan `js/`, lalu `python3 tools/build.py`.
 

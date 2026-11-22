@@ -1,4 +1,4 @@
-/* GWM — beranda portal: banner berputar, ticker "Segera hadir", pintasan berlencana, tab topik, sapaan dan "terakhir dilihat".
+/* GoWithDME — beranda portal: banner berputar, ticker "Segera hadir", pintasan berlencana, tab topik, sapaan dan "terakhir dilihat".
    Membaca data lewat window.IB_Api (js/app.js). Tidak ada permintaan jaringan sendiri. */
 (function(){
 var d=document,tr=window.IB_T||function(k){return k},$=function(i){return d.getElementById(i)};

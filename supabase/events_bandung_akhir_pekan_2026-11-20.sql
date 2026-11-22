@@ -1,4 +1,4 @@
--- GWM: 9 event Bandung (20-24 Nov 2026) yang belum ada di web, non-konser + 1 konser gratis.
+-- GoWithDME: 9 event Bandung (20-24 Nov 2026) yang belum ada di web, non-konser + 1 konser gratis.
 -- Jalankan di Supabase > SQL Editor. Aman diulang (slug sama = diperbarui, tidak dobel).
 -- Prasyarat: schema.sql, schema_kota.sql, events_goers_draft.sql (kategori festival/lainnya), schema_komunitas.sql (kolom organizer).
 -- Sumber: infobdg.com (dicek 20 Nov 2026) + akun IG resmi penyelenggara. Tidak semua event punya link tiket:

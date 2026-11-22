@@ -42,5 +42,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, HOST, () => {
-  console.log(`GWM static server running at http://${HOST}:${PORT}`);
+  console.log(`GoWithDME static server running at http://${HOST}:${PORT}`);
 });

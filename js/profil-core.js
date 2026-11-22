@@ -1,4 +1,4 @@
-/* Pure dashboard helpers for GWM social profile page (Browser + Node ESM/CJS testable). */
+/* Pure dashboard helpers for GoWithDME social profile page (Browser + Node ESM/CJS testable). */
 (function(root, factory){
   var api = factory();
   if (typeof module === "object" && module.exports) module.exports = api;

@@ -1,4 +1,4 @@
--- GWM: event dari Goers (11 Nov 2026), status DRAFT. Jalankan di Supabase > SQL Editor.
+-- GoWithDME: event dari Goers (11 Nov 2026), status DRAFT. Jalankan di Supabase > SQL Editor.
 -- Prasyarat: schema.sql, schema_kota.sql sudah dijalankan. Aman dijalankan ulang (slug sama dilewati).
 -- Semua event masuk sebagai draft: cek dulu, isi poster_url, lalu terbitkan lewat halaman admin (atau jalankan UPDATE di bawah).
 -- Cek ulang jadwal/harga di tautan tiket sebelum diterbitkan.

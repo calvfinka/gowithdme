@@ -1,4 +1,4 @@
-/* GWM — perilaku bersama gaya portal (semua halaman): mega menu "Semua layanan", status masuk, kotak cari header
+/* GoWithDME — perilaku bersama gaya portal (semua halaman): mega menu "Semua layanan", status masuk, kotak cari header
    yang muncul saat kotak besar di beranda keluar layar, dan tema dari menu. Tanpa data event; aman dimuat di halaman mana pun. */
 (function(){
 var d=document,B=d.body,mm=d.getElementById("mm");

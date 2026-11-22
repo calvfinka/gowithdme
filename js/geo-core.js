@@ -7,7 +7,7 @@
   if (root) root.IB_GeoCore = api;
 })(typeof window !== "undefined" ? window : (typeof globalThis !== "undefined" ? globalThis : this), function(){
   var MAX_KM = 80;        /* titik terdekat lebih jauh dari ini = di luar jangkauan, tidak menebak */
-  var NEAR_KM = 25;       /* kota yang ada di GWM dipilih bila selisih jaraknya dari titik terdekat tidak lebih dari ini (Lembang -> Bandung) */
+  var NEAR_KM = 25;       /* kota yang ada di GoWithDME dipilih bila selisih jaraknya dari titik terdekat tidak lebih dari ini (Lembang -> Bandung) */
   var FALLBACK_KM = 150;  /* batas tawaran "pakai kota terdekat yang sudah ada" */
   var MAX_ACC = 30000;    /* akurasi lebih kasar dari 30 km (mis. perkiraan dari jaringan) tidak dipakai */
   var ONB_DAYS = 7;       /* kartu kota hanya untuk akun yang berumur kurang dari ini */
@@ -34,7 +34,7 @@
   }
 
   /* o: {geo, cities (nama kota yang ada di tabel cities), accuracy (meter, opsional)}.
-     Hasil: {kind:"known", city, km} kota ada di GWM; {kind:"unlisted", city, km, fallback:{city,km}|null} kota terbaca tapi belum ada di GWM;
+     Hasil: {kind:"known", city, km} kota ada di GoWithDME; {kind:"unlisted", city, km, fallback:{city,km}|null} kota terbaca tapi belum ada di GoWithDME;
      {kind:"none", reason:"bad"|"coarse"|"far"} tidak menebak. */
   function resolve(lat, lng, o){
     o = o || {};

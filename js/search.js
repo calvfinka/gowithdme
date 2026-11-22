@@ -1,4 +1,4 @@
-/* GWM: pencarian autoscope.
+/* GoWithDME: pencarian autoscope.
    Satu kotak untuk semua: event, artis/penampil, genre, kota & provinsi, gunung, artikel blog, postingan komunitas, nama akun, halaman situs, dan FAQ/Bantuan.
    Cara kerja: semua kata di kotak harus cocok (AND), awalan kata dan salah ketik ringan ikut dihitung,
    singkatan umum (jkt, bdg, jogja, jabar...) dikenali, dan hasil dikelompokkan lalu diurutkan menurut kecocokan.

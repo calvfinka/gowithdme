@@ -18,7 +18,7 @@ window.admAsk=function(o){o=o||{};return new Promise(function(res){
   var inpHtml="";
   if(o.banForm){
     inpHtml='<label class="f">Lama blokir (hari, 0 = permanen)<input name="days" type="number" min="0" max="3650" value="7" required></label>'+
-      '<label class="f">Alasan (dibaca pengguna)<textarea name="why" rows="3" maxlength="300" required>Melanggar aturan komunitas GWM.</textarea></label>';
+      '<label class="f">Alasan (dibaca pengguna)<textarea name="why" rows="3" maxlength="300" required>Melanggar aturan komunitas GoWithDME.</textarea></label>';
   }else if(o.input){
     inpHtml=chips+'<label class="f">'+(o.inputLabel?esc(o.inputLabel):"")+'<textarea name="v" rows="3" maxlength="300" placeholder="'+esc(o.ph||"")+'">'+esc(o.def||"")+'</textarea></label>';
   }
@@ -84,7 +84,7 @@ document.addEventListener("click",function(ev){var b=ev.target.closest("button")
     if(b.dataset.a==="edit")fill(e);
     if(b.dataset.a==="ok")sb.rpc("admin_review_event",{p_id:e.id,p_ok:true,p_reason:null}).then(function(r){msg(r.error?friendlyErr(r.error):"Disetujui dan tayang.",r.error?"err":"ok");load()});
     if(b.dataset.a==="no"){
-      admAsk({title:"Tolak pengajuan event",text:'Berikan alasan penolakan untuk "'+e.title+'" agar pengaju dapat memperbaiki.',input:true,ph:"Tulis alasan penolakan (opsional)…",presets:["Poster kurang jelas / tidak sesuai","Tanggal atau lokasi belum lengkap","Kontak penyelenggara tidak valid","Konten tidak sesuai panduan GWM"],ok:"Tolak Pengajuan"}).then(function(why){
+      admAsk({title:"Tolak pengajuan event",text:'Berikan alasan penolakan untuk "'+e.title+'" agar pengaju dapat memperbaiki.',input:true,ph:"Tulis alasan penolakan (opsional)…",presets:["Poster kurang jelas / tidak sesuai","Tanggal atau lokasi belum lengkap","Kontak penyelenggara tidak valid","Konten tidak sesuai panduan GoWithDME"],ok:"Tolak Pengajuan"}).then(function(why){
         if(why===null)return;
         sb.rpc("admin_review_event",{p_id:e.id,p_ok:false,p_reason:why}).then(function(r){msg(r.error?friendlyErr(r.error):"Pengajuan ditolak.",r.error?"err":"ok");load()});
       });
