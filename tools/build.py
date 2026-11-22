@@ -86,7 +86,7 @@ for l in LANGS:
         h=inc(open(f"{ROOT}/src/{p}.html",encoding="utf-8").read())
         h=h.replace("{{search}}",inc("{{>search}}"))
         h=h.replace("{{stat_link}}",STAT_LINK if STAT_ON else "")
-        h=h.replace("{{pgshare}}",'<button class="mm-share" id="pgShare" type="button"><svg class="i" aria-hidden="true"><use href="#i-share"/></svg>{{sh_aria}}</button>' if p in APP else "")
+        h=h.replace("{{pgshare}}",'<button class="mm-share" id="pgShare" type="button"><svg class="i" aria-hidden="true"><use href="#ia-share"/></svg>{{sh_aria}}</button>' if p in APP else "")
         if p in("privacy","terms","copyright","template","about"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
         sw=f'<a class="lang" href="../{o}/{path(p)}" data-sw="{o}" hreflang="{o}" lang="{o}" aria-label="{S["lang_label"][IDX[l]]}">{o.upper()}</a>'
         hl="" if p in NOINDEX else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'

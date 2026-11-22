@@ -336,3 +336,18 @@ html .now .clock{display:grid;grid-template-columns:auto auto;justify-content:st
 .nv-apps-in .app{--c:var(--brand)!important}
 .btn.line{color:var(--brand);border-color:var(--brand)}
 .btn.line:hover{background:var(--sel)}
+
+/* solid icon pack for category tiles */
+.nv-apps-in .ap-ic{background:var(--brand);box-shadow:none;border-radius:15px;color:var(--brand-ink)}
+.nv-apps-in .ap-ic .i{width:28px;height:28px;stroke-width:0}
+.iaw{fill:var(--brand-ink);stroke:none}.iao{fill:var(--accent);stroke:none}.iab{fill:var(--brand);stroke:none}
+.iawj{fill:var(--brand-ink);stroke:var(--brand-ink);stroke-width:1.6}.iaoj{fill:var(--accent);stroke:var(--accent);stroke-width:1.6}
+.iaws{fill:none;stroke:var(--brand-ink);stroke-width:2.2}.iaos{fill:none;stroke:var(--accent);stroke-width:2.6}.iabs{fill:none;stroke:var(--brand);stroke-width:2.2}
+
+/* nav panel: solid tiles + activity markers */
+.mm .mm-g section .i{background:var(--brand);color:var(--brand-ink);padding:5px}
+.mm .mm-g section a:hover .i,.mm .mm-g section button:hover .i{background:var(--brand)}
+.mm .mm-g .mm-msg,.mm .mm-g #ajMy{position:relative}
+.mm .mm-g .mm-msg .nb,.mm .mm-g #ajMy .ajn{position:absolute;left:22px;top:0;right:auto;margin:0;transform:none;min-width:17px;height:17px;padding:0 4px;font-size:10.5px;line-height:17px;box-shadow:0 0 0 2px var(--bg)}
+.mm .mm-g section:has(.mm-msg .nb,#ajMy .ajn:not([hidden])) h3::after{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+@media (prefers-reduced-motion:no-preference){.mm .mm-g section:has(.mm-msg .nb,#ajMy .ajn:not([hidden])) h3::after{animation:mmpl 1.8s ease-out infinite}@keyframes mmpl{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 45%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}}
