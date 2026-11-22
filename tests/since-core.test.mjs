@@ -42,3 +42,53 @@ test("whenLabel: terlalu dekat disembunyikan; hari ini, kemarin, n hari", () => 
   assert.deepEqual(whenLabel(NOW - 5 * 864e5, NOW), { k: "days", n: 5 });
   assert.equal(whenLabel(0, NOW), null);
 });
+
+/* ---- L2 + B1 ---- */
+const { countInvites, inWindow, label, isNewSince, CAP, WINDOW_DAYS } = globalThis.IB_SinceCore;
+const day = (n) => new Date(NOW + n * 864e5).toISOString().slice(0, 10);
+
+test("label: lebih dari batas ditulis dengan plus", () => {
+  assert.equal(CAP, 20);
+  assert.equal(label(1), "1");
+  assert.equal(label(20), "20");
+  assert.equal(label(21), "20+");
+  assert.equal(label(131), "20+");
+});
+test("inWindow: event jauh di masa depan tidak ikut, tanpa tanggal valid ikut", () => {
+  assert.equal(WINDOW_DAYS, 30);
+  assert.equal(inWindow({ event_date: day(10) }, NOW, 30), true);
+  assert.equal(inWindow({ event_date: day(30) }, NOW, 30), true);
+  assert.equal(inWindow({ event_date: day(45) }, NOW, 30), false);
+  assert.equal(inWindow({}, NOW, 30), true);
+  assert.equal(inWindow({ event_date: "bukan" }, NOW, 30), true);
+});
+test("countNew: impor massal event jauh tidak membuat hitungan bising", () => {
+  const ev = [];
+  for (let i = 0; i < 50; i++) ev.push({ created_at: iso(2), city: "Bandung", event_date: day(90 + i) });
+  ev.push({ created_at: iso(2), city: "Bandung", event_date: day(5) });
+  ev.push({ created_at: iso(2), city: "Jakarta", event_date: day(12) });
+  const r = countNew(ev, NOW - 10 * 36e5, () => true, "Bandung", { now: NOW, days: 30 });
+  assert.deepEqual(r, { total: 2, city: 1 });
+  const lama = countNew(ev, NOW - 10 * 36e5, () => true, "Bandung");
+  assert.equal(lama.total, 52);
+});
+test("isNewSince: hanya yang dibuat setelah acuan", () => {
+  assert.equal(isNewSince({ created_at: iso(1) }, NOW - 5 * 36e5), true);
+  assert.equal(isNewSince({ created_at: iso(9) }, NOW - 5 * 36e5), false);
+  assert.equal(isNewSince({ created_at: iso(1) }, 0), false);
+  assert.equal(isNewSince({}, NOW), false);
+});
+test("countInvites: terbuka, di kota pengguna, baru, belum lewat", () => {
+  const rows = [
+    { created_at: iso(2), status: "open", city: "Bandung", when_date: day(3) },
+    { created_at: iso(2), status: "open", city: "bandung", when_date: null },
+    { created_at: iso(2), status: "full", city: "Bandung", when_date: day(3) },
+    { created_at: iso(2), status: "open", city: "Jakarta", when_date: day(3) },
+    { created_at: iso(30), status: "open", city: "Bandung", when_date: day(3) },
+    { created_at: iso(2), status: "open", city: "Bandung", when_date: day(-2) },
+  ];
+  assert.equal(countInvites(rows, NOW - 10 * 36e5, "Bandung", day(0)), 2);
+  assert.equal(countInvites(rows, NOW - 10 * 36e5, "", day(0)), 0);
+  assert.equal(countInvites(rows, NOW - 10 * 36e5, "semua", day(0)), 0);
+  assert.equal(countInvites(rows, null, "Bandung", day(0)), 0);
+});

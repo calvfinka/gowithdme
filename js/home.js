@@ -127,13 +127,15 @@ function since(){var box=$("sinceBox"),C=window.IB_SinceCore;if(!box||!C||!A)ret
   var base=C.baseline(seen,sb,now);
   try{localStorage.setItem(SEEN,String(now));if(base&&!sb)sessionStorage.setItem(BASE,String(base))}catch(e){}
   if(!base)return;
+  /* teman.js (ajakan baru di kota) menunggu acuan ini: urutan muat kedua skrip tidak pasti */
+  try{document.dispatchEvent(new CustomEvent("ib:since"))}catch(e){}
   try{var loc=JSON.parse(localStorage.getItem("gwm_loc")||"null");city=loc&&loc.city||""}catch(e){}
   var w=C.whenLabel(base,now);if(!w)return;
-  var r=C.countNew(A.events(),base,A.isActive,city);if(!r.total)return;
+  var r=C.countNew(A.events(),base,A.isActive,city,{now:now,days:C.WINDOW_DAYS});if(!r.total)return;
   var wt=w.k==="today"?tr("sn_today"):w.k==="yesterday"?tr("sn_yest"):tr("sn_days",{n:w.n});
-  var t=tr(r.total===1?"sn_msg1":"sn_msg",{n:r.total,w:wt});
-  if(r.city&&r.city<r.total)t+=" "+tr("sn_city",{c:r.city,city:city});
-  $("sinceTxt").textContent=t;box.hidden=false}
+  var t=tr(r.total===1?"sn_msg1":"sn_msg",{n:C.label(r.total),w:wt});
+  if(r.city&&r.city<r.total)t+=" "+tr("sn_city",{c:C.label(r.city),city:city});
+  $("sinceTxt").textContent=t;$("sinceEv").hidden=false;box.hidden=false}
 
 function init(){A=window.IB_Api;if(!A)return;
   trendBind();bannerBind();tabsBind();recentBind();greet();dots();since();

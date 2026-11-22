@@ -1030,10 +1030,14 @@ _SINCE = {
 "sn_msg": ("{n} event baru sejak kunjunganmu terakhir ({w}).", "{n} new events since your last visit ({w})."),
 "sn_msg1": ("1 event baru sejak kunjunganmu terakhir ({w}).", "1 new event since your last visit ({w})."),
 "sn_city": ("{c} di {city}.", "{c} in {city}."),
+"sn_inv": ("{n} ajakan baru di {city}.", "{n} new invites in {city}."),
+"sn_inv1": ("1 ajakan baru di {city}.", "1 new invite in {city}."),
 "sn_today": ("hari ini", "today"),
 "sn_yest": ("kemarin", "yesterday"),
 "sn_days": ("{n} hari lalu", "{n} days ago"),
 "sn_link": ("Lihat yang terbaru", "See the newest"),
+"sn_inv_link": ("Lihat ajakan", "See invites"),
+"sn_new": ("Baru", "New"),
 }
 S.update(_SINCE); J.update(_SINCE)
 

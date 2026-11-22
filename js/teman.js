@@ -208,12 +208,21 @@ function bind(){
     if(x==="leave")return ask({title:tr("aj_leave"),text:tr("aj_sure_leave")}).then(function(v){if(v)run(sb.rpc("leave_or_cancel",{p_inv:i}),tr("aj_left"),again)});
     if(x==="report")return ask({title:tr("aj_report_h"),input:{ph:tr("aj_report_ph"),min:3,max:200},ok:tr("aj_send")}).then(function(v){if(v)run(sb.rpc("report_invitation",{p_inv:i,p_reason:v}),tr("aj_reported"),again)})}}
 
+/* ---------- beranda: ajakan baru sejak kunjungan (acuan dari home.js lewat sessionStorage) ---------- */
+document.addEventListener("ib:since",function(){sinceInv()});
+function sinceInv(){var C=window.IB_SinceCore,box=$("sinceBox"),sp=$("sinceInv");if(!C||!box||!sp||!st.city)return;
+  var base=0,now=Date.now();try{base=+sessionStorage.getItem("gwm_home_base")||0}catch(e){}
+  if(!base||!C.whenLabel(base,now))return;
+  var n=C.countInvites(st.rows,base,st.city,today());if(!n)return;
+  $("sinceInvTxt").textContent=tr(n===1?"sn_inv1":"sn_inv",{n:C.label(n),city:st.city});sp.hidden=false;box.hidden=false}
+
 /* ---------- beranda: ringkas ---------- */
 function home(){var box=$("tmHome");if(!box)return;
   Promise.all([session(),load()]).then(function(){
     if(st.nosql)return;
     var cnt={};st.rows.forEach(function(i){if(i.niche)cnt[i.niche]=(cnt[i.niche]||0)+1});
     $("tmHomeChips").innerHTML=NICHES.map(function(n){return'<a class="tm-c" href="teman?n='+n[0]+'">'+ic(n[1])+'<span>'+esc(nlabel(n[0]))+'</span>'+(cnt[n[0]]?'<small>'+cnt[n[0]]+'</small>':'')+'</a>'}).join("");
+    sinceInv();
     st.mode="near";var L=list().slice(0,3);
     $("tmHomeList").innerHTML=L.length?L.map(function(i){return'<a class="tm-mini" href="teman?i='+encodeURIComponent(i.id)+'"><span class="tm-bs">'+badges(i)+'</span><b>'+esc(i.title)+'</b><small>'+esc(placeTxt(i))+(i.when_date?' · '+esc(dfmt(i.when_date)):'')+' · '+i.filled+'/'+i.capacity+'</small></a>'}).join(""):'<p class="meta">'+esc(tr("ct_none_home"))+'</p>'+emptyRow({where:"home"});
     box.hidden=false})}

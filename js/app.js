@@ -98,6 +98,9 @@ function loadChips(){var box=$("kChips");if(!box||!window.sb)return;
   window.sb.from("forum_city_stats").select("*").order("sort").then(function(r){var A=(r.data||[]).filter(function(c){return c.active});if(!A.length)return;
     box.innerHTML=A.map(function(c){return'<a class="kchip" href="komunitas?kota='+encodeURIComponent(c.city)+'">'+esc(c.city)+(c.posts?' <small>'+c.posts+'</small>':'')+'</a>'}).join("")+'<a class="kchip all" href="komunitas">'+esc(tr("home_allcities"))+'</a>'},function(){})}
 function invN(e){return SOC[e.id]?+SOC[e.id].open_invites||0:0}
+/* "Baru": hanya saat daftar diurutkan terbaru (event?sort=new) dan ada acuan kunjungan dari beranda di sesi ini. */
+var NEWBASE=0;try{NEWBASE=+sessionStorage.getItem("gwm_home_base")||0}catch(e){}
+function newBadge(e){var C=window.IB_SinceCore;return state.sort==="new"&&NEWBASE&&C&&C.isNewSince(e,NEWBASE)?'<span class="badge int">'+esc(tr("sn_new"))+'</span>':""}
 function invBadge(e){var n=invN(e),w=SOC[e.id]?+SOC[e.id].interested||0:0;
   return n?'<span class="badge inv">'+esc(tr("aj_open_badge",{n:n}))+'</span>':(w?'<span class="badge int">'+esc(tr("aj_interest_n",{n:w}))+'</span>':"")}
 /* ---- Klasifikasi & filter ---- */
@@ -139,13 +142,13 @@ function tile(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
     '<div class="d"><b>'+p.d+'</b><span>'+p.m+'</span></div>'+
     '<button class="fav sh" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
     '<button class="fav" type="button" data-sv="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr("sv_label"))+'">'+ic("heart")+'</button></div>'+
-    '<div><div class="tt">'+esc(ttl(e))+'</div><div class="tm">'+where(e)+'</div><div class="tm">'+esc(kind(e))+(sp?' · '+sp:'')+'</div><div class="tm">'+badge(e)+featBadge(e)+invBadge(e)+'</div>'+
+    '<div><div class="tt">'+esc(ttl(e))+'</div><div class="tm">'+where(e)+'</div><div class="tm">'+esc(kind(e))+(sp?' · '+sp:'')+'</div><div class="tm">'+badge(e)+newBadge(e)+featBadge(e)+invBadge(e)+'</div>'+
     '<div class="tm p'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_tbd"))+'</div>'+(s.k==="past"?'':buddyBtn(e))+'</div></div>'}
 function row(e){var p=dparts(e.event_date),s=status(e),on=isSaved(e.id);
   var sp=e._sponsored?' · <span class="meta-sp">'+esc(tr("promo_partner_badge"))+'</span>':'';
   return'<div class="r'+(s.k==="past"?' past':'')+'" data-id="'+esc(e.id)+'" role="button" tabindex="0"><div class="rd" style="'+posterStyle(e)+'"><div><b>'+p.d+'</b><span>'+p.m+'</span></div></div>'+
     '<div class="rt"><b>'+esc(ttl(e))+'</b><span>'+esc(kind(e))+' · '+esc(rng(e))+sp+'</span></div>'+
-    '<div class="rc">'+where(e)+'</div><div class="rs">'+badge(e)+featBadge(e)+invBadge(e)+'</div>'+
+    '<div class="rc">'+where(e)+'</div><div class="rs">'+badge(e)+newBadge(e)+featBadge(e)+invBadge(e)+'</div>'+
     '<div class="rp'+(priceOf(e)?'':' t')+'">'+esc(priceOf(e)||tr("price_soon"))+'</div>'+
     '<div class="ra">'+(s.k==="past"?'':'<button class="rf rbd" type="button" data-bd="'+esc(e.id)+'" aria-label="'+esc(tr("buddy_aria"))+'" title="'+esc(tr("buddy_btn"))+'">'+ic("users")+'</button>')+'<button class="rf" type="button" data-sh="'+esc(e.id)+'" aria-label="'+esc(tr("share"))+'">'+ic("share")+'</button>'+
     '<button class="rf" type="button" data-sv="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr("sv_label"))+'">'+ic("heart")+'</button></div></div>'}
