@@ -331,3 +331,8 @@ html .now .clock{display:grid;grid-template-columns:auto auto;justify-content:st
 .stat.cta{grid-column:1/-1;text-decoration:none;color:inherit;border-left:0;padding-left:0;border-top:1px solid var(--line)}
 .stat.cta b{font-size:15px;color:var(--brand)}
 .stat.cta:hover b{text-decoration:underline}
+
+/* brand refresh: one brand green for category icons, outline buttons in brand green */
+.nv-apps-in .app{--c:var(--brand)!important}
+.btn.line{color:var(--brand);border-color:var(--brand)}
+.btn.line:hover{background:var(--sel)}
