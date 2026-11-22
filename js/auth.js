@@ -5,7 +5,10 @@ var OAUTH_NAMES={google:"Google",facebook:"Facebook",discord:"Discord",github:"G
 /* Arah setelah masuk: ?next=... atau beranda. Disimpan di sessionStorage supaya tetap jalan setelah OAuth/email membawa pengguna kembali. */
 function setAfter(def){var to=safeNext(def===undefined?"./":def);if(to==null)return;try{sessionStorage.setItem(AFTER,JSON.stringify({to:to,t:Date.now()}))}catch(e){}}
 function takeAfter(){try{var v=JSON.parse(sessionStorage.getItem(AFTER)||"null");sessionStorage.removeItem(AFTER);return v&&Date.now()-v.t<6e5?v.to:null}catch(e){return null}}
-function goAfter(){var to=takeAfter();if(!to)return false;msg(tr("a_redirect"),"ok");setTimeout(function(){location.href=to},350);return true}
+function goAfter(){var to=takeAfter();if(!to)return false;
+  var go=function(){msg(tr("a_redirect"),"ok");setTimeout(function(){location.href=to},350)};
+  getMe().then(function(m){if(m&&needCity(m)){window.IB_ONB_TO=to;msg("");show();return}go()},go);   /* akun baru tanpa kota: tampilkan kartu kota dulu, lalu lanjut ke tujuan */
+  return true}
 function seg(m){mode=m;$("fLogin").hidden=m!=="login";$("fReg").hidden=m!=="reg";$("sLogin").classList.toggle("on",m==="login");$("sReg").classList.toggle("on",m==="reg");msg("")}
 $("sLogin").onclick=function(){seg("login")};$("sReg").onclick=function(){seg("reg")};
 $("fLogin").onsubmit=function(e){e.preventDefault();msg(tr("processing"));holding=true;setAfter();
@@ -100,6 +103,7 @@ function welcome(){
     var d=driftOf(m);
     msg(tr("su_welcome",{n:nm}),"ok");
     if(d){show();setTimeout(function(){driftShow(m,d)},1400);return true}   /* tetap di halaman akun supaya pesan terbaca */
+    if(to&&needCity(m)){window.IB_ONB_TO=to;show();return true}   /* akun baru tanpa kota: tahan di halaman akun supaya kartu kota tampil, lalu lanjut ke tujuan */
     if(to)setTimeout(function(){location.href=to},1300);else show();
     return true})}
 if(ARR.error){
@@ -161,20 +165,48 @@ $("bLoc").onclick=function(){logLocation()};
 function onbKey(id){return"gwm_onb_"+String(id).slice(0,12)}
 function onbSeen(id){try{return localStorage.getItem(onbKey(id))==="1"}catch(e){return false}}
 function onbMark(id){try{localStorage.setItem(onbKey(id),"1")}catch(e){}}
+function needCity(m){var G=window.IB_GeoCore;return G?G.onbNeeded(m.profile,m.user.created_at,onbSeen(m.user.id)):false}
 function firstRun(m,nick){
   var old=$("onb");
   if(old&&old.parentNode)old.parentNode.removeChild(old);
-  var p=m.profile||{},age=Date.now()-new Date(m.user.created_at||0).getTime();
-  if(p.city_id||onbSeen(m.user.id)||!(age>=0&&age<7*864e5))return;
+  if(!needCity(m))return;
   var top=document.querySelector("#me .acct-top");if(!top)return;
+  var go=window.IB_ONB_TO||null;
   var box=document.createElement("section");box.className="card ok onb";box.id="onb";box.style.marginBottom="14px";
   box.innerHTML='<h3>'+esc(tr("onb_t",{n:nick}))+'</h3><p class="meta">'+esc(tr("onb_p"))+'</p>'+
     '<label class="f">'+esc(tr("onb_city"))+'<select id="onbCity"></select></label>'+
-    '<div class="row"><button class="btn pri sm" id="onbSave" type="button">'+esc(tr("onb_save"))+'</button><button class="btn ghost sm" id="onbSkip" type="button">'+esc(tr("onb_skip"))+'</button></div>';
+    '<p class="row"><button class="btn ghost sm" id="onbGeo" type="button">'+esc(tr("onb_geo"))+'</button></p>'+
+    '<p class="meta" id="onbGeoSt" aria-live="polite">'+esc(tr("onb_geo_note"))+'</p><p class="row" id="onbGeoAct"></p>'+
+    '<div class="row"><button class="btn pri sm" id="onbSave" type="button">'+esc(tr(go?"onb_save_go":"onb_save"))+'</button><button class="btn ghost sm" id="onbSkip" type="button">'+esc(tr(go?"onb_skip_go":"onb_skip"))+'</button></div>';
   top.parentNode.insertBefore(box,top.nextSibling);
-  var sel=$("onbCity");
+  var sel=$("onbCity"),G=window.IB_GeoCore,geoBtn=$("onbGeo"),geoSt=$("onbGeoSt"),geoAct=$("onbGeoAct");
+  function say(t){geoSt.textContent=t}
+  function pickByName(name){var k=String(name).toLowerCase().trim();for(var i=0;i<sel.options.length;i++)if(sel.options[i].value&&sel.options[i].text.toLowerCase().trim()===k){sel.selectedIndex=i;return true}return false}
+  function next(delay){if(!go)return;var to=go;window.IB_ONB_TO=null;go=null;setTimeout(function(){location.href=to},delay)}
+  function saveLoc(name){try{if(!localStorage.getItem("gwm_loc"))localStorage.setItem("gwm_loc",JSON.stringify({city:name,prov:"",macro:"",radiusKm:0}))}catch(e){}}
+  function geoShow(r){
+    geoAct.innerHTML="";
+    if(r.kind==="known"){pickByName(r.city);return say(tr("onb_geo_found",{c:r.city}))}
+    if(r.kind!=="unlisted")return say(tr("onb_geo_none"));
+    say(tr("onb_geo_unlisted",{c:r.city}));
+    var wait=document.createElement("button");wait.type="button";wait.className="btn ghost sm";wait.textContent=tr("onb_geo_notify");
+    wait.onclick=function(){wait.disabled=true;
+      sb.rpc("forum_waitlist_join",{p_city:r.city,p_on:true}).then(function(x){
+        if(x.error){wait.disabled=false;return msg(friendlyErr(x.error),"err")}
+        saveLoc(r.city);say(tr("onb_geo_notified",{c:r.city}));wait.remove()},function(){wait.disabled=false;msg(friendlyErr(null),"err")})};
+    geoAct.appendChild(wait);
+    if(r.fallback){var nb=document.createElement("button");nb.type="button";nb.className="btn ghost sm";nb.textContent=tr("onb_geo_near",{c:r.fallback.city});
+      nb.onclick=function(){if(pickByName(r.fallback.city))say(tr("onb_geo_found",{c:r.fallback.city}));geoAct.innerHTML=""};geoAct.appendChild(nb)}}
+  geoBtn.onclick=function(){
+    if(!G||!navigator.geolocation)return say(tr("onb_geo_none"));
+    geoBtn.disabled=true;geoAct.innerHTML="";say(tr("onb_geo_wait"));
+    navigator.geolocation.getCurrentPosition(function(pos){
+      geoBtn.disabled=false;
+      var names=[].map.call(sel.options,function(o){return o.value?o.text:null}).filter(Boolean);
+      geoShow(G.resolve(pos.coords.latitude,pos.coords.longitude,{geo:window.IB_GEO,cities:names,accuracy:pos.coords.accuracy}))
+    },function(er){geoBtn.disabled=false;say(tr(er&&er.code===1?"onb_geo_denied":"onb_geo_none"))},{enableHighAccuracy:false,timeout:8000,maximumAge:600000})};
   loadCities(sel,true).then(function(){
-    $("onbSkip").onclick=function(){onbMark(m.user.id);box.parentNode.removeChild(box)};
+    $("onbSkip").onclick=function(){onbMark(m.user.id);box.parentNode.removeChild(box);next(0)};
     $("onbSave").onclick=function(){
       var id=sel.value;if(!id)return msg(tr("onb_pick"),"err");
       var name=sel.options[sel.selectedIndex].text,b=this;b.disabled=true;
@@ -184,7 +216,7 @@ function firstRun(m,nick){
         try{if(!localStorage.getItem("gwm_loc"))localStorage.setItem("gwm_loc",JSON.stringify({city:name,prov:"",macro:"",radiusKm:0}))}catch(e){}
         $("pCity").value=id;
         if(box.parentNode)box.parentNode.removeChild(box);
-        msg(tr("onb_done",{c:name}),"ok")})}})}
+        msg(tr("onb_done",{c:name}),"ok");next(900)})}})}
 var recovering=false;
 function show(){if(recovering||holding)return;getMe().then(function(m){
   $("guest").hidden=!!m;$("me").hidden=!m;var mn=document.querySelector("main.auth-pg");if(mn)mn.classList.toggle("wide",!!m);if(!m)return;document.title=tr("ac_title");
