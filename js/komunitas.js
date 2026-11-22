@@ -11,7 +11,7 @@ var KINDS=["teman","tanya","tips"],st={city:null,kind:"semua",me:null,posts:[],c
 var QS=new URLSearchParams(location.search),CITY=QS.get("kota"),POST=QS.get("p"),EVT=QS.get("event");
 if(["teman","tanya","tips"].indexOf(QS.get("t"))>=0)st.kind=QS.get("t");
 function toast(m){var t=$("toast");if(!t)return;t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},Math.max(2800,m.length*70))}
-function needLogin(){toast(tr("aj_needlogin"));setTimeout(function(){location.href="login"},900)}
+function needLogin(){toast(tr("aj_needlogin"));var to=window.IB_NextCore?IB_NextCore.loginHere():"login";setTimeout(function(){location.href=to},900)}
 function run(p,okMsg,after){return p.then(function(r){if(r.error){toast((window.IB_ErrText?IB_ErrText(r.error):r.error.message)||tr("k_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("k_err"));return false})}
 function today(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta"}).format(new Date())}
 function ago(ts){var s=(new Date(ts).getTime()-Date.now())/1000,a=Math.abs(s),r;

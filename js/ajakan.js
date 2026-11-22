@@ -21,7 +21,7 @@ function gate(){var SC=window.IB_SafetyCore,raw=null;if(!SC)return Promise.resol
     if(!v)return false;try{localStorage.setItem(SC.KEY,SC.VERSION)}catch(e){}return true})}
 function run(p,okMsg,after){return p.then(function(r){if(r.error){toast((window.IB_ErrText?IB_ErrText(r.error):r.error.message)||tr("aj_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("aj_err"));return false})}
 /* e (opsional): setelah login, pengguna dikembalikan ke event ini dan formulir ajakan dibuka (?teman=1, dibaca app.js). */
-function needLogin(e){toast(tr("aj_needlogin"));var nx=e?"?next="+encodeURIComponent((e.category==="naikgunung"?"gunung":"event")+"?e="+encodeURIComponent(e.slug||e.id)+"&teman=1"):"";setTimeout(function(){location.href="login"+nx},900)}
+function needLogin(e){toast(tr("aj_needlogin"));var nx=e?"?next="+encodeURIComponent((e.category==="naikgunung"?"gunung":"event")+"?e="+encodeURIComponent(e.slug||e.id)+"&teman=1"):"";if(!nx&&window.IB_NextCore)nx=IB_NextCore.loginHere().replace(/^login/,"");setTimeout(function(){location.href="login"+nx},900)}
 function refresh(){if(window.IB_AjakanBadge)window.IB_AjakanBadge()}
 
 /* ---------- Di dalam rincian event ---------- */

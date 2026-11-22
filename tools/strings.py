@@ -171,7 +171,7 @@ J = {
 "aj_f_note": ("Catatan", "Notes"), "aj_f_note_ph": ("Rencana, kendaraan, syarat", "Plan, transport, requirements"),
 "aj_f_wa": ("WhatsApp (hanya dilihat peserta yang kamu terima)", "WhatsApp (only visible to participants you accept)"),
 "aj_f_submit": ("Terbitkan ajakan", "Publish invite"),
-"aj_needlogin": ("Masuk dulu untuk memakai fitur ini.", "Please log in to use this feature."),
+"aj_needlogin": ("Masuk dulu untuk memakai fitur ini. Setelah itu kamu kembali ke halaman ini.", "Please log in to use this feature. You will come back to this page afterwards."),
 "aj_prompt": ("Pesan singkat untuk host (opsional):", "Short message to the host (optional):"),
 "aj_sent": ("Permintaan terkirim. Tunggu persetujuan host.", "Request sent. Wait for the host to approve."),
 "aj_sure": ("Yakin?", "Are you sure?"), "aj_posted": ("Ajakan terbit.", "Invite published."),
