@@ -76,6 +76,17 @@ grant select on admin_roles to authenticated;
 grant select on admin_staff to authenticated;
 grant select on admin_audit to authenticated;
 
+-- Audit log append-only: tidak bisa diubah, dihapus, atau dikosongkan oleh siapa pun lewat API (termasuk pemilik).
+-- Hanya SQL Editor/service role (di luar API) yang berwenang; trigger tetap menolak kecuali dibuang sengaja.
+create or replace function _admin_audit_immutable() returns trigger language plpgsql as $$
+begin
+  raise exception 'Riwayat audit tidak bisa diubah atau dihapus.' using errcode='42501';
+end $$;
+drop trigger if exists admin_audit_no_change on admin_audit;
+create trigger admin_audit_no_change before update or delete on admin_audit for each row execute function _admin_audit_immutable();
+drop trigger if exists admin_audit_no_truncate on admin_audit;
+create trigger admin_audit_no_truncate before truncate on admin_audit for each statement execute function _admin_audit_immutable();
+
 -- 3) Fungsi dasar ------------------------------------------------------------------
 create or replace function is_owner() returns boolean language sql security definer stable set search_path=public as
 $$ select exists (select 1 from profiles where id = auth.uid() and role = 'admin') $$;
@@ -278,7 +289,39 @@ end $$;
 drop trigger if exists events_perm_guard on events;
 create trigger events_perm_guard before insert or update on events for each row execute function _events_perm_guard();
 
--- 8) Pemeriksaan hasil ---------------------------------------------------------------
+-- 9) Pencarian event di database (admin): toleran typo (pg_trgm) + filter kota, kategori, rentang tanggal, status ------
+create extension if not exists pg_trgm;
+create index if not exists events_title_trgm on events using gin (title gin_trgm_ops);
+
+create or replace function admin_search_events(
+  p_q text default null, p_city int default null, p_category text default null,
+  p_from date default null, p_to date default null, p_status text default null,
+  p_limit int default 60, p_offset int default 0) returns jsonb
+language plpgsql stable security definer set search_path=public, extensions as $$
+declare q text:=nullif(trim(coalesce(p_q,'')),''); lim int:=least(greatest(coalesce(p_limit,60),1),200); ofs int:=greatest(coalesce(p_offset,0),0); tot int; rows jsonb;
+begin
+  if not has_perm('events.view') then raise exception 'Tidak punya izin melihat event.' using errcode='42501'; end if;
+  with f as (
+    select e.*, case when q is null then 0 else greatest(
+        similarity(lower(e.title),lower(q)), word_similarity(lower(q),lower(e.title)),
+        case when e.title ilike '%'||q||'%' then 1 else 0 end,
+        case when coalesce(e.venue,'') ilike '%'||q||'%' or coalesce(e.lineup,'') ilike '%'||q||'%' then 0.6 else 0 end) end as score
+    from events e
+    where (p_city is null or e.city_id=p_city)
+      and (p_category is null or p_category='' or e.category=p_category)
+      and (p_status is null or p_status='' or e.status=p_status)
+      and (p_from is null or coalesce(e.end_date,e.event_date)>=p_from)
+      and (p_to is null or e.event_date<=p_to))
+  select count(*) into tot from f where q is null or score>=0.3;
+  select coalesce(jsonb_agg(x order by sc desc, ed desc),'[]'::jsonb) into rows from (
+    select to_jsonb(f)-'score' || jsonb_build_object('cities',jsonb_build_object('name',(select c.name from cities c where c.id=f.city_id))) as x, f.score as sc, f.event_date as ed
+    from f where q is null or f.score>=0.3 order by f.score desc, f.event_date desc limit lim offset ofs) t;
+  return jsonb_build_object('total',tot,'rows',rows);
+end $$;
+revoke all on function admin_search_events from public, anon;
+grant execute on function admin_search_events to authenticated;
+
+-- 10) Pemeriksaan hasil ---------------------------------------------------------------
 -- (a) Sisa fungsi yang masih memakai is_admin() = khusus pemilik (wajar: stat_*, dll). Periksa daftarnya:
 --   select p.proname from pg_proc p join pg_namespace s on s.oid=p.pronamespace
 --   where s.nspname='public' and pg_get_functiondef(p.oid) ~ 'is_admin\(\)' and p.proname not in ('is_admin') order by 1;

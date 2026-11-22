@@ -51,3 +51,10 @@ Editor Konten, Kontributor (hanya draft), Moderator Komunitas, Manajer Sponsor, 
 - Daftar fungsi yang masih khusus Pemilik: query (a) di akhir `schema_rbac.sql`.
 - `select my_admin();` menampilkan akses akun yang sedang login.
 - Uji otomatis (repo admin): `node tests/rbac.test.js`.
+
+## Cara tes singkat
+1. **SQL (backend):** Supabase > SQL Editor > tempel isi `supabase/tes_rbac.sql` > Run. Harus muncul `=== SEMUA TES LULUS ===` di Messages. Data uji otomatis dibatalkan.
+2. **Logika + UI (repo admin):** `node tests/rbac.test.js` (29 uji) dan, bila Playwright terpasang, `node tests/browser-smoke.js`.
+3. **Manual:** buat admin peran Editor, masuk dengan akun itu: menu Statistik dan Admin & Akses tidak ada, event tidak bisa dihapus/diterbitkan; cari "Soundrenalin" (typo) harus tetap menemukan "Soundrenaline".
+
+Pencarian event di panel kini memakai fungsi database `admin_search_events` (pg_trgm, toleran typo) dengan filter kota, kategori, rentang tanggal, dan status yang disaring di server. Audit log bersifat append-only: trigger menolak ubah/hapus/kosongkan oleh siapa pun lewat API.
