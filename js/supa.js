@@ -2,9 +2,18 @@ if(/\.html$/.test(location.pathname))history.replaceState(null,"",location.pathn
 // Klien Supabase bersama + utilitas UI (msg/toast/esc/friendlyErr)
 /* Simpan alamat asli sebelum klien Supabase membersihkan #hash: auth.js membacanya untuk hasil tautan konfirmasi email (sukses atau galat). */
 window.IB_ARRIVAL={hash:location.hash,search:location.search};
+/* Tautan reset password yang mendarat di halaman selain login (mis. Site URL Supabase = beranda, atau alamat tujuan tidak ada di daftar Redirect URL) dibawa ke halaman login dengan token utuh, supaya form "Buat password baru" tampil. */
+window.IB_RECOVERY_REDIRECT=false;
+(function(){
+  var h=location.hash||"",q=location.search||"";
+  if(!/(^|[#&?])type=recovery(&|$)/.test(h+"&"+q.replace(/^\?/,""))||!(/access_token=/.test(h)||/[?&]code=/.test(q)||/token_hash=/.test(h+q)))return;
+  if(/\/login(\.html)?$/.test(location.pathname))return;
+  var m=location.pathname.match(/^(.*\/)(id|en)\/[^\/]*$/),dir=m?m[1]+m[2]+"/":location.pathname.replace(/[^\/]*$/,"")+"id/";
+  window.IB_RECOVERY_REDIRECT=true;location.replace(dir+"login"+q+h);
+})();
 (function(){
   var C=window.IB_CONFIG||{};
-  window.sb=(window.supabase&&C.SUPABASE_URL&&C.SUPABASE_ANON_KEY)?window.supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY):null;
+  window.sb=window.IB_RECOVERY_REDIRECT?null:(window.supabase&&C.SUPABASE_URL&&C.SUPABASE_ANON_KEY)?window.supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY):null;
   var DUM=document.createElement("div");
   window.$=function(i){return document.getElementById(i)||DUM};
   window.esc=function(s){

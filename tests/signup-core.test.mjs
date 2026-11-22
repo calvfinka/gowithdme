@@ -123,3 +123,12 @@ test("nickDrift: nama diganti server terdeteksi, rapikan spasi/huruf besar tidak
   assert.equal(SC.nickDrift("Budi", null), false);
   assert.equal(SC.nickDrift("x".repeat(40), "x".repeat(30)), false);
 });
+
+test("parseArrival: tautan reset password dikenali sebagai recovery, bukan konfirmasi", () => {
+  const r = SC.parseArrival("#access_token=a&refresh_token=b&expires_in=3600&token_type=bearer&type=recovery", "");
+  assert.equal(r.recovery, true);
+  assert.equal(r.confirmed, false);
+  assert.equal(SC.parseArrival("", "?code=abc&type=recovery").recovery, true);
+  assert.equal(SC.parseArrival("#error=access_denied&error_code=otp_expired&type=recovery", "").recovery, false);
+  assert.equal(SC.parseArrival("#access_token=a&type=signup", "").recovery, false);
+});

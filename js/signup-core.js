@@ -155,6 +155,7 @@
     r.type = String(h.type || q.type || "").toLowerCase();
     r.hasToken = !!h.access_token;
     r.hasCode = !!q.code;
+    r.recovery = !r.error && r.type === "recovery" && (r.hasToken || r.hasCode || !!h.token_hash);
     r.confirmed = !r.error && (r.type === "signup" || r.type === "email") && (r.hasToken || r.hasCode || !!h.token_hash);
     return r;
   }

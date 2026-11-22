@@ -108,8 +108,11 @@ function welcome(){
     return true})}
 if(ARR.error){
   cleanUrl();arrDone=true;
-  var pe=readPending(),ek=SC.arrivalErrorKey(ARR);
-  if(pe&&pe.email)showSent(pe.email,tr(ek),"err");else{seg("login");msg(tr(ek),"err")}
+  var pe=readPending(),ek=SC.arrivalErrorKey(ARR),rf=0;
+  try{rf=+localStorage.getItem("gwm_reset")||0}catch(e){}
+  if(pe&&pe.email)showSent(pe.email,tr(ek),"err");
+  else if(rf&&Date.now()-rf<864e5){seg("login");msg(tr(ek==="su_l_expired"?"rc_expired":"rc_bad"),"err")}   /* baru saja minta reset: ini galat tautan reset, bukan konfirmasi */
+  else{seg("login");msg(tr(ek),"err")}
 }else if(ARR.confirmed){
   msg(tr("su_confirming"));holding=true;cleanUrl();
   /* Cadangan bila SIGNED_IN tidak datang (mis. sesi sudah ada): cek sesi, kalau tetap kosong beri tahu tautan tidak bisa dipakai. */
@@ -130,12 +133,23 @@ if(ARR.error){
   };
 });
 
-$("lForgot").onclick=function(){var em=$("lEmail").value.trim();if(!em)return msg(tr("a_needmail"),"err");
-  sb.auth.resetPasswordForEmail(em,{redirectTo:location.href}).then(function(r){msg(r.error?friendlyErr(r.error):tr("a_resetsent"),r.error?"err":"ok")})};
+/* Lupa password: tautan membawa pengguna kembali ke halaman login ini (tanpa query/hash, supaya cocok dengan Redirect URL di Supabase), tempat form "Buat password baru" muncul. */
+var RESET_FLAG="gwm_reset",resetTimer=null;
+function resetCool(){var b=$("lForgot"),n=60,t0=b.textContent;b.disabled=true;clearInterval(resetTimer);
+  resetTimer=setInterval(function(){n--;if(n<=0){clearInterval(resetTimer);b.disabled=false;b.textContent=t0}else b.textContent=tr("a_reset_wait",{n:n})},1000);b.textContent=tr("a_reset_wait",{n:n})}
+$("lForgot").onclick=function(){var em=$("lEmail").value.trim();
+  if(!em){$("lEmail").focus();return msg(tr("a_needmail"),"err")}
+  if(!SC.EMAIL_RE.test(em)){$("lEmail").focus();return msg(tr("a_needmail_bad"),"err")}
+  var b=this;b.disabled=true;msg(tr("a_resetting"));
+  sb.auth.resetPasswordForEmail(em,{redirectTo:redirectUrl()}).then(function(r){
+    if(r.error){b.disabled=false;return msg(friendlyErr(r.error),"err")}
+    try{localStorage.setItem(RESET_FLAG,String(Date.now()))}catch(e){}
+    msg(tr("a_resetsent"),"ok");resetCool()
+  },function(err){b.disabled=false;msg(friendlyErr(err),"err")})};
 /* Login tanpa password: link sekali pakai ke email. */
 $("lMagic").onclick=function(){var em=$("lEmail").value.trim();if(!em)return msg(tr("a_needmail"),"err");
   msg(tr("processing"));setAfter();var b=this;b.disabled=true;
-  sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.href,shouldCreateUser:false}}).then(function(r){
+  sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:redirectUrl(),shouldCreateUser:false}}).then(function(r){
     b.disabled=false;
     if(r.error){takeAfter();return msg(/signups? not allowed|not found/i.test(r.error.message||"")?tr("a_magic_none"):r.error.message,"err")}
     msg(tr("a_magic_sent"),"ok")})};
@@ -217,7 +231,20 @@ function firstRun(m,nick){
         $("pCity").value=id;
         if(box.parentNode)box.parentNode.removeChild(box);
         msg(tr("onb_done",{c:name}),"ok");next(900)})}})}
-var recovering=false;
+/* ---- Reset password: tampilkan form "Buat password baru" begitu tautan reset terbuka ---- */
+var recovering=!!ARR.recovery;
+function showRecovery(){
+  recovering=true;holding=false;
+  var mn0=document.querySelector("main.auth-pg");if(mn0)mn0.classList.remove("wide");
+  $("guest").hidden=true;$("me").hidden=true;$("rec").hidden=false;document.title=tr("lg_rec_h");
+  msg(tr("a_recover"),"ok");setTimeout(function(){var i=$("nPass");if(i&&i.focus)i.focus()},60)}
+function recoveryFailed(){
+  recovering=false;$("rec").hidden=true;$("guest").hidden=false;seg("login");msg(tr("rc_bad"),"err")}
+if(ARR.recovery){
+  /* Form langsung tampil (tanpa menunggu klien Supabase menukar token). Bila sesi tak kunjung terbentuk, tautan tidak bisa dipakai. */
+  showRecovery();
+  setTimeout(function(){if(!recovering)return;sb.auth.getSession().then(function(r){if(!recovering)return;if(!(r&&r.data&&r.data.session))recoveryFailed()},function(){})},8000);
+}
 function show(){if(recovering||holding)return;getMe().then(function(m){
   $("guest").hidden=!!m;$("me").hidden=!m;var mn=document.querySelector("main.auth-pg");if(mn)mn.classList.toggle("wide",!!m);if(!m)return;document.title=tr("ac_title");
   var p=m.profile,n=p.nickname||m.user.email.split("@")[0];
@@ -291,14 +318,28 @@ $("fAll").onsubmit=function(e){e.preventDefault();var btn=this.querySelector('[t
     var taken=err&&(err.code==="23505"||/profiles_nickname_ci/.test(String(err.message||"")));
     msg(taken?tr("pe_nick_taken"):friendlyErr(err),"err")})};
 sb.auth.onAuthStateChange(function(ev){
-  if(ev==="PASSWORD_RECOVERY"){recovering=true;var mn0=document.querySelector("main.auth-pg");if(mn0)mn0.classList.remove("wide");$("guest").hidden=true;$("me").hidden=true;$("rec").hidden=false;msg(tr("a_recover"),"ok");return}
+  if(ev==="PASSWORD_RECOVERY"){showRecovery();return}
+  if(recovering)return;   /* SIGNED_IN dari sesi reset datang sebelum PASSWORD_RECOVERY: jangan buka halaman akun / alihkan */
   if(ev==="SIGNED_IN"&&ARR.confirmed&&!arrDone){holding=false;setTimeout(welcome,0);return}
   if(ev==="SIGNED_IN"&&!holding&&goAfter())return;
   show()});
-$("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
-  if(p.length<8)return msg(tr("a_pass8"),"err");
-  sb.auth.updateUser({password:p}).then(function(r){if(r.error)return msg(friendlyErr(r.error),"err");
-    recovering=false;$("rec").hidden=true;$("nPass").value="";msg(tr("a_passok"),"ok");show()})};
+$("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value,p2=$("nPass2").value,btn=$("bRec");
+  if(p.length<8){$("nPass").focus();return msg(tr("a_pass8"),"err")}
+  if(p!==p2){$("nPass2").focus();return msg(tr("a_pass_mismatch"),"err")}
+  btn.disabled=true;msg(tr("processing"));
+  getMe().then(function(m){
+    if(!m){btn.disabled=false;return recoveryFailed()}
+    var ik=SC.passIssue(p,{email:m.user.email,nick:m.profile&&m.profile.nickname});
+    if(ik){btn.disabled=false;$("nPass").focus();return msg(tr(ik),"err")}
+    return sb.auth.updateUser({password:p}).then(function(r){btn.disabled=false;
+      if(r.error){
+        var raw=String(r.error.message||"").toLowerCase();
+        if(/different from the old|same as the old/.test(raw))return msg(tr("a_pass_same"),"err");
+        if(/session missing|not authenticated|jwt/.test(raw))return recoveryFailed();
+        return msg(friendlyErr(r.error),"err")}
+      recovering=false;try{localStorage.removeItem("gwm_reset")}catch(x){}
+      $("rec").hidden=true;$("nPass").value="";$("nPass2").value="";msg(tr("a_passok"),"ok");show()})
+  }).catch(function(err){btn.disabled=false;msg(friendlyErr(err),"err")})};
 /* ---- Daftar / masuk dengan WhatsApp (OTP) + gaya tombol email link ---- */
 (function(){
   var EN=window.IB_LANG==="en",C=window.IB_CONFIG||{},KEY=C.SUPABASE_ANON_KEY,FN=(C.SUPABASE_URL||"")+"/functions/v1/";
