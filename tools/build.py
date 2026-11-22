@@ -147,8 +147,9 @@ def fdate(l,d):
 def price_num(lb):
     if not lb: return None
     if re.search(r"gratis|free",lb,re.I): return 0
-    m=re.search(r"Rp\s*([\d.]+)",lb)
-    return int(m.group(1).replace(".","")) if m else None
+    m=re.search(r"Rp\.?\s*(\d[\d.]*)",lb)  # harus diawali angka: "Rp. 50.000" / "Rp." tanpa angka tidak boleh membuat build gagal
+    d=m.group(1).replace(".","") if m else ""
+    return int(d) if d else None
 def esc(x): return _h.escape(str(x),quote=True)
 def ldj(o): return '<script type="application/ld+json">'+json.dumps(o,ensure_ascii=False).replace("</","<\\/")+'</script>'
 def ev_page(l,e):
