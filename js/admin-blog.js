@@ -141,6 +141,7 @@ function save(status){
   q.then(function(r){if(r.error)return msg(/duplicate|unique/i.test(r.error.message)?"Alamat ini sudah dipakai di kategori yang sama.":hint(r.error),"err");
     var id=(r.data&&r.data.id)||editing,res=curRes,ack=$("bgAck")?$("bgAck").checked:false;
     var ck=(res&&id)?sb.from("blog_checks").upsert({post_id:id,paste_pct:res.pasted,level:res.level,flags:res.flags.map(function(f){return{k:f.k,lv:f.lv,t:f.t}}),ack:ack,body_len:body.length,checked_at:new Date().toISOString()},{onConflict:"post_id"}).then(function(){},function(){}):Promise.resolve();
+    try{sessionStorage.removeItem("gwm_blogtab_v1")}catch(e){}
     return ck.then(load).then(function(){show(false);msg(status==="published"?"Tersimpan dan terbit. Sudah bisa dibuka lewat tombol Lihat; halaman permanennya dibuat saat sinkron (otomatis, paling lama 1 jam).":"Tersimpan sebagai draft.","ok")})})}
 function bind(){
   var o=$("bgNew");if(!o)return;
@@ -158,9 +159,10 @@ function bind(){
   $("bgMode").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setMode(b.dataset.m)});
   $("bgSaveD").onclick=function(){save("draft")};$("bgSaveP").onclick=function(){save("published")};
   $("bgDel").onclick=function(){delPost(cur)};
-  var s=$("bgCat");s.innerHTML=CATS.map(function(c){return'<option value="'+c[0]+'">'+c[1]+"</option>"}).join("")}
+  var HOME=["panduan-konser","tips-gunung","komunitas"];
+  var s=$("bgCat");s.innerHTML=CATS.map(function(c){return'<option value="'+c[0]+'">'+c[1]+(HOME.indexOf(c[0])>=0?" · tampil di beranda":"")+"</option>"}).join("")}
 function delPost(p){if(!p)return;
-  var goDel=function(){sb.from("blog_posts").delete().eq("id",p.id).then(function(r){if(r.error)return msg(hint(r.error),"err");load().then(function(){show(false);msg("Tulisan dihapus.","ok")})})};
+  var goDel=function(){sb.from("blog_posts").delete().eq("id",p.id).then(function(r){if(r.error)return msg(hint(r.error),"err");try{sessionStorage.removeItem("gwm_blogtab_v1")}catch(e){}load().then(function(){show(false);msg("Tulisan dihapus.","ok")})})};
   if(typeof window.admAsk==="function"){admAsk({title:"Hapus tulisan blog",text:'Hapus "'+p.title+'"? Halaman publik hilang saat sinkron berikutnya.',ok:"Hapus"}).then(function(ok){if(ok)goDel()})}
   else goDel()}
 document.addEventListener("click",function(ev){

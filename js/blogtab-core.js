@@ -19,5 +19,12 @@
   function topics(list){
     return TOPICS.filter(function(t){ return list.some(function(p){ return p.category === t; }); });
   }
-  return { TOPICS: TOPICS, keep: keep, topics: topics };
+  /* filter PostgREST: hanya kategori yang boleh tampil di tab beranda (dipakai untuk ambil data langsung dari Supabase) */
+  function query(){ return "category=in.(" + TOPICS.join(",") + ")"; }
+  /* cukup tulisan yang tampil di tab: tiap topik maksimal n terbaru, supaya satu topik ramai tidak menghabiskan jatah */
+  function limit(posts, n){
+    var seen = {};
+    return keep(posts).filter(function(p){ seen[p.category] = (seen[p.category] || 0) + 1; return seen[p.category] <= n; });
+  }
+  return { TOPICS: TOPICS, keep: keep, topics: topics, query: query, limit: limit };
 });
