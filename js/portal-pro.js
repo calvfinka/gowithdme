@@ -269,15 +269,36 @@
 
   /* ---- Berita & Panduan Blog Tab ---- */
   var BLOG_CAT_LABELS={berita:"Berita","panduan-konser":"Panduan Konser","tips-gunung":"Tips Gunung",wisata:"Wisata",opini:"Opini",review:"Review",komunitas:"Komunitas"};
+  /* nama niche mengikuti bahasa halaman (kamus blog_c_*); kategori lain memakai nama bawaan */
+  function blogCatLabel(c){var k="blog_c_"+String(c).replace(/-/g,"_"),t=tr(k);return t&&t!==k?t:(BLOG_CAT_LABELS[c]||c||"Blog")}
+  var BLOG_SHOW=6,blogAll=false;
   function stripHtml(s){return String(s||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim()}
+  /* Sumber tab: tulisan yang admin terbitkan di Supabase (langsung, jadi hasil panel admin ikut berubah di beranda).
+     Cadangan: data/posts.json (hasil build) bila Supabase gagal/dijeda. Hanya topik terkait (IB_BlogTab.TOPICS).
+     Hemat egress: simpan 2 menit di sessionStorage; admin-blog.js ikut menghapusnya bila admin menyimpan dari tab yang sama; tab lain menyusul <=2 menit. */
+  var BLOG_KEY="gwm_blogtab_v1",BLOG_TTL=120000,BLOG_PER_TOPIC=8;
+  function blogCacheGet(){try{var o=JSON.parse(sessionStorage.getItem(BLOG_KEY)||"null");if(o&&Array.isArray(o.rows)&&Date.now()-o.t<BLOG_TTL)return o.rows}catch(e){}return null}
+  function blogCachePut(rows){try{sessionStorage.setItem(BLOG_KEY,JSON.stringify({t:Date.now(),rows:rows}))}catch(e){}}
+  function blogLive(){
+    var BT=window.IB_BlogTab,U=(C.SUPABASE_URL||"").replace(/\/+$/,""),K=C.SUPABASE_ANON_KEY||"";
+    if(!BT||!U||!K)return Promise.resolve(null);
+    var cols="id,title,slug,category,body,is_html,published_at";
+    var url=U+"/rest/v1/blog_posts?status=eq.published&"+BT.query()+"&select="+cols+"&order=published_at.desc&limit="+(BT.TOPICS.length*BLOG_PER_TOPIC);
+    return fetch(url,{headers:{apikey:K,Authorization:"Bearer "+K}}).then(function(r){return r.ok?r.json():null}).then(function(rows){
+      return Array.isArray(rows)?BT.limit(rows,BLOG_PER_TOPIC):null;
+    }).catch(function(){return null});
+  }
   function loadBlog(){
     var grid=$("blogGrid");if(!grid)return;
     if(blogPosts){renderBlog();return}
+    var cached=blogCacheGet();
+    if(cached){blogPosts=cached;renderBlog();return}
     grid.innerHTML='<div class="sk"></div><div class="sk"></div>';
-    fetch("../data/posts.json").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(arr){
-      blogPosts=Array.isArray(arr)?arr:[];renderBlog();
-    }).catch(function(){
-      blogPosts=[];renderBlog();
+    blogLive().then(function(rows){
+      if(rows){blogPosts=rows;blogCachePut(rows);renderBlog();return}
+      return fetch("../data/posts.json").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(arr){
+        blogPosts=Array.isArray(arr)?arr:[];renderBlog();
+      }).catch(function(){blogPosts=[];renderBlog()});
     });
   }
   function renderBlog(){
@@ -287,25 +308,28 @@
     if(cats.indexOf(blogCat)<0)blogCat="semua";
     if(catsEl){
       catsEl.innerHTML=cats.map(function(c){
-        var lbl=c==="semua"?tr("blog_cat_all"):(BLOG_CAT_LABELS[c]||c);
+        var lbl=c==="semua"?tr("blog_cat_all"):blogCatLabel(c);
         return'<button type="button" data-bc="'+esc(c)+'" aria-pressed="'+(blogCat===c)+'">'+esc(lbl)+'</button>';
       }).join("");
-      catsEl.onclick=function(e){var b=e.target.closest("[data-bc]");if(!b)return;blogCat=b.dataset.bc;renderBlog()};
+      catsEl.onclick=function(e){var b=e.target.closest("[data-bc]");if(!b)return;blogCat=b.dataset.bc;blogAll=false;renderBlog()};
     }
     var list=all.filter(function(p){return blogCat==="semua"||p.category===blogCat});
     if(!list.length){grid.innerHTML='<div class="empty"><b>'+esc(tr("blog_empty"))+'</b></div>';return}
+    var more=blogAll?0:Math.max(0,list.length-BLOG_SHOW);
+    if(more)list=list.slice(0,BLOG_SHOW);
     grid.innerHTML=list.map(function(p,idx){
       var txt=stripHtml(p.body),excerpt=txt.slice(0,140).replace(/\s+\S*$/,"")+"…";
       var mins=Math.max(2,Math.round(txt.split(/\s+/).length/180));
       var dt=String(p.published_at||"").slice(0,10);
-      var catLbl=BLOG_CAT_LABELS[p.category]||p.category||"Blog";
+      var catLbl=blogCatLabel(p.category);
       return'<article class="blog-card" data-bidx="'+blogPosts.indexOf(p)+'">'+
         '<div class="bc-meta"><span>'+esc(catLbl)+'</span><span> · '+esc(dt)+'</span><span> · '+esc(tr("blog_min",{n:mins}))+'</span></div>'+
         '<h3>'+esc(p.title)+'</h3><p>'+esc(excerpt)+'</p>'+
         '<div class="bc-foot"><button type="button" class="lnk" data-bopen="'+blogPosts.indexOf(p)+'">'+esc(tr("blog_read"))+' →</button><a class="lnk" href="../blog/'+esc(p.category||"berita")+'/'+esc(p.slug)+'">URL</a></div>'+
       '</article>';
-    }).join("");
+    }).join("")+(more?'<div class="nv-more" style="grid-column:1/-1"><button type="button" class="btn line" data-bmore="1">'+esc(tr("blog_more",{n:more}))+'</button></div>':"");
     grid.onclick=function(e){
+      if(e.target.closest("[data-bmore]")){blogAll=true;renderBlog();return}
       if(e.target.closest("a"))return;
       var card=e.target.closest("[data-bidx],[data-bopen]");if(!card)return;
       var i=+(card.dataset.bopen!=null?card.dataset.bopen:card.dataset.bidx);
@@ -325,7 +349,7 @@
   }
   function openPostModal(p){
     var dlg=$("postDlg"),body=$("postDlgBody");if(!dlg||!body||!p)return;
-    var catLbl=BLOG_CAT_LABELS[p.category]||p.category||"Blog";
+    var catLbl=blogCatLabel(p.category);
     var content=p.is_html?p.body:mdToSimpleHtml(p.body);
     body.innerHTML='<div class="postd-h"><div><div class="meta">'+esc(catLbl)+' · '+esc(String(p.published_at||"").slice(0,10))+'</div><h2>'+esc(p.title)+'</h2></div><button type="button" class="ico-btn" id="postDlgX" aria-label="'+esc(tr("close"))+'"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>'+
       '<div class="postd-b">'+content+'</div>'+
