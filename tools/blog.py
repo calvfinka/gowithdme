@@ -194,7 +194,8 @@ def side_in(p,posts,counts,cur,pop=True):
     popl="".join(f'<li data-k="{x["category"]}/{x["slug"]}"><a href="{p}blog/{x["category"]}/{x["slug"]}"><b>{esc(x["title"])}</b><span>{esc(CATNAME[x["category"]])} · <i class="bl-sv" hidden><b data-v></b> dibaca</i><i class="bl-nv">{fdate(x.get("published_at"))}</i></span></a></li>' for x in posts[:5])
     cnt=lambda k: counts.get(k,0)
     topics="".join(f'<li><a class="bl-c-{k}" href="{p}blog/{k}/"'+(' aria-current="page"' if cur==k else '')+f'><span class="bl-dot">{ic(k)}</span>{esc(CATNAME[k])}<i>{cnt(k)}</i></a></li>' for k,_,_ in CATS if cnt(k))
-    return ((f'<section class="bl-box" id="blPop"><h3>{ic("flame")}<span>Tulisan terbaru</span></h3><ol class="bl-rank">{popl}</ol></section>' if popl and pop else "")
+    return ((f'<section class="bl-box" id="blPopular" hidden><h3>{ic("flame")}<span>Populer</span></h3><ol class="bl-rank"></ol></section>' if pop else "")
+            +(f'<section class="bl-box" id="blPop"><h3>{ic("flame")}<span>Tulisan terbaru</span></h3><ol class="bl-rank">{popl}</ol></section>' if popl and pop else "")
             +(f'<section class="bl-box bl-topics-box"><h3>{ic("grid")}Topik</h3><ul class="bl-topics-l">{topics}</ul></section>' if topics else "")
             +f'<section class="bl-box bl-promo"><h3>Cari tontonan atau pendakian?</h3><p>Lihat jadwal konser, festival, dan open trip terbaru di GWM.</p><a class="btn" href="{p}id/event">Lihat event</a> <a class="btn line" href="{p}id/gunung">Gunung</a></section>')
 def side(p,posts,counts,cur): return '<aside class="bl-side" aria-label="Samping">'+side_in(p,posts,counts,cur)+'</aside>'
@@ -204,12 +205,7 @@ def listing(p,cur,posts,BASE,allp,counts):
     shown=posts[:30] if cur=="" else posts
     feed="".join(card(p,x) for x in shown) or '<p class="bl-empty">Belum ada tulisan di sini.</p>'
     ntopic=sum(1 for k,_,_ in CATS if counts.get(k))
-    topics=""
-    if cur=="" and posts:
-        grp=[(g,[k for k in ks if counts.get(k)]) for g,ks in GROUPS]
-        grp=[(g,ks) for g,ks in grp if ks]
-        topics='<section class="bl-tp" aria-label="Jelajahi topik"><h2 class="bl-h2">Jelajahi topik</h2><div class="bl-tg">'+"".join(
-            f'<div class="bl-tgrp"><h3>{esc(g)}</h3>'+"".join(f'<a class="bl-tile bl-c-{k}" href="{p}blog/{k}/"><span class="bl-dot">{ic(k)}</span><span><b>{esc(CATNAME[k])}</b><small>{counts[k]} tulisan</small></span></a>' for k in ks)+'</div>' for g,ks in grp)+'</div></section>'
+    topics=""  # "Jelajahi topik" dihapus: daftar Topik di samping sudah cukup
     ld=ldj({"@context":"https://schema.org","@type":"CollectionPage","name":f"{name} – Blog GWM","url":canon,"inLanguage":"id"})
     hero=(f'<header class="bl-hero bl-c-{cur or "all"}"><div><h1>{esc(name)}</h1><p class="bl-sub">{esc(desc)}</p>'
           f'<p class="bl-kpi"><span><b>{len(posts)}</b> tulisan</span>'+(f'<span><b>{ntopic}</b> topik</span>' if cur=="" else "")+'<span class="bl-sv" hidden><b data-tv></b> kali dibaca</span></p></div>'
