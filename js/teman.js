@@ -20,7 +20,7 @@ function provOf(c){if(!c)return"";for(var p in REG)if(REG[p].indexOf(c)>-1)retur
 function waNum(s){var d=String(s||"").replace(/\D/g,"");if(d.indexOf("00")===0)d=d.slice(2);if(d.charAt(0)==="0")d="62"+d.slice(1);return d}
 function toast(m){var t=$("toast");if(!t)return;t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},Math.max(2800,m.length*70))}
 function needLogin(){toast(tr("aj_needlogin"));setTimeout(function(){location.href="login"},900)}
-function run(p,okMsg,after){return p.then(function(r){if(r.error){toast(r.error.message||tr("aj_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("aj_err"));return false})}
+function run(p,okMsg,after){return p.then(function(r){if(r.error){toast((window.IB_ErrText?IB_ErrText(r.error):r.error.message)||tr("aj_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("aj_err"));return false})}
 function dfmt(d){try{return new Date(d+"T00:00:00").toLocaleDateString(LOC,{day:"numeric",month:"short"})}catch(e){return d||""}}
 function nlabel(n){return NIDS.indexOf(n)>-1?tr("ct_n_"+n):""}
 function tlabel(t){return tr("ct_t_"+t)}
@@ -136,7 +136,7 @@ function openForm(){
   var tg=NICHES.map(function(n){return'<fieldset class="tm-fs"><legend>'+esc(nlabel(n[0]))+'</legend>'+TAGS[n[0]].map(function(t){
     return'<label class="tm-c sm"><input type="checkbox" name="tg" value="'+t+'" data-p="'+n[0]+'"><span>'+esc(tlabel(t))+'</span></label>'}).join("")+'</fieldset>'}).join("");
   var rs=["kota","provinsi","nasional","online"].map(function(r){return'<option value="'+r+'">'+esc(tr("ct_reach_"+r))+'</option>'}).join("");
-  d.innerHTML='<form class="aqf tm-form"><h3>'+esc(tr("aj_new").replace(/^\+\s*/,""))+'</h3>'+
+  d.innerHTML='<form class="aqf tm-form"><h3>'+esc(tr("aj_new").replace(/^\+\s*/,""))+'</h3>'+(window.IB_ProbNote?IB_ProbNote("inv",st.me):"")+
    '<label class="f">'+tr("aj_f_title")+'<input name="t" maxlength="80" minlength="5" required placeholder="'+esc(tr("ct_f_title_ph"))+'"></label>'+
    '<label class="f">'+tr("ct_f_niche")+'<select name="n" required><option value="">'+esc(tr("ct_pick"))+'</option>'+NICHES.map(function(n){return'<option value="'+n[0]+'">'+esc(nlabel(n[0]))+'</option>'}).join("")+'</select></label>'+
    '<div class="f"><span>'+tr("ct_f_tags")+'</span><span class="meta">'+esc(tr("ct_f_tags_hint"))+'</span>'+tg+'</div>'+

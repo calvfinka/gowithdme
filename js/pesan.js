@@ -93,7 +93,7 @@ root.addEventListener("change",function(ev){if(ev.target.id!=="mFile")return;var
 root.addEventListener("keydown",function(ev){if(ev.target.id==="mTxt"&&ev.key==="Enter"&&!ev.shiftKey){ev.preventDefault();send()}});
 sb.auth.getSession().then(function(s){me=s.data.session&&s.data.session.user;if(!me)return need();
   var u=Q.get("u"),t=Q.get("t");
-  if(u)return sb.rpc("chat_open",{p_other:u}).then(function(r){if(r.error){toast(r.error.message);return inbox()}try{history.replaceState(null,"","pesan?t="+r.data)}catch(e){}openThread(r.data)});
+  if(u)return sb.rpc("chat_open",{p_other:u}).then(function(r){if(r.error){toast(window.IB_ErrText?IB_ErrText(r.error):r.error.message);return inbox()}try{history.replaceState(null,"","pesan?t="+r.data)}catch(e){}openThread(r.data)});
   t?openThread(t):inbox()});
 })();
 

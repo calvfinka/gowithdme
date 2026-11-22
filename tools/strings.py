@@ -1031,3 +1031,20 @@ _SINCE = {
 }
 S.update(_SINCE); J.update(_SINCE)
 
+# ---- Masa percobaan akun baru: galat ramah + catatan awal (js/probation-core.js) ----
+_PROB = {
+"pb_msg": ("Akun baru dibatasi {n} {what} selama 48 jam pertama. Coba lagi besok. {tip}", "New accounts are limited to {n} {what} during the first 48 hours. Try again tomorrow. {tip}"),
+"pb_note": ("Akun baru punya batas awal selama 48 jam pertama: {n} {what}.", "New accounts have a starting limit for the first 48 hours: {n} {what}."),
+"pb_w_inv": ("ajakan baru per hari", "new invites per day"),
+"pb_w_post": ("kiriman forum per hari", "forum posts per day"),
+"pb_w_reply": ("balasan forum per hari", "forum replies per day"),
+"pb_w_chat": ("percakapan baru per hari", "new conversations per day"),
+"pb_w_event": ("pengajuan event per hari", "event submissions per day"),
+"pb_tip_inv": ("Sementara itu kamu tetap bisa bergabung ke ajakan orang lain.", "Meanwhile you can still join other people's invites."),
+"pb_tip_post": ("Sementara itu kamu tetap bisa membalas kiriman orang lain.", "Meanwhile you can still reply to other people's posts."),
+"pb_tip_reply": ("Sementara itu kamu tetap bisa membaca kiriman di forum.", "Meanwhile you can still read forum posts."),
+"pb_tip_chat": ("Percakapan yang sudah ada tetap bisa dilanjutkan.", "You can still continue existing conversations."),
+"pb_tip_event": ("Sementara itu kamu tetap bisa menjelajah event dan ajakan.", "Meanwhile you can still browse events and invites."),
+}
+S.update(_PROB); J.update(_PROB)
+

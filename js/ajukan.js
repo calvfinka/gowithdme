@@ -79,7 +79,7 @@ $("fSub").onsubmit=function(ev){ev.preventDefault();if(busy)return;
   }
   busy=true;$("a_send").disabled=true;msg(tr("sj_sending"));
   sb.rpc("submit_event",{p:p}).then(function(r){busy=false;$("a_send").disabled=false;
-    if(r.error)return msg(r.error.message,"err");
+    if(r.error)return msg(window.IB_ErrText?IB_ErrText(r.error):r.error.message,"err");
     $("fSub").reset();posterUrl="";pv("");$("ccDesc").textContent="0";setKind("konser");
     msg(tr("sj_submit_ok"),"ok");scrollTo({top:0,behavior:"smooth"});loadMine()})};
 

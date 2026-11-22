@@ -3,7 +3,7 @@
 var sb=window.sb;if(!sb)return;
 var tr=window.IB_T||function(k){return k},esc=window.esc||function(s){return String(s==null?"":s)};
 function waNum(s){var d=String(s||"").replace(/\D/g,"");if(d.indexOf("00")===0)d=d.slice(2);if(d.charAt(0)==="0")d="62"+d.slice(1);return d}
-function toast(m){var t=document.getElementById("toast");if(!t)return;t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2800)}
+function toast(m){var t=document.getElementById("toast");if(!t)return;t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},Math.max(2800,m.length*70))}
 /* Dialog kecil pengganti alert/prompt/confirm. o: {title,text,input:{ph,min,max},ok,no} -> Promise(true | teks | null) */
 function ask(o){return new Promise(function(res){
   var d=document.createElement("dialog");d.className="aqd";
@@ -13,7 +13,7 @@ function ask(o){return new Promise(function(res){
   document.body.appendChild(d);
   d.addEventListener("close",function(){var v=d.querySelector("textarea"),ok=d.returnValue==="ok";res(ok?(v?v.value.trim():true):null);d.remove()});
   d.showModal();var t=d.querySelector("textarea");if(t)t.focus()})}
-function run(p,okMsg,after){return p.then(function(r){if(r.error){toast(r.error.message||tr("aj_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("aj_err"));return false})}
+function run(p,okMsg,after){return p.then(function(r){if(r.error){toast((window.IB_ErrText?IB_ErrText(r.error):r.error.message)||tr("aj_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("aj_err"));return false})}
 /* e (opsional): setelah login, pengguna dikembalikan ke event ini dan formulir ajakan dibuka (?teman=1, dibaca app.js). */
 function needLogin(e){toast(tr("aj_needlogin"));var nx=e?"?next="+encodeURIComponent((e.category==="naikgunung"?"gunung":"event")+"?e="+encodeURIComponent(e.slug||e.id)+"&teman=1"):"";setTimeout(function(){location.href="login"+nx},900)}
 function refresh(){if(window.IB_AjakanBadge)window.IB_AjakanBadge()}
@@ -58,7 +58,7 @@ function draw(e,box,me,L,M,C,soc,mineInt){
   var n=+soc.interested||0;
   h+='<div class="aji"><button class="btn line sm" data-x="interest" aria-pressed="'+mineInt+'">'+tr(mineInt?"aj_interest_on":"aj_interest")+'</button>'+(n?' <span class="meta">'+tr("aj_interest_n",{n:n})+'</span>':'')+'</div>';
   h+=L.length?L.map(function(i){return card(e,me,i,M,C)}).join(""):'<p class="meta">'+tr("aj_none")+'</p>';
-  h+='<button class="btn" data-x="new">'+tr("aj_new")+'</button><form class="ajf nw" hidden>'+(n?'<p class="meta">'+tr("aj_hint_new",{n:n})+'</p>':'')+
+  h+='<button class="btn" data-x="new">'+tr("aj_new")+'</button><form class="ajf nw" hidden>'+(window.IB_ProbNote?IB_ProbNote("inv",me):"")+(n?'<p class="meta">'+tr("aj_hint_new",{n:n})+'</p>':'')+
    '<label class="f">'+tr("aj_f_title")+'<input name="t" maxlength="80" minlength="5" placeholder="'+tr("aj_f_title_ph")+'" required></label>'+
    '<label class="f">'+tr("aj_f_meet")+'<input name="m" maxlength="100" placeholder="'+tr("aj_f_meet_ph")+'"></label>'+
    '<div class="g2"><label class="f">'+tr("aj_f_cap")+'<input name="c" type="number" min="2" max="20" value="4" required></label><label class="f">'+tr("aj_f_cost")+'<input name="p" maxlength="60" placeholder="'+tr("aj_f_cost_ph")+'"></label></div>'+

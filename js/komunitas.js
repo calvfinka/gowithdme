@@ -12,7 +12,7 @@ var QS=new URLSearchParams(location.search),CITY=QS.get("kota"),POST=QS.get("p")
 if(["teman","tanya","tips"].indexOf(QS.get("t"))>=0)st.kind=QS.get("t");
 function toast(m){var t=$("toast");if(!t)return;t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},Math.max(2800,m.length*70))}
 function needLogin(){toast(tr("aj_needlogin"));setTimeout(function(){location.href="login"},900)}
-function run(p,okMsg,after){return p.then(function(r){if(r.error){toast(r.error.message||tr("k_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("k_err"));return false})}
+function run(p,okMsg,after){return p.then(function(r){if(r.error){toast((window.IB_ErrText?IB_ErrText(r.error):r.error.message)||tr("k_err"));return false}if(okMsg)toast(okMsg);if(after)after();return true},function(){toast(tr("k_err"));return false})}
 function today(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta"}).format(new Date())}
 function ago(ts){var s=(new Date(ts).getTime()-Date.now())/1000,a=Math.abs(s),r;
   try{r=new Intl.RelativeTimeFormat(tr("locale"),{numeric:"auto"})}catch(e){return""}
@@ -144,7 +144,7 @@ function openForm(pre){
   Promise.all([sb.from("events").select("id,title,event_date,cities!inner(name)").eq("status","published").eq("cities.name",st.city).or("end_date.gte."+t+",event_date.gte."+t).order("event_date").limit(60),pq]).then(function(x){
     var r=x[0],E=r.error?[]:(r.data||[]);
     if(pre&&x[1].data&&!E.some(function(e){return e.id===pre}))E.unshift(x[1].data);
-    $("dBody").innerHTML='<h2>'+esc(tr("k_form_h"))+'</h2><form id="kForm"><div class="seg" id="kfKind" role="group" aria-label="'+esc(tr("k_f_kind"))+'">'+KINDS.map(function(k){return'<button type="button" data-k="'+k+'"'+(k===kind?' class="on"':'')+'>'+esc(tr("k_tab_"+k))+'</button>'}).join("")+'</div>'+
+    $("dBody").innerHTML='<h2>'+esc(tr("k_form_h"))+'</h2>'+(window.IB_ProbNote?IB_ProbNote("post",st.me):"")+'<form id="kForm"><div class="seg" id="kfKind" role="group" aria-label="'+esc(tr("k_f_kind"))+'">'+KINDS.map(function(k){return'<button type="button" data-k="'+k+'"'+(k===kind?' class="on"':'')+'>'+esc(tr("k_tab_"+k))+'</button>'}).join("")+'</div>'+
      '<label class="f">'+esc(tr("k_f_title"))+'<input name="t" minlength="5" maxlength="100" required placeholder="'+esc(tr("k_f_title_ph"))+'"></label>'+
      '<label class="f">'+esc(tr("k_f_body"))+'<textarea name="b" rows="5" minlength="5" maxlength="1000" required placeholder="'+esc(tr("k_f_body_ph"))+'"></textarea></label>'+
      '<label class="f">'+esc(tr("k_f_event"))+'<select name="e"><option value="">'+esc(tr("k_f_noevent"))+'</option>'+E.map(function(e){return'<option value="'+esc(e.id)+'"'+(e.id===pre?' selected':'')+'>'+esc(e.title)+'</option>'}).join("")+'</select></label>'+
