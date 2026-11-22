@@ -50,7 +50,7 @@ function sanitize(h){return walk(new DOMParser().parseFromString("<body>"+h+"</b
 function top(cur){
   var chips='<a href="'+B+'blog/">Semua</a>'+CATS.map(function(c){return'<a href="'+B+'blog/'+c[0]+'/"'+(cur===c[0]?' aria-current="page"':"")+">"+esc(c[1])+"</a>"}).join("");
   return'<header class="bl-top"><div class="wrap"><a class="logo" href="'+B+'id/"><img src="'+B+'assets/favicon.svg" alt="" width="24" height="24">GoWithDME</a><span class="sp"></span><a class="bl-l" href="'+B+'blog/">Blog</a><a class="bl-l" href="'+B+'id/event">Event</a><a class="bl-l" href="'+B+'id/gunung">Gunung</a></div></header><nav class="bl-cats wrap" aria-label="Kategori blog">'+chips+"</nav>"}
-var FOOT='<footer class="bl-foot wrap"><span>GoWithDME oleh Jurkon Studio</span><a href="'+B+'id/bantuan">Bantuan</a><a href="'+B+'id/terms">Syarat</a><a href="'+B+'id/privacy">Privasi</a></footer>';
+var FOOT='<footer class="bl-foot wrap"><span>© GoWithDME</span><a href="'+B+'id/bantuan">Bantuan</a><a href="'+B+'id/terms">Syarat</a><a href="'+B+'id/privacy">Privasi</a></footer>';
 function show(cur,main,title,bare){document.title=title+" – GoWithDME";app.innerHTML=bare?'<main class="wrap bl-main">'+main+"</main>":top(cur)+'<main class="wrap bl-main">'+main+"</main>"+FOOT}
 var EN=/\/en\//.test(location.pathname),T=EN?{h:"Page not found",s:"This address does not exist or has been moved.",retry:"Try again",b:"Go to blog",c:"Go to home",pw:"Play while you wait",play:"Play",more:"Explore GoWithDME",ev:"Events",gn:"Mountains",km:"Communities",
  g1:"Hiking game",g2:"Taller mountain?",g3:"Tap the tickets",

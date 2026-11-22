@@ -10,6 +10,12 @@ ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Untuk alamat lain (mis. uji coba):  GWM_SITE=https://alamat-lain python3 tools/build.py
 BASE=os.environ.get("GWM_SITE","https://gowithdme.com").rstrip("/")
 VER=os.environ.get("GWM_VER") or time.strftime("%Y%m%d%H%M")  # GWM_VER tetap -> build ulang tidak mengubah file (dipakai workflow)
+# ---- pemilik situs + tautan sosial (tampil di Hak Cipta dan Tentang; juga jadi data "founder" untuk Google) ----
+# Tambah akun lain dengan satu baris: ("Instagram","https://instagram.com/akunmu"),
+OWNER_NAME="Kalfin Agus Setiawan"
+OWNER_SOCIAL=[("Blog","https://calvfinka.blogspot.com"),("GitHub","https://github.com/calvfinka")]
+_ol={"id":"Sosial media","en":"Social"}
+S["owner_links"]=tuple((f'<p>{_ol[x]}: '+" · ".join(f'<a href="{u}" rel="me noopener" target="_blank">{n}</a>' for n,u in OWNER_SOCIAL)+"</p>") for x in ("id","en"))
 LANGS=["id","en"]; IDX={"id":0,"en":1}
 PAGES=["index","event","gunung","login","privacy","terms","copyright","template","about","ajukan","komunitas","teman","profil","bantuan","pesan"]
 # halaman /statistik hanya ada bila data/statistik.json berstatus aktif (sakelar 'publik' di Supabase); selain itu tidak dibangun dan file lamanya dihapus
@@ -95,7 +101,7 @@ for l in LANGS:
         if p=="index":
             ld={"@context":"https://schema.org","@graph":[
                 {"@type":"WebSite","name":"GoWithDME","url":f"{BASE}/{l}/","inLanguage":l},
-                {"@type":"Organization","name":"GoWithDME","url":f"{BASE}/{l}/","logo":f"{BASE}/assets/icon-512.png","founder":{"@type":"Organization","name":"Jurkon Studio"}}]}
+                {"@type":"Organization","name":"GoWithDME","url":f"{BASE}/{l}/","logo":f"{BASE}/assets/icon-512.png","founder":{"@type":"Person","name":OWNER_NAME,"sameAs":[u for _,u in OWNER_SOCIAL]}}]}
             hl+='<script type="application/ld+json">'+json.dumps(ld,ensure_ascii=False).replace("</","<\\/")+'</script>'
         h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl).replace("{{og_img}}",f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png")
         h=re.sub(r"\{\{(\w+)\}\}",lambda m:S[m.group(1)][IDX[l]],h)

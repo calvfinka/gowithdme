@@ -9,8 +9,8 @@ window.IB_CONFIG = {
   CONTACT_EMAIL_PERSONAL: "personal@gowithdme.com", // data pribadi: permintaan hak subjek data (privasi)
   CONTACT_WA: "6282243562960",
   CONTACT_WA_LABEL: "0822 4356 2960",
-  OWNER_NAME: "Jurkon Studio",
-  OWNER_LEGAL: "Jurkon Studio",
+  OWNER_NAME: "Kalfin Agus Setiawan",
+  OWNER_LEGAL: "Kalfin Agus Setiawan",
   COPYRIGHT_YEAR: "2026",
   SITE_NAME: "GoWithDME",
   FEATURED_ENABLED: true,
