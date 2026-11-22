@@ -38,3 +38,5 @@
 .tm-home .tm-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .tm-home .tm-c{flex:none}
 .tm-home-a{display:flex;gap:8px;flex-wrap:wrap}
+/* <main class="tm"> bentrok dengan gaya waktu .tm (style.css): teks tidak boleh nowrap/terpotong */
+main.tm{white-space:normal;overflow:visible;text-overflow:clip}

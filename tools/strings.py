@@ -1009,3 +1009,12 @@ _TPL = {"f_template": ("Template", "Templates"),
 "tpl_loc": ("id_ID", "en_US"),
 "tpl_og": ("https://gowithdme.com/assets/og-template.png", "https://gowithdme.com/assets/og-template-en.png")}
 S.update(_TPL); J.update(_TPL)
+
+# ---- Daftar ajakan kosong: selalu ada jalan berikutnya (js/empty-core.js + js/teman.js) ----
+_EMPTY = {
+"ct_e_all": ("Lihat semua kota", "See all cities"),
+"ct_e_reset": ("Hapus filter", "Clear filters"),
+"ct_e_events": ("Lihat event terdekat", "See upcoming events"),
+"ct_e_create": ("Buat ajakan pertama", "Create the first invite"),
+}
+S.update(_EMPTY); J.update(_EMPTY)
