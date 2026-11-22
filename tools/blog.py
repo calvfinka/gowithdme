@@ -145,6 +145,7 @@ _I={"eye":'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle c
  "flame":'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
  "check":'<path d="M20 6 9 17l-5-5"/>',"x":'<path d="M18 6 6 18M6 6l12 12"/>',
  "moon":'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+ "sun":'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
  "grid":'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
  "berita":'<path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/>',
  "opini":'<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
@@ -176,12 +177,12 @@ def top(p,cur,counts,bar=True):
     chip=lambda href,name,icon,n,on: f'<a href="{href}"'+(' aria-current="page"' if on else '')+f'>{ic(icon)}<span>{esc(name)}</span>'+(f'<i>{n}</i>' if n else '')+'</a>'
     chips=chip(f"{p}blog/","Semua","grid",tot,cur=="")+"".join(chip(f"{p}blog/{k}/",n,k,counts.get(k,0),cur==k) for k,n,_ in CATS if counts.get(k,0) or cur==k)
     navbar=f'<nav class="bl-cats wrap" aria-label="Kategori blog">{chips}</nav>' if bar else ""
-    return f"""<body class="bl">{SPRITE}<header class="bl-top"><div class="wrap"><a class="logo" href="{p}id/"><img src="{p}assets/favicon.svg" alt="" width="24" height="24">GWM</a><span class="sp"></span><a class="bl-l" href="{p}blog/">Blog</a><a class="bl-l" href="{p}id/event">Event</a><a class="bl-l" href="{p}id/gunung">Gunung</a><a class="bl-l" href="{p}id/komunitas">Komunitas</a><button type="button" class="bl-ib" id="theme" aria-label="Ganti tema terang/gelap">{ic("moon")}</button></div></header>
+    return f"""<body class="bl">{SPRITE}<div class="bl-clockbar" role="group" aria-label="Tanggal dan jam sekarang"><div class="wrap"><span class="bl-tick" aria-hidden="true"></span><time id="blClock" datetime=""><span data-d></span><span class="bl-ck-t"><span data-t></span> <small data-z></small></span></time></div></div><header class="bl-top"><div class="wrap"><a class="logo" href="{p}id/"><img src="{p}assets/favicon.svg" alt="" width="24" height="24">GWM</a><span class="sp"></span><a class="bl-l" href="{p}blog/">Blog</a><a class="bl-l" href="{p}id/event">Event</a><a class="bl-l" href="{p}id/gunung">Gunung</a><a class="bl-l" href="{p}id/komunitas">Komunitas</a><button type="button" class="bl-ib" id="theme" aria-label="Ganti tema terang/gelap">{ic("moon","i i-moon")}{ic("sun","i i-sun")}</button></div></header>
 {navbar}"""
 def foot(p):
     v=f"?v={VER}" if VER else ""
     return (f'<footer class="bl-foot wrap"><span>GWM oleh Jurkon Studio</span><a href="{p}id/bantuan">Bantuan</a><a href="{p}id/template">Template</a><a href="{p}id/terms">Syarat</a><a href="{p}id/privacy">Privasi</a></footer>'
-            f'<div class="bl-toast" id="blToast" role="status" aria-live="polite"></div><script src="{p}js/config.js"></script><script src="{p}js/word-filter.js"></script><script src="{p}js/blog-ui.js{v}"></script><script src="{p}js/blog-live.js{v}"></script></body></html>')
+            f'<div class="bl-toast" id="blToast" role="status" aria-live="polite"></div><script src="{p}js/config.js"></script><script src="{p}js/word-filter.js"></script><script src="{p}js/clock-core.js{v}"></script><script src="{p}js/blog-clock.js{v}" defer></script><script src="{p}js/blog-ui.js{v}"></script><script src="{p}js/blog-live.js{v}"></script></body></html>')
 def card(p,x):
     k=f'{x["category"]}/{x["slug"]}'; url=f'{p}blog/{k}'; c=x["category"]
     return (f'<article class="bl-card bl-c-{c}" data-k="{k}" data-d="{esc((x.get("published_at") or "")[:19])}">'

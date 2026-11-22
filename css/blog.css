@@ -333,3 +333,66 @@ body.bl{overflow-x:clip;padding-bottom:calc(84px + env(safe-area-inset-bottom,0p
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .bl [class*="bl-c-"]{--cc:hsl(var(--h,160) 70% 72%);--cb:hsl(var(--h,160) 34% 19%);--cg:linear-gradient(135deg,hsl(var(--h,160) 48% 34%),hsl(calc(var(--h,160) + 38) 50% 20%))}}
 .bl-hero.bl-c-all{--cg:linear-gradient(135deg,#1f9a74,#17506b)}
 .bl-q input{padding-right:16px}.bl-q input:not(:placeholder-shown){padding-right:44px}
+
+/* ===== Tahap 8: blog hanya teks (tanpa foto, kotak ikon, atau gradien) + bilah tanggal & jam ===== */
+.bl-clockbar{background:var(--field);border-bottom:1px solid var(--line);font-size:12.5px;color:var(--mute);padding-top:env(safe-area-inset-top,0px)}
+.bl-clockbar .wrap{display:flex;align-items:center;gap:8px;min-height:32px}
+.bl-clockbar time{display:flex;flex:1;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+.bl-clockbar time>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;color:var(--ink)}
+.bl-ck-t{flex:none;font-variant-numeric:tabular-nums;font-feature-settings:"tnum";color:var(--ink);font-weight:600;letter-spacing:.01em}
+.bl-ck-t small{font-size:11px;font-weight:700;color:var(--brand);margin-left:2px}
+.bl-tick{flex:none;width:7px;height:7px;border-radius:50%;background:var(--brand)}
+@media(prefers-reduced-motion:no-preference){.bl-tick{animation:bl-tick 1s ease-in-out infinite}}
+@keyframes bl-tick{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.55);opacity:.45}}
+@media(max-width:340px){.bl-clockbar{font-size:12px}.bl-ck-t small{display:none}}
+
+/* tombol tema: ikon matahari saat gelap, bulan saat terang */
+.bl-ib .i-sun{display:none}
+:root[data-theme="dark"] .bl-ib .i-moon{display:none}:root[data-theme="dark"] .bl-ib .i-sun{display:block}
+
+/* tanpa gambar: semua kotak ikon, gradien, dan lencana ikon disembunyikan; topik ditandai titik warna kecil */
+.bl .bl-th{display:none!important}
+.bl .bl-badge svg,.bl .bl-cats a svg,.bl .bl-pop-strip small svg,.bl .bl-box h3 svg{display:none}
+.bl .bl-dot{width:9px;height:9px;min-width:9px;border-radius:50%;background:var(--cc);align-self:center}
+.bl .bl-dot svg{display:none}
+.bl .bl-badge{background:transparent;padding:0;gap:6px;font-size:12px;letter-spacing:.02em}
+.bl .bl-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cc);flex:none}
+
+/* kartu: satu kolom teks */
+.bl .bl-card,.bl .bl-card:first-child{grid-template-columns:minmax(0,1fr)}
+.bl .bl-card .bl-cb{grid-column:1;grid-row:auto}
+.bl .bl-card{padding:16px 18px;border-radius:14px}
+.bl .bl-card::before{top:16px;bottom:16px;width:3px}
+.bl .bl-card h2{font-size:1.1rem;line-height:1.35;letter-spacing:-.01em}
+.bl .bl-ex{color:var(--mute);-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+.bl .bl-feed>.bl-card:first-child{padding:20px 22px 16px;border-radius:16px;box-shadow:none;border-color:color-mix(in srgb,var(--cc) 35%,var(--line))}
+.bl .bl-feed>.bl-card:first-child::before{display:block}
+.bl .bl-feed>.bl-card:first-child .bl-cb{padding:0;gap:9px}
+.bl .bl-feed>.bl-card:first-child .bl-bd::after{content:"Pilihan utama";order:-1;margin-right:4px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:0 9px;line-height:18px}
+.bl .bl-feed>.bl-card:first-child h2{font-size:clamp(1.35rem,4.4vw,1.8rem);line-height:1.25;-webkit-line-clamp:4}
+.bl .bl-feed>.bl-card:first-child .bl-ex{font-size:15px;-webkit-line-clamp:3}
+.bl-bd{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px}
+
+/* hero: judul teks di atas latar polos */
+.bl .bl-hero,.bl .bl-hero.bl-c-all{background:none;box-shadow:none;border-width:0 0 1px;color:var(--ink);padding:6px 0 18px;border-radius:0;border-bottom:1px solid var(--line);margin-bottom:22px;overflow:visible}
+.bl .bl-hero::after{display:none}
+.bl .bl-hero h1{color:var(--ink);font-size:clamp(2rem,6vw,2.7rem);letter-spacing:-.03em}
+.bl .bl-sub{color:var(--mute)}
+.bl .bl-kpi{color:var(--mute)}.bl .bl-kpi b{color:var(--ink)}
+.bl .bl-kpi span{background:var(--field);border:1px solid var(--line);color:var(--mute)}
+.bl .bl-q input{background:var(--field);color:var(--ink);box-shadow:none;border:1px solid var(--line)}
+.bl .bl-q input:focus{border-color:var(--brand);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 22%,transparent)}
+.bl .bl-q input::placeholder{color:var(--mute)}
+.bl .bl-q>svg{color:var(--mute)}
+.bl .bl-q .bl-ib{background:var(--bg);color:var(--mute);border:1px solid var(--line)}
+@media(min-width:760px){.bl .bl-hero{padding:10px 0 22px}}
+
+/* topik: kartu teks */
+.bl .bl-tile{padding:11px 14px;gap:10px;border-radius:12px}
+.bl .bl-tile .bl-dot{width:9px;height:9px;border-radius:50%}
+.bl .bl-topics-l .bl-dot{width:9px;height:9px;border-radius:50%}
+.bl .bl-box h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--mute)}
+.bl .bl-promo{background:var(--field)}
+
+/* artikel */
+.bl .bl-art .bl-badge{margin-bottom:2px}
