@@ -96,7 +96,13 @@ function loadSocial(){if(!window.sb)return;
   return window.sb.from("event_social").select("*").then(function(r){(r.data||[]).forEach(function(z){SOC[z.event_id]=z})},function(){})}
 function loadChips(){var box=$("kChips");if(!box||!window.sb)return;
   window.sb.from("forum_city_stats").select("*").order("sort").then(function(r){var A=(r.data||[]).filter(function(c){return c.active});if(!A.length)return;
-    box.innerHTML=A.map(function(c){return'<a class="kchip" href="komunitas?kota='+encodeURIComponent(c.city)+'">'+esc(c.city)+(c.posts?' <small>'+c.posts+'</small>':'')+'</a>'}).join("")+'<a class="kchip all" href="komunitas">'+esc(tr("home_allcities"))+'</a>'},function(){})}
+    /* kotamu dulu (kota terpilih / kota awal), lalu urutan bawaan; yang tidak muat di satu baris disembunyikan, "Semua kota" selalu ada */
+    var my="";try{var sl=JSON.parse(localStorage.getItem("gwm_loc")||"null");my=(sl&&sl.city&&sl.city!=="semua")?sl.city:""}catch(e){}
+    my=my||(window.IB_CONFIG&&IB_CONFIG.DEFAULT_CITY)||"";
+    A=A.filter(function(c){return c.city===my}).concat(A.filter(function(c){return c.city!==my}));
+    box.innerHTML=A.map(function(c){return'<a class="kchip" data-fit="1" href="komunitas?kota='+encodeURIComponent(c.city)+'">'+esc(c.city)+(c.posts?' <small>'+c.posts+'</small>':'')+'</a>'}).join("")+'<a class="kchip all" href="komunitas">'+esc(tr("home_allcities"))+'</a>';
+    var fit=function(){var it=[].slice.call(box.querySelectorAll("[data-fit]"));it.forEach(function(a){a.hidden=false});if(!box.clientWidth)return;for(var k=it.length-1;k>=0&&box.scrollWidth>box.clientWidth+1;k--)it[k].hidden=true};
+    fit();var t;window.addEventListener("resize",function(){clearTimeout(t);t=setTimeout(fit,150)})},function(){})}
 function invN(e){return SOC[e.id]?+SOC[e.id].open_invites||0:0}
 /* "Baru": hanya saat daftar diurutkan terbaru (event?sort=new) dan ada acuan kunjungan dari beranda di sesi ini. */
 var NEWBASE=0;try{NEWBASE=+sessionStorage.getItem("gwm_home_base")||0}catch(e){}

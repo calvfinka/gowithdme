@@ -41,27 +41,67 @@
       sbTxt.textContent=hasLoc?tr("loc_scope_detail",{label:lbl,n:n}):tr("loc_scope_all",{n:n});
       if(sbClr)sbClr.hidden=!hasLoc;
     }
-    var qb=$("locQuickBar");
-    if(qb){
-      [].forEach.call(qb.querySelectorAll("[data-qmacro]"),function(b){
-        var m=b.dataset.qmacro;
-        b.setAttribute("aria-pressed",(m===""&&!hasLoc)||(m&&loc.macro===m)?"true":"false");
-      });
-    }
+    if($("locQuickBar")&&$("locQuickBar").onclick)renderQuickBar();
   }
 
   /* ---- Hero Macro-Region Quick Switcher ---- */
+  /* Bilah wilayah satu baris yang menyesuaikan: urutan prioritas = wilayah terpilih, wilayah kotamu, lalu yang paling banyak event.
+     Chip yang tidak muat di lebar layar ikut terlipat ke "Lainnya +N" (dikelompokkan Jawa & Bali / Luar Jawa). */
+  var qbOpen=false;
+  function macroGroup(m){return /^(Jabodetabek|Jawa|Bali)/i.test(m)?"java":"out"}
+  function myMacro(l){
+    var city=(l.city&&l.city!=="semua")?l.city:(C.DEFAULT_CITY||"");
+    if(!PC||!city)return "";
+    var prov=l.prov||PC.resolveProvince(city,REG);
+    return prov?(PC.resolveMacroRegion(prov,MAC)||""):"";
+  }
+  function macroOrder(l){
+    var macros=Object.keys(MAC),ev=activeEvents(),cnt={};
+    macros.forEach(function(m){
+      cnt[m]=PC&&ev.length?ev.filter(function(e){return PC.filterEventsByLocation([e],{city:"semua",prov:"",macro:m,radiusKm:0},REG,GEO,MAC).length>0}).length:0;
+    });
+    var first=[l.macro,myMacro(l)].filter(function(m,i,a){return m&&macros.indexOf(m)>=0&&a.indexOf(m)===i});
+    var rest=macros.filter(function(m){return first.indexOf(m)<0}).sort(function(a,b){return cnt[b]-cnt[a]||macros.indexOf(a)-macros.indexOf(b)});
+    return first.concat(rest);
+  }
+  /* sembunyikan chip berprioritas terendah sampai satu baris muat; kembalikan yang disembunyikan */
+  function fitRow(row,sel){
+    var items=[].slice.call(row.querySelectorAll(sel)),hid=[];
+    items.forEach(function(b){b.hidden=false});
+    if(!row.clientWidth)return hid;  /* belum tampil (lebar 0): jangan sembunyikan apa pun */
+    for(var k=items.length-1;k>=0&&row.scrollWidth>row.clientWidth+1;k--){items[k].hidden=true;hid.unshift(items[k])}
+    return hid;
+  }
+  function renderQuickBar(){
+    var qb=$("locQuickBar");if(!qb)return;
+    var l=curLoc(),cur=l.macro||"",hasLoc=(l.city&&l.city!=="semua")||!!l.prov||!!l.macro,order=macroOrder(l);
+    var btn=function(m,x){return'<button type="button" '+(x||"")+' data-qmacro="'+esc(m)+'" aria-pressed="'+(cur===m?"true":"false")+'">'+esc(m)+'</button>'};
+    var row='<button type="button" class="lqb-all" data-qmacro="" aria-pressed="'+(!hasLoc?"true":"false")+'">'+esc(tr("loc_all_id"))+'</button>'+
+      order.map(function(m){return btn(m,'data-fit="1"')}).join("")+
+      '<button type="button" class="lqb-tog" id="qbarMore" aria-expanded="'+(qbOpen?"true":"false")+'"></button>'+
+      '<button type="button" class="lqb-exp" id="qbarExplorer" title="38 '+esc(tr("loc_prov_h"))+' · 120+" aria-label="38 '+esc(tr("loc_prov_h"))+' · 120+"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg></button>';
+    qb.innerHTML='<div class="lqb-row">'+row+'</div><div class="lqb-more" id="qbarPanel" hidden></div>';
+    var rowEl=qb.firstChild,tog=$("qbarMore");
+    tog.textContent=tr("loc_more",{n:order.length});  /* ukur dengan label terpanjang */
+    var hid=fitRow(rowEl,"[data-fit]");
+    if(!hid.length){tog.hidden=true;return}
+    tog.textContent=qbOpen?tr("loc_less"):tr("loc_more",{n:hid.length});
+    if(qbOpen){
+      var panel=$("qbarPanel"),names=hid.map(function(b){return b.dataset.qmacro}),h="";
+      [["java","loc_grp_java"],["out","loc_grp_out"]].forEach(function(g){
+        var ms=names.filter(function(m){return macroGroup(m)===g[0]});
+        if(ms.length)h+='<div class="lqb-grp"><span class="lqb-gl">'+esc(tr(g[1]))+'</span>'+ms.map(function(m){return btn(m)}).join("")+'</div>';
+      });
+      panel.innerHTML=h;panel.hidden=false;
+    }
+  }
+  var qbT;window.addEventListener("resize",function(){clearTimeout(qbT);qbT=setTimeout(function(){if($("locQuickBar")&&$("locQuickBar").onclick)renderQuickBar()},150)});
   function buildQuickMacroBar(){
     var qb=$("locQuickBar");if(!qb)return;
-    var macros=Object.keys(MAC);
-    var html='<button type="button" class="lqb-all" data-qmacro="" aria-pressed="true">'+esc(tr("loc_all_id"))+'</button>';
-    macros.forEach(function(m){
-      html+='<button type="button" data-qmacro="'+esc(m)+'" aria-pressed="false">'+esc(m)+'</button>';
-    });
-    html+='<button type="button" class="lqb-exp" id="qbarExplorer"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg><span>38 '+esc(tr("loc_prov_h"))+' · 120+</span></button>';
-    qb.innerHTML=html;
+    renderQuickBar();
     qb.onclick=function(e){
       var ex=e.target.closest("#qbarExplorer");if(ex){openLocModal();return}
+      var tg=e.target.closest("#qbarMore");if(tg){qbOpen=!qbOpen;renderQuickBar();return}
       var b=e.target.closest("[data-qmacro]");if(!b)return;
       var m=b.dataset.qmacro;
       if(window.IB_Api&&IB_Api.setLocation){
