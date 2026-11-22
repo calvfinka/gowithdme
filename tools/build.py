@@ -214,16 +214,48 @@ rows=[]
 for l in LANGS:
     for p in pub:
         alt="".join(f'<xhtml:link rel="alternate" hreflang="{x}" href="{url(x,p)}"/>' for x in LANGS)
-        rows.append(f"<url><loc>{url(l,p)}</loc>"+("<lastmod>2026-11-21</lastmod>" if p=="template" else "")+f"{alt}</url>")
+        rows.append(f"<url><loc>{url(l,p)}</loc>"+("<lastmod>2026-11-21</lastmod>" if p=="template" else "@@LM@@")+f"{alt}</url>")
 # ---- blog statis (data/posts.json dari tools/gen_blog.py) -> blog/<kategori>/<alamat>.html ----
 POSTS=json.load(open(ROOT+"/data/posts.json",encoding="utf-8")) if os.path.exists(ROOT+"/data/posts.json") else []
 for u,lm in BL.build(ROOT,BASE,POSTS): rows.append(f"<url><loc>{u}</loc>"+(f"<lastmod>{lm[:10]}</lastmod>" if lm else "")+"</url>")
+_TODAY=_date.today().isoformat()
+_OLD=(_date.today()-__import__("datetime").timedelta(days=30)).isoformat()  # event yang berakhir >30 hari lalu: halaman tetap ada, tapi keluar dari sitemap
 for e in EV:
+    if (e.get("end_date") or e["event_date"])[:10]<_OLD: continue
     alt="".join(f'<xhtml:link rel="alternate" hreflang="{x}" href="{BASE}/{x}/e/{e["slug"]}"/>' for x in LANGS)
     for l in LANGS: rows.append(f"<url><loc>{BASE}/{l}/e/{e['slug']}</loc><lastmod>{(e.get('created_at') or e['event_date'])[:10]}</lastmod>{alt}</url>")
-open(ROOT+"/sitemap.xml","w",encoding="utf-8").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+"".join(rows)+"</urlset>\n")
+# lastmod halaman inti = tanggal konten terbaru yang benar-benar ada (event ditambahkan atau tulisan blog), bukan tanggal build
+_dates=[(e.get("created_at") or "")[:10] for e in EV]+[(x.get("updated_at") or x.get("published_at") or "")[:10] for x in POSTS]
+_dates=[x for x in _dates if x]
+_LMTAG=f"<lastmod>{max(_dates)}</lastmod>" if _dates else ""
+open(ROOT+"/sitemap.xml","w",encoding="utf-8").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+"".join(rows).replace("@@LM@@",_LMTAG)+"</urlset>\n")
 pre=urlparse(BASE).path.rstrip("/")
 open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("admin","login","id/login","en/login","ajukan","id/ajukan","en/ajukan","profil","id/profil","en/profil","pesan","id/pesan","en/pesan"))+f"Sitemap: {BASE}/sitemap.xml\n")
+
+# ---- "Pilihan GoWithDME": blok tautan statis di beranda, dipilih otomatis dari isi situs ----
+# Beranda dirender JavaScript, jadi perayap melihat sedikit tautan. Blok ini memberi tautan biasa ke halaman paling berharga:
+# event yang masih berlangsung/akan datang (urutan sama dengan beranda: unggulan valid, boost_score, lalu tanggal terdekat) dan tulisan terbaru.
+def _live(e): return (e.get("end_date") or e["event_date"])[:10]>=_TODAY
+def _feat(e): return bool(e.get("is_featured")) and not (e.get("featured_until") and str(e["featured_until"])[:10]<_TODAY)
+_PICKS=sorted([e for e in EV if _live(e)],key=lambda e:(not _feat(e),-(int(e.get("boost_score") or 0)),e["event_date"][:10]))[:6]
+_NEWP=sorted(POSTS,key=lambda x:x.get("published_at") or "",reverse=True)[:4]
+PK={"id":{"h":"Pilihan GoWithDME","p":"Event terdekat dan tulisan terbaru, dipilih otomatis dari isi situs.","e":"Event pilihan","b":"Tulisan terbaru","x":"Jelajahi","ev":"Semua event","mt":"Naik gunung","fr":"Cari teman","cm":"Komunitas","bl":"Blog"},
+    "en":{"h":"GoWithDME Picks","p":"Upcoming events and the latest articles, picked automatically from the site's content.","e":"Featured events","b":"Latest articles","x":"Explore","ev":"All events","mt":"Hiking","fr":"Find company","cm":"Community","bl":"Blog"}}
+def _pick_html(l):
+    t=PK[l]
+    ev="".join(f'<li><a href="e/{esc(e["slug"])}">{esc((e.get("title_en") if l=="en" and e.get("title_en") else e["title"]))}</a> <small>{fdate(l,e["event_date"])}{(" · "+esc(e["city"])) if isinstance(e.get("city"),str) and e.get("city") else ""}</small></li>' for e in _PICKS)
+    bp="".join(f'<li><a href="../blog/{esc(x["category"])}/{esc(x["slug"])}">{esc(x["title"])}</a></li>' for x in _NEWP)
+    nav="".join(f'<a href="{h}">{t[k]}</a>' for h,k in (("event","ev"),("gunung","mt"),("teman","fr"),("komunitas","cm"),("../blog/","bl")))
+    return (f'<!--gwm-pick--><section class="gwm-pick" aria-labelledby="gwmPickH"><style>.gwm-pick{{max-width:1100px;margin:28px auto;padding:0 16px}}.gwm-pick h2{{margin:0 0 4px}}.gwm-pick .pk-g{{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:14px 0}}.gwm-pick h3{{font-size:15px;margin:0 0 6px}}.gwm-pick ul{{margin:0;padding-left:18px;line-height:1.7}}.gwm-pick small{{color:var(--mute)}}.gwm-pick .pk-n{{display:flex;flex-wrap:wrap;gap:8px}}.gwm-pick .pk-n a{{border:1px solid var(--line);border-radius:99px;padding:6px 14px;text-decoration:none}}</style>'
+            f'<h2 id="gwmPickH">{t["h"]}</h2><p>{t["p"]}</p><div class="pk-g">'
+            +(f'<div><h3>{t["e"]}</h3><ul>{ev}</ul></div>' if ev else "")+(f'<div><h3>{t["b"]}</h3><ul>{bp}</ul></div>' if bp else "")
+            +f'</div><nav class="pk-n" aria-label="{t["x"]}">{nav}</nav></section><!--/gwm-pick-->')
+for _l in LANGS:
+    _f=f"{ROOT}/{_l}/index.html"; _h2=open(_f,encoding="utf-8").read()
+    _h2=re.sub(r"<!--gwm-pick-->.*?<!--/gwm-pick-->","",_h2,flags=re.S)
+    _i=_h2.rfind("</main>")
+    if _i>0 and (_PICKS or _NEWP): _h2=_h2[:_i]+_pick_html(_l)+_h2[_i:]
+    open(_f,"w",encoding="utf-8").write(_h2)
 # ---- sw.js: service worker (offline + cepat). VER ikut build, jadi cache versi lama dibuang otomatis ----
 # cangkang offline: halaman utama dua bahasa + semua CSS/JS (dengan ?v= yang sama persis dengan yang diminta halaman) + data event.
 # Diunduh service worker saat dipasang, jadi situs langsung bisa dibuka tanpa sinyal tanpa menunggu tiap halaman dikunjungi.
