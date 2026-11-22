@@ -61,7 +61,8 @@ html:where([data-dsk]) .tiles{gap:16px 12px}
 html:where([data-dsk]) #pgShare{display:none}
 html:where([data-dsk]) .khero{gap:10px}
 html:where([data-dsk]) .khero h1{font-size:24px}
-html:where([data-dsk]) dialog,html:where([data-dsk]) dialog.shr,html:where([data-dsk]) dialog.aqd{width:100%!important;max-width:100%;margin:auto 0 0;border-radius:18px 18px 0 0;max-height:calc(92*var(--vh));border-bottom:0}
+html:where([data-dsk]) dialog{width:100%!important;max-width:100%;margin:auto 0 0;border-radius:18px 18px 0 0;max-height:calc(92*var(--vh));border-bottom:0}
+html:where([data-dsk]) dialog.shr,html:where([data-dsk]) dialog.aqd{width:calc(100% - 32px)!important;max-width:380px;margin:auto;border-radius:16px;border-bottom:1px solid var(--line);max-height:calc(88*var(--vh))}
 html:where([data-dsk]) .db{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
 html:where([data-dsk]) .dp{height:min(calc(46*var(--vh)),300px)}
 /* adaptive.css @640 */

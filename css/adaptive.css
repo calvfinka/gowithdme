@@ -77,7 +77,9 @@ main:focus,.page:focus{outline:none}
   .tiles{gap:16px 12px}
   #pgShare{display:none}
   .khero{gap:10px}.khero h1{font-size:24px}
-  dialog,dialog.shr,dialog.aqd{width:100%!important;max-width:100%;margin:auto 0 0;border-radius:18px 18px 0 0;max-height:calc(92*var(--vh));border-bottom:0}
+  dialog{width:100%!important;max-width:100%;margin:auto 0 0;border-radius:18px 18px 0 0;max-height:calc(92*var(--vh));border-bottom:0}
+  /* dialog kecil (pesan, tips, konfirmasi, bagikan): kartu di tengah, bukan bottom sheet */
+  dialog.shr,dialog.aqd{width:calc(100% - 32px)!important;max-width:380px;margin:auto;border-radius:16px;border-bottom:1px solid var(--line);max-height:calc(88*var(--vh))}
   .db{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
   .dp{height:min(calc(46*var(--vh)),300px)}
 }
@@ -123,7 +125,7 @@ html[data-tier="low"] .topbar.scrolled{box-shadow:0 1px 0 var(--line)}
   }
   html:not([data-tier="low"]) dialog[open]{animation:dlgIn .24s var(--ease)}
   html:not([data-tier="low"]) dialog[open]::backdrop{animation:fadeIn .24s}
-  @media (max-width:640px){html:not([data-tier="low"]) dialog[open]{animation:sheetIn .3s var(--ease)}}
+  @media (max-width:640px){html:not([data-tier="low"]) dialog[open]{animation:sheetIn .3s var(--ease)}html:not([data-tier="low"]) dialog.aqd[open],html:not([data-tier="low"]) dialog.shr[open]{animation:dlgIn .24s var(--ease)}}
   html:not([data-tier="low"]) .totop,html:not([data-tier="low"]) .topbar{transition:box-shadow .2s,opacity .2s,transform .2s}
 }
 
