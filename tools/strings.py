@@ -95,7 +95,7 @@ S = {
 "lg_nick": ("Nama panggilan", "Nickname"),
 "lg_nick_ph": ("contoh: Pendaki Dago", "e.g. Dago Hiker"),
 "lg_pass8": ("Password (min. 8 karakter)", "Password (min. 8 characters)"),
-"lg_newpass_ph": ("Buat password", "Create a password"),
+"lg_newpass_ph": ("Minimal 8 karakter", "At least 8 characters"),
 "lg_agree2": ("Saya setuju dengan <a href=\"privacy\" target=\"_blank\" rel=\"noopener\">kebijakan privasi</a>, <a href=\"terms\" target=\"_blank\" rel=\"noopener\">syarat</a>, dan pemakaian lokasi untuk keamanan akun (UU PDP). Lokasi detail tidak ditampilkan ke pengguna lain.",
               "I agree to the <a href=\"privacy\" target=\"_blank\" rel=\"noopener\">privacy policy</a>, <a href=\"terms\" target=\"_blank\" rel=\"noopener\">terms</a>, and the use of location for account security (Indonesian PDP Law). Precise location is never shown to other users."),
 "lg_create": ("Buat akun", "Create account"),
@@ -476,7 +476,7 @@ S.update({
 "hp_ig_p": ("Untuk info event terbaru dan pesan lewat DM.", "For the latest event updates and DMs."),
 "hp_ig_btn": ("Buka Instagram", "Open Instagram"),
 "hp_copy": ("Salin", "Copy"),
-"hp_hours": ("Placeholder: tulis jam layanan dan perkiraan waktu balas di sini (ubah di tools/strings.py, kunci hp_hours).", "Placeholder: write service hours and expected reply time here (edit tools/strings.py, key hp_hours)."),
+"hp_hours": ("Kami membalas email dan WhatsApp setiap hari, biasanya dalam 1×24 jam. Di akhir pekan dan hari libur nasional balasan bisa lebih lama. Untuk laporan, sertakan tautan halaman yang dimaksud supaya lebih cepat ditangani.", "We reply to email and WhatsApp every day, usually within 24 hours. Replies may take longer on weekends and public holidays. For reports, include the link to the page in question so we can handle it faster."),
 "hp_faq_h": ("Pertanyaan umum", "Frequently asked questions"),
 "hp_search_ph": ("Cari di FAQ", "Search the FAQ"),
 "hp_search_aria": ("Cari di FAQ", "Search the FAQ"),
@@ -1102,3 +1102,22 @@ _STAT={
 "sx_p_stats": ("Statistik konser", "Concert stats"),
 }
 S.update(_STAT); J.update(_STAT)
+
+N = {
+"ph_email": ("nama@email.com", "name@email.com"),
+"ph_wa": ("0812 3456 7890", "0812 3456 7890"),
+"ph_ig": ("contoh: @komunitasmu", "e.g. @yourcommunity"),
+"ph_ticket": ("https://link-tiket-atau-pendaftaran", "https://ticket-or-registration-link"),
+"sb_ph_title": ("contoh: Konser Hindia Jakarta 2026", "e.g. Hindia Concert Jakarta 2026"),
+"sb_ph_title_trip": ("contoh: Open Trip Gunung Papandayan 2D1N", "e.g. Mount Papandayan Open Trip 2D1N"),
+"sb_ph_venue": ("contoh: Istora Senayan, Jakarta", "e.g. Istora Senayan, Jakarta"),
+"sb_ph_meet": ("contoh: Basecamp Cisurupan, Garut", "e.g. Cisurupan Basecamp, Garut"),
+"sb_ph_org": ("contoh: Komunitas Pendaki Bandung", "e.g. Bandung Hikers Community"),
+"sb_ph_alt": ("contoh: 2665", "e.g. 2665"),
+"sb_ph_quota": ("contoh: 15", "e.g. 15"),
+"promo_ph_org": ("contoh: Nama promotor atau brand", "e.g. Promoter or brand name"),
+"promo_ph_title": ("contoh: Konser Akhir Tahun Bandung 2026", "e.g. Bandung Year-End Concert 2026"),
+"promo_ph_note": ("Tautan tiket atau catatan, mis. tanggal tayang yang diinginkan", "Ticket link or notes, e.g. preferred start date"),
+}
+S.update(N)
+J.update({k:N[k] for k in ("ph_wa","sb_ph_title","sb_ph_title_trip","sb_ph_venue","sb_ph_meet")})
