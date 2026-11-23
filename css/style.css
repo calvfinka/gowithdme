@@ -170,6 +170,8 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stro
 .info b{font-weight:600}.info span{color:var(--mute);font-size:13px}
 .foot{margin-top:24px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;color:var(--faint);font-size:12px}
 .foot nav{display:flex;gap:16px;flex-wrap:wrap}.foot a:hover{color:var(--ink)}
+.foot nav{align-items:center}.foot .foot-ig{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:-4px 0 -4px -6px;border-radius:50%;color:var(--mute);transition:color .15s,background-color .15s}
+.foot .foot-ig svg.i{width:19px;height:19px}.foot .foot-ig:hover{color:#E1306C;background:var(--sel,rgba(0,0,0,.05))}.foot .foot-ig:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .page .foot{margin-top:40px}
 
 #toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:9px;font-weight:600;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;max-width:calc(92*var(--vw))}
