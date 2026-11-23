@@ -181,6 +181,81 @@ def price_num(lb):
     return int(d) if d else None
 def esc(x): return _h.escape(str(x),quote=True)
 def ldj(o): return '<script type="application/ld+json">'+json.dumps(o,ensure_ascii=False).replace("</","<\\/")+'</script>'
+
+# ---- halaman artis: tiap nama di line-up jadi halaman sendiri (huruf besar/kecil, spasi, aksen, tanda baca diabaikan saat menggabungkan) ----
+import unicodedata as _ud
+TX["id"].update({"lineup_h":"Pengisi acara","a_title":"{a}: Jadwal Konser & Tiket","a_desc":"Jadwal konser dan festival {a}: {n} event di GoWithDME. {nx}","a_next":"Event terdekat: {t} pada {d}.","a_none":"Belum ada jadwal mendatang.","a_up":"Jadwal mendatang","a_past":"Event sebelumnya","a_qwhen":"Kapan {a} konser?","a_qnone":"Belum ada jadwal {a} yang akan datang di GoWithDME. Halaman ini diperbarui saat ada event baru.","a_all":"Semua artis","a_index_t":"Daftar Artis & Pengisi Acara","a_index_d":"Daftar artis dan pengisi acara konser dan festival di Indonesia beserta jadwalnya.","a_count":"{n} event","a_ended":"selesai"})
+TX["en"].update({"lineup_h":"Line-up","a_title":"{a}: Concert Dates & Tickets","a_desc":"Concert and festival dates for {a}: {n} events on GoWithDME. {nx}","a_next":"Next show: {t} on {d}.","a_none":"No upcoming dates yet.","a_up":"Upcoming shows","a_past":"Past events","a_qwhen":"When is {a} playing next?","a_qnone":"There are no upcoming {a} dates on GoWithDME yet. This page is updated when new events are added.","a_all":"All artists","a_index_t":"Artists & Performers","a_index_d":"Artists and performers at concerts and festivals in Indonesia, with their dates.","a_count":"{n} events","a_ended":"ended"})
+_PLACE=re.compile(r"menyusul|segera|soon|tba|tbc|tbd|lainnya|and more|to be announced|pengumuman|line-?up|musisi|guest star",re.I)
+def _akey(n): return re.sub(r"[^0-9a-z]+","",_ud.normalize("NFKD",n).encode("ascii","ignore").decode().lower() or n.lower()) or re.sub(r"\W+","",n.casefold())
+def _aslug(n):
+    a=_ud.normalize("NFKD",n).encode("ascii","ignore").decode().lower()
+    return re.sub(r"[^0-9a-z]+","-",a).strip("-")
+def split_lineup(txt):
+    t=re.sub(r"\.\s*Day\s*\d+\s*\([^)]*\):\s*",", ",txt); t=re.sub(r"^\s*Day\s*\d+\s*\([^)]*\):\s*","",t)
+    t=re.sub(r"\.\s+Dan masih.*$","",t,flags=re.I)
+    out=[]
+    for x in re.split(r"[,;\n]",t):
+        x=re.sub(r"\([^)]*\)","",x).strip(" .\t\"'“”‘’"); x=re.sub(r"^Day\s*\d+\s*:\s*","",x,flags=re.I); x=re.sub(r"^(dan|and)\s+","",x,flags=re.I).strip(" .\"'")
+        if re.fullmatch(r"day\s*\d+",x,re.I): continue
+        if len(x)<2 or len(x)>60 or _PLACE.search(x): continue
+        out.append(x)
+    return out
+ARTISTS={}   # key -> {"names":Counter,"events":[e..],"slug":...}
+import collections as _col
+for _e in EV:
+    seen=set()
+    for _n in split_lineup(_e.get("lineup") or ""):
+        k=_akey(_n)
+        if not k or k in seen: continue
+        seen.add(k); a=ARTISTS.setdefault(k,{"names":_col.Counter(),"events":[]}); a["names"][_n]+=1; a["events"].append(_e)
+_used=set()
+for k,a in sorted(ARTISTS.items()):
+    # nama tampilan = ejaan paling sering dipakai; seri: yang bukan huruf besar semua
+    a["name"]=sorted(a["names"].items(),key=lambda kv:(-kv[1],kv[0].isupper(),kv[0]))[0][0]
+    sl=_aslug(a["name"]) or k; base=sl; i=2
+    while sl in _used: sl=f"{base}-{i}"; i+=1
+    _used.add(sl); a["slug"]=sl
+def lineup_html(l,e):
+    parts=[]
+    for n in split_lineup(e.get("lineup") or ""):
+        a=ARTISTS.get(_akey(n)); parts.append(f'<a href="../a/{esc(a["slug"])}">{esc(n)}</a>' if a else esc(n))
+    return ", ".join(parts)
+def artist_page(l,a):
+    o="en" if l=="id" else "id"; t=TX[l]; nm=a["name"]; u=f"{BASE}/{l}/a/{a['slug']}"
+    evs=a["events"]; up=sorted([x for x in evs if (x.get("end_date") or x["event_date"])[:10]>=_NOW],key=lambda x:x["event_date"])
+    pa=sorted([x for x in evs if x not in up],key=lambda x:x["event_date"],reverse=True)
+    nx=t["a_next"].format(t=(up[0].get("title_en") if l=="en" and up[0].get("title_en") else up[0]["title"]),d=fdate(l,up[0]["event_date"])) if up else t["a_none"]
+    title=t["a_title"].format(a=nm); desc=t["a_desc"].format(a=nm,n=len(evs),nx=nx)
+    def row(x):
+        tt=(x.get("title_en") if l=="en" and x.get("title_en") else x["title"]); ended=(x.get("end_date") or x["event_date"])[:10]<_NOW
+        return f'<li><a href="../e/{esc(x["slug"])}">{esc(tt)}</a><br><small>{esc(fdate(l,x["event_date"]))}{(" · "+esc(x["city"])) if x.get("city") else ""}{(" · "+t["a_ended"]) if ended else ""}</small></li>'
+    ld={"@context":"https://schema.org","@type":"PerformingGroup","name":nm,"url":u,"inLanguage":l}
+    qa=t["a_qwhen"].format(a=nm); ans=nx if up else t["a_qnone"].format(a=nm)
+    body=(f'<h2>{t["a_up"]}</h2><ul>'+"".join(map(row,up))+"</ul>" if up else "")+(f'<h2>{t["a_past"]}</h2><ul>'+"".join(map(row,pa))+"</ul>" if pa else "")
+    return f"""<!DOCTYPE html>
+<html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(title)} | GoWithDME</title><meta name="description" content="{esc(desc[:300])}">
+<link rel="canonical" href="{u}"><link rel="alternate" hreflang="{l}" href="{u}"><link rel="alternate" hreflang="{o}" href="{BASE}/{o}/a/{a['slug']}"><link rel="alternate" hreflang="x-default" href="{BASE}/id/a/{a['slug']}">
+<meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc[:200])}"><meta property="og:image" content="{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"><meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<style>{ART_CSS}</style>{ldj(ld)}</head><body><main>
+<nav><a href="../">GoWithDME</a> › <a href="./">{t["a_all"]}</a></nav>
+<h1>{esc(nm)}</h1><p><b>{esc(nx)}</b></p>{body}<h2>{t["faq"]}</h2><h3>{esc(qa)}</h3><p>{esc(ans)}</p>
+<p><small>{t["note"]}</small></p></main></body></html>
+"""
+def artist_index(l):
+    o="en" if l=="id" else "id"; t=TX[l]; u=f"{BASE}/{l}/a/"
+    items=sorted(ARTISTS.values(),key=lambda a:(-len(a["events"]),a["name"].lower()))
+    lis="".join(f'<li><a href="{esc(a["slug"])}">{esc(a["name"])}</a> <small>{t["a_count"].format(n=len(a["events"]))}</small></li>' for a in items)
+    return f"""<!DOCTYPE html>
+<html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{t["a_index_t"]} | GoWithDME</title><meta name="description" content="{esc(t["a_index_d"])}">
+<link rel="canonical" href="{u}"><link rel="alternate" hreflang="{l}" href="{u}"><link rel="alternate" hreflang="{o}" href="{BASE}/{o}/a/"><link rel="alternate" hreflang="x-default" href="{BASE}/id/a/">
+<meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<style>{ART_CSS}li{{margin:6px 0}}</style></head><body><main><nav><a href="../">GoWithDME</a></nav><h1>{t["a_index_t"]}</h1><ul>{lis}</ul></main></body></html>
+"""
+ART_CSS="body{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}main{max-width:720px;margin:0 auto;padding:20px 16px 48px}h1{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}h2{font-size:1.15rem;margin:28px 0 6px}h3{font-size:1rem;margin:14px 0 0}h3+p{margin:2px 0 0}ul{padding-left:20px}li{margin:10px 0}a{color:#0E5A46}small{color:#5b6a63}@media(prefers-color-scheme:dark){body{background:#101613;color:#e8efeb}a,nav a{color:#7fd1b4}small{color:#9bb0a6}}"
 def ev_page(l,e):
     o="en" if l=="id" else "id"
     title=(e.get("title_en") if l=="en" and e.get("title_en") else e["title"])
@@ -206,7 +281,7 @@ def ev_page(l,e):
     if pn is not None and e.get("ticket_url") and not past:
         ld["offers"]={"@type":"Offer","url":e["ticket_url"],"priceCurrency":"IDR","price":pn,"availability":"https://schema.org/InStock"}
     rows=[(t["when"],fdate(l,sd)+(" – "+fdate(l,ed) if ed!=sd else "")),(t["where"],where),(t["price"],e.get("price_label")),(t["lineup"],e.get("lineup"))]
-    dl="".join(f"<dt>{esc(k)}</dt><dd>{esc(v)}</dd>" for k,v in rows if v)
+    dl="".join(f"<dt>{esc(k)}</dt><dd>{(lineup_html(l,e) or esc(v)) if k==t['lineup'] else esc(v)}</dd>" for k,v in rows if v)
     btn=f'<a class="b" href="../event?e={esc(e["slug"])}">{t["open"]}</a>'+(f' <a class="b l" href="{esc(e["ticket_url"])}" rel="noopener nofollow" target="_blank">{t["tix"]}</a>' if e.get("ticket_url") and not past else "")
     when_txt=fday(l,sd)+(" – "+fdate(l,ed) if ed!=sd else "")
     banner=f'<p class="end"><b>{t["ended"]} {esc(when_txt)}.</b> {t["next"]}</p>' if past else ""
@@ -237,6 +312,10 @@ for l in LANGS:
     os.makedirs(f"{ROOT}/{l}/e",exist_ok=True)
     for f in os.listdir(f"{ROOT}/{l}/e"): os.remove(f"{ROOT}/{l}/e/{f}")
     for e in EV: open(f"{ROOT}/{l}/e/{e['slug']}.html","w",encoding="utf-8").write(ev_page(l,e))
+    os.makedirs(f"{ROOT}/{l}/a",exist_ok=True)
+    for f in os.listdir(f"{ROOT}/{l}/a"): os.remove(f"{ROOT}/{l}/a/{f}")
+    for a in ARTISTS.values(): open(f"{ROOT}/{l}/a/{a['slug']}.html","w",encoding="utf-8").write(artist_page(l,a))
+    open(f"{ROOT}/{l}/a/index.html","w",encoding="utf-8").write(artist_index(l))
 # ---- sitemap.xml dan robots.txt (ikut BASE, jadi tidak perlu diedit tangan saat pindah domain) ----
 from urllib.parse import urlparse
 pub=[p for p in PAGES if p not in NOINDEX]
@@ -255,6 +334,11 @@ for e in EV:
     if (e.get("end_date") or e["event_date"])[:10]<_OLD: continue
     alt="".join(f'<xhtml:link rel="alternate" hreflang="{x}" href="{BASE}/{x}/e/{e["slug"]}"/>' for x in LANGS)
     for l in LANGS: rows.append(f"<url><loc>{BASE}/{l}/e/{e['slug']}</loc><lastmod>{(e.get('created_at') or e['event_date'])[:10]}</lastmod>{alt}</url>")
+for a in ARTISTS.values():
+    if all((x.get("end_date") or x["event_date"])[:10]<_OLD for x in a["events"]): continue
+    alt="".join(f'<xhtml:link rel="alternate" hreflang="{x}" href="{BASE}/{x}/a/{a["slug"]}"/>' for x in LANGS)
+    lm=max((x.get("created_at") or x["event_date"])[:10] for x in a["events"])
+    for l in LANGS: rows.append(f"<url><loc>{BASE}/{l}/a/{a['slug']}</loc><lastmod>{lm}</lastmod>{alt}</url>")
 # lastmod halaman inti = tanggal konten terbaru yang benar-benar ada (event ditambahkan atau tulisan blog), bukan tanggal build
 _dates=[(e.get("created_at") or "")[:10] for e in EV]+[(x.get("updated_at") or x.get("published_at") or "")[:10] for x in POSTS]
 _dates=[x for x in _dates if x]

@@ -669,6 +669,7 @@ S.update(NEWCAT); J.update(NEWCAT)
 # --- Blog menggantikan kontrol kualitas di footer; bottom nav HP ---
 S.update({
 "nv_blog": ("Blog", "Blog"), "f_blog": ("Blog", "Blog"),
+"nv_artists": ("Artis & line-up", "Artists & line-ups"), "f_artists": ("Artis", "Artists"),
 })
 S.update({"f1_w": ("Terkurasi", "Curated"), "f2_w": ("Aman", "Safe"), "f3_w": ("Gratis", "Free")})
 
