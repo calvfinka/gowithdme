@@ -17,6 +17,7 @@ window.IB_CONFIG = {
   FEATURED_LABEL_ID: "Disorot",
   FEATURED_LABEL_EN: "Featured",
   SPONSOR_LEADS_ENABLED: true,
+  ADS_ENABLED: true,                            // lencana iklan dari admin > Iklan & Lencana (false = matikan semua)
   AFFILIATE_TICKET_BASE: "",
   AD_SLOT_HOME: "",
   AD_SLOT_SIDE: ""

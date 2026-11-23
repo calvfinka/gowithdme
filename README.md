@@ -53,6 +53,13 @@ Format tulisan blog (mode Teks): `## Judul bagian`, `### Sub`, `- daftar`, `**te
 - **Jaga aktif** (`jaga-aktif.yml`, harian 09:23 WIB): ping kecil ke Supabase agar proyek gratis tidak dijeda setelah 7 hari sepi; menyalakan ulang workflow terjadwal (GitHub mematikannya setelah 60 hari repo sepi); membuka issue bila Supabase tidak menjawab.
 - Rincian dan cara pantau: [`HEMAT-SUPABASE.md`](HEMAT-SUPABASE.md).
 
+## Iklan & Lencana (dipasang dari admin.gowithdme.com)
+Admin membuka **Iklan & Lencana**, memilih tempat di peta bernomor, mengisi judul/teks/tautan https/jadwal/kota, lalu Simpan. Tampil di situs dalam ±5 menit. Selalu berlabel Iklan/Sponsor/Partner/Promo.
+Lima tempat: `home_rail` (kolom kanan Beranda), `home_top` (atas daftar Beranda), `event_list` (atas daftar Event & Gunung), `event_detail` (jendela detail event), `blog_post` (sebelum komentar artikel). Beranda menampilkan ajakan "Pasang iklan" bila `home_rail` kosong.
+- Pasang: jalankan `supabase/schema_iklan.sql` (setelah `schema_tahap2.sql`/`schema_rbac.sql`). Izin memakai `sponsor.view`/`sponsor.manage`.
+- Berkas: `js/ads-core.js` (logika; salinan identik di repo admin), `js/ads.js`, `css/ads.css`. Satu permintaan `ads_live` per halaman, cache 5 menit. Matikan semua: `ADS_ENABLED:false` di `js/config.js`.
+- Klik dihitung anonim (`ad_click`), Do Not Track dihormati. Uji: `npm test` dan `node tests/ads-browser.cjs`.
+
 ## Hemat egress Supabase
 Daftar event dimuat satu kali (`js/events-src.js`) dan dibagi ke halaman dan pencarian, disimpan 5 menit di sessionStorage, dengan cadangan otomatis ke `data/events.json` bila Supabase gagal. Blog memuat daftar ringan dulu dan isi hanya untuk tulisan baru. Poster unggahan di-cache 1 tahun.
 Saklar di `js/config.js`: `EVENTS_SOURCE: "live"` (Supabase dulu, default) atau `"static"` (data/events.json dulu, 0 egress, data tertunda sampai 1 jam).

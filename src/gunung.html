@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{lang}}">
 <head>
-{{>head}}<title>{{gn_title}}</title>
+{{>head}}<link rel="stylesheet" href="../css/ads.css"><title>{{gn_title}}</title>
 <meta name="description" content="{{gn_desc}}">
 <meta property="og:title" content="{{og_title}}"><meta property="og:description" content="{{og_desc}}"><meta property="og:image" content="{{og_img}}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
 {{hreflang}}</head>
@@ -18,6 +18,7 @@
   <div class="mfilters" id="mCat" role="group" aria-label="{{aria_kind}}"></div>
   {{>stats}}
   <div class="cnt" id="cnt" aria-live="polite"></div>
+  <div class="ad-slot" data-ad-slot="event_list" hidden></div>
   <div id="list"><div class="group"><div class="tiles"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div></div>
   <section class="group tools-g" id="tools">
     <h2>{{tools_h}}</h2><p class="meta" style="margin:-6px 0 12px">{{tools_p}}</p>
@@ -39,6 +40,6 @@
 </div>
 <dialog id="dlg"><div id="dBody"></div></dialog>
 <div id="toast" role="status"></div>
-{{>libs}}<script>window.IB_MODE="gunung"</script><script src="../js/share.js"></script><script src="../js/safety-core.js"></script><script src="../js/ajakan.js"></script><script src="../js/forum-event.js"></script><script src="../js/now.js"></script><script src="../js/app.js"></script><script src="../js/tools.js"></script>
+{{>libs}}<script src="../js/ads-core.js"></script><script src="../js/ads.js"></script><script>window.IB_MODE="gunung"</script><script src="../js/share.js"></script><script src="../js/safety-core.js"></script><script src="../js/ajakan.js"></script><script src="../js/forum-event.js"></script><script src="../js/now.js"></script><script src="../js/app.js"></script><script src="../js/tools.js"></script>
 </body>
 </html>

@@ -277,7 +277,7 @@ function openEv(id,buddy){
    +(igHandle(e.source_ig)?'<a class="btn line" target="_blank" rel="noopener noreferrer" href="https://instagram.com/'+encodeURIComponent(igHandle(e.source_ig))+'">'+tr("source")+esc(igHandle(e.source_ig))+'</a>':'')
    +'<a class="btn line" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((e.venue||"")+" "+(e.city||""))+'">'+ic("pin")+tr("map")+'</a>'
    +'<button class="btn line" type="button" id="dIcs">'+ic("cal")+tr("cal")+'</button><button class="btn line" type="button" id="dShare">'+ic("share")+tr("share")+'</button>'
-   +'<button class="btn line" type="button" id="close">'+tr("close")+'</button></div><div id="ajk" class="ajk"></div><div id="fe" class="fe"></div></div>';
+   +'<button class="btn line" type="button" id="close">'+tr("close")+'</button></div><div class="ad-slot" data-ad-slot="event_detail" hidden></div><div id="ajk" class="ajk"></div><div id="fe" class="fe"></div></div>';
   $("dlg").showModal();
   if(history.replaceState){var u=new URL(location.href);u.searchParams.set("e",e.slug||e.id);u.searchParams.delete("teman");history.replaceState(null,"",u.pathname+u.search)}
   $("close").onclick=function(){$("dlg").close()};$("dX").onclick=function(){$("dlg").close()};
@@ -285,6 +285,7 @@ function openEv(id,buddy){
   var tl=$("dTicketLink");if(tl&&tl!==DUM)tl.onclick=function(){try{var n=+localStorage.getItem("gwm_aff_clicks")||0;localStorage.setItem("gwm_aff_clicks",String(n+1))}catch(ex){}};
   if(window.IB_Ajakan)IB_Ajakan.mount(e,$("ajk"));else $("ajk").innerHTML='<p class="meta">'+tr("aj_off")+'</p>';
   if(window.IB_ForumEvent)IB_ForumEvent.mount(e,$("fe"));
+  if(window.IB_Ads)IB_Ads.mount($("dBody"),{city:e.city});
 }
 /* ---- Pasang elemen & event ---- */
 var sel=$("city");

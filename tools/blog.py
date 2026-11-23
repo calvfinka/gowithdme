@@ -171,7 +171,7 @@ def head(p,title,desc,canon,BASE,extra="",otype="website"):
 <meta property="og:type" content="{otype}"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{esc(canon)}"><meta property="og:image" content="{BASE}/assets/og-image.png"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="{p}assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="{p}assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="{p}js/theme.js"></script><script src="{p}js/pwa.js{v}" defer></script><link rel="stylesheet" href="{p}css/style.css"><link rel="stylesheet" href="{p}css/blog.css{v}">{extra}</head>"""
+<script src="{p}js/theme.js"></script><script src="{p}js/pwa.js{v}" defer></script><link rel="stylesheet" href="{p}css/style.css"><link rel="stylesheet" href="{p}css/blog.css{v}"><link rel="stylesheet" href="{p}css/ads.css{v}">{extra}</head>"""
 def top(p,cur,counts,bar=True):
     tot=sum(counts.values())
     chip=lambda href,name,icon,n,on: f'<a href="{href}"'+(' aria-current="page"' if on else '')+f'>{ic(icon)}<span>{esc(name)}</span>'+(f'<i>{n}</i>' if n else '')+'</a>'
@@ -181,7 +181,7 @@ def top(p,cur,counts,bar=True):
 def foot(p):
     v=f"?v={VER}" if VER else ""
     return (f'<footer class="bl-foot wrap"><span>© GoWithDME</span><a href="{p}id/bantuan">Bantuan</a><a href="{p}id/template">Template</a><a href="{p}id/terms">Syarat</a><a href="{p}id/privacy">Privasi</a></footer>'
-            f'<div class="bl-toast" id="blToast" role="status" aria-live="polite"></div><script src="{p}js/config.js"></script><script src="{p}js/word-filter.js"></script><script src="{p}js/clock-core.js{v}"></script><script src="{p}js/blog-clock.js{v}" defer></script><script src="{p}js/panel-core.js{v}"></script><script src="{p}js/blog-panel.js{v}" defer></script><script src="{p}js/blog-ui.js{v}"></script><script src="{p}js/blog-live.js{v}"></script></body></html>')
+            f'<div class="bl-toast" id="blToast" role="status" aria-live="polite"></div><script src="{p}js/config.js"></script><script src="{p}js/ads-core.js{v}"></script><script src="{p}js/ads.js{v}"></script><script src="{p}js/word-filter.js"></script><script src="{p}js/clock-core.js{v}"></script><script src="{p}js/blog-clock.js{v}" defer></script><script src="{p}js/panel-core.js{v}"></script><script src="{p}js/blog-panel.js{v}" defer></script><script src="{p}js/blog-ui.js{v}"></script><script src="{p}js/blog-live.js{v}"></script></body></html>')
 def card(p,x):
     k=f'{x["category"]}/{x["slug"]}'; url=f'{p}blog/{k}'; c=x["category"]
     return (f'<article class="bl-card bl-c-{c}" data-k="{k}" data-d="{esc((x.get("published_at") or "")[:19])}">'
@@ -255,7 +255,7 @@ def article(p,x,others,BASE,prev,nxt,allp,counts):
       f'<div class="bl-body" id="blBody">{x["_html"]}</div>{tags}{srcbox(x)}'
       f'<div class="bl-end"><button type="button" class="bl-like" id="blLike" aria-pressed="false">{ic("heart")}<span>Suka tulisan ini</span><b data-l></b></button>'
       f'<p>Ada yang mau ditambah atau dikoreksi? Tulis di kolom komentar di bawah.</p></div>'
-      f'<section class="bl-cm" id="komentar" data-k="{key}" aria-labelledby="blCmH"><h2 id="blCmH">Komentar <i data-c></i></h2><div id="blCmBox"><p class="bl-muted">Memuat komentar…</p></div></section>'
+      f'<div class="ad-slot" data-ad-slot="blog_post" hidden></div><section class="bl-cm" id="komentar" data-k="{key}" aria-labelledby="blCmH"><h2 id="blCmH">Komentar <i data-c></i></h2><div id="blCmBox"><p class="bl-muted">Memuat komentar…</p></div></section>'
       f'<nav class="bl-pn" aria-label="Tulisan sebelum dan sesudah">{pn(prev,"Lebih lama","l","left",True)}{pn(nxt,"Lebih baru","r","right",False)}</nav>'
       +(f'<section class="bl-rel"><h2 class="bl-h2">Baca juga</h2><div class="bl-list">{more}</div></section>' if more else "")+
       f'<p class="bl-cta"><a class="btn" href="{p}id/event">Lihat event terbaru</a> <a class="btn line" href="{p}blog/{k}/">Lebih banyak di {esc(CATNAME[k])}</a></p></article>'
@@ -268,7 +268,7 @@ def build(ROOT,BASE,posts):
     global VER  # cache-buster = sidik isi css/js blog: berubah hanya bila berkas itu berubah
     import hashlib
     hs=hashlib.md5()
-    for f in ("css/blog.css","js/blog-ui.js","js/blog-live.js"):
+    for f in ("css/blog.css","js/blog-ui.js","js/blog-live.js","css/ads.css","js/ads-core.js","js/ads.js"):
         try: hs.update(open(f"{ROOT}/{f}","rb").read())
         except OSError: pass
     VER=hs.hexdigest()[:10]
