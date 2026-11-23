@@ -150,6 +150,7 @@ location.replace(l+"/{t}"+location.search+location.hash)}})()</script></head>
     open(f"{ROOT}/{p}.html","w",encoding="utf-8").write(h)
 # ---- halaman statis per event (data/events.json dari tools/gen_events.py): Event JSON-LD + teks yang bisa dibaca bot ----
 import html as _h
+import guide
 from datetime import date as _date
 EV=[]
 if os.path.exists(ROOT+"/data/events.json"):
@@ -285,14 +286,15 @@ def ev_page(l,e):
     btn=f'<a class="b" href="../event?e={esc(e["slug"])}">{t["open"]}</a>'+(f' <a class="b l" href="{esc(e["ticket_url"])}" rel="noopener nofollow" target="_blank">{t["tix"]}</a>' if e.get("ticket_url") and not past else "")
     when_txt=fday(l,sd)+(" – "+fdate(l,ed) if ed!=sd else "")
     banner=f'<p class="end"><b>{t["ended"]} {esc(when_txt)}.</b> {t["next"]}</p>' if past else ""
-    qa=[(t["qwhen"].format(t=title),t["awhen"].format(t=title,d=when_txt))]
-    if where: qa.append((t["qwhere"].format(t=title),t["awhere"].format(w=where)))
-    if e.get("price_label"): qa.append((t["qprice"].format(t=title),t["aprice"].format(p=e["price_label"])))
+    G=guide.T[l]
+    qa=guide.faq(l,e,title,when_txt,where,past)
     faq=f'<h2>{t["faq"]}</h2>'+"".join(f"<h3>{esc(q)}</h3><p>{esc(a)}</p>" for q,a in qa)
-    cand=[x for x in EV if x["slug"]!=e["slug"] and (x.get("end_date") or x["event_date"])[:10]>=_NOW]
-    same=[x for x in cand if e.get("city") and x.get("city")==e.get("city")]
-    rel=sorted(same,key=lambda x:x["event_date"])[:4] or sorted(cand,key=lambda x:x["event_date"])[:4]
-    relh=(f'<h2>{t["related"]}</h2><ul>'+"".join(f'<li><a href="{esc(x["slug"])}">{esc(x["title"])}</a> <small>{esc(fdate(l,x["event_date"]))}{(" · "+esc(x["city"])) if x.get("city") else ""}</small></li>' for x in rel)+"</ul>") if rel else ""
+    faqld={"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in qa]}
+    rp="".join(f"<p>{esc(x)}</p>" for x in guide.route(l,e,where))
+    routeh=(f'<h2>{G["route"]}</h2>{rp}<p><a class="b l" href="{esc(guide.maps_dir(e))}" rel="noopener nofollow" target="_blank">{G["maps"]}</a></p>') if (e.get("venue") or e.get("city")) else ""
+    tipsh="" if past else f'<h2>{G["tips"]}</h2><ul>'+"".join(f"<li>{esc(x)}</li>" for x in guide.tips(l,e))+"</ul>"
+    rel=guide.related(l,e,EV,_NOW,split_lineup,_akey)
+    relh=(f'<h2>{G["related"]}</h2><ul>'+"".join(f'<li><a href="{esc(x["slug"])}">{esc(x["title"])}</a> <small>{esc(fdate(l,x["event_date"]))}{(" · "+esc(x["city"])) if x.get("city") else ""} · {esc(" · ".join(why))}</small></li>' for x,why in rel)+f'</ul><p><a href="../event">{G["rel_more"]}</a></p>') if rel else f'<h2>{G["related"]}</h2><p>{G["rel_none"]}</p><p><a href="../event">{G["rel_more"]}</a></p>'
     return f"""<!DOCTYPE html>
 <html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(stitle)} | GoWithDME</title><meta name="description" content="{esc((fday(l,sd)+(' – '+fdate(l,ed) if ed!=sd else '')+' · '+where+'. '+desc)[:300])}">
@@ -300,11 +302,11 @@ def ev_page(l,e):
 <meta property="og:type" content="website"><meta property="og:title" content="{esc(stitle)}"><meta property="og:description" content="{esc(desc[:200])}"><meta property="og:image" content="{esc(img)}"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <style>body{{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}}main{{max-width:720px;margin:0 auto;padding:20px 16px 48px}}img{{max-width:100%;border-radius:14px;display:block}}h1{{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}}.c{{color:#0E5A46;font-weight:600;font-size:.9rem}}dl{{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0}}dt{{font-weight:600}}dd{{margin:0}}.b{{display:inline-block;background:#0E5A46;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin:4px 6px 4px 0}}.b.l{{background:#fff;color:#0E5A46;border:1px solid #0E5A46}}small{{color:#5b6a63}}.end{{background:#fff3cd;color:#5c4400;padding:10px 14px;border-radius:10px}}h2{{font-size:1.15rem;margin:28px 0 6px}}h3{{font-size:1rem;margin:14px 0 0}}h3+p{{margin:2px 0 0}}nav a{{color:#0E5A46}}@media(prefers-color-scheme:dark){{body{{background:#101613;color:#e8efeb}}.b.l{{background:transparent;color:#7fd1b4;border-color:#7fd1b4}}.c,nav a{{color:#7fd1b4}}small{{color:#9bb0a6}}}}</style>
-{ldj(ld)}</head><body><main>
+{ldj(ld)}{ldj(faqld)}</head><body><main>
 <nav><a href="../">GoWithDME</a> › <a href="../event">{t["all"]}</a></nav>
 {f'<img src="{esc(pimg)}" alt="{esc(title)}" loading="eager">' if pimg else ""}
 <div class="c">{esc(cat)}{(" · "+esc(e["genre"])) if e.get("genre") else ""}</div>
-<h1>{esc(title)}</h1>{banner}<dl>{dl}</dl><p>{esc(desc)}</p><p>{btn}</p>{faq}{relh}<p><small>{t["note"]}</small></p>
+<h1>{esc(title)}</h1>{banner}<dl>{dl}</dl><p>{esc(desc)}</p><p>{btn}</p>{routeh}{tipsh}{faq}{relh}<p><small>{t["note"]}</small></p>
 </main></body></html>
 """
 EVURLS=[]

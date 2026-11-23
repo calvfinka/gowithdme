@@ -154,7 +154,7 @@ J = {
 "price_tbd": ("Info menyusul", "Price info coming soon"), "to": (" s/d ", " to "), "lineup": ("Line-up:", "Line-up:"),
 "nodesc": ("Deskripsi belum tersedia.", "Description not available yet."),
 "ticket": ("Tiket / Daftar", "Tickets / Register"), "noticket": ("Link tiket belum tersedia", "Ticket link not available yet"),
-"source": ("Sumber: @", "Source: @"), "map": ("Peta", "Map"), "cal": ("Kalender", "Calendar"), "share": ("Bagikan", "Share"), "close": ("Tutup", "Close"),
+"source": ("Sumber: @", "Source: @"), "map": ("Peta", "Map"), "guide": ("Panduan & FAQ", "Guide & FAQ"), "cal": ("Kalender", "Calendar"), "share": ("Bagikan", "Share"), "close": ("Tutup", "Close"),
 "aj_off": ("Fitur ajakan belum aktif di situs ini.", "The meet-up feature is not active on this site."),
 "pickcity": ("Pilih kota", "Select city"),
 # ajakan

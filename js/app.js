@@ -276,6 +276,7 @@ function openEv(id,buddy){
    +(waDigits(e.contact_wa)?'<a class="btn" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+waDigits(e.contact_wa)+'?text='+encodeURIComponent(tr("wa_hello",{t:ttl(e)}))+'">'+tr("wa_contact")+'</a>':'')
    +(igHandle(e.source_ig)?'<a class="btn line" target="_blank" rel="noopener noreferrer" href="https://instagram.com/'+encodeURIComponent(igHandle(e.source_ig))+'">'+tr("source")+esc(igHandle(e.source_ig))+'</a>':'')
    +'<a class="btn line" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((e.venue||"")+" "+(e.city||""))+'">'+ic("pin")+tr("map")+'</a>'
+   +(e.slug?'<a class="btn line" href="e/'+encodeURIComponent(e.slug)+'">'+tr("guide")+'</a>':'')
    +'<button class="btn line" type="button" id="dIcs">'+ic("cal")+tr("cal")+'</button><button class="btn line" type="button" id="dShare">'+ic("share")+tr("share")+'</button>'
    +'<button class="btn line" type="button" id="close">'+tr("close")+'</button></div><div class="ad-slot" data-ad-slot="event_detail" hidden></div><div id="ajk" class="ajk"></div><div id="fe" class="fe"></div></div>';
   $("dlg").showModal();
