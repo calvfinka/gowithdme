@@ -158,6 +158,19 @@ CAT={"id":{"konser":"Konser","pameran":"Pameran","naikgunung":"Naik Gunung","fes
 TX={"id":{"open":"Buka di GoWithDME","tix":"Beli tiket / info resmi","all":"Semua event","when":"Tanggal","where":"Lokasi","price":"Harga","lineup":"Pengisi acara","note":"Cek ulang jadwal dan harga di kanal resmi penyelenggara sebelum membeli tiket."},
     "en":{"open":"Open in GoWithDME","tix":"Tickets / official info","all":"All events","when":"Date","where":"Location","price":"Price","lineup":"Line-up","note":"Please re-check schedule and price on the organizer's official channel before buying tickets."}}
 MON={"id":["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"],"en":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]}
+TX["id"].update({"ended":"Event ini sudah selesai digelar pada","related":"Event mendatang yang mungkin kamu suka","next":"Edisi berikutnya belum diumumkan di GoWithDME. Pantau halaman ini atau cek event serupa di bawah.","qwhen":"Kapan {t} digelar?","qwhere":"Di mana {t} digelar?","qprice":"Berapa harga tiket {t}?","awhen":"{t} digelar pada {d}.","awhere":"Lokasinya di {w}.","aprice":"Harga tiket: {p}.","faq":"Pertanyaan umum"})
+TX["en"].update({"ended":"This event already took place on","related":"Upcoming events you may like","next":"The next edition has not been announced on GoWithDME yet. Check back here or browse similar events below.","qwhen":"When is {t}?","qwhere":"Where is {t} held?","qprice":"How much are {t} tickets?","awhen":"{t} takes place on {d}.","awhere":"The venue is {w}.","aprice":"Ticket price: {p}.","faq":"FAQ"})
+DAYS={"id":["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"],"en":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]}
+_NOW=_date.today().isoformat()
+def fday(l,d):
+    y,m,dd=map(int,d[:10].split("-")); return DAYS[l][_date(y,m,dd).weekday()]+", "+fdate(l,d)
+def seo_title(l,e,title):
+    city=(e.get("city") or "").strip(); sd=e["event_date"][:10]
+    parts=[title]
+    if city and city.lower() not in title.lower(): parts.append(city)
+    parts.append(fdate(l,sd))
+    tail=("Lineup & Tiket" if l=="id" else "Lineup & Tickets") if e.get("category") in ("konser","festival") else ("Info & Tiket" if l=="id" else "Info & Tickets")
+    return " ".join(parts)+": "+tail
 def fdate(l,d):
     y,m,dd=map(int,d[:10].split("-")); return f"{dd} {MON[l][m-1]} {y}"
 def price_num(lb):
@@ -174,7 +187,9 @@ def ev_page(l,e):
     desc=(e.get("description_en") if l=="en" and e.get("description_en") else e.get("description")) or title
     sd=e["event_date"][:10]; ed=(e.get("end_date") or sd)[:10]
     t=TX[l]; cat=CAT[l].get(e.get("category"),e.get("category") or "")
-    where=", ".join(x for x in (e.get("venue"),e.get("city")) if x)
+    past=ed<_NOW
+    stitle=seo_title(l,e,title)
+    where=", ".join(x for x in (e.get("venue"),e.get("city")) if x and not (x==e.get("city") and (e.get("venue") or "").strip().lower().endswith(x.strip().lower())))
     u=f"{BASE}/{l}/e/{e['slug']}"
     pu=e.get("poster_url") or ""
     # poster lokal: harus ada filenya, dan dari id/e/ atau en/e/ alamatnya naik dua tingkat ke akar situs
@@ -188,23 +203,33 @@ def ev_page(l,e):
         "location":{"@type":"Place","name":e.get("venue") or e.get("city") or "Indonesia","address":{"@type":"PostalAddress","addressLocality":e.get("city") or "","addressCountry":"ID"}}}
     if e.get("lineup"): ld["performer"]=[{"@type":"PerformingGroup","name":x.strip()} for x in re.split(r"[,;]",e["lineup"]) if x.strip()]
     pn=price_num(e.get("price_label"))
-    if pn is not None and e.get("ticket_url"):
+    if pn is not None and e.get("ticket_url") and not past:
         ld["offers"]={"@type":"Offer","url":e["ticket_url"],"priceCurrency":"IDR","price":pn,"availability":"https://schema.org/InStock"}
     rows=[(t["when"],fdate(l,sd)+(" – "+fdate(l,ed) if ed!=sd else "")),(t["where"],where),(t["price"],e.get("price_label")),(t["lineup"],e.get("lineup"))]
     dl="".join(f"<dt>{esc(k)}</dt><dd>{esc(v)}</dd>" for k,v in rows if v)
-    btn=f'<a class="b" href="../event?e={esc(e["slug"])}">{t["open"]}</a>'+(f' <a class="b l" href="{esc(e["ticket_url"])}" rel="noopener nofollow" target="_blank">{t["tix"]}</a>' if e.get("ticket_url") else "")
+    btn=f'<a class="b" href="../event?e={esc(e["slug"])}">{t["open"]}</a>'+(f' <a class="b l" href="{esc(e["ticket_url"])}" rel="noopener nofollow" target="_blank">{t["tix"]}</a>' if e.get("ticket_url") and not past else "")
+    when_txt=fday(l,sd)+(" – "+fdate(l,ed) if ed!=sd else "")
+    banner=f'<p class="end"><b>{t["ended"]} {esc(when_txt)}.</b> {t["next"]}</p>' if past else ""
+    qa=[(t["qwhen"].format(t=title),t["awhen"].format(t=title,d=when_txt))]
+    if where: qa.append((t["qwhere"].format(t=title),t["awhere"].format(w=where)))
+    if e.get("price_label"): qa.append((t["qprice"].format(t=title),t["aprice"].format(p=e["price_label"])))
+    faq=f'<h2>{t["faq"]}</h2>'+"".join(f"<h3>{esc(q)}</h3><p>{esc(a)}</p>" for q,a in qa)
+    cand=[x for x in EV if x["slug"]!=e["slug"] and (x.get("end_date") or x["event_date"])[:10]>=_NOW]
+    same=[x for x in cand if e.get("city") and x.get("city")==e.get("city")]
+    rel=sorted(same,key=lambda x:x["event_date"])[:4] or sorted(cand,key=lambda x:x["event_date"])[:4]
+    relh=(f'<h2>{t["related"]}</h2><ul>'+"".join(f'<li><a href="{esc(x["slug"])}">{esc(x["title"])}</a> <small>{esc(fdate(l,x["event_date"]))}{(" · "+esc(x["city"])) if x.get("city") else ""}</small></li>' for x in rel)+"</ul>") if rel else ""
     return f"""<!DOCTYPE html>
 <html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(title)} – GoWithDME</title><meta name="description" content="{esc((cat+' · '+where+' · '+fdate(l,sd)+'. '+desc)[:300])}">
+<title>{esc(stitle)} | GoWithDME</title><meta name="description" content="{esc((fday(l,sd)+(' – '+fdate(l,ed) if ed!=sd else '')+' · '+where+'. '+desc)[:300])}">
 <link rel="canonical" href="{u}"><link rel="alternate" hreflang="{l}" href="{u}"><link rel="alternate" hreflang="{o}" href="{BASE}/{o}/e/{e['slug']}"><link rel="alternate" hreflang="x-default" href="{BASE}/id/e/{e['slug']}">
-<meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc[:200])}"><meta property="og:image" content="{esc(img)}"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="website"><meta property="og:title" content="{esc(stitle)}"><meta property="og:description" content="{esc(desc[:200])}"><meta property="og:image" content="{esc(img)}"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-<style>body{{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}}main{{max-width:720px;margin:0 auto;padding:20px 16px 48px}}img{{max-width:100%;border-radius:14px;display:block}}h1{{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}}.c{{color:#0E5A46;font-weight:600;font-size:.9rem}}dl{{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0}}dt{{font-weight:600}}dd{{margin:0}}.b{{display:inline-block;background:#0E5A46;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin:4px 6px 4px 0}}.b.l{{background:#fff;color:#0E5A46;border:1px solid #0E5A46}}small{{color:#5b6a63}}nav a{{color:#0E5A46}}@media(prefers-color-scheme:dark){{body{{background:#101613;color:#e8efeb}}.b.l{{background:transparent;color:#7fd1b4;border-color:#7fd1b4}}.c,nav a{{color:#7fd1b4}}small{{color:#9bb0a6}}}}</style>
+<style>body{{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}}main{{max-width:720px;margin:0 auto;padding:20px 16px 48px}}img{{max-width:100%;border-radius:14px;display:block}}h1{{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}}.c{{color:#0E5A46;font-weight:600;font-size:.9rem}}dl{{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0}}dt{{font-weight:600}}dd{{margin:0}}.b{{display:inline-block;background:#0E5A46;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin:4px 6px 4px 0}}.b.l{{background:#fff;color:#0E5A46;border:1px solid #0E5A46}}small{{color:#5b6a63}}.end{{background:#fff3cd;color:#5c4400;padding:10px 14px;border-radius:10px}}h2{{font-size:1.15rem;margin:28px 0 6px}}h3{{font-size:1rem;margin:14px 0 0}}h3+p{{margin:2px 0 0}}nav a{{color:#0E5A46}}@media(prefers-color-scheme:dark){{body{{background:#101613;color:#e8efeb}}.b.l{{background:transparent;color:#7fd1b4;border-color:#7fd1b4}}.c,nav a{{color:#7fd1b4}}small{{color:#9bb0a6}}}}</style>
 {ldj(ld)}</head><body><main>
 <nav><a href="../">GoWithDME</a> › <a href="../event">{t["all"]}</a></nav>
 {f'<img src="{esc(pimg)}" alt="{esc(title)}" loading="eager">' if pimg else ""}
 <div class="c">{esc(cat)}{(" · "+esc(e["genre"])) if e.get("genre") else ""}</div>
-<h1>{esc(title)}</h1><dl>{dl}</dl><p>{esc(desc)}</p><p>{btn}</p><p><small>{t["note"]}</small></p>
+<h1>{esc(title)}</h1>{banner}<dl>{dl}</dl><p>{esc(desc)}</p><p>{btn}</p>{faq}{relh}<p><small>{t["note"]}</small></p>
 </main></body></html>
 """
 EVURLS=[]
