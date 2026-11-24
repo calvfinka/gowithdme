@@ -246,16 +246,57 @@ def artist_page(l,a):
 <h1>{esc(nm)}</h1><p><b>{esc(nx)}</b></p>{body}<h2>{t["faq"]}</h2><h3>{esc(qa)}</h3><p>{esc(ans)}</p>
 <p><small>{t["note"]}</small></p></main></body></html>
 """
+# ---- indeks artis (/a/): grid kartu + cari, filter huruf, urutan. CSS/JS ada di src/artists-index.css dan .js, di-inline ke halaman ini saja (CSS global tidak tersentuh) ----
+TX["id"].update({"a_count1":"{n} event","a_search":"Cari artis...","a_search_l":"Cari artis","a_trend_h":"Artis Trending","a_trend_d":"Nama yang paling sering muncul di line-up.","a_sort":"Urutkan","a_sort_e":"Event Terbanyak","a_sort_a":"A-Z","a_letter":"Filter berdasarkan huruf","a_all_l":"Semua","a_view":"Lihat Event","a_view_l":"Lihat event {a}","a_noup":"Belum ada jadwal mendatang","a_found1":"1 artis","a_foundn":"{n} artis","a_empty":"Tidak ada artis yang cocok.","a_reset":"Hapus filter","a_intro":"{n} artis dan pengisi acara konser dan festival di seluruh Indonesia."})
+TX["en"].update({"a_count1":"{n} event","a_search":"Search artist...","a_search_l":"Search artists","a_trend_h":"Trending Artists","a_trend_d":"The names in the most line-ups.","a_sort":"Sort","a_sort_e":"Most Events","a_sort_a":"A-Z","a_letter":"Filter by letter","a_all_l":"All","a_view":"View Events","a_view_l":"View events for {a}","a_noup":"No upcoming dates yet","a_found1":"1 artist","a_foundn":"{n} artists","a_empty":"No artists match your search.","a_reset":"Clear filters","a_intro":"{n} artists and performers from concerts and festivals across Indonesia."})
+def _read_src(n): return open(f"{ROOT}/src/{n}",encoding="utf-8").read().strip()
+def _aletter(n):
+    m=re.search(r"[A-Z0-9]",_ud.normalize("NFKD",n).encode("ascii","ignore").decode().upper())
+    return m.group() if m and m.group().isalpha() else "#"
+def _axcard(l,a,rank=0,dup=False):
+    # rank>0: kartu Trending (besar). dup: salinan Trending di grid utama (disembunyikan CSS saat tampilan awal).
+    t=TX[l]; n=len(a["events"]); nm=esc(a["name"]); sl=esc(a["slug"])
+    up=sorted([x for x in a["events"] if (x.get("end_date") or x["event_date"])[:10]>=_NOW],key=lambda x:x["event_date"])[:2]
+    def row(x):
+        tt=x.get("title_en") if l=="en" and x.get("title_en") else x["title"]
+        c=(esc(x["city"])+", ") if x.get("city") else ""
+        return f'<li><a href="../e/{esc(x["slug"])}">{esc(tt)}</a><span>{c}<time datetime="{esc(x["event_date"][:10])}">{esc(fdate(l,x["event_date"]))}</time></span></li>'
+    evs=f'<ul class="ax-ev">{"".join(map(row,up))}</ul>' if up else f'<p class="ax-ev ax-no">{t["a_noup"]}</p>'
+    btn=f'<a class="ax-b" href="{sl}" aria-label="{esc(t["a_view_l"].format(a=a["name"]))}">{t["a_view"]}</a>'
+    name=f'<h3 class="ax-n"><a href="{sl}">{nm}</a></h3>'
+    if rank:
+        k=f'<p class="ax-k"><b>{n}</b> {t["a_count"].format(n="").strip()}</p>'
+        return f'<li class="ax-t"><div class="ax-top"><span class="ax-rk">#{rank}</span>{k}</div>{name}{evs}{btn}</li>'
+    k=f'<p class="ax-k">{(t["a_count1"] if n==1 else t["a_count"]).format(n=n)}</p>'
+    return f'<li class="ax-c" data-l="{_aletter(a["name"])}"{" data-t" if dup else ""}>{name}{k}{evs}{btn}</li>'
 def artist_index(l):
     o="en" if l=="id" else "id"; t=TX[l]; u=f"{BASE}/{l}/a/"
     items=sorted(ARTISTS.values(),key=lambda a:(-len(a["events"]),a["name"].lower()))
-    lis="".join(f'<li><a href="{esc(a["slug"])}">{esc(a["name"])}</a> <small>{t["a_count"].format(n=len(a["events"]))}</small></li>' for a in items)
+    letters=sorted({_aletter(a["name"]) for a in items},key=lambda c:(c!="#",c))
+    trend="".join(_axcard(l,a,i+1) for i,a in enumerate(items[:3]))
+    cards="".join(_axcard(l,a,0,i<3) for i,a in enumerate(items))
+    chips=f'<button type="button" data-l="" aria-pressed="true">{t["a_all_l"]}</button>'+"".join(f'<button type="button" data-l="{c}" aria-pressed="false">{c}</button>' for c in letters)
     return f"""<!DOCTYPE html>
-<html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{t["a_index_t"]} | GoWithDME</title><meta name="description" content="{esc(t["a_index_d"])}">
 <link rel="canonical" href="{u}"><link rel="alternate" hreflang="{l}" href="{u}"><link rel="alternate" hreflang="{o}" href="{BASE}/{o}/a/"><link rel="alternate" hreflang="x-default" href="{BASE}/id/a/">
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-<style>{ART_CSS}li{{margin:6px 0}}</style></head><body><main><nav><a href="../">GoWithDME</a></nav><h1>{t["a_index_t"]}</h1><ul>{lis}</ul></main></body></html>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="../../js/theme.js?v={VER}"></script>
+<style>{_read_src("artists-index.css")}</style><noscript><style>.ax-tools{{display:none}}</style></noscript></head>
+<body><div class="ax ax-def" id="ax" data-f1="{esc(t["a_found1"])}" data-fn="{esc(t["a_foundn"])}">
+<nav class="ax-crumb"><a href="../">GoWithDME</a></nav>
+<h1>{t["a_index_t"]}</h1><p class="ax-intro">{t["a_intro"].format(n=len(items))}</p>
+<div class="ax-tools"><div class="ax-row">
+<label class="ax-search"><span class="ax-sr">{t["a_search_l"]}</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="ax-q" type="search" placeholder="{esc(t["a_search"])}" autocomplete="off" spellcheck="false" enterkeyhint="search"></label>
+<div class="ax-sort" role="group" aria-label="{t["a_sort"]}"><button type="button" data-s="e" aria-pressed="true">{t["a_sort_e"]}</button><button type="button" data-s="a" aria-pressed="false">{t["a_sort_a"]}</button></div>
+</div><div class="ax-az" role="group" aria-label="{t["a_letter"]}">{chips}</div></div>
+<section class="ax-trend" aria-labelledby="ax-th"><div class="ax-h"><h2 id="ax-th">{t["a_trend_h"]}</h2><p>{t["a_trend_d"]}</p></div><ul class="ax-tr">{trend}</ul></section>
+<section aria-labelledby="ax-ah"><div class="ax-h"><h2 id="ax-ah">{t["a_all"]}</h2><p id="ax-count" aria-live="polite">{t["a_foundn"].format(n=len(items)-3)}</p></div>
+<ul class="ax-grid">{cards}</ul>
+<div class="ax-empty" id="ax-empty" hidden><p>{t["a_empty"]}</p><button type="button" id="ax-reset">{t["a_reset"]}</button></div></section>
+</div><script>{_read_src("artists-index.js")}</script></body></html>
 """
 ART_CSS="body{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}main{max-width:720px;margin:0 auto;padding:20px 16px 48px}h1{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}h2{font-size:1.15rem;margin:28px 0 6px}h3{font-size:1rem;margin:14px 0 0}h3+p{margin:2px 0 0}ul{padding-left:20px}li{margin:10px 0}a{color:#0E5A46}small{color:#5b6a63}@media(prefers-color-scheme:dark){body{background:#101613;color:#e8efeb}a,nav a{color:#7fd1b4}small{color:#9bb0a6}}"
 def ev_page(l,e):
