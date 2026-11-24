@@ -351,3 +351,5 @@ html .now .clock{display:grid;grid-template-columns:auto auto;justify-content:st
 .mm .mm-g .mm-msg .nb,.mm .mm-g #ajMy .ajn{position:absolute;left:22px;top:0;right:auto;margin:0;transform:none;min-width:17px;height:17px;padding:0 4px;font-size:10.5px;line-height:17px;box-shadow:0 0 0 2px var(--bg)}
 .mm .mm-g section:has(.mm-msg .nb,#ajMy .ajn:not([hidden])) h3::after{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--accent)}
 @media (prefers-reduced-motion:no-preference){.mm .mm-g section:has(.mm-msg .nb,#ajMy .ajn:not([hidden])) h3::after{animation:mmpl 1.8s ease-out infinite}@keyframes mmpl{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 45%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}}
+/* menu akun: tombol keluar dibuat lebih tenang, merah hanya saat disentuh */
+.mm-g .mm-out{color:var(--mute)}.mm-g .mm-out:hover,.mm-g .mm-out:focus-visible{color:var(--err)}
