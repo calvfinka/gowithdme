@@ -4,6 +4,7 @@ import os,re,json,sys,time
 sys.path.insert(0,os.path.dirname(__file__))
 from strings import S,J,PROV_EN
 import blog as BL
+import gen_og  # kartu pratinjau /og/<slug>.jpg untuk og:image
 import gen_dsk  # css/dsk.css dan css/dsk-b.css (mode "situs desktop" di HP) dibuat dari css lain
 ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Alamat situs untuk canonical, hreflang, dan sitemap. Default: domain utama gowithdme.com.
@@ -273,6 +274,14 @@ def ev_page(l,e):
     pimg=pu if (not pu or re.match(r"https?://",pu)) else "../../"+pu.lstrip("/")
     img=pu or f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"
     if not re.match(r"https?://",img): img=BASE+"/"+img.lstrip("/")  # og:image dan JSON-LD wajib URL absolut
+    ogimg=f"{BASE}/og/{e['slug']}.jpg" if e['slug'] in OG_OK else f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"  # pratinjau medsos: kartu 1200x630 di domain sendiri
+    ogd=(fday(l,sd)+(' – '+fdate(l,ed) if ed!=sd else '')+(' · '+where if where else '')+'. '+desc)[:200]
+    ogm=(f'<meta property="og:type" content="website"><meta property="og:site_name" content="GoWithDME"><meta property="og:locale" content="{"id_ID" if l=="id" else "en_US"}">'
+         f'<meta property="og:url" content="{u}"><meta property="og:title" content="{esc(stitle)}"><meta property="og:description" content="{esc(ogd)}">'
+         f'<meta property="og:image" content="{esc(ogimg)}"><meta property="og:image:secure_url" content="{esc(ogimg)}"><meta property="og:image:type" content="image/{"jpeg" if e["slug"] in OG_OK else "png"}">'
+         f'<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="{esc(title)}">'
+         f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(stitle)}"><meta name="twitter:description" content="{esc(ogd[:200])}">'
+         f'<meta name="twitter:image" content="{esc(ogimg)}"><meta name="twitter:image:alt" content="{esc(title)}">')
     ld={"@context":"https://schema.org","@type":"Event","name":title,"startDate":sd,"endDate":ed,"description":desc,
         "eventStatus":"https://schema.org/EventScheduled","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
         "image":[img],"url":u,"inLanguage":l,
@@ -299,7 +308,7 @@ def ev_page(l,e):
 <html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(stitle)} | GoWithDME</title><meta name="description" content="{esc((fday(l,sd)+(' – '+fdate(l,ed) if ed!=sd else '')+' · '+where+'. '+desc)[:300])}">
 <link rel="canonical" href="{u}"><link rel="alternate" hreflang="{l}" href="{u}"><link rel="alternate" hreflang="{o}" href="{BASE}/{o}/e/{e['slug']}"><link rel="alternate" hreflang="x-default" href="{BASE}/id/e/{e['slug']}">
-<meta property="og:type" content="website"><meta property="og:title" content="{esc(stitle)}"><meta property="og:description" content="{esc(desc[:200])}"><meta property="og:image" content="{esc(img)}"><meta name="twitter:card" content="summary_large_image">
+{ogm}
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <style>body{{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}}main{{max-width:720px;margin:0 auto;padding:20px 16px 48px}}img{{max-width:100%;border-radius:14px;display:block}}h1{{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}}.c{{color:#0E5A46;font-weight:600;font-size:.9rem}}dl{{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0}}dt{{font-weight:600}}dd{{margin:0}}.b{{display:inline-block;background:#0E5A46;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin:4px 6px 4px 0}}.b.l{{background:#fff;color:#0E5A46;border:1px solid #0E5A46}}small{{color:#5b6a63}}.end{{background:#fff3cd;color:#5c4400;padding:10px 14px;border-radius:10px}}h2{{font-size:1.15rem;margin:28px 0 6px}}h3{{font-size:1rem;margin:14px 0 0}}h3+p{{margin:2px 0 0}}main a:not(.b){{color:#0E5A46;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(14,90,70,.35)}}main a:not(.b):visited{{color:#0E5A46}}main a:not(.b):hover{{text-decoration-color:currentColor}}@media(prefers-color-scheme:dark){{body{{background:#101613;color:#e8efeb}}.b.l{{background:transparent;color:#7fd1b4;border-color:#7fd1b4}}.c,main a:not(.b),main a:not(.b):visited{{color:#7fd1b4}}main a:not(.b){{text-decoration-color:rgba(127,209,180,.4)}}small{{color:#9bb0a6}}}}</style>
 {ldj(ld)}{ldj(faqld)}</head><body><main>
@@ -309,6 +318,10 @@ def ev_page(l,e):
 <h1>{esc(title)}</h1>{banner}<dl>{dl}</dl><p>{esc(desc)}</p><p>{btn}</p>{routeh}{tipsh}{faq}{relh}<p><small>{t["note"]}</small></p>
 </main></body></html>
 """
+def _og_meta(e):
+    sd=e["event_date"][:10]; ed=(e.get("end_date") or sd)[:10]
+    return fdate("id",sd)+(" – "+fdate("id",ed) if ed!=sd else "")+((" · "+e["city"]) if e.get("city") else "")
+OG_OK=gen_og.build(EV,ROOT,_og_meta)
 EVURLS=[]
 for l in LANGS:
     os.makedirs(f"{ROOT}/{l}/e",exist_ok=True)

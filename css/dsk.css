@@ -36,6 +36,8 @@ html:where([data-dsk]) .pl,html:where([data-dsk]) .form,html:where([data-dsk]) .
 html:where([data-dsk]) .hx .sel{flex:1 1 120px;max-width:none}
 /* style.css @420 */
 html:where([data-dsk]) .logo .w{display:none}
+/* style.css @360 */
+html:where([data-dsk]) .shg{grid-template-columns:repeat(3,1fr)}
 /* style.css @640 */
 html:where([data-dsk]) .khero h1{font-size:26px}
 /* style.css @640 */

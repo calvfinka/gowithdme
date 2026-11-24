@@ -4,3 +4,4 @@ __pycache__/
 .aistudio/
 cari-teman-*.zip
 node_modules
+tools/.og-cache/

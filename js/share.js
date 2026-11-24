@@ -8,10 +8,13 @@ function copy(text,input){
   if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text).then(function(){toast(tr("copied"))},function(){fallback()});
   fallback();
   function fallback(){try{input.select();input.setSelectionRange(0,9999);if(document.execCommand("copy"))return toast(tr("copied"))}catch(e){}toast(tr("copy_manual"))}}
+var CH={WhatsApp:["#25D366","WA"],Telegram:["#229ED9","TG"],X:["#111111","X"],Facebook:["#1877F2","f"],Email:["#6E6E73",""]};
+var MAIL='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>';
 function build(){
   dlg=document.createElement("dialog");dlg.className="shr";dlg.setAttribute("aria-label",tr("share"));
   dlg.innerHTML='<div class="shb"><div class="shh"><b>'+esc(tr("share"))+'</b><button type="button" class="shx" data-sh-close aria-label="'+esc(tr("close"))+'">×</button></div>'
-   +'<p class="shp" id="shT"></p><div class="shg" id="shG"></div>'
+   +'<div class="shv"><span class="shi" id="shI" aria-hidden="true"></span><span class="sht"><b id="shT"></b><small id="shM"></small></span></div>'
+   +'<div class="shg" id="shG" role="list"></div>'
    +'<div class="shc"><input id="shU" readonly aria-label="URL"><button type="button" class="btn sm" id="shCp">'+esc(tr("copy_link"))+'</button></div>'
    +'<button type="button" class="btn line sm block" id="shNat" hidden>'+esc(tr("share_more"))+'</button></div>';
   document.body.appendChild(dlg);
@@ -23,14 +26,17 @@ function links(d){var u=encodeURIComponent(d.url),t=encodeURIComponent(d.text),t
 function sheet(d){
   if(!dlg)build();
   dlg.querySelector("#shT").textContent=d.title;
-  dlg.querySelector("#shG").innerHTML=links(d).map(function(l){return'<a class="btn line sm" target="_blank" rel="noopener noreferrer" href="'+esc(l[1])+'">'+esc(l[0])+'</a>'}).join("");
+  dlg.querySelector("#shM").textContent=d.meta||"";
+  var im=dlg.querySelector("#shI");im.style.backgroundImage=d.image?"url('"+String(d.image).replace(/'/g,"%27")+"')":"";im.classList.toggle("noimg",!d.image);
+  dlg.querySelector("#shG").innerHTML=links(d).map(function(l){var c=CH[l[0]]||["#6E6E73",l[0].charAt(0)],mail=l[0]==="Email",ext=mail?"":' target="_blank" rel="noopener noreferrer"';
+    return'<a role="listitem" class="shl" '+ext+' href="'+esc(l[1])+'"><span class="shk" style="background:'+c[0]+'">'+(mail?MAIL:esc(c[1]))+'</span><span>'+esc(l[0])+'</span></a>'}).join("");
   var inp=dlg.querySelector("#shU");inp.value=d.url;
   dlg.querySelector("#shCp").onclick=function(){copy(d.url,inp)};
   var nat=dlg.querySelector("#shNat");nat.hidden=!navigator.share;
   nat.onclick=function(){navigator.share({title:d.title,text:d.text,url:d.url}).then(function(){dlg.close()},function(){})};
   if(!dlg.open)dlg.showModal()}
 function open(d){
-  d={title:String(d.title||document.title).slice(0,140),text:String(d.text||d.title||document.title).slice(0,240),url:clean(d.url||location.href)};
+  d={title:String(d.title||document.title).slice(0,140),text:String(d.text||d.title||document.title).slice(0,240),url:clean(d.url||location.href),image:d.image||"",meta:d.meta||""};
   var mobile=/Android|iPhone|iPad|iPod|Mobi/i.test(navigator.userAgent);
   if(mobile&&navigator.share)return navigator.share({title:d.title,text:d.text,url:d.url}).catch(function(e){if(!e||e.name!=="AbortError")sheet(d)});
   sheet(d)}

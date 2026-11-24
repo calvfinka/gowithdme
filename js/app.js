@@ -243,9 +243,10 @@ function ics(e){var f=function(s){return s.replace(/-/g,"")},n=new Date(endOf(e)
   var u=URL.createObjectURL(new Blob([b],{type:"text/calendar;charset=utf-8"})),a=document.createElement("a");
   a.href=u;a.download=(ttl(e)||"event").replace(/\W+/g,"-").replace(/^-+|-+$/g,"")+".ics";if(a.download===".ics")a.download="event.ics";
   document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);toast(tr("ics_ok"))}
-function evUrl(e){return location.origin+location.pathname.replace(/[^\/]*$/,"")+(e.category==="naikgunung"?"gunung":"event")+"?e="+encodeURIComponent(e.slug||e.id)}
+/* Tautan bagikan = halaman statis /id/e/<slug> (punya judul, deskripsi, dan gambar OG per event; perayap medsos tidak menjalankan JS). Tanpa slug: kembali ke tautan aplikasi. */
+function evUrl(e){var b=location.origin+location.pathname.replace(/[^\/]*$/,"");return e.slug?b+"e/"+encodeURIComponent(e.slug):b+(e.category==="naikgunung"?"gunung":"event")+"?e="+encodeURIComponent(e.id)}
 function byId(id){return state.events.filter(function(x){return String(x.id)===String(id)})[0]}
-function share(e){var d={title:ttl(e),text:e.city?tr("share_text",{t:ttl(e),c:e.city}):tr("share_text2",{t:ttl(e)}),url:evUrl(e)};
+function share(e){var d={title:ttl(e),text:e.city?tr("share_text",{t:ttl(e),c:e.city}):tr("share_text2",{t:ttl(e)}),url:evUrl(e),image:e.poster_url?purl(e.poster_url):"",meta:[rng(e),e.city].filter(Boolean).join(" · ")};
   if(window.IB_Share)return IB_Share.open(d);
   if(navigator.clipboard)navigator.clipboard.writeText(d.text+" "+d.url).then(function(){toast(tr("copied"))});else toast(tr("copy_manual"))}
 /* Tombol "Cari teman": gulir ke bagian ajakan di rincian event dan buka formulir "Buat ajakan".
