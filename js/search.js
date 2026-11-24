@@ -307,6 +307,9 @@ function itemHtml(r,toks,i){var d=r.d,meta="";
     +(d.type==="user"?'<span class="sxi av" aria-hidden="true">'+esc(d.init)+'</span>':'<span class="sxi">'+ic("search")+'</span>')+'<span class="sxt"><b>'+hl(d.title,toks)+(d.verified?' <i class="sxv" aria-label="Verified">✓</i>':"")+'</b><small>'+(d.type==="faq"||d.type==="post"||lm?hl(sub,toks):esc(sub))+'</small></span>'+meta+'<span class="sxfill" data-q="'+esc(d.title)+'" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 17 7 7M7 15V7h8"/></svg></span></a>'}
 function actHtml(icon,label,href,i,extra){return'<a class="sxr act" role="option" id="sxo'+i+'" aria-selected="false" href="'+esc(href)+'" data-i="'+i+'"'+(extra||"")+'><span class="sxi">'+ic(icon)+'</span><span class="sxt"><b>'+esc(label)+'</b></span></a>'}
 
+/* Lanjut ke subdomain: pencarian lengkap (search.gowithdme.com) dan asisten AI (ai.gowithdme.com). Tautan biasa, tanpa permintaan jaringan tambahan. */
+function xtra(q,i){q=String(q||"").trim().slice(0,200);var t=q.length>18?q.slice(0,18)+"…":q,e=' target="_blank" rel="noopener"';
+  return actHtml("search",tr("sx_full",{q:t}),"https://search.gowithdme.com/?q="+qenc(q),i,e)+actHtml("spark",tr("sx_ai",{q:t}),"https://ai.gowithdme.com/?q="+qenc(q),i+1,e)}
 function trendDocs(){return DOCS.event.filter(function(d){return d.st.k!=="past"}).sort(function(a,b){return(a.st.k==="live"?0:1)-(b.st.k==="live"?0:1)||(a.date<b.date?-1:a.date>b.date?1:0)}).slice(0,5)}
 function renderEmpty(){
   var rec=read("gwm_recent_q",[]),h="",tr5=trendDocs(),base=rec.length;
@@ -329,8 +332,8 @@ function run(){var raw=inp.value;lastQ=raw;panel.classList.toggle("sxq",!!raw.tr
     if(REM.busy){elList.innerHTML='<div class="sxn">'+esc(tr("sx_searching"))+'</div>';items=[];setActive(-1);return}
     var dm=didYouMean(r.q);
     h='<div class="sxe"><b>'+esc(tr("sx_none",{q:r.q}))+'</b><p>'+esc(tr("sx_none_tip"))+'</p>'+(dm?'<p><button type="button" class="sxdm" data-q="'+esc(dm.title)+'">'+esc(tr("sx_dym"))+' <u>'+esc(dm.title)+'</u>?</button></p>':"")+'</div>';
-    h+=actHtml("help",tr("sx_ask"),"bantuan#kontak",0)+actHtml("plus",tr("sx_submit"),"ajukan",1);
-    if(eff==="user"&&REM.auth===false)h+=actHtml("user",tr("sx_login_users"),"login",2);
+    h+=xtra(r.q,0)+actHtml("help",tr("sx_ask"),"bantuan#kontak",2)+actHtml("plus",tr("sx_submit"),"ajukan",3);
+    if(eff==="user"&&REM.auth===false)h+=actHtml("user",tr("sx_login_users"),"login",4);
     elList.innerHTML=h;items=[].slice.call(elList.querySelectorAll("a.sxr"));setActive(-1);elLive.textContent=tr("sx_none",{q:r.q});return}
   order=eff==="all"?TYPES.filter(function(t){return r.tot[t]}).sort(function(a,b){return r.res[b][0].s-r.res[a][0].s}):[eff];
   if(r.partial)h+='<div class="sxn">'+esc(tr("sx_partial"))+'</div>';
@@ -339,6 +342,7 @@ function run(){var raw=inp.value;lastQ=raw;panel.classList.toggle("sxq",!!raw.tr
     h+='<div class="sxg" role="presentation"><span>'+esc(tr("sx_t_"+t))+'</span>'+(eff==="all"&&list.length>shown.length?'<button type="button" data-s="'+t+'">'+esc(tr("sx_more",{n:list.length-shown.length}))+'</button>':"")+'</div>';
     shown.forEach(function(x){h+=itemHtml(x,r.toks,i++)})});
   if(r.tot.event&&!r.partial&&(eff==="all"||eff==="event"))h+=actHtml("search",tr("sx_all_events",{q:r.q}),"event?q="+qenc(r.q),i++);
+  h+=xtra(r.q,i);i+=2;
   elList.innerHTML=h;items=[].slice.call(elList.querySelectorAll("a.sxr"));setActive(0);
   elLive.textContent=tr("sx_status",{n:r.tot.all})+(STATE==="loading"?" · "+tr("sx_loading"):"")}
 

@@ -1015,6 +1015,9 @@ S.update(_NAVSIMPLE)
 # ---- Tautan ke asisten AI (ai.gowithdme.com): menu, halaman Bantuan, dan cadangan bot panduan ----
 _AI = {
 "nv_ai": ("Asisten AI", "AI assistant"),
+"nv_search": ("Pencarian lengkap", "Full search"),
+"sx_full": ("Pencarian lengkap: “{q}”", "Full search: “{q}”"),
+"sx_ai": ("Tanya AI: “{q}”", "Ask AI: “{q}”"),
 "hp_ai_h": ("Tanya AI GoWithDME", "Ask GoWithDME AI"),
 "hp_ai_p": ("Asisten perencana perjalanan untuk gunung, konser, dan trip: itinerary, estimasi biaya, dan perlengkapan. Jawaban AI bisa keliru, jadi cek sumber resmi sebelum berangkat.", "A travel-planning assistant for hikes, concerts, and trips: itineraries, cost estimates, and gear. AI answers can be wrong, so check official sources before you go."),
 "hp_ai_btn": ("Buka asisten AI", "Open the AI assistant"),
