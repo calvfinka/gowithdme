@@ -272,7 +272,7 @@ S.update({
                 "Pick from the list, or type your own if the mountain is missing. Make sure the route and quota follow basecamp / national park permits."),
 "sb_l_alt": ("Ketinggian (mdpl)", "Altitude (masl)"), "sb_l_dif": ("Kesulitan", "Difficulty"),
 "sb_l_dur": ("Durasi", "Duration"), "sb_ph_dur": ("contoh: 3 hari 2 malam", "e.g. 3 days 2 nights"),
-"sb_l_quota": ("Kuota peserta", "Participant quota"), "sb_l_org": ("Nama penyelenggara / komunitas", "Organizer / community name"),
+"sb_l_quota": ("Kuota peserta", "Participant quota"), "sb_l_org": ("Nama penyelenggara / komunitas", "Organizer / community name"), "sb_org_hint": ("Tidak punya nama organisasi? Tulis \"Perorangan\" atau nama komunitasmu.", "No organization name? Write \"Individual\" or your community name."),
 "sb_l_wa": ("WhatsApp penyelenggara (akan tampil publik)", "Organizer WhatsApp (will be shown publicly)"),
 "sb_f4": ("4. Deskripsi & tautan", "4. Description & links"),
 "sb_l_desc": ("Deskripsi", "Description"), "sb_ph_desc": ("Ringkasan, fasilitas, syarat, barang bawaan, info penting", "Summary, facilities, requirements, what to bring, key info"),
