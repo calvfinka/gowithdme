@@ -1,28 +1,50 @@
-/* GWM — polish halus untuk Beranda. Dimuat paling akhir; hanya menimpa, tidak mengubah tema. */
+/* GWM — polish halus untuk Beranda. Dimuat paling akhir; hanya menimpa, tidak mengubah tema.
+   Browser lama (Chrome 80+, Safari 13+): nilai cadangan ditulis lebih dulu, versi color-mix()/text-wrap hanya di dalam @supports.
+   Catatan: color-mix() yang memuat var() lolos saat di-parse di browser lama lalu gagal saat dihitung (nilai jadi kosong),
+   jadi pola "dua deklarasi" tidak berfungsi; @supports adalah satu-satunya cara cadangan benar-benar dipakai. */
 
 /* Hero: latar lembut agar tidak terasa kosong */
 .nv-home .nv-hero{position:relative;padding:44px 0 14px;isolation:isolate}
-.nv-home .nv-hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(55% 100% at 50% 0%,color-mix(in srgb,var(--brand) 10%,transparent),transparent 72%)}
-.nv-hero h1{text-wrap:balance}
-.nv-hero p{line-height:1.55;text-wrap:pretty}
+.nv-home .nv-hero::before{content:"";position:absolute;top:0;right:0;bottom:0;left:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(55% 100% at 50% 0%,rgba(14,90,70,.1),rgba(14,90,70,0) 72%)}
+@supports (color:color-mix(in srgb,red 10%,white)){
+  .nv-home .nv-hero::before{background:radial-gradient(55% 100% at 50% 0%,color-mix(in srgb,var(--brand) 10%,transparent),transparent 72%)}
+}
+.nv-hero p{line-height:1.55}
+@supports (text-wrap:balance){.nv-hero h1{text-wrap:balance}}
+@supports (text-wrap:pretty){.nv-hero p{text-wrap:pretty}}
 
 /* Kotak cari: garis tipis + bayangan lembut; cincin tebal hanya saat fokus */
-.nv-hero .search.nvs{border-width:1.5px;border-color:color-mix(in srgb,var(--brand) 55%,var(--line));
-  box-shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px -8px color-mix(in srgb,var(--brand) 28%,transparent);
+.nv-hero .search.nvs{border-width:1.5px;border-color:var(--brand);
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px -8px rgba(14,90,70,.28);
   transition:border-color .15s,box-shadow .15s}
+@supports (color:color-mix(in srgb,red 10%,white)){
+  .nv-hero .search.nvs{border-color:color-mix(in srgb,var(--brand) 55%,var(--line));
+    box-shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px -8px color-mix(in srgb,var(--brand) 28%,transparent)}
+}
 .nv-hero .search.nvs:hover{border-color:var(--brand)}
-.nv-hero .search.nvs:focus-within{border-color:var(--brand);box-shadow:0 0 0 4px color-mix(in srgb,var(--brand) 18%,transparent)}
+.nv-hero .search.nvs:focus-within{border-color:var(--brand);box-shadow:0 0 0 4px rgba(14,90,70,.18)}
+@supports (color:color-mix(in srgb,red 10%,white)){
+  .nv-hero .search.nvs:focus-within{box-shadow:0 0 0 4px color-mix(in srgb,var(--brand) 18%,transparent)}
+}
 .search.nvs input::placeholder{color:var(--faint);text-overflow:ellipsis}
 
 /* Deretan ikon & kartu: bayangan tipis, jarak lebih lega */
 .nv-apps{box-shadow:0 1px 2px rgba(0,0,0,.03);margin-top:22px}
 .app{transition:background .15s}
 .nvc{transition:border-color .15s,box-shadow .15s}
-@media (hover:hover){.nvc:hover{border-color:color-mix(in srgb,var(--brand) 22%,var(--line))}}
+@supports (color:color-mix(in srgb,red 10%,white)){
+  @media (hover:hover){.nvc:hover{border-color:color-mix(in srgb,var(--brand) 22%,var(--line))}}
+}
+
+/* Kartu di bawah lipatan: dirender saat mendekati layar (peningkatan; diabaikan di browser tanpa dukungan).
+   Hanya .nvc: .nv-apps dan .nv-ban ada di atas lipatan (tidak ada untungnya) dan .nv-ban dikelola JS (carousel). */
+@supports (content-visibility:auto){
+  .nvc{content-visibility:auto;contain-intrinsic-size:auto 180px}
+}
 
 /* Banner: gradasi bawah supaya teks dan kontrol selalu terbaca */
-.nv-ban::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;z-index:1;pointer-events:none;
+.nv-ban::after{content:"";position:absolute;top:auto;right:0;bottom:0;left:0;height:45%;z-index:1;pointer-events:none;
   background:linear-gradient(to top,rgba(0,0,0,.35),transparent)}
 .nv-ban-ctl{z-index:3}
 
@@ -38,3 +60,13 @@
   .nv-apps{margin-top:16px}
 }
 @media (prefers-reduced-motion:reduce){.nv-hero .search.nvs,.app,.nvc,.btn,.ap-ic,.ap-ic .i{transition:none}}
+
+/* HP kecil + browser lama (Chrome 80+, Safari 13+) */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+img,video,canvas{max-width:100%}
+h1,h2,h3,p,li{overflow-wrap:break-word}
+/* portal-pro.css (dimuat setelah file ini) memakai color-mix() untuk .promo-res.err; di browser lama latar itu kosong.
+   Selektor lebih spesifik + @supports not: hanya browser lama yang terkena, tampilan modern tidak berubah. */
+@supports not (color:color-mix(in srgb,red 10%,white)){
+  html .promo-res.err{background:var(--soon-bg)}
+}
