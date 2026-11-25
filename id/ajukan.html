@@ -247,6 +247,8 @@
         <label class="f"><span id="lEnd">Tanggal selesai</span><input id="a_end" type="date"></label>
       </div>
       <label class="f"><span id="lVenue">Lokasi / venue</span><input id="a_venue" type="text" maxlength="120"></label>
+      <label class="f"><span>Nama penyelenggara / komunitas <i class="req">*</i></span><input id="a_org" type="text" maxlength="80" required></label>
+      <p class="meta" style="margin:-4px 0 10px">Tidak punya nama organisasi? Tulis "Perorangan" atau nama komunitasmu.</p>
     </fieldset>
     <fieldset class="fs" data-for="konser"><legend>3. Detail konser</legend>
       <label class="f">Genre<select id="a_genre"></select></label>
@@ -261,7 +263,6 @@
         <label class="f">Durasi<input id="a_dur" type="text" maxlength="40" placeholder="contoh: 3 hari 2 malam"></label>
         <label class="f"><span>Kuota peserta <i class="req">*</i></span><input id="a_quota" type="number" min="1" max="500" inputmode="numeric"></label>
       </div>
-      <label class="f">Nama penyelenggara / komunitas<input id="a_org" type="text" maxlength="80"></label>
       <label class="f">WhatsApp penyelenggara (akan tampil publik)<input id="a_wa" type="tel" inputmode="tel" placeholder="08xxxxxxxxxx"></label>
     </fieldset>
     <fieldset class="fs"><legend>4. Deskripsi & tautan</legend>
