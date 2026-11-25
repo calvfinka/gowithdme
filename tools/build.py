@@ -163,7 +163,8 @@ MON={"id":["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","De
 TX["id"].update({"ended":"Event ini sudah selesai digelar pada","related":"Event mendatang yang mungkin kamu suka","next":"Edisi berikutnya belum diumumkan di GoWithDME. Pantau halaman ini atau cek event serupa di bawah.","qwhen":"Kapan {t} digelar?","qwhere":"Di mana {t} digelar?","qprice":"Berapa harga tiket {t}?","awhen":"{t} digelar pada {d}.","awhere":"Lokasinya di {w}.","aprice":"Harga tiket: {p}.","faq":"Pertanyaan umum"})
 TX["en"].update({"ended":"This event already took place on","related":"Upcoming events you may like","next":"The next edition has not been announced on GoWithDME yet. Check back here or browse similar events below.","qwhen":"When is {t}?","qwhere":"Where is {t} held?","qprice":"How much are {t} tickets?","awhen":"{t} takes place on {d}.","awhere":"The venue is {w}.","aprice":"Ticket price: {p}.","faq":"FAQ"})
 DAYS={"id":["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"],"en":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]}
-_NOW=_date.today().isoformat()
+from datetime import datetime as _dtm, timezone as _tzm, timedelta as _tdm
+_NOW=os.environ.get("GWM_TODAY") or (_dtm.now(_tzm.utc)+_tdm(hours=7)).date().isoformat()  # WIB (UTC+7): build di server UTC tidak boleh salah hari antara 00:00-07:00 WIB
 def fday(l,d):
     y,m,dd=map(int,d[:10].split("-")); return DAYS[l][_date(y,m,dd).weekday()]+", "+fdate(l,d)
 def seo_title(l,e,title):
@@ -188,7 +189,7 @@ def ldj(o): return '<script type="application/ld+json">'+json.dumps(o,ensure_asc
 import unicodedata as _ud
 TX["id"].update({"lineup_h":"Pengisi acara","a_title":"{a}: Jadwal Konser & Tiket","a_desc":"Jadwal konser dan festival {a}: {n} event di GoWithDME. {nx}","a_next":"Event terdekat: {t} pada {d}.","a_none":"Belum ada jadwal mendatang.","a_up":"Jadwal mendatang","a_past":"Event sebelumnya","a_qwhen":"Kapan {a} konser?","a_qnone":"Belum ada jadwal {a} yang akan datang di GoWithDME. Halaman ini diperbarui saat ada event baru.","a_all":"Semua artis","a_index_t":"Daftar Artis & Pengisi Acara","a_index_d":"Daftar artis dan pengisi acara konser dan festival di Indonesia beserta jadwalnya.","a_count":"{n} event","a_ended":"selesai"})
 TX["en"].update({"lineup_h":"Line-up","a_title":"{a}: Concert Dates & Tickets","a_desc":"Concert and festival dates for {a}: {n} events on GoWithDME. {nx}","a_next":"Next show: {t} on {d}.","a_none":"No upcoming dates yet.","a_up":"Upcoming shows","a_past":"Past events","a_qwhen":"When is {a} playing next?","a_qnone":"There are no upcoming {a} dates on GoWithDME yet. This page is updated when new events are added.","a_all":"All artists","a_index_t":"Artists & Performers","a_index_d":"Artists and performers at concerts and festivals in Indonesia, with their dates.","a_count":"{n} events","a_ended":"ended"})
-_PLACE=re.compile(r"menyusul|segera|soon|tba|tbc|tbd|lainnya|and more|to be announced|pengumuman|line-?up|musisi|guest star",re.I)
+_PLACE=re.compile(r"menyusul|segera|soon|tba|tbc|tbd|lainnya|and more|to be announced|pengumuman|line-?up|musisi|guest star|masih banyak|^day\s*\d|^kategori\s|\b(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember|january|february|march|june|july|august|october|december)\s+20\d\d",re.I)
 def _akey(n): return re.sub(r"[^0-9a-z]+","",_ud.normalize("NFKD",n).encode("ascii","ignore").decode().lower() or n.lower()) or re.sub(r"\W+","",n.casefold())
 def _aslug(n):
     a=_ud.normalize("NFKD",n).encode("ascii","ignore").decode().lower()
@@ -223,28 +224,142 @@ def lineup_html(l,e):
     for n in split_lineup(e.get("lineup") or ""):
         a=ARTISTS.get(_akey(n)); parts.append(f'<a href="../a/{esc(a["slug"])}">{esc(n)}</a>' if a else esc(n))
     return ", ".join(parts)
+# ---- halaman artis: status event dihitung dari tanggal hari ini (WIB), bukan tanggal mesin build; JS (src/artist-page.js) menghitung ulang saat dibuka ----
+TX["id"].update({"a_live":"Sedang berlangsung","a_today":"Hari ini","a_tmrw":"Besok","a_in":"H-{n}","a_nosched":"Belum ada jadwal","a_role":"Artis & pengisi acara","a_stat_total":"Total event","a_stat_up":"Mendatang","a_stat_city":"Kota","a_nx":"Penampilan berikutnya","a_ticket":"Tiket & info resmi","a_detail":"Lihat detail","a_pastn":"Event sebelumnya","a_with_h":"Sering satu line-up dengan","a_with_n":"{n}× bersama","a_faq_h":"Pertanyaan umum","a_upd":"Data diperbarui {d} (WIB)","a_lang":"English","a_home":"Beranda","a_f_where":"Di mana {a} akan tampil?","a_f_where_a":"{a} dijadwalkan tampil di {c}.","a_f_price":"Berapa harga tiket untuk menonton {a}?","a_f_price_a":"Untuk {t}: {p}.","a_f_count":"Berapa kali {a} tampil di GoWithDME?","a_f_count_a":"{a} tercatat di {n} event: {u} mendatang dan {p} sudah selesai.","a_f_with":"Siapa saja yang satu line-up dengan {a}?","a_f_with_a":"Nama yang paling sering tampil di event yang sama: {x}.","a_f_live_a":"{t} sedang berlangsung sampai {d}.","a_nx_range":"{a} – {b}"})
+TX["en"].update({"a_live":"Happening now","a_today":"Today","a_tmrw":"Tomorrow","a_in":"In {n} days","a_nosched":"No dates yet","a_role":"Artist & performer","a_stat_total":"Total events","a_stat_up":"Upcoming","a_stat_city":"Cities","a_nx":"Next show","a_ticket":"Tickets & official info","a_detail":"View details","a_pastn":"Past events","a_with_h":"Often on the same bill as","a_with_n":"{n}× together","a_faq_h":"FAQ","a_upd":"Data updated {d} (WIB)","a_lang":"Bahasa Indonesia","a_home":"Home","a_f_where":"Where is {a} playing?","a_f_where_a":"{a} is scheduled to play in {c}.","a_f_price":"How much are tickets to see {a}?","a_f_price_a":"For {t}: {p}.","a_f_count":"How many shows does {a} have on GoWithDME?","a_f_count_a":"{a} appears in {n} events: {u} upcoming and {p} already finished.","a_f_with":"Who plays on the same bill as {a}?","a_f_with_a":"Names that most often share a line-up: {x}.","a_f_live_a":"{t} is happening now through {d}.","a_nx_range":"{a} – {b}"})
+_NOSCHED=re.compile(r"menyusul|segera|soon|tba|tbc|tbd|info",re.I)
+def _aend(x): return max((x.get("end_date") or x["event_date"])[:10],x["event_date"][:10])
+def _ast(x,today=None):
+    today=today or _NOW; s=x["event_date"][:10]; e=_aend(x)
+    return "ended" if e<today else ("live" if s<=today else "up")
+def _alabel(l,st,x):
+    t=TX[l]
+    if st=="ended": return t["a_ended"]
+    if st=="live": return t["a_live"]
+    n=(_date.fromisoformat(x["event_date"][:10])-_date.fromisoformat(_NOW)).days
+    return t["a_today"] if n<=0 else (t["a_tmrw"] if n==1 else t["a_in"].format(n=n))
+def _ainitials(nm):
+    w=[x for x in re.split(r"[\s\-_.]+",nm) if re.search(r"[0-9A-Za-zÀ-￿]",x)]
+    w=[re.sub(r"^[^0-9A-Za-zÀ-￿]+","",x) for x in w]
+    s="".join(x[0] for x in w[:2]) if len(w)>1 else (w[0][:2] if w else "?")
+    return s.upper()
+def _atitle(l,x): return x.get("title_en") if l=="en" and x.get("title_en") else x["title"]
+def _awhere(x):
+    v=(x.get("venue") or "").strip(); c=(x.get("city") or "").strip()
+    return ", ".join(p for p in (v,c) if p and not (p==c and v.lower().endswith(c.lower()))) 
+def _aposter(x):
+    pu=x.get("poster_url") or ""
+    if not pu: return ""
+    if re.match(r"https?://",pu): return pu
+    return "../../"+pu.lstrip("/") if os.path.exists(f"{ROOT}/{pu.lstrip('/')}") else ""
+def _aprice(x):
+    p=(x.get("price_label") or "").strip()
+    return "" if (not p or _NOSCHED.search(p)) else p
+def _arange(l,x):
+    sd=x["event_date"][:10]; ed=_aend(x)
+    return fdate(l,sd)+((" – "+fdate(l,ed)) if ed!=sd else "")
+def _aevent_ld(l,x):
+    sd=x["event_date"][:10]; ed=_aend(x)
+    o={"@type":"Event","name":_atitle(l,x),"startDate":sd,"endDate":ed,"url":f"{BASE}/{l}/e/{x['slug']}",
+       "eventStatus":"https://schema.org/EventScheduled","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
+       "location":{"@type":"Place","name":x.get("venue") or x.get("city") or "Indonesia","address":{"@type":"PostalAddress","addressLocality":x.get("city") or "","addressCountry":"ID"}}}
+    pu=x.get("poster_url") or ""
+    if pu: o["image"]=[pu if re.match(r"https?://",pu) else BASE+"/"+pu.lstrip("/")]
+    return o
+def _acompanions(a,limit=8):
+    me=_akey(a["name"]); c=_col.Counter(); seen={}
+    for x in a["events"]:
+        for n in split_lineup(x.get("lineup") or ""):
+            k=_akey(n)
+            if k and k!=me and k in ARTISTS: c[k]+=1
+    return [(ARTISTS[k],n) for k,n in sorted(c.items(),key=lambda kv:(-kv[1],ARTISTS[kv[0]]["name"].lower()))[:limit]]
 def artist_page(l,a):
     o="en" if l=="id" else "id"; t=TX[l]; nm=a["name"]; u=f"{BASE}/{l}/a/{a['slug']}"
-    evs=a["events"]; up=sorted([x for x in evs if (x.get("end_date") or x["event_date"])[:10]>=_NOW],key=lambda x:x["event_date"])
-    pa=sorted([x for x in evs if x not in up],key=lambda x:x["event_date"],reverse=True)
-    nx=t["a_next"].format(t=(up[0].get("title_en") if l=="en" and up[0].get("title_en") else up[0]["title"]),d=fdate(l,up[0]["event_date"])) if up else t["a_none"]
+    evs=a["events"]
+    cur=sorted([x for x in evs if _ast(x)!="ended"],key=lambda x:x["event_date"])
+    pa=sorted([x for x in evs if _ast(x)=="ended"],key=lambda x:(_aend(x),x["event_date"]),reverse=True)
+    nxe=cur[0] if cur else None
+    nx=t["a_next"].format(t=_atitle(l,nxe),d=fdate(l,nxe["event_date"])) if nxe else t["a_none"]
     title=t["a_title"].format(a=nm); desc=t["a_desc"].format(a=nm,n=len(evs),nx=nx)
-    def row(x):
-        tt=(x.get("title_en") if l=="en" and x.get("title_en") else x["title"]); ended=(x.get("end_date") or x["event_date"])[:10]<_NOW
-        return f'<li><a href="../e/{esc(x["slug"])}">{esc(tt)}</a><br><small>{esc(fdate(l,x["event_date"]))}{(" · "+esc(x["city"])) if x.get("city") else ""}{(" · "+t["a_ended"]) if ended else ""}</small></li>'
-    ld={"@context":"https://schema.org","@type":"PerformingGroup","name":nm,"url":u,"inLanguage":l}
-    qa=t["a_qwhen"].format(a=nm); ans=nx if up else t["a_qnone"].format(a=nm)
-    body=(f'<h2>{t["a_up"]}</h2><ul>'+"".join(map(row,up))+"</ul>" if up else "")+(f'<h2>{t["a_past"]}</h2><ul>'+"".join(map(row,pa))+"</ul>" if pa else "")
+    cities=_col.Counter((x.get("city") or "").strip() for x in evs if (x.get("city") or "").strip())
+    cats=[]
+    for x in evs:
+        c=CAT[l].get(x.get("category"),"")
+        if c and c not in cats: cats.append(c)
+    comp=_acompanions(a)
+    # ---- kartu event ----
+    def card(x):
+        st=_ast(x); tt=_atitle(l,x); sd=x["event_date"][:10]; w=_awhere(x); pr=_aprice(x); img=_aposter(x)
+        d_=int(sd[8:10]); mo=MON[l][int(sd[5:7])-1]
+        th=(f'<a class="th" href="../e/{esc(x["slug"])}" tabindex="-1" aria-hidden="true"><img src="{esc(img)}" alt="" loading="lazy" decoding="async" width="108" height="144" onerror="this.parentNode.className=\'th dt\';this.parentNode.innerHTML=\'<b>{d_}</b><i>{mo}</i>\'"></a>' if img
+            else f'<a class="th dt" href="../e/{esc(x["slug"])}" tabindex="-1" aria-hidden="true"><b>{d_}</b><i>{mo}</i></a>')
+        cat=CAT[l].get(x.get("category"),"")
+        tix=(f'<a class="bt tx" href="{esc(x["ticket_url"])}" rel="noopener nofollow" target="_blank"{" hidden" if st=="ended" else ""}>{esc(t["a_ticket"])}</a>') if x.get("ticket_url") else ""
+        return (f'<li class="ev" data-s="{sd}" data-e="{_aend(x)}" data-t="{esc(tt)}" data-fd="{esc(fdate(l,sd))}" data-st="{st}" data-nx="{esc(t["a_nx"])}">{th}<div class="bo">'
+            f'<div class="ln"><span class="bd st-{st}">{esc(_alabel(l,st,x))}</span>{f"<span class=ct>{esc(cat)}</span>" if cat else ""}</div>'
+            f'<h3><a href="../e/{esc(x["slug"])}">{esc(tt)}</a></h3>'
+            f'<p class="mt"><time datetime="{sd}">{esc(_arange(l,x))}</time>{(" · "+esc(w)) if w else ""}</p>'
+            f'{f"<p class=pr>{esc(pr)}</p>" if pr else ""}'
+            f'<div class="ac"><a class="bt pri" href="../e/{esc(x["slug"])}">{t["a_detail"]}</a>{tix}</div></div></li>')
+    def cards(xs): return "".join(map(card,xs))
+    # kedua daftar selalu ada di HTML (JS memindahkan kartu di antaranya); yang kosong disembunyikan
+    nxs=[card(x) for x in cur]
+    if nxs: nxs[0]=nxs[0].replace('<li class="ev"','<li class="ev nx"',1)
+    up_h=f'<section class="sec" id="sec-up"{"" if cur else " hidden"}><h2>{t["a_up"]} <em id="n-up">{len(cur)}</em></h2><ul class="evl" id="up">{"".join(nxs)}</ul></section>'
+    noup=f'<p class="noup" id="noup"{" hidden" if cur else ""}>{esc(t["a_qnone"].format(a=nm))}</p>'
+    pa_h=f'<section class="sec" id="sec-pa"{"" if pa else " hidden"}><details class="more"{" open" if not cur else ""}><summary>{t["a_past"]} <em id="n-pa">{len(pa)}</em></summary><ul class="evl" id="pa">{cards(pa)}</ul></details></section>'
+    # ---- hero ----
+    stx=_ast(nxe) if nxe else "none"
+    pill=_alabel(l,stx,nxe) if nxe else t["a_nosched"]
+    chips="".join(f'<span class="chip">{esc(c)}</span>' for c in cats[:3])
+    top_c=[c for c,_ in cities.most_common(4)]
+    chips+="".join(f'<span class="chip">{esc(c)}</span>' for c in top_c)+(f'<span class="chip">+{len(cities)-4}</span>' if len(cities)>4 else "")
+    hue=sum(map(ord,a["slug"]))%360
+    hero=(f'<section class="hero"><div class="av" style="--h:{hue}" aria-hidden="true">{esc(_ainitials(nm))}</div>'
+          f'<div><p class="eyebrow">{esc(t["a_role"])}</p><h1>{esc(nm)}</h1></div>'
+          f'<span class="pill st-{stx}" id="pill">{esc(pill)}</span>'
+          f'<p class="lead" id="lead">{esc(nx)}</p>'
+          f'{f"<div class=meta>{chips}</div>" if chips else ""}</section>')
+    stats=(f'<dl class="stats"><div class="stat"><dd>{len(evs)}</dd><dt>{t["a_stat_total"]}</dt></div>'
+           f'<div class="stat"><dd id="st-up">{len(cur)}</dd><dt>{t["a_stat_up"]}</dt></div>'
+           f'<div class="stat"><dd>{len(cities)}</dd><dt>{t["a_stat_city"]}</dt></div></dl>')
+    withh=(f'<section class="sec"><h2>{t["a_with_h"]} {esc(nm)}</h2><div class="with">'+"".join(f'<a href="{esc(b["slug"])}">{esc(b["name"])} <small>{t["a_with_n"].format(n=n)}</small></a>' for b,n in comp)+'</div></section>') if comp else ""
+    # ---- FAQ: hanya pertanyaan yang jawabannya benar-benar ada di data ----
+    qa=[(t["a_qwhen"].format(a=nm),(t["a_f_live_a"].format(t=_atitle(l,nxe),d=fdate(l,_aend(nxe))) if (nxe and _ast(nxe)=="live") else (nx if cur else t["a_qnone"].format(a=nm))))]
+    ucity=[]
+    for x in cur:
+        c=(x.get("city") or "").strip()
+        if c and c not in ucity: ucity.append(c)
+    if ucity: qa.append((t["a_f_where"].format(a=nm),t["a_f_where_a"].format(a=nm,c=", ".join(ucity[:4])+(f" +{len(ucity)-4}" if len(ucity)>4 else ""))))
+    pe=next((x for x in cur if _aprice(x)),None)
+    if pe: qa.append((t["a_f_price"].format(a=nm),t["a_f_price_a"].format(t=_atitle(l,pe),p=_aprice(pe))))
+    qa.append((t["a_f_count"].format(a=nm),t["a_f_count_a"].format(a=nm,n=len(evs),u=len(cur),p=len(pa))))
+    if comp: qa.append((t["a_f_with"].format(a=nm),t["a_f_with_a"].format(x=", ".join(b["name"] for b,_ in comp[:5]))))
+    faq=f'<section class="sec"><h2>{t["a_faq_h"]}</h2><div class="faq">'+"".join(f'<details{" open" if i==0 else ""}><summary>{esc(q)}</summary><p>{esc(ans)}</p></details>' for i,(q,ans) in enumerate(qa))+"</div></section>"
+    # ---- data terstruktur ----
+    ld={"@context":"https://schema.org","@type":"PerformingGroup","name":nm,"url":u,"inLanguage":l,"event":[_aevent_ld(l,x) for x in (cur+pa)[:12]]}
+    bc={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+        {"@type":"ListItem","position":1,"name":"GoWithDME","item":f"{BASE}/{l}/"},
+        {"@type":"ListItem","position":2,"name":t["a_all"],"item":f"{BASE}/{l}/a/"},
+        {"@type":"ListItem","position":3,"name":nm,"item":u}]}
+    fld={"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":ans}} for q,ans in qa]}
+    ogd=desc[:200]; ogi=f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"
+    data=" ".join(f'data-{k}="{esc(v)}"' for k,v in (("l-ended",t["a_ended"]),("l-live",t["a_live"]),("l-today",t["a_today"]),("l-tmrw",t["a_tmrw"]),("l-in",t["a_in"]),("l-none",t["a_nosched"]),("l-lead",t["a_next"]),("l-none2",t["a_none"])))
     return f"""<!DOCTYPE html>
-<html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{esc(title)} | GoWithDME</title><meta name="description" content="{esc(desc[:300])}">
 <link rel="canonical" href="{u}"><link rel="alternate" hreflang="{l}" href="{u}"><link rel="alternate" hreflang="{o}" href="{BASE}/{o}/a/{a['slug']}"><link rel="alternate" hreflang="x-default" href="{BASE}/id/a/{a['slug']}">
-<meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc[:200])}"><meta property="og:image" content="{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"><meta name="twitter:card" content="summary">
+<meta property="og:type" content="website"><meta property="og:site_name" content="GoWithDME"><meta property="og:locale" content="{"id_ID" if l=="id" else "en_US"}"><meta property="og:url" content="{u}"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(ogd)}"><meta property="og:image" content="{ogi}"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(ogd)}">
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-<style>{ART_CSS}</style>{ldj(ld)}</head><body><main>
-<nav><a href="../">GoWithDME</a> › <a href="./">{t["a_all"]}</a></nav>
-<h1>{esc(nm)}</h1><p><b>{esc(nx)}</b></p>{body}<h2>{t["faq"]}</h2><h3>{esc(qa)}</h3><p>{esc(ans)}</p>
-<p><small>{t["note"]}</small></p></main></body></html>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="../../js/theme.js?v={VER}"></script>
+<style>{ART_CSS}</style>{ldj(ld)}{ldj(bc)}{ldj(fld)}</head><body>
+<header class="top"><nav class="crumb" aria-label="Breadcrumb"><a href="../">GoWithDME</a><span aria-hidden="true">›</span><a href="./">{t["a_all"]}</a><span aria-hidden="true">›</span><span aria-current="page">{esc(nm)}</span></nav><a class="lang" href="../../{o}/a/{esc(a['slug'])}" hreflang="{o}" lang="{o}">{t["a_lang"]}</a></header>
+<main id="m" {data}>
+{hero}{stats}{up_h}{noup}{pa_h}{withh}{faq}
+<footer class="foot"><p>{t["note"]}</p><p>{t["a_upd"].format(d=fdate(l,_NOW))} · <a href="./">{t["a_all"]}</a></p></footer>
+</main><script>{ART_JS}</script></body></html>
 """
 # ---- indeks artis (/a/): grid kartu + cari, filter huruf, urutan. CSS/JS ada di src/artists-index.css dan .js, di-inline ke halaman ini saja (CSS global tidak tersentuh) ----
 TX["id"].update({"a_count1":"{n} event","a_search":"Cari artis...","a_search_l":"Cari artis","a_trend_h":"Artis Trending","a_trend_d":"Nama yang paling sering muncul di line-up.","a_sort":"Urutkan","a_sort_e":"Event Terbanyak","a_sort_a":"A-Z","a_letter":"Filter berdasarkan huruf","a_all_l":"Semua","a_view":"Lihat Event","a_view_l":"Lihat event {a}","a_noup":"Belum ada jadwal mendatang","a_found1":"1 artis","a_foundn":"{n} artis","a_empty":"Tidak ada artis yang cocok.","a_reset":"Hapus filter","a_intro":"{n} artis dan pengisi acara konser dan festival di seluruh Indonesia."})
@@ -298,7 +413,7 @@ def artist_index(l):
 <div class="ax-empty" id="ax-empty" hidden><p>{t["a_empty"]}</p><button type="button" id="ax-reset">{t["a_reset"]}</button></div></section>
 </div><script>{_read_src("artists-index.js")}</script></body></html>
 """
-ART_CSS="body{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}main{max-width:720px;margin:0 auto;padding:20px 16px 48px}h1{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}h2{font-size:1.15rem;margin:28px 0 6px}h3{font-size:1rem;margin:14px 0 0}h3+p{margin:2px 0 0}ul{padding-left:20px}li{margin:10px 0}a{color:#0E5A46}small{color:#5b6a63}@media(prefers-color-scheme:dark){body{background:#101613;color:#e8efeb}a,nav a{color:#7fd1b4}small{color:#9bb0a6}}"
+ART_CSS=_read_src("artist-page.css"); ART_JS=_read_src("artist-page.js")
 def ev_page(l,e):
     o="en" if l=="id" else "id"
     title=(e.get("title_en") if l=="en" and e.get("title_en") else e["title"])
