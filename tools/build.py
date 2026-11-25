@@ -329,8 +329,12 @@ def ev_page(l,e):
         "location":{"@type":"Place","name":e.get("venue") or e.get("city") or "Indonesia","address":{"@type":"PostalAddress","addressLocality":e.get("city") or "","addressCountry":"ID"}}}
     if e.get("lineup"): ld["performer"]=[{"@type":"PerformingGroup","name":x.strip()} for x in re.split(r"[,;]",e["lineup"]) if x.strip()]
     pn=price_num(e.get("price_label"))
-    if pn is not None and e.get("ticket_url") and not past:
-        ld["offers"]={"@type":"Offer","url":e["ticket_url"],"priceCurrency":"IDR","price":pn,"availability":"https://schema.org/InStock"}
+    if pn is not None and e.get("ticket_url"):
+        ld["offers"]={"@type":"Offer","url":e["ticket_url"],"priceCurrency":"IDR","price":pn}
+        if not past: ld["offers"]["availability"]="https://schema.org/InStock"  # event lampau: jangan mengaku masih tersedia
+    # organizer: hanya dari data asli (kolom organizer); tidak menebak, supaya tidak menyesatkan
+    og=(e.get("organizer") or "").strip()
+    if og: ld["organizer"]={"@type":"Organization","name":og}
     rows=[(t["when"],fdate(l,sd)+(" – "+fdate(l,ed) if ed!=sd else "")),(t["where"],where),(t["price"],e.get("price_label")),(t["lineup"],e.get("lineup"))]
     dl="".join(f"<dt>{esc(k)}</dt><dd>{(lineup_html(l,e) or esc(v)) if k==t['lineup'] else esc(v)}</dd>" for k,v in rows if v)
     btn=f'<a class="b" href="../event?e={esc(e["slug"])}">{t["open"]}</a>'+(f' <a class="b l" href="{esc(e["ticket_url"])}" rel="noopener nofollow" target="_blank">{t["tix"]}</a>' if e.get("ticket_url") and not past else "")
