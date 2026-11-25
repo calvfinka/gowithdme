@@ -247,6 +247,8 @@
         <label class="f"><span id="lEnd">End date</span><input id="a_end" type="date"></label>
       </div>
       <label class="f"><span id="lVenue">Location / venue</span><input id="a_venue" type="text" maxlength="120"></label>
+      <label class="f"><span>Organizer / community name <i class="req">*</i></span><input id="a_org" type="text" maxlength="80" required></label>
+      <p class="meta" style="margin:-4px 0 10px">No organization name? Write "Individual" or your community name.</p>
     </fieldset>
     <fieldset class="fs" data-for="konser"><legend>3. Concert details</legend>
       <label class="f">Genre<select id="a_genre"></select></label>
@@ -261,7 +263,6 @@
         <label class="f">Duration<input id="a_dur" type="text" maxlength="40" placeholder="e.g. 3 days 2 nights"></label>
         <label class="f"><span>Participant quota <i class="req">*</i></span><input id="a_quota" type="number" min="1" max="500" inputmode="numeric"></label>
       </div>
-      <label class="f">Organizer / community name<input id="a_org" type="text" maxlength="80"></label>
       <label class="f">Organizer WhatsApp (will be shown publicly)<input id="a_wa" type="tel" inputmode="tel" placeholder="08xxxxxxxxxx"></label>
     </fieldset>
     <fieldset class="fs"><legend>4. Description & links</legend>
