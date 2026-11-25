@@ -28,6 +28,8 @@
         <label class="f"><span id="lEnd">{{sb_l_end}}</span><input id="a_end" type="date"></label>
       </div>
       <label class="f"><span id="lVenue">{{sb_l_venue}}</span><input id="a_venue" type="text" maxlength="120"></label>
+      <label class="f"><span>{{sb_l_org}} <i class="req">*</i></span><input id="a_org" type="text" maxlength="80" required></label>
+      <p class="meta" style="margin:-4px 0 10px">{{sb_org_hint}}</p>
     </fieldset>
     <fieldset class="fs" data-for="konser"><legend>{{sb_f3k}}</legend>
       <label class="f">{{sb_l_genre}}<select id="a_genre"></select></label>
@@ -42,7 +44,6 @@
         <label class="f">{{sb_l_dur}}<input id="a_dur" type="text" maxlength="40" placeholder="{{sb_ph_dur}}"></label>
         <label class="f"><span>{{sb_l_quota}} <i class="req">*</i></span><input id="a_quota" type="number" min="1" max="500" inputmode="numeric"></label>
       </div>
-      <label class="f">{{sb_l_org}}<input id="a_org" type="text" maxlength="80"></label>
       <label class="f">{{sb_l_wa}}<input id="a_wa" type="tel" inputmode="tel" placeholder="08xxxxxxxxxx"></label>
     </fieldset>
     <fieldset class="fs"><legend>{{sb_f4}}</legend>
