@@ -295,7 +295,8 @@ def ev_page(l,e):
 def _og_meta(e):
     sd=e["event_date"][:10]; ed=(e.get("end_date") or sd)[:10]
     return fdate("id",sd)+(" – "+fdate("id",ed) if ed!=sd else "")+((" · "+e["city"]) if e.get("city") else "")
-OG_OK=gen_og.build(EV,ROOT,_og_meta)
+_OG_BATAS=(_date.fromisoformat(_NOW)-_tdm(days=61)).isoformat()  # event berakhir > ~2 bulan: kartu og/ tidak dibuat lagi (halaman tetap, pakai gambar bawaan)
+OG_OK=gen_og.build([e for e in EV if (e.get("end_date") or e["event_date"])[:10]>=_OG_BATAS],ROOT,_og_meta)
 EVURLS=[]
 for l in LANGS:
     os.makedirs(f"{ROOT}/{l}/e",exist_ok=True)
