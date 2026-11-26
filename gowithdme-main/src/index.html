@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+{{>head}}<link rel="stylesheet" href="../css/ads.css"><title>{{idx_title}}</title>
+<meta name="description" content="{{idx_desc}}">
+<meta property="og:title" content="{{og_title}}"><meta property="og:description" content="{{og_desc}}"><meta property="og:image" content="{{og_img}}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../css/teman.css">
+{{hreflang}}</head>
+<body class="nv-home">
+{{>icons}}{{>bar}}
+<div class="shell">
+{{>side}}
+<main class="main">
+  <section class="nv-hero" aria-label="{{nv_hero_aria}}">
+    <h1 id="evTitle">{{home_h}}</h1>
+    <p>{{home_p}}</p>
+    <nav class="nv-go" aria-label="{{nv_go_aria}}">
+      <a class="btn pri" href="event">{{nv_go_event}}</a>
+      <a class="btn line" href="gunung">{{nv_go_hike}}</a>
+      <a class="btn line" href="teman">{{nv_go_mate}}</a>
+    </nav>
+    <div class="search nvs" id="sxHero" data-sxanchor="1"><input id="gq2" type="search" placeholder="{{search_ph}}" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" role="combobox" aria-expanded="false" aria-controls="sxPanel" aria-autocomplete="list" aria-label="{{search_aria}}"><kbd class="sxk" aria-hidden="true">/</kbd><button class="sxgo" type="button" aria-label="{{nv_go}}"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></button></div>
+    <div class="sx-qscope" id="sxQuickScope" role="group" aria-label="{{search_aria}}">
+      <button type="button" data-sq="">{{sx_scope_all}}</button>
+      <button type="button" data-sq="event: ">{{sx_t_event}}</button>
+      <button type="button" data-sq="kota: ">{{sx_t_place}}</button>
+      <button type="button" data-sq="gunung: ">{{sx_t_mtn}}</button>
+      <button type="button" data-ptab="blog">{{sx_scope_blog}}</button>
+      <button type="button" data-ptab="deals">{{sx_scope_deal}}</button>
+    </div>
+    <div class="nv-trend" id="nvTrend" hidden>
+      <div class="nv-tr-bar"><span class="nv-tr-h">{{nv_trend_h}}</span><div class="nv-roll" id="nvRoll"><ol id="nvRollL"></ol></div><button class="nv-tr-t" id="nvTrT" type="button" aria-expanded="false" aria-controls="nvTrList" aria-label="{{nv_trend_open}}"><svg class="i" aria-hidden="true"><use href="#i-chev-d"/></svg></button></div>
+      <ol class="nv-tr-list" id="nvTrList" hidden></ol>
+    </div>
+    <div class="loc-qbar" id="locQuickBar" aria-label="{{loc_macro_h}}"></div>
+    <div class="kchips nv-ch" id="kChips" role="group" aria-label="{{home_chips_aria}}"></div>
+  </section>
+  <p class="since" id="sinceBox" role="status" hidden><span id="sinceEv" hidden><span id="sinceTxt"></span> <a href="event?sort=new">{{sn_link}}</a></span> <span id="sinceInv" hidden><span id="sinceInvTxt"></span> <a href="teman">{{sn_inv_link}}</a></span></p>
+
+  <nav class="nv-apps" aria-label="{{nv_apps_h}}">
+    <div class="nv-apps-in" id="nvApps">
+      <a class="app" href="event" style="--c:var(--c1)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-all"/></svg></span><span class="ap-t">{{nv_a_all}}</span><i class="ap-n" data-n="semua" hidden></i></a>
+      <a class="app" href="event?kat=konser" style="--c:var(--c2)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-mic"/></svg></span><span class="ap-t">{{nv_a_concert}}</span><i class="ap-n" data-n="konser" hidden></i></a>
+      <a class="app" href="event?kat=pameran" style="--c:var(--c3)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-bag"/></svg></span><span class="ap-t">{{nv_a_expo}}</span><i class="ap-n" data-n="pameran" hidden></i></a>
+      <a class="app" href="gunung" style="--c:var(--c1)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-mtn"/></svg></span><span class="ap-t">{{nv_a_hike}}</span><i class="ap-n" data-n="naikgunung" hidden></i></a>
+      <a class="app" href="teman" style="--c:var(--c4)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-users"/></svg></span><span class="ap-t">{{nv_a_invite}}</span><i class="ap-n" data-n="inv" hidden></i></a>
+      <a class="app" href="komunitas" style="--c:var(--c5)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-chat"/></svg></span><span class="ap-t">{{nv_a_comm}}</span></a>
+      <a class="app" href="pesan" style="--c:var(--c6)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-mail"/></svg></span><span class="ap-t">{{nv_a_msgs}}</span></a>
+      <a class="app" href="event?kat=tersimpan" style="--c:var(--c2)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-heart"/></svg></span><span class="ap-t">{{nv_a_saved}}</span><i class="ap-n" data-n="saved" hidden></i></a>
+      <a class="app js-tab-link" href="#deals" data-ptab="deals" style="--c:var(--c3)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-store"/></svg></span><span class="ap-t">{{nv_a_deals}}</span></a>
+      <a class="app js-tab-link" href="#promo" data-ptab="promo" style="--c:var(--c2)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-mega"/></svg></span><span class="ap-t">{{nv_a_promo}}</span></a>
+      <a class="app" href="gunung#tools" style="--c:var(--c1)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-calc"/></svg></span><span class="ap-t">{{nv_a_split}}</span></a>
+      <a class="app" href="bantuan" style="--c:var(--c4)"><span class="ap-ic"><svg class="i" aria-hidden="true"><use href="#ig-help"/></svg></span><span class="ap-t">{{nv_a_help}}</span></a>
+    </div>
+    <div class="nv-dots" id="nvDots" aria-hidden="true"></div>
+  </nav>
+
+  <section class="tm-home" id="tmHome" hidden>
+    <h2>{{ct_home_h}}</h2><p class="meta">{{ct_home_p}}</p>
+    <div class="tm-chips" id="tmHomeChips"></div>
+    <div class="tm-home-l" id="tmHomeList"></div>
+    <div class="tm-home-a"><a class="btn" href="teman">{{ct_home_all}}</a></div>
+  </section>
+
+  <div class="nv-cols">
+    <section class="nv-ban" id="nvBan" aria-roledescription="carousel" aria-label="{{nv_ban_aria}}" hidden data-prev="{{nv_prev}}" data-next="{{nv_next}}" data-pause="{{nv_pause}}" data-play="{{nv_play}}">
+      <div class="nv-ban-vp"><div class="nv-ban-trk" id="nvBanTrk"></div></div>
+      <div class="nv-ban-ctl"><button type="button" id="nvPrev" aria-label="{{nv_prev}}"><svg class="i" aria-hidden="true"><use href="#i-chev-l"/></svg></button><span class="nv-ban-n" id="nvBanN" aria-live="polite"></span><button type="button" id="nvNext" aria-label="{{nv_next}}"><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></button><button type="button" class="nv-pp" id="nvPP" aria-label="{{nv_pause}}"><svg class="i t-pause" aria-hidden="true"><use href="#i-pause"/></svg><svg class="i t-play" aria-hidden="true"><use href="#i-play"/></svg></button></div>
+    </section>
+
+    <aside class="nv-rail">
+      <section class="nvc nvc-login" id="nvLogin">
+        <div class="li-out"><div class="av"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg></div><b>{{nv_r_login_h}}</b><p>{{nv_r_login_p}}</p><a class="btn" href="login">{{login_btn}}</a><div class="sub"><a href="login">{{nv_r_signup}}</a><a href="bantuan">{{f_help}}</a></div></div>
+        <div class="li-in"><div class="av"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg></div><b id="nvHi">{{nv_r_hi2}}</b><p>{{nv_r_me_p}}</p><div class="quick"><a href="profil"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg>{{nv_profile}}</a><a href="pesan"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg>{{nv_a_msgs}}</a><a href="event?kat=tersimpan"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg>{{nv_a_saved}}</a></div></div>
+      </section>
+      <section class="nvc"><h3>{{nv_r_now_h}}</h3>{{>now}}</section>
+      <section class="nvc nvc-pulse" id="nvPulse">
+        <h3><span>{{rail_pulse_h}}</span><button type="button" id="railLocOpen">{{loc_btn}}</button></h3>
+        <p class="meta" style="margin:0 0 10px">{{rail_pulse_p}}</p>
+        <div id="railPulseBars" class="pulse-bars"></div>
+        <div id="railNearBox" class="rail-near" hidden></div>
+      </section>
+      <section class="nvc nvc-sponsor" id="nvSponsorCard" data-ad-slot="home_rail" data-house="1" hidden></section>
+      <section class="nvc"><h3>{{nv_r_stats_h}}</h3>{{>stats}}</section>
+      <section class="nvc nvc-recent" id="nvRecent"><h3><span>{{nv_r_recent_h}}</span><button type="button" id="nvRecClr" hidden>{{nv_r_clear}}</button></h3><ul id="nvRecL"></ul><p class="none" id="nvRecNone">{{nv_r_recent_empty}}</p></section>
+    </aside>
+
+    <div class="nv-feed">
+      <div class="ad-slot" data-ad-slot="home_top" hidden></div>
+      <nav class="portal-ws" id="portalTabs" role="tablist" aria-label="{{ptab_aria}}">
+        <button type="button" role="tab" data-ptab="events" aria-selected="true">{{ptab_events}}</button>
+        <button type="button" role="tab" data-ptab="hike" aria-selected="false">{{ptab_hike}}</button>
+        <button type="button" role="tab" data-ptab="blog" aria-selected="false">{{ptab_blog}}</button>
+        <button type="button" role="tab" data-ptab="deals" aria-selected="false">{{ptab_deals}}</button>
+        <button type="button" role="tab" data-ptab="promo" aria-selected="false">{{ptab_promo}}</button>
+      </nav>
+
+      <div id="paneEvents">
+        <div class="loc-scopebar" id="locScopeBar">
+          <div class="loc-sb-info"><svg class="i" aria-hidden="true"><use href="#i-globe"/></svg><span id="locScopeTxt"></span></div>
+          <div class="loc-sb-act"><button type="button" class="lnk" id="locScopeChange">{{loc_btn}}</button><button type="button" class="lnk" id="locScopeClear" hidden>{{loc_reset}}</button></div>
+        </div>
+        <div class="nv-tabs" id="nvTabs">
+          <div class="nv-cat" id="nvCat" role="group" aria-label="{{nv_cat_aria}}">
+            <button type="button" data-cat="semua" aria-pressed="true">{{nv_t_all}}<small></small></button><button type="button" data-cat="konser" aria-pressed="false">{{nv_t_concert}}<small></small></button><button type="button" data-cat="pameran" aria-pressed="false">{{nv_t_expo}}<small></small></button><button type="button" data-cat="naikgunung" aria-pressed="false">{{nv_t_hike}}<small></small></button><button type="button" data-cat="festival" aria-pressed="false">{{cat_festival}}<small></small></button><button type="button" data-cat="komedi" aria-pressed="false">{{cat_komedi}}<small></small></button><button type="button" data-cat="seminar" aria-pressed="false">{{cat_seminar}}<small></small></button><button type="button" data-cat="meetup" aria-pressed="false">{{cat_meetup}}<small></small></button><button type="button" data-cat="lainnya" aria-pressed="false">{{cat_lainnya}}<small></small></button>
+          </div>
+          <div class="nv-flt" id="nvFlt" role="group" aria-label="{{nv_when_aria}}">
+            <button type="button" data-when="live" aria-pressed="false">{{nv_t_live}}</button><button type="button" data-when="week" aria-pressed="false">{{nv_t_week}}</button><button type="button" data-when="month" aria-pressed="false">{{nv_t_month}}</button><button type="button" data-when="semua" aria-pressed="false">{{nv_t_any}}</button><span class="sep"></span><button type="button" data-price="gratis" aria-pressed="false">{{nv_t_free}}</button><button type="button" data-inv="1" aria-pressed="false">{{nv_t_inv}}</button>
+          </div>
+        </div>
+        <div class="head">
+          <div><h2 id="nowH">{{home_now_h}}</h2><p>{{home_now_p}}</p></div>
+          <div class="hx"><select class="sel" id="city" aria-label="{{aria_city}}"></select>{{>view}}</div>
+        </div>
+        <p class="note" id="note" hidden>{{home_note}}</p>
+        <div id="list"><div class="group"><div class="tiles"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div></div>
+        <div class="nv-more" id="more" hidden><button class="btn line" id="moreB" type="button"></button></div>
+        <p style="margin:18px 0 0"><a class="btn line" href="event">{{see_filter}}</a></p>
+      </div>
+
+      <section id="paneBlog" class="ws-pane" hidden>
+        <div class="ws-head"><div><h2>{{blog_h}}</h2><p class="meta">{{blog_p}}</p></div><a class="lnk" href="https://blog.gowithdme.com/">{{blog_all}}</a></div>
+        <div class="ws-cats" id="blogCats"></div>
+        <div id="blogGrid" class="blog-grid"></div>
+      </section>
+
+      <section id="paneDeals" class="ws-pane" hidden>
+        <div class="ws-head"><div><h2>{{deals_h}}</h2><p class="meta">{{deals_p}}</p></div><span class="meta mono" id="dealsClicks"></span></div>
+        <div id="dealsGrid" class="deals-grid"></div>
+        <p class="meta" style="margin-top:14px">{{deals_note}}</p>
+      </section>
+
+      <section id="panePromo" class="ws-pane" hidden>
+        <div class="ws-head"><div><h2>{{promo_h}}</h2><p class="meta">{{promo_p}}</p></div></div>
+        <div class="promo-wrap">
+          <div class="promo-calc card">
+            <h3>{{promo_tier_h}}</h3>
+            <div class="promo-tiers" id="promoTiers"></div>
+            <div class="form promo-inputs">
+              <label>{{promo_city_h}}<select id="promoCity"></select></label>
+              <label>{{promo_dur_h}}<select id="promoWeeks"><option value="1">1</option><option value="2">2</option><option value="4">4</option><option value="8">8</option></select></label>
+            </div>
+            <div class="promo-est" id="promoEstBox"></div>
+            <p class="meta promo-note">{{promo_est_note}}</p>
+          </div>
+          <form class="promo-form card" id="promoForm">
+            <h3>{{promo_form_h}}</h3>
+            <label class="f">{{promo_name}}<input id="prOrg" type="text" maxlength="80" required></label>
+            <label class="f">{{promo_title}}<input id="prTitle" type="text" maxlength="120" required></label>
+            <label class="f">{{promo_wa}}<input id="prWa" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="08xxxxxxxxxx" required></label>
+            <label class="f">{{promo_note}}<textarea id="prNote" rows="2" maxlength="300" placeholder="https://…"></textarea></label>
+            <button type="submit" class="btn pri block">{{promo_btn}}</button>
+            <div id="promoResult" class="promo-res" hidden></div>
+          </form>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="mfilters nv-off" id="mCat" role="group" aria-label="{{aria_kind}}"></div>
+  <p class="infow"><span title="{{f1_p}}">{{f1_w}}</span><span title="{{f2_p}}">{{f2_w}}</span><span title="{{f3_p}}">{{f3_w}}</span></p>
+  {{>foot}}
+</main>
+</div>
+<dialog id="dlg"><div id="dBody"></div></dialog>
+<dialog id="postDlg" class="postd"><div id="postDlgBody"></div></dialog>
+<div id="toast" role="status"></div>
+{{>libs}}<script src="../js/ads-core.js"></script><script src="../js/ads.js"></script><script>window.IB_MODE="home"</script><script src="../js/share.js"></script><script src="../js/safety-core.js"></script><script src="../js/ajakan.js"></script><script src="../js/empty-core.js"></script><script src="../js/since-core.js"></script><script src="../js/city-core.js"></script><script src="../js/teman.js"></script><script src="../js/forum-event.js"></script><script src="../js/now.js"></script><script src="../js/gwm-bot.js"></script><script src="../js/home.js"></script><script src="../js/app.js"></script>
+</body>
+</html>

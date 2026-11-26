@@ -1,0 +1,24 @@
+<header class="topbar" id="top" data-skip="{{skip}}" data-top="{{totop}}">
+<div class="tb-main">
+  <div class="tb-l">
+    <button class="ico-btn js-mm mm-ico" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="mm" aria-label="{{nv_all}}"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
+    <a class="logo" href="./" aria-label="GoWithDME"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="mk-bg" width="32" height="32" rx="7.5"/><path class="mk-g" d="M23.35 11.75A8.5 8.5 0 1 0 24.5 16"/><path class="mk-b" d="M16.5 16H24.5"/></svg><span class="w">GoWith<b>DME</b></span></a>
+  </div>
+  <nav class="tb-nav" aria-label="{{nav_primary}}">
+    <a href="event">{{pnav_events}}</a>
+    <a href="gunung">{{pnav_hike}}</a>
+    <a href="komunitas">{{pnav_comm}}</a>
+    <a href="https://blog.gowithdme.com/">{{pnav_blog}}</a>
+    <a href="./#deals" class="js-tab-link" data-ptab="deals">{{pnav_deals}}</a>
+  </nav>
+  <div class="tb-c">{{search}}</div>
+  <div class="tb-r">
+    <button class="tb-loc" id="tbLocBtn" type="button" aria-haspopup="dialog" aria-label="{{loc_title}}"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span id="tbLocLbl">{{loc_all_id}}</span></button>
+    <a class="ico-btn tb-msg" id="tbMsgBtn" href="pesan" aria-label="{{nav_inbox_aria}}" hidden><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg><b class="nb" id="tbMsgBadge" hidden>0</b></a>
+    <a class="tb-acc" id="tbAccBtn" href="login" aria-label="{{login_btn}}"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg><span>{{login_btn}}</span></a>
+    <a class="btn line sm tb-cta" href="ajukan"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg><span>{{pnav_submit}}</span></a>
+  </div>
+</div>
+</header>
+{{>menu}}
+{{>locdlg}}
