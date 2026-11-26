@@ -8,7 +8,7 @@ Alamat situs: **https://gowithdme.com** (domain `.com` sudah dipakai). Alamat la
 ```
 id/ en/              halaman publik (DIBUAT OTOMATIS oleh tools/build.py, jangan edit tangan)
 id/e/ en/e/          satu halaman statis per event (untuk Google)
-blog/<kategori>/     halaman blog statis (dibuat dari data/posts.json)
+blog/                halaman PENGALIH ke blog.gowithdme.com (repo terpisah: gowithdme-blog). Jangan diedit; tulisan baru tidak dibuat di sini
 src/                 sumber halaman: _*.html (potongan bersama), *.html, naskah privasi/syarat
 tools/               build.py, strings.py (semua teks), gen_events.py, gen_blog.py, jaga_aktif.py,
                      pindah_poster.py, sql_run.sh, arsip_setup.sh
@@ -20,7 +20,9 @@ assets/              ikon, og-image, poster/ (poster yang disimpan di repo)
 .github/workflows/   sinkron.yml (tiap jam + otomatis saat terbit), jaga-aktif.yml (harian)
 admin.html           Panel Admin (satu bahasa, /admin)
 ```
-File yang dibuat otomatis (jangan diedit): `id/`, `en/`, `js/i18n.js`, `js/search-index.js`, `css/dsk.css`, `css/dsk-b.css`, `sitemap.xml`, `robots.txt`, `sw.js`, `blog/`.
+File yang dibuat otomatis (jangan diedit): `id/`, `en/`, `js/i18n.js`, `js/search-index.js`, `css/dsk.css`, `css/dsk-b.css`, `sitemap.xml`, `robots.txt`, `sw.js`.
+
+> **Blog dan Arsip Blog sudah pindah** ke repo `gowithdme-blog` (`https://blog.gowithdme.com`). Di repo ini `blog/**` dan `arsip.html` tinggal halaman pengalih (canonical + `location.replace`) supaya tautan lama tetap jalan; `404.html` meneruskan sisa `/blog/...` ke domain baru. `data/posts.json` tetap diambil `tools/gen_blog.py` hanya untuk cadangan tab "Panduan & Komunitas" di beranda dan `lastmod` sitemap. Pemicu Supabase untuk tulisan blog sekarang memanggil repo blog (`supabase/auto_sinkron_blog.sql` di repo itu); event tetap memicu repo ini.
 
 ## Pasang dari nol
 1. **Supabase:** buat proyek. Di SQL Editor jalankan berkas `supabase/` **berurutan** (semuanya aman diulang):

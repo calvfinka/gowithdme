@@ -6,6 +6,16 @@
      jadi tulisan baru bisa dibuka sebelum sinkron membuat halaman statisnya.
      Aturan render HARUS sama dengan tools/blog.py dan js/admin-blog.js. -->
 <script>
+/* Blog pindah ke blog.gowithdme.com. Alamat /blog/... yang tidak punya halaman pengalih (mis. tulisan yang terbit tepat sebelum pindah)
+   dan /404.html?blog=<kategori>/<alamat> (tombol "Lihat" admin lama) diteruskan ke sana. Hanya di domain produksi. */
+(function(){
+var h=location.hostname;if(h!=="gowithdme.com"&&h!=="www.gowithdme.com")return;
+var m=location.pathname.match(/^\/blog(?:\/(.*))?$/),q=location.search.match(/[?&]blog=([a-z0-9-]+)(?:%2F|\/)([a-z0-9]+(?:-[a-z0-9]+)*)/);
+if(m)location.replace("https://blog.gowithdme.com/"+(m[1]||"").replace(/\.html$/,"")+location.search+location.hash);
+else if(q)location.replace("https://blog.gowithdme.com/"+q[1]+"/"+q[2]);
+})();
+</script>
+<script>
 (function(){
 var P=location.pathname,M=P.match(/^(.*\/)blog\/([a-z0-9-]+)\/([a-z0-9]+(?:-[a-z0-9]+)*)\/?$/);
 /* Cadangan: /404.html?blog=<kategori>/<alamat> membuka tulisan terbit langsung dari Supabase (dipakai tombol Lihat di admin saat host tidak menyajikan 404.html di alamat permanen). */

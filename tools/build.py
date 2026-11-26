@@ -3,7 +3,6 @@
 import os,re,json,sys,time
 sys.path.insert(0,os.path.dirname(__file__))
 from strings import S,J,PROV_EN
-import blog as BL
 import gen_og  # kartu pratinjau /og/<slug>.jpg untuk og:image
 import gen_dsk  # css/dsk.css dan css/dsk-b.css (mode "situs desktop" di HP) dibuat dari css lain
 ROOT=os.path.join(os.path.dirname(__file__),"..")
@@ -312,9 +311,9 @@ for l in LANGS:
     for p in pub:
         alt="".join(f'<xhtml:link rel="alternate" hreflang="{x}" href="{url(x,p)}"/>' for x in LANGS)
         rows.append(f"<url><loc>{url(l,p)}</loc>"+("<lastmod>2026-11-21</lastmod>" if p=="template" else "@@LM@@")+f"{alt}</url>")
-# ---- blog statis (data/posts.json dari tools/gen_blog.py) -> blog/<kategori>/<alamat>.html ----
+# ---- blog: sudah pindah ke repo sendiri (blog.gowithdme.com). Di sini data/posts.json hanya dipakai untuk lastmod halaman inti
+#      dan cadangan tab "Panduan & Komunitas" di beranda; halaman blog/ di repo ini tinggal pengalih (lihat blog/*.html). ----
 POSTS=json.load(open(ROOT+"/data/posts.json",encoding="utf-8")) if os.path.exists(ROOT+"/data/posts.json") else []
-for u,lm in BL.build(ROOT,BASE,POSTS): rows.append(f"<url><loc>{u}</loc>"+(f"<lastmod>{lm[:10]}</lastmod>" if lm else "")+"</url>")
 _TODAY=_date.today().isoformat()
 _OLD=(_date.today()-__import__("datetime").timedelta(days=30)).isoformat()  # event yang berakhir >30 hari lalu: halaman tetap ada, tapi keluar dari sitemap
 for e in EV:

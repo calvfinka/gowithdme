@@ -143,8 +143,8 @@ function buildComm(rows){DOCS.place=DOCS.place.filter(function(p){return p.kind!
 var BLOGCAT={berita:"Berita",opini:"Opini & Cerita","gaya-hidup":"Gaya Hidup",hiburan:"Hiburan",wisata:"Wisata",teknologi:"Teknologi",tips:"Tips & Panduan","panduan-konser":"Panduan Konser","tips-gunung":"Tips Gunung",review:"Review",komunitas:"Komunitas"};
 function buildBlog(rows){DOCS.blog=[];(rows||[]).forEach(function(p){if(!p||!p.t||!p.k)return;var cn=BLOGCAT[p.c]||p.c||"",dt=p.d?new Date(p.d):null,ok=dt&&!isNaN(dt),
   dm=ok?("0"+dt.getDate()).slice(-2)+" "+MON[dt.getMonth()]:"";
-  DOCS.blog.push(mk("blog",p.t,[[p.t,3],[cn,1],[p.c,.6],[p.x,.8],["artikel blog tulisan berita article",.5]],{href:"../blog/"+p.k,icon:"doc",sub:cn,dm:dm,date:p.d||""}))})}
-function loadBlog(cb){fetch("../blog/index.json").then(function(r){return r.ok?r.json():{posts:[]}}).then(function(j){buildBlog(j&&j.posts)}).catch(function(){}).then(cb)}
+  DOCS.blog.push(mk("blog",p.t,[[p.t,3],[cn,1],[p.c,.6],[p.x,.8],["artikel blog tulisan berita article",.5]],{href:"https://blog.gowithdme.com/"+p.k,icon:"doc",sub:cn,dm:dm,date:p.d||""}))})}
+function loadBlog(cb){fetch("https://blog.gowithdme.com/index.json").then(function(r){return r.ok?r.json():{posts:[]}}).then(function(j){buildBlog(j&&j.posts)}).catch(function(){}).then(cb)}
 
 function loadData(){if(STATE!=="idle")return;STATE="loading";
   var pending=3,fin=function(){if(--pending===0){STATE="ready"}if(open)run()};
@@ -363,7 +363,7 @@ function submit(){var q=inp.value.trim();if(!q){kf(inp);return}
   if(open&&active>-1&&items[active]){items[active].click();return}
   var p=parse(q),t=(p.q||q).trim();remember();
   if(p.scope==="user"){kf(inp);return}
-  location.href=p.scope==="blog"?"../blog/"+(norm(t)?"?q="+qenc(t):""):p.scope==="post"?"komunitas":p.scope==="artist"&&norm(t)?"event?artis="+sl(t):p.scope==="genre"&&norm(t)?"event?genre="+sl(t):(p.scope==="mtn"?"gunung":"event")+"?q="+qenc(t)}
+  location.href=p.scope==="blog"?"https://blog.gowithdme.com/"+(norm(t)?"?q="+qenc(t):""):p.scope==="post"?"komunitas":p.scope==="artist"&&norm(t)?"event?artis="+sl(t):p.scope==="genre"&&norm(t)?"event?genre="+sl(t):(p.scope==="mtn"?"gunung":"event")+"?q="+qenc(t)}
 function onKey(e){var k=e.key;
   if(k==="ArrowDown"){e.preventDefault();if(!open)setOpen(true);else setActive(active<items.length-1?active+1:0)}
   else if(k==="ArrowUp"){e.preventDefault();if(open)setActive(active>0?active-1:items.length-1)}

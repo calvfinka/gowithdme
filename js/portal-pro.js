@@ -368,7 +368,7 @@
       return'<article class="blog-card" data-bidx="'+blogPosts.indexOf(p)+'">'+
         '<div class="bc-meta"><span>'+esc(catLbl)+'</span><span> · '+esc(dt)+'</span><span> · '+esc(tr("blog_min",{n:mins}))+'</span></div>'+
         '<h3>'+esc(p.title)+'</h3><p>'+esc(excerpt)+'</p>'+
-        '<div class="bc-foot"><button type="button" class="lnk" data-bopen="'+blogPosts.indexOf(p)+'">'+esc(tr("blog_read"))+' →</button><a class="lnk" href="../blog/'+esc(p.category||"berita")+'/'+esc(p.slug)+'">URL</a></div>'+
+        '<div class="bc-foot"><button type="button" class="lnk" data-bopen="'+blogPosts.indexOf(p)+'">'+esc(tr("blog_read"))+' →</button><a class="lnk" href="https://blog.gowithdme.com/'+esc(p.category||"berita")+'/'+esc(p.slug)+'">URL</a></div>'+
       '</article>';
     }).join("")+(more?'<div class="nv-more" style="grid-column:1/-1"><button type="button" class="btn line" data-bmore="1">'+esc(trf("blog_more","Lihat {n} lagi","Show {n} more",{n:more}))+'</button></div>':"");
     grid.onclick=function(e){
@@ -396,7 +396,7 @@
     var content=p.is_html?p.body:mdToSimpleHtml(p.body);
     body.innerHTML='<div class="postd-h"><div><div class="meta">'+esc(catLbl)+' · '+esc(String(p.published_at||"").slice(0,10))+'</div><h2>'+esc(p.title)+'</h2></div><button type="button" class="ico-btn" id="postDlgX" aria-label="'+esc(tr("close"))+'"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>'+
       '<div class="postd-b">'+content+'</div>'+
-      '<div class="postd-f"><a class="btn line" href="../blog/'+esc(p.category||"berita")+'/'+esc(p.slug)+'">'+esc(tr("blog_all"))+'</a><button type="button" class="btn pri" id="postDlgClose">'+esc(tr("close"))+'</button></div>';
+      '<div class="postd-f"><a class="btn line" href="https://blog.gowithdme.com/'+esc(p.category||"berita")+'/'+esc(p.slug)+'">'+esc(tr("blog_all"))+'</a><button type="button" class="btn pri" id="postDlgClose">'+esc(tr("close"))+'</button></div>';
     dlg.showModal();
     $("postDlgX").onclick=function(){dlg.close()};
     $("postDlgClose").onclick=function(){dlg.close()};
