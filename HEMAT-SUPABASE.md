@@ -36,3 +36,8 @@ Hari ini hanya 1 poster di Storage; sisanya hotlink ke situs lain atau sudah di 
 
 ## 3. Pantau
 Dashboard Supabase > **Settings > Usage**: egress, ukuran database. Pertimbangkan Pro saat database ±400 MB atau egress rutin >70%.
+
+## 4. Hapus otomatis event lama (berakhir > 2 bulan)
+- **Supabase**: `supabase/hapus_event_lama.sql` memasang `event_purge()` yang dijalankan pg_cron tiap hari 03.17 WIB. Hapus event dengan `coalesce(end_date, event_date)` lebih dari 2 bulan lalu, plus poster-nya di Storage (lewat Storage API; perlu kunci `service_role_key` di Vault, langkahnya ada di kepala berkasnya). Pratinjau: `select * from event_lama_cek();`.
+- **GitHub**: `tools/bersih_lama.py` (dipanggil `sinkron.yml`) menghapus `assets/posters/*` yang tidak lagi dipakai event mana pun dan sudah lebih dari 60 hari di git. Halaman `id/e`, `en/e` dan `og/` memang dibangun ulang dari event yang masih ada, jadi yang lama otomatis hilang.
+- Riwayat git tetap menyimpan berkas lama, jadi ukuran folder `.git` tidak mengecil; yang berkurang adalah isi situs dan ukuran build.

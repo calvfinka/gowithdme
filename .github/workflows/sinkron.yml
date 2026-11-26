@@ -14,11 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: {fetch-depth: 0}  # riwayat penuh: bersih_lama.py memeriksa umur berkas poster lewat git log
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - name: Ambil data dan bangun
         run: |
           python3 tools/gen_events.py
+          python3 tools/bersih_lama.py
           python3 tools/gen_blog.py
           python3 tools/gen_statistik.py || true
           export GWM_VER=$(git log -1 --format=%cd --date=format:%Y%m%d%H%M -- css js src tools assets)
