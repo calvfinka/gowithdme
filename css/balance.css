@@ -275,3 +275,7 @@ html[data-tier] .nv-rail .now{grid-template-columns:minmax(0,1fr) !important;col
   #dBody:has(>.dp)>.db h2{font-size:26px}
   .db .pact .btn{flex:0 1 auto;min-width:150px}
 }
+/* poster tambahan (event multi-hari) di halaman detail */
+.dpx{display:flex;gap:8px;overflow-x:auto;padding:8px 12px 0;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.dpx a{flex:0 0 auto;scroll-snap-align:start}
+.dpx img{height:120px;width:auto;border-radius:10px;display:block}

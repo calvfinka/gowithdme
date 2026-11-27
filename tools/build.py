@@ -243,6 +243,7 @@ def ev_page(l,e):
     # poster lokal: harus ada filenya, dan dari id/e/ atau en/e/ alamatnya naik dua tingkat ke akar situs
     if pu and not re.match(r"https?://",pu) and not os.path.exists(f"{ROOT}/{pu.lstrip('/')}"): pu=""
     pimg=pu if (not pu or re.match(r"https?://",pu)) else "../../"+pu.lstrip("/")
+    exs=[x for x in (e.get("extra_posters") or []) if isinstance(x,str) and x.startswith("https://")]  # poster tambahan (Hari 2, dst)
     img=pu or f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"
     if not re.match(r"https?://",img): img=BASE+"/"+img.lstrip("/")  # og:image dan JSON-LD wajib URL absolut
     ogimg=f"{BASE}/og/{e['slug']}.jpg" if e['slug'] in OG_OK else f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"  # pratinjau medsos: kartu 1200x630 di domain sendiri
@@ -255,7 +256,7 @@ def ev_page(l,e):
          f'<meta name="twitter:image" content="{esc(ogimg)}"><meta name="twitter:image:alt" content="{esc(title)}">')
     ld={"@context":"https://schema.org","@type":"Event","name":title,"startDate":sd,"endDate":ed,"description":desc,
         "eventStatus":"https://schema.org/EventScheduled","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
-        "image":[img],"url":u,"inLanguage":l,
+        "image":[img]+exs,"url":u,"inLanguage":l,
         "location":{"@type":"Place","name":e.get("venue") or e.get("city") or "Indonesia","address":{"@type":"PostalAddress","addressLocality":e.get("city") or "","addressCountry":"ID"}}}
     if e.get("lineup"): ld["performer"]=[{"@type":"PerformingGroup","name":x.strip()} for x in re.split(r"[,;]",e["lineup"]) if x.strip()]
     pn=price_num(e.get("price_label"))
@@ -288,7 +289,7 @@ def ev_page(l,e):
 <style>body{{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}}main{{max-width:720px;margin:0 auto;padding:20px 16px 48px}}img{{max-width:100%;border-radius:14px;display:block}}h1{{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}}.c{{color:#0E5A46;font-weight:600;font-size:.9rem}}dl{{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0}}dt{{font-weight:600}}dd{{margin:0}}.b{{display:inline-block;background:#0E5A46;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin:4px 6px 4px 0}}.b.l{{background:#fff;color:#0E5A46;border:1px solid #0E5A46}}small{{color:#5b6a63}}.end{{background:#fff3cd;color:#5c4400;padding:10px 14px;border-radius:10px}}h2{{font-size:1.15rem;margin:28px 0 6px}}h3{{font-size:1rem;margin:14px 0 0}}h3+p{{margin:2px 0 0}}main a:not(.b){{color:#0E5A46;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(14,90,70,.35)}}main a:not(.b):visited{{color:#0E5A46}}main a:not(.b):hover{{text-decoration-color:currentColor}}@media(prefers-color-scheme:dark){{body{{background:#101613;color:#e8efeb}}.b.l{{background:transparent;color:#7fd1b4;border-color:#7fd1b4}}.c,main a:not(.b),main a:not(.b):visited{{color:#7fd1b4}}main a:not(.b){{text-decoration-color:rgba(127,209,180,.4)}}small{{color:#9bb0a6}}}}</style>
 {ldj(ld)}{ldj(faqld)}</head><body><main>
 <nav><a href="../">GoWithDME</a> › <a href="../event">{t["all"]}</a></nav>
-{f'<img src="{esc(pimg)}" alt="{esc(title)}" loading="eager">' if pimg else ""}
+{f'<img src="{esc(pimg)}" alt="{esc(title)}" loading="eager">' if pimg else ""}{''.join(f'<img src="{esc(x)}" alt="{esc(title)}" loading="lazy">' for x in exs)}
 <div class="c">{esc(cat)}{(" · "+esc(e["genre"])) if e.get("genre") else ""}</div>
 <h1>{esc(title)}</h1>{banner}<dl>{dl}</dl><p>{esc(desc)}</p><p>{btn}</p>{routeh}{tipsh}{faq}{relh}<p><small>{t["note"]}</small></p>
 </main></body></html>

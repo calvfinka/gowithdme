@@ -7,7 +7,7 @@
    isinya diperbarui workflow "Sinkron konten" tiap jam, atau segera setelah terbit bila supabase/auto_sinkron.sql dipasang). */
 (function(){
 var C=window.IB_CONFIG||{},KEY="gwm_events_v1",TTL=5*60*1000,STATIC="../data/events.json",P=null,
-COLS="id,title,title_en,slug,category,city_id,venue,event_date,end_date,price_label,description,description_en,poster_url,ticket_url,source_ig,created_at,genre,lineup,organizer,mountain,altitude_mdpl,difficulty,duration,is_community,quota,contact_wa,cities(name)";
+COLS="id,title,title_en,slug,category,city_id,venue,event_date,end_date,price_label,description,description_en,poster_url,extra_posters,ticket_url,source_ig,created_at,genre,lineup,organizer,mountain,altitude_mdpl,difficulty,duration,is_community,quota,contact_wa,cities(name)";
 function jget(u,h){return fetch(u,h?{headers:h}:undefined).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){if(!Array.isArray(j))throw new Error("format");return j})}
 function live(){var h={apikey:C.SUPABASE_ANON_KEY,Authorization:"Bearer "+C.SUPABASE_ANON_KEY};
   return jget(C.SUPABASE_URL+"/rest/v1/events?select="+COLS+"&status=eq.published&order=event_date.asc",h)}

@@ -263,7 +263,7 @@ function openEv(id,buddy){
   var rawTicket=safeUrl(e.ticket_url);
   var tixUrl=rawTicket&&window.IB_MonetizeCore?IB_MonetizeCore.buildPartnerTicketUrl(rawTicket,e.slug||e.id,C&&C.MONETIZE&&C.MONETIZE.AFFILIATE):rawTicket;
   var areas=(e.city&&window.IB_AREAS&&IB_AREAS[e.city])?IB_AREAS[e.city]:null;
-  $("dBody").innerHTML='<div class="dp'+(e.poster_url?' pf':'')+'" style="'+posterStyle(e,1)+'">'+deco(e)+badge(e)+featBadge(e)+'<button class="dx" type="button" id="dX" aria-label="'+esc(tr("close"))+'">&times;</button></div><div class="db"><h2>'+esc(ttl(e))+'</h2><ul class="dm">'+
+  $("dBody").innerHTML='<div class="dp'+(e.poster_url?' pf':'')+'" style="'+posterStyle(e,1)+'">'+deco(e)+badge(e)+featBadge(e)+'<button class="dx" type="button" id="dX" aria-label="'+esc(tr("close"))+'">&times;</button></div>'+(e.extra_posters&&e.extra_posters.length?'<div class="dpx">'+e.extra_posters.map(function(u,i){return'<a href="'+esc(purl(u))+'" target="_blank" rel="noopener"><img loading="lazy" src="'+esc(purl(u))+'" alt="'+esc(ttl(e))+' – poster '+(i+2)+'"></a>'}).join("")+'</div>':"")+'<div class="db"><h2>'+esc(ttl(e))+'</h2><ul class="dm">'+
    '<li>'+ic("cal")+'<span>'+p.full+(multi?esc(tr("to"))+dparts(e.end_date).full:'')+'</span></li>'+
    '<li>'+ic("pin")+'<span>'+esc(e.venue||e.city)+(e.city&&e.venue!==e.city?', '+esc(e.city):'')+'</span></li>'+
    '<li>'+ic("tag")+'<span>'+esc(e.price_label||tr("price_tbd"))+'</span></li>'+
