@@ -20,7 +20,7 @@ assets/              ikon, og-image, poster/ (poster yang disimpan di repo)
 .github/workflows/   sinkron.yml (tiap jam + otomatis saat terbit), jaga-aktif.yml (harian)
 admin.html           Panel Admin (satu bahasa, /admin)
 ```
-File yang dibuat otomatis (jangan diedit): `id/`, `en/`, `js/i18n.js`, `js/search-index.js`, `css/dsk.css`, `css/dsk-b.css`, `sitemap.xml`, `robots.txt`, `sw.js`.
+File yang dibuat otomatis (jangan diedit): `id/`, `en/`, `js/i18n.js`, `js/search-index.js`, `css/dsk.css`, `css/dsk-b.css`, `sitemap.xml`, `robots.txt`, `llms.txt`, `sw.js`.
 
 > **Blog dan Arsip Blog sudah pindah** ke repo `gowithdme-blog` (`https://blog.gowithdme.com`). Di repo ini `blog/**` dan `arsip.html` tinggal halaman pengalih (canonical + `location.replace`) supaya tautan lama tetap jalan; `404.html` meneruskan sisa `/blog/...` ke domain baru. `data/posts.json` tetap diambil `tools/gen_blog.py` hanya untuk cadangan tab "Panduan & Komunitas" di beranda dan `lastmod` sitemap. Pemicu Supabase untuk tulisan blog sekarang memanggil repo blog (`supabase/auto_sinkron_blog.sql` di repo itu); event tetap memicu repo ini.
 
@@ -120,3 +120,13 @@ Catatan: `@phone.jurkon.my.id` di `js/auth.js` bukan email kontak, melainkan ala
 - Cache dinamai dengan `VER` build; saat versi berganti, cache lama dibuang otomatis.
 - Tombol "Pasang aplikasi" ada di menu dan hanya muncul bila browser mengizinkan. Penanda "offline" muncul di bawah layar saat sinyal hilang.
 - Tes: `npm test` (`tests/sw.test.mjs`). Bila `sw.js` bermasalah di produksi: hapus `js/pwa.js` dari `src/_head.html` dan `tools/blog.py`, bangun ulang, lalu sebarkan versi `sw.js` yang memanggil `self.registration.unregister()`.
+
+## SEO dan jawaban mesin pencari / AI
+Tujuan: ketika orang (atau asisten AI) bertanya "apa itu GoWithDME", jawabannya diambil dari data yang rapi dan konsisten. Semua dibuat oleh `tools/build.py` + `tools/seo.py`; jangan edit HTML hasilnya.
+- **Entitas** (`seo.entity`): `Organization` (nama, nama alternatif, definisi, area layanan, kontak, `sameAs`), `Person` (pendiri), dan `WebSite` (dengan `SearchAction`). Ada di beranda, Tentang, dan Hak Cipta; halaman lain merujuknya lewat `@id`.
+- **Per halaman**: `WebPage`/`AboutPage`/`CollectionPage` + `BreadcrumbList`; `FAQPage` di Bantuan (13 tanya jawab); `ItemList` event mendatang di `/id/event` dan `/en/event`; halaman event punya `Event`, `FAQPage`, `BreadcrumbList`.
+- **Meta**: `robots` (`max-snippet:-1`, `max-image-preview:large`) dan OG/Twitter di semua halaman publik. Judul dan deskripsi (`tools/strings.py`: `idx_desc`, `ab_*`, `pv_*`, `tm_*`, `cr_*`) memuat kalimat definisi "portal info ... bukan penjual tiket".
+- **`llms.txt`**: ringkasan situs untuk asisten AI (fakta kunci, halaman utama, 40 event terdekat). Dibuat ulang tiap build. Daftar nama merek yang "bukan afiliasi" ada di `seo.llms_txt`; ubah di sana bila perlu.
+- **IndexNow** (`tools/indexnow.py`, dipanggil `sinkron.yml` setelah commit): memberi tahu Bing/Naver/Yandex tentang event baru. Kunci = berkas `<32-hex>.txt` di akar. Google tidak memakai IndexNow: kirim `sitemap.xml` di Search Console.
+- Uji lokal tanpa internet: `GWM_SKIP_OG=1 python3 tools/build.py` (melewati unduh poster untuk kartu OG). Tes: `tests/seo.test.mjs`.
+- **Duplikat host**: pastikan `www.gowithdme.com` dialihkan 301 ke `gowithdme.com` (GitHub Pages melakukannya otomatis bila DNS `www` berupa CNAME ke `<akun>.github.io` dan domain apex terpasang). Tanpa itu, `www` bisa terindeks ganda.

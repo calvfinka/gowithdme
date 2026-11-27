@@ -1,0 +1,89 @@
+# GoWithDME
+
+> GoWithDME is an information and community portal for concerts, festivals, expos, and hiking trips in cities across Indonesia, with features for finding travel companions (meet-up invites) and per-city communities. GoWithDME is not a ticket seller and not an event organizer.
+> GoWithDME adalah portal informasi dan komunitas untuk konser, festival, pameran, dan open trip naik gunung di kota-kota Indonesia, dengan fitur cari teman jalan (ajakan barengan) dan komunitas per kota. GoWithDME bukan penjual tiket dan bukan penyelenggara acara.
+
+Also written: GoWithDME.com, Go With DME. Not affiliated with other brands with similar names (for example GoWithGuide, GoWit, GoFundMe, GoTo). Official domain: gowithdme.com. Languages: Indonesian (/id/) and English (/en/).
+
+## Key facts
+- Coverage: 38 provinces and 120+ cities/regencies in Indonesia (filter by macro-region, province, city, or nearby radius).
+- Content: concerts, festivals, expos, and hiking open trips, curated in one place with date, venue, price, line-up, and official ticket link.
+- Features: event search, Dea AI (assistant for event questions), meet-up invites (find company to attend an event), per-city communities, hiking packing checklist and cost splitter.
+- GoWithDME does NOT sell tickets, does NOT organize events, and is NOT a party to any transaction. Buy tickets only from the official seller or organizer.
+- Founder and operator: Kalfin Agus Setiawan. Privacy policy follows Indonesia's Personal Data Protection Law (Law No. 27/2022).
+- Contact: halo@gowithdme.com (replies usually within 24 hours).
+- Origin: the founder attended a music festival alone, felt lost in the crowd, and built GoWithDME so people can find companions.
+
+## Main pages (English)
+- [GoWithDME — Find Friends for Festivals & Hikes in Your City](https://gowithdme.com/en/): GoWithDME: an information portal for concerts, festivals, and hiking trips in Indonesia, plus finding travel companions (meet-up invites) and city communities. Not a ticket seller.
+- [All Events — GoWithDME](https://gowithdme.com/en/event): All active concerts, expos, and hiking events, filterable by city, time, and price.
+- [Mountain Hiking — GoWithDME](https://gowithdme.com/en/gunung): Open trips and hiking schedules, packing checklist, and cost-split calculator.
+- [Find Company — GoWithDME](https://gowithdme.com/en/teman): Find company for concerts, hikes, sports, food, study, and more. Invites by city, province, all Indonesia, or online.
+- [Community — Find Friends for Festivals & Hikes | GoWithDME](https://gowithdme.com/en/komunitas): GoWithDME community by city: find friends for concerts and hikes, ask questions, and share tips with fellow goers.
+- [Help & FAQ — GoWithDME](https://gowithdme.com/en/bantuan): Answers to common questions about accounts, events, invites, and safety, plus how to contact GoWithDME.
+- [About GoWithDME — Concerts, Festivals & Travel Companions in Indonesia](https://gowithdme.com/en/about): GoWithDME is an information portal for concerts, festivals, hiking, and finding travel companions in Indonesia. Origin story, how it works, owner (Kalfin Agus Setiawan), partnerships, and contact. Not a ticket seller.
+- [Privacy Policy — GoWithDME](https://gowithdme.com/en/privacy): GoWithDME Privacy Policy: what data is collected, how it is used, your rights, and contact, aligned with Indonesia's Personal Data Protection Law (Law No. 27/2022).
+- [Terms & Conditions — GoWithDME](https://gowithdme.com/en/terms): GoWithDME Terms & Conditions: GoWithDME is not a ticket seller or event organizer and not a party to any transaction; rules for accounts, meet-up invites, and content.
+- [Copyright & Ownership — GoWithDME](https://gowithdme.com/en/copyright): Owner and operator of GoWithDME (Kalfin Agus Setiawan), content and poster copyright, and how to request removal.
+
+## Halaman utama (Indonesia)
+- [GoWithDME — Cari Teman Nonton Festival & Naik Gunung di Kotamu](https://gowithdme.com/id/): GoWithDME: portal info konser, festival, dan open trip naik gunung di Indonesia, plus cari teman jalan (ajakan barengan) dan komunitas per kota. Bukan penjual tiket.
+- [Semua Event — GoWithDME](https://gowithdme.com/id/event): Semua event konser, pameran, dan naik gunung yang aktif, bisa disaring menurut kota, waktu, dan harga.
+- [Niche Gunung — GoWithDME](https://gowithdme.com/id/gunung): Open trip dan jadwal naik gunung, daftar perlengkapan, dan kalkulator patungan biaya.
+- [Cari Teman Bareng — GoWithDME](https://gowithdme.com/id/teman): Cari teman untuk konser, naik gunung, olahraga, kuliner, belajar, dan banyak lagi. Ajakan per kota, provinsi, seluruh Indonesia, atau online.
+- [Komunitas — Cari Teman Nonton Festival & Naik Gunung | GoWithDME](https://gowithdme.com/id/komunitas): Komunitas GoWithDME per kota: cari teman nonton konser dan naik gunung, tanya info, dan bagi tips bareng sesama pengunjung.
+- [Bantuan & FAQ — GoWithDME](https://gowithdme.com/id/bantuan): Jawaban untuk pertanyaan umum soal akun, event, ajakan, dan keamanan, plus cara menghubungi GoWithDME.
+- [Tentang GoWithDME — Portal Konser, Festival & Teman Jalan Indonesia](https://gowithdme.com/id/about): GoWithDME adalah portal info konser, festival, naik gunung, dan cari teman seperjalanan di Indonesia. Cerita awal, cara kerja, pemilik (Kalfin Agus Setiawan), kerja sama, dan kontak. Bukan penjual tiket.
+- [Kebijakan Privasi — GoWithDME](https://gowithdme.com/id/privacy): Kebijakan Privasi GoWithDME: data apa yang dikumpulkan, cara dipakai, hak pengguna, dan kontak, selaras dengan UU PDP (UU No. 27/2022).
+- [Syarat & Ketentuan — GoWithDME](https://gowithdme.com/id/terms): Syarat & Ketentuan GoWithDME: GoWithDME bukan penjual tiket atau penyelenggara acara dan bukan pihak dalam transaksi apa pun; aturan akun, ajakan barengan, dan konten.
+- [Hak Cipta & Kepemilikan — GoWithDME](https://gowithdme.com/id/copyright): Pemilik dan operator GoWithDME (Kalfin Agus Setiawan), hak cipta konten dan poster, serta cara mengajukan penghapusan.
+
+## Related sites
+- [Artists index](https://artis.gowithdme.com/en/): concert dates per artist
+- [Blog](https://blog.gowithdme.com): articles and guides
+
+## Upcoming events (auto-generated each build)
+- [Ulun Danu Festival 2026](https://gowithdme.com/en/e/ulun-danu-festival-2026): 1 Nov 2026 – 30 Nov 2026, Tabanan
+- [Jembrana Jegog Festival 2026](https://gowithdme.com/en/e/jembrana-jegog-festival-2026): 1 Nov 2026 – 30 Nov 2026, Jembrana
+- [Sanur Village Festival 2026](https://gowithdme.com/en/e/sanur-village-festival-2026): 1 Nov 2026 – 30 Nov 2026, Denpasar
+- [Open Trip Mount Papandayan - Atlantik Traveller Indonesia](https://gowithdme.com/en/e/atlantik-traveller-open-trip-gunung-papandayan-2026): 21 Nov 2026 – 31 Dec 2026, Tasikmalaya
+- [Gaikindo Auto Week 2026 – Bandung](https://gowithdme.com/en/e/gaikindo-auto-week-2026-bandung): 25 Nov 2026 – 29 Nov 2026, Bandung
+- [Festival Musikal Indonesia 2026](https://gowithdme.com/en/e/festival-musikal-indonesia-2026-tim): 26 Nov 2026 – 29 Nov 2026, Jakarta
+- [Trico – Giacometti Jakarta Showcase](https://gowithdme.com/en/e/trico-giacometti-jakarta-showcase): 26 Nov 2026 – 27 Nov 2026, Jakarta
+- [Dilarang Melarang Vol.7](https://gowithdme.com/en/e/dilarang-melarang-vol-7-jakarta-2026): 27 Nov 2026, Jakarta
+- [Hot Wheels Monster Trucks Live: Glow-N-Fire](https://gowithdme.com/en/e/hot-wheels-monster-trucks-live-jakarta-2026): 27 Nov 2026 – 29 Nov 2026, Jakarta
+- [BOOMFEST Bandung](https://gowithdme.com/en/e/boomfest-bandung): 27 Nov 2026, Bandung
+- [Simple Plan – Bigger Than You Think! Tour (Jakarta)](https://gowithdme.com/en/e/simple-plan-jakarta-2026): 27 Nov 2026, Jakarta
+- [The Jesus and Mary Chain – Jakarta](https://gowithdme.com/en/e/jesus-and-mary-chain-jakarta-2026): 27 Nov 2026, Jakarta
+- [Save a Lot Market](https://gowithdme.com/en/e/save-a-lot-market-blok-m-2026-11): 27 Nov 2026 – 29 Nov 2026, Jakarta
+- [Badailovecoustic with Interaksi Space Pamulang](https://gowithdme.com/en/e/badailovecoustic-pamulang-tangerang-selatan-2026): 27 Nov 2026, Tangerang Selatan
+- [Capytal 2026](https://gowithdme.com/en/e/capytal-2026-semarang): 27 Nov 2026, Semarang
+- [Musikalam Fest 2K26](https://gowithdme.com/en/e/musikalam-fest-2k26-bulungan): 27 Nov 2026 – 29 Nov 2026, Bulungan
+- [Ruang Riang Intimate WOW MA Showcase – Bandung](https://gowithdme.com/en/e/ruang-riang-wow-ma-bandung-2026): 27 Nov 2026, Bandung
+- [Unify UMN Festival 2026](https://gowithdme.com/en/e/unify-umn-festival-2026): 28 Nov 2026, Tangerang Selatan
+- [Hajatan Weeaboo – Festival Budaya Jepang dan Konser Musik](https://gowithdme.com/en/e/hajatan-weeaboo-jakarta-2026): 28 Nov 2026, Jakarta
+- [Kings of Convenience – Jakarta](https://gowithdme.com/en/e/kings-of-convenience-jakarta-2026): 28 Nov 2026 – 29 Nov 2026, Jakarta
+- [Suroboyo Pride: Dewa 19 ft Virzha x Padi Reborn – When Legends Comeback to Surabaya](https://gowithdme.com/en/e/dewa19-padi-reborn-surabaya-2026): 28 Nov 2026, Surabaya
+- [Fucom Vol.4](https://gowithdme.com/en/e/fucom-vol-4-cirebon): 28 Nov 2026, Cirebon
+- [Stereo 2026](https://gowithdme.com/en/e/stereo-2026-bantul): 28 Nov 2026, Bantul
+- [Java Beat Fest](https://gowithdme.com/en/e/java-beat-fest-solo-2026): 28 Nov 2026, Solo
+- [50th Sirkus Barock](https://gowithdme.com/en/e/50th-sirkus-barock-yogyakarta-2026-11-28): 28 Nov 2026, Yogyakarta
+- [Ancol Sunset Sound: Hindia, .Feast & For Revenge](https://gowithdme.com/en/e/ancol-sunset-sound-hindia-feast-2026): 28 Nov 2026, Jakarta
+- [NBJ Keliling Nusantara: Semarang](https://gowithdme.com/en/e/nbj-keliling-nusantara-semarang-2026): 28 Nov 2026, Semarang
+- [NUi High School Fest 2026](https://gowithdme.com/en/e/nui-high-school-fest-2026): 28 Nov 2026 – 29 Nov 2026, Jakarta
+- [EXVILEN 2026](https://gowithdme.com/en/e/exvilen-2026-pontianak): 28 Nov 2026, Pontianak
+- [Nadaria Vol 10](https://gowithdme.com/en/e/nadaria-vol-10-depok): 28 Nov 2026, Depok
+- [Joyland Sessions 2026](https://gowithdme.com/en/e/joyland-sessions-2026): 28 Nov 2026 – 29 Nov 2026, Jakarta
+- [MEET & CLICK JISOO (BLACKPINK) – Jakarta](https://gowithdme.com/en/e/meet-and-click-jisoo-jakarta-2026): 28 Nov 2026, Jakarta
+- [New Comers Concert 2026 – INVENIO](https://gowithdme.com/en/e/new-comers-concert-2026-invenio-semarang): 28 Nov 2026, Semarang
+- [Bogor of Soul](https://gowithdme.com/en/e/bogor-of-soul-dsawah-2026): 28 Nov 2026, Bogor
+- [Art Party 2.0](https://gowithdme.com/en/e/art-party-2-0-jakarta-2026): 28 Nov 2026 – 29 Nov 2026, Jakarta
+- [XODIAC Debut Fancon in Indonesia [X: IN TO YOU]](https://gowithdme.com/en/e/xodiac-debut-fancon-jakarta-2026): 28 Nov 2026, Jakarta
+- [Enamore Intimate Show Bandung](https://gowithdme.com/en/e/enamore-intimate-show-bandung-2026): 29 Nov 2026, Bandung
+- [Bodjong Festival 2026 – ALSTE Heritage Fun Run & Walk](https://gowithdme.com/en/e/bodjong-festival-2026-alste-heritage-fun-run-walk): 29 Nov 2026, Semarang
+- [Pesta Warna Nada Vol.2](https://gowithdme.com/en/e/pesta-warna-nada-vol-2-bekasi-2026): 29 Nov 2026, Bekasi
+- [Konser Nasyid Nostalgia](https://gowithdme.com/en/e/konser-nasyid-nostalgia): 29 Nov 2026, Bandung
+
+## Machine-readable
+- [Sitemap](https://gowithdme.com/sitemap.xml)
+- [Event data (JSON)](https://gowithdme.com/data/events.json)

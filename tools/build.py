@@ -5,6 +5,8 @@ sys.path.insert(0,os.path.dirname(__file__))
 from strings import S,J,PROV_EN
 import gen_og  # kartu pratinjau /og/<slug>.jpg untuk og:image
 import gen_dsk  # css/dsk.css dan css/dsk-b.css (mode "situs desktop" di HP) dibuat dari css lain
+import seo  # JSON-LD entitas/halaman, meta robots, OG cadangan, llms.txt
+import html as _hh
 ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Alamat situs untuk canonical, hreflang, dan sitemap. Default: domain utama gowithdme.com.
 # Untuk alamat lain (mis. uji coba):  GWM_SITE=https://alamat-lain python3 tools/build.py
@@ -84,6 +86,26 @@ sx={"pages":[{"k":k,"h":h,"t":[J[tk][0],J[tk][1]],"type":ty,"kw":kw} for k,h,tk,
     "faq":[{"n":n,"q":[plain(S[f"fq{n}_q"][0]),plain(S[f"fq{n}_q"][1])],"a":[plain(S[f"fq{n}_a"][0]),plain(S[f"fq{n}_a"][1])]} for n in range(1,14)]}
 sx["prov"]=PROV_EN
 open(ROOT+"/js/search-index.js","w",encoding="utf-8").write("/* Dibuat oleh tools/build.py dari tools/strings.py. Jangan edit tangan. */\nwindow.IB_SX="+json.dumps(sx,ensure_ascii=False)+";\n")
+# ---- SEO per halaman: meta robots, OG cadangan, JSON-LD (entitas + halaman + breadcrumb + FAQ) ----
+CONTACT_EMAIL="halo@gowithdme.com"
+SIBLINGS=["https://blog.gowithdme.com","https://artis.gowithdme.com"]
+CRUMB_PARENT={"komunitas":"index","teman":"index"}
+WTYPE={"about":"AboutPage","event":"CollectionPage","gunung":"CollectionPage","bantuan":"WebPage"}
+def seo_page(h,l,p):
+    url=f"{BASE}/{l}/{path(p)}"
+    title=plain(_hh.unescape(re.search(r"<title>(.*?)</title>",h,re.S).group(1)))
+    m=re.search(r'<meta name="description" content="([^"]*)"',h); desc=_hh.unescape(m.group(1)) if m else ""
+    extra=seo.ROBOTS_META
+    if 'property="og:title"' not in h: extra+=seo.og_block(BASE,l,url,title,desc,f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png")
+    if p!="template":  # template sudah punya SoftwareApplication sendiri
+        graph=[]
+        if p in ("index","about","copyright"): graph+=seo.entity(BASE,l,OWNER_NAME,OWNER_SOCIAL,CONTACT_EMAIL,OWNER_SOCIAL_URLS(l))
+        main={"@id":f"{BASE}/#organization"} if p=="about" else None  # definisi lengkap organisasi ikut di halaman ini (lihat baris di atas)
+        graph+=seo.webpage(BASE,l,p,url,title,desc,WTYPE.get(p,"WebPage"),main)
+        if p=="bantuan": graph.append(seo.faq_node(url,[(plain(S[f"fq{n}_q"][IDX[l]]),plain(S[f"fq{n}_a"][IDX[l]])) for n in range(1,14)]))
+        extra+=seo.ldj({"@context":"https://schema.org","@graph":graph})
+    return h.replace("</head>",extra+"</head>",1)
+def OWNER_SOCIAL_URLS(l): return SIBLINGS  # sameAs organisasi: situs saudara resmi. Akun sosial pribadi pemilik ada di node Person (founder)
 # ---- halaman per bahasa ----
 for l in LANGS:
     o="en" if l=="id" else "id"
@@ -98,14 +120,10 @@ for l in LANGS:
         hl="" if p in NOINDEX else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
             +"".join(f'<link rel="alternate" hreflang="{x}" href="{BASE}/{x}/{path(p)}">' for x in LANGS)
             +f'<link rel="alternate" hreflang="x-default" href="{BASE}/id/{path(p)}">')
-        if p=="index":
-            ld={"@context":"https://schema.org","@graph":[
-                {"@type":"WebSite","name":"GoWithDME","url":f"{BASE}/{l}/","inLanguage":l},
-                {"@type":"Organization","name":"GoWithDME","url":f"{BASE}/{l}/","logo":f"{BASE}/assets/icon-512.png","founder":{"@type":"Person","name":OWNER_NAME,"sameAs":[u for _,u in OWNER_SOCIAL]}}]}
-            hl+='<script type="application/ld+json">'+json.dumps(ld,ensure_ascii=False).replace("</","<\\/")+'</script>'
         h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl).replace("{{og_img}}",f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png")
         h=re.sub(r"\{\{(\w+)\}\}",lambda m:S[m.group(1)][IDX[l]],h)
         assert "{{" not in h,(l,p)
+        if p not in NOINDEX: h=seo_page(h,l,p)
         need=[x for x in ("i18n","config","word-filter","portal-core","monetize-core","next-core","lineup-core","events-src","regions","geo-core","blogtab-core","gunung-data","search-index","search","navauth","naver","portal-pro","track") if f"../js/{x}.js" not in h]
         h=h.replace("</body>","".join(f'<script src="../js/{x}.js"></script>' for x in need)+"\n</body>",1)
         h=re.sub(r'(\.\./(?:js|css)/[\w.-]+\.(?:js|css))"',r'\1?v='+VER+'"',h)
@@ -273,6 +291,9 @@ def ev_page(l,e):
     qa=guide.faq(l,e,title,when_txt,where,past)
     faq=f'<h2>{t["faq"]}</h2>'+"".join(f"<h3>{esc(q)}</h3><p>{esc(a)}</p>" for q,a in qa)
     faqld={"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in qa]}
+    bcld={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"GoWithDME","item":f"{BASE}/{l}/"},{"@type":"ListItem","position":2,"name":t["all"],"item":f"{BASE}/{l}/event"},{"@type":"ListItem","position":3,"name":title,"item":u}]}
+    ld["@id"]=u+"#event"; ld["mainEntityOfPage"]=u; ld["isAccessibleForFree"]=(pn==0) if pn is not None else None
+    if ld["isAccessibleForFree"] is None: del ld["isAccessibleForFree"]
     rp="".join(f"<p>{esc(x)}</p>" for x in guide.route(l,e,where))
     routeh=(f'<h2>{G["route"]}</h2>{rp}<p><a class="b l" href="{esc(guide.maps_dir(e))}" rel="noopener nofollow" target="_blank">{G["maps"]}</a></p>') if (e.get("venue") or e.get("city")) else ""
     tipsh="" if past else f'<h2>{G["tips"]}</h2><ul>'+"".join(f"<li>{esc(x)}</li>" for x in guide.tips(l,e))+"</ul>"
@@ -285,7 +306,7 @@ def ev_page(l,e):
 {ogm}
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <style>body{{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}}main{{max-width:720px;margin:0 auto;padding:20px 16px 48px}}img{{max-width:100%;border-radius:14px;display:block}}h1{{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}}.c{{color:#0E5A46;font-weight:600;font-size:.9rem}}dl{{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0}}dt{{font-weight:600}}dd{{margin:0}}.b{{display:inline-block;background:#0E5A46;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin:4px 6px 4px 0}}.b.l{{background:#fff;color:#0E5A46;border:1px solid #0E5A46}}small{{color:#5b6a63}}.end{{background:#fff3cd;color:#5c4400;padding:10px 14px;border-radius:10px}}h2{{font-size:1.15rem;margin:28px 0 6px}}h3{{font-size:1rem;margin:14px 0 0}}h3+p{{margin:2px 0 0}}main a:not(.b){{color:#0E5A46;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(14,90,70,.35)}}main a:not(.b):visited{{color:#0E5A46}}main a:not(.b):hover{{text-decoration-color:currentColor}}@media(prefers-color-scheme:dark){{body{{background:#101613;color:#e8efeb}}.b.l{{background:transparent;color:#7fd1b4;border-color:#7fd1b4}}.c,main a:not(.b),main a:not(.b):visited{{color:#7fd1b4}}main a:not(.b){{text-decoration-color:rgba(127,209,180,.4)}}small{{color:#9bb0a6}}}}</style>
-{ldj(ld)}{ldj(faqld)}</head><body><main>
+{seo.ROBOTS_META}{ldj(ld)}{ldj(faqld)}{ldj(bcld)}</head><body><main>
 <nav><a href="../">GoWithDME</a> › <a href="../event">{t["all"]}</a></nav>
 {f'<img src="{esc(pimg)}" alt="{esc(title)}" loading="eager">' if pimg else ""}
 <div class="c">{esc(cat)}{(" · "+esc(e["genre"])) if e.get("genre") else ""}</div>
@@ -303,6 +324,21 @@ for l in LANGS:
     for f in os.listdir(f"{ROOT}/{l}/e"): os.remove(f"{ROOT}/{l}/e/{f}")
     for e in EV: open(f"{ROOT}/{l}/e/{e['slug']}.html","w",encoding="utf-8").write(ev_page(l,e))
     AP.tulis(ROOT,l,ARTISTS,ARTIS_BASE,ARTIS_PENGALIH)  # halaman lama /<bahasa>/a/... -> pengalih ke artis.gowithdme.com
+# ---- ItemList event mendatang di /<bahasa>/event + llms.txt ----
+def _ttl(l,e): return e.get("title_en") if l=="en" and e.get("title_en") else e["title"]
+UP=sorted([e for e in EV if (e.get("end_date") or e["event_date"])[:10]>=_NOW],key=lambda e:e["event_date"])
+for l in LANGS:
+    f=f"{ROOT}/{l}/event.html"; h=open(f,encoding="utf-8").read()
+    if UP and "#upcoming" not in h:
+        node={"@context":"https://schema.org","@graph":[seo.event_itemlist(BASE,l,f"{BASE}/{l}/event",UP,lambda e,l=l:_ttl(l,e))]}
+        open(f,"w",encoding="utf-8").write(h.replace("</head>",seo.ldj(node)+"</head>",1))
+_PG={}
+for l in LANGS:
+    _PG[l]={}
+    for k,tk,dk in (("","idx_title","idx_desc"),("event","ev_title","ev_desc"),("gunung","gn_title","gn_desc"),("teman","ct_title","ct_desc"),("komunitas","kom_title","kom_desc"),("bantuan","hp_title","hp_desc"),("about","ab_title","ab_desc"),("privacy","pv_title","pv_desc"),("terms","tm_title","tm_desc"),("copyright","cr_title","cr_desc")):
+        _PG[l][k]=(plain(S[tk][IDX[l]]),plain(S[dk][IDX[l]]))
+def _llm_date(e): return fdate("en",e["event_date"][:10])+((" – "+fdate("en",e["end_date"][:10])) if e.get("end_date") and e["end_date"][:10]!=e["event_date"][:10] else "")+((", "+e["city"]) if e.get("city") else "")
+open(ROOT+"/llms.txt","w",encoding="utf-8").write(seo.llms_txt(BASE,OWNER_NAME,CONTACT_EMAIL,UP[:40],_llm_date,lambda e:_ttl("en",e),_PG))
 # ---- sitemap.xml dan robots.txt (ikut BASE, jadi tidak perlu diedit tangan saat pindah domain) ----
 from urllib.parse import urlparse
 pub=[p for p in PAGES if p not in NOINDEX]

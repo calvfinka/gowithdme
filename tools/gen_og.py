@@ -133,6 +133,8 @@ def build(events, root, meta_for):
         print("gen_og: Pillow tidak terpasang, kartu pratinjau dilewati (pip install pillow)")
         return set()
     out_dir = os.path.join(root, "og")
+    if os.environ.get("GWM_SKIP_OG"):  # uji lokal tanpa internet: pakai kartu yang sudah ada, jangan hapus/unduh ulang
+        return {f[:-4] for f in os.listdir(out_dir) if f.endswith(".jpg")} if os.path.isdir(out_dir) else set()
     cache = os.path.join(root, "tools", ".og-cache")
     os.makedirs(out_dir, exist_ok=True)
     for f in os.listdir(out_dir):

@@ -35,3 +35,6 @@ jobs:
         if: steps.commit.outputs.changed == 'true'
         env: {GH_TOKEN: "${{ github.token }}"}
         run: gh api -X POST "/repos/${{ github.repository }}/pages/builds" || true
+      - name: Beri tahu mesin pencari (IndexNow)
+        if: steps.commit.outputs.changed == 'true'
+        run: python3 tools/indexnow.py || true
