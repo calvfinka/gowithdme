@@ -229,6 +229,7 @@ function show(){if(recovering||holding)return;getMe().then(function(m){
   if(dirty)return;
   $("pNick").value=p.nickname||"";loadCities($("pCity"),true).then(function(){$("pCity").value=p.city_id||"";setDirty(false)});
   loadExtra(m.user.id);
+  if(window.IB_PK)IB_PK.refresh();
 })}
 /* ---- profil diperluas: bio, minat, level, privasi, statistik ---- */
 var INT=["konser","festival","pameran","naikgunung","camping","pop","rock","indie","edm","jazz","hiphop","dangdut","kpop"],LV=["pemula","menengah","sulit"],sel=[];
@@ -366,6 +367,120 @@ $("fRec").onsubmit=function(e){e.preventDefault();var p=$("nPass").value;
   $("phOk").onclick=verify;
   $("phRe").onclick=function(){sendCode(this)};
   $("phChg").onclick=function(){clearInterval(timer);$("phS2").hidden=true;$("phS1").hidden=false;$("phSend").disabled=false;msg("");$("phNum").focus()};
+})();
+/* ---- Passkey: masuk tanpa password + kelola di Pengaturan (Edge Function auth-passkey) ---- */
+(function(){
+  var EN=window.IB_LANG==="en",C=window.IB_CONFIG||{},KEY=C.SUPABASE_ANON_KEY,FN=(C.SUPABASE_URL||"")+"/functions/v1/auth-passkey/";
+  if(!KEY)return;
+  var T=EN?{btn:"Sign in with Passkey",h:"Passkey",p:"Sign in with your fingerprint, face or screen lock, no password needed. Your password still works as a backup.",add:"Enable Passkey",none:"No passkey yet.",del:"Remove",sure:"Remove this passkey? You can still sign in another way.",added:"Passkey enabled.",removed:"Passkey removed.",used:"Last used",never:"Not used yet",cancel:"Cancelled or timed out. Try again.",nosup:"This device or browser does not support passkeys.",nolib:"Passkey library failed to load. Reload the page.",net:"Could not reach the server. Try again.",wait:"Too many attempts. Wait a few minutes.",unk:"No passkey found for this site. Sign in another way, then enable one in Settings.",fail:"Passkey sign-in failed. Try again.",dup:"This device already has a passkey for your account.",max:"Passkey limit reached. Remove one first.",ban:"This account is restricted.",load:"Could not load passkeys.",synced:"synced",dev:"this device"}
+  :{btn:"Masuk dengan Passkey",h:"Passkey",p:"Masuk dengan sidik jari, wajah, atau kunci layar, tanpa password. Password tetap bisa dipakai sebagai cadangan.",add:"Aktifkan Passkey",none:"Belum ada passkey.",del:"Hapus",sure:"Hapus passkey ini? Kamu tetap bisa masuk dengan cara lain.",added:"Passkey aktif.",removed:"Passkey dihapus.",used:"Terakhir dipakai",never:"Belum pernah dipakai",cancel:"Dibatalkan atau waktunya habis. Coba lagi.",nosup:"Perangkat atau browser ini belum mendukung passkey.",nolib:"Pustaka passkey gagal dimuat. Muat ulang halaman.",net:"Tidak bisa terhubung ke server. Coba lagi.",wait:"Terlalu banyak percobaan. Tunggu beberapa menit.",unk:"Passkey untuk situs ini tidak ditemukan. Masuk dengan cara lain, lalu aktifkan di Pengaturan.",fail:"Masuk dengan passkey gagal. Coba lagi.",dup:"Perangkat ini sudah punya passkey untuk akunmu.",max:"Batas passkey tercapai. Hapus salah satu dulu.",ban:"Akun ini sedang dibatasi.",load:"Daftar passkey gagal dimuat.",synced:"tersinkron",dev:"perangkat ini"};
+  function lib(){var L=window.SimpleWebAuthnBrowser;return L&&L.startAuthentication&&L.startRegistration?L:null}
+  function supported(){return !!window.PublicKeyCredential&&!!lib()}
+  function call(name,body,token){
+    var h={"Content-Type":"application/json",apikey:KEY};h.Authorization="Bearer "+(token||KEY);
+    return fetch(FN+name,{method:"POST",headers:h,body:JSON.stringify(body||{})}).then(function(r){
+      return r.json().catch(function(){return{}}).then(function(j){j._s=r.status;return j})})}
+  function errText(j){
+    var s=j._s,m=String(j.error||"");
+    if(s===429)return T.wait;
+    if(s===403&&/dibatasi/i.test(m))return T.ban;
+    if(s===409&&/batas/i.test(m))return T.max;
+    if(s===409&&/sudah terdaftar/i.test(m))return T.dup;
+    if(s===401&&/Token/i.test(m))return tr("err_session");
+    if(s===401&&/dikenali/i.test(m))return T.unk;
+    return T.fail}
+  function browserErr(e){
+    var n=e&&e.name,c=e&&e.code;
+    if(n==="NotAllowedError"||n==="AbortError"||c==="ERROR_CEREMONY_ABORTED")return T.cancel;
+    if(c==="ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED"||n==="InvalidStateError")return T.dup;
+    return T.fail}
+  function token(){return sb.auth.getSession().then(function(r){var s=r&&r.data&&r.data.session;return s?s.access_token:null})}
+
+  /* ---- tombol di halaman masuk ---- */
+  var G=$("guest"),grid=document.querySelector("#guest .oauth-grid");
+  if(G&&grid&&window.PublicKeyCredential){
+    var st=document.createElement("style");
+    st.textContent=".oa-pk{grid-column:1/-1}.pk-box{margin:18px 0 0;padding-top:14px;border-top:1px solid rgba(127,127,127,.25)}.pk-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;margin:8px 0;border-radius:12px;background:rgba(127,127,127,.12)}.pk-row b{display:block;word-break:break-word}.pk-row .meta{margin:2px 0 0}.pk-row button{flex:none}.pk-add{margin-top:6px}";
+    document.head.appendChild(st);
+    var b=document.createElement("button");b.type="button";b.id="bPasskey";b.className="btn ghost oauth-btn oa-pk";
+    b.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M3 20c0-3.3 2.7-6 6-6h2"/><path d="M17 13v8M14.5 17.5 17 20l2.5-2.5"/></svg><span>'+T.btn+'</span>';
+    grid.insertBefore(b,grid.firstChild);
+    b.onclick=function(){
+      if(!lib())return msg(T.nolib,"err");
+      var self=this;self.disabled=true;msg(tr("processing"));holding=true;setAfter();
+      function stop(m){holding=false;takeAfter();self.disabled=false;msg(m,"err")}
+      call("options-login",{}).then(function(j){
+        if(!j.options||!j.nonce)return stop(errText(j));
+        return lib().startAuthentication({optionsJSON:j.options}).then(function(resp){
+          msg(tr("processing"));
+          return call("verify-login",{nonce:j.nonce,response:resp}).then(function(v){
+            if(!v.token_hash)return stop(errText(v));
+            return sb.auth.verifyOtp({token_hash:v.token_hash,type:"magiclink"}).then(function(r){
+              if(r.error)return stop(T.fail);
+              msg(tr("a_redirect"),"ok");
+              self.disabled=false;
+              logLocation(function(){holding=false;if(!goAfter())show()})})})
+        },function(e){stop(browserErr(e))})
+      }).catch(function(){stop(T.net)})}}
+
+  /* ---- bagian di Pengaturan (Email & keamanan) ---- */
+  var box=null;
+  function guess(){
+    var u=navigator.userAgent||"",os=/Android/i.test(u)?"Android":/iPhone|iPad/i.test(u)?"iOS":/Windows/i.test(u)?"Windows":/Mac/i.test(u)?"Mac":/Linux/i.test(u)?"Linux":"";
+    var br=/Edg\//.test(u)?"Edge":/SamsungBrowser/i.test(u)?"Samsung Internet":/Firefox/i.test(u)?"Firefox":/Chrome/i.test(u)?"Chrome":/Safari/i.test(u)?"Safari":"";
+    return(os+(os&&br?" · ":"")+br)||"Passkey"}
+  function fmt(d){try{return new Date(d).toLocaleDateString(EN?"en-GB":"id-ID",{day:"numeric",month:"short",year:"numeric"})}catch(e){return""}}
+  function build(){
+    if(box)return box;
+    var host=$("s-acct");if(!host||host.id!=="s-acct")return null;
+    var loc=host.querySelector(".acct-loc");
+    box=document.createElement("div");box.className="pk-box";box.id="pkBox";box.hidden=true;
+    box.innerHTML='<h3 class="kh">'+T.h+'</h3><p class="meta">'+T.p+'</p><div id="pkList"></div><button class="btn ghost pk-add" id="pkAdd" type="button">'+T.add+'</button>';
+    if(loc)host.insertBefore(box,loc);else host.appendChild(box);
+    $("pkAdd").onclick=addKey;
+    return box}
+  function draw(rows){
+    var L=$("pkList");L.innerHTML="";
+    if(!rows.length){var p=document.createElement("p");p.className="meta";p.textContent=T.none;L.appendChild(p);return}
+    rows.forEach(function(r){
+      var d=document.createElement("div");d.className="pk-row";
+      var info=document.createElement("div");
+      var nm=document.createElement("b");nm.textContent=r.name||"Passkey";
+      var mt=document.createElement("span");mt.className="meta";
+      mt.textContent=(r.last_used_at?T.used+" "+fmt(r.last_used_at):T.never)+" · "+(r.backed_up?T.synced:T.dev);
+      info.appendChild(nm);info.appendChild(mt);
+      var x=document.createElement("button");x.type="button";x.className="btn ghost sm";x.textContent=T.del;
+      x.onclick=function(){
+        if(!window.confirm(T.sure))return;
+        x.disabled=true;
+        sb.from("user_passkeys").delete().eq("id",r.id).then(function(res){
+          if(res.error){x.disabled=false;return msg(friendlyErr(res.error),"err")}
+          msg(T.removed,"ok");refresh()})};
+      d.appendChild(info);d.appendChild(x);L.appendChild(d)})}
+  function refresh(){
+    var bx=build();if(!bx)return;
+    if(!window.PublicKeyCredential){bx.hidden=true;return}
+    bx.hidden=false;
+    sb.from("user_passkeys").select("id,name,created_at,last_used_at,backed_up").order("created_at",{ascending:true}).then(function(r){
+      if(r.error){var L=$("pkList");L.innerHTML="";var p=document.createElement("p");p.className="meta";
+        p.textContent=/relation|does not exist|schema cache/i.test(r.error.message||"")?"supabase/schema_user_passkey.sql":T.load;L.appendChild(p);return}
+      draw(r.data||[])})}
+  function addKey(){
+    if(!window.PublicKeyCredential)return msg(T.nosup,"err");
+    if(!lib())return msg(T.nolib,"err");
+    var btn=$("pkAdd");btn.disabled=true;msg(tr("processing"));
+    function done(m,t){btn.disabled=false;msg(m,t)}
+    token().then(function(tok){
+      if(!tok)return done(tr("err_session"),"err");
+      return call("options-register",{},tok).then(function(j){
+        if(!j.options||!j.nonce)return done(errText(j),"err");
+        return lib().startRegistration({optionsJSON:j.options}).then(function(resp){
+          return call("verify-register",{nonce:j.nonce,response:resp,name:guess()},tok).then(function(v){
+            if(!v.ok)return done(errText(v),"err");
+            done(T.added,"ok");refresh()})
+        },function(e){done(browserErr(e),"err")})})
+    }).catch(function(){done(T.net,"err")})}
+  window.IB_PK={refresh:refresh};
 })();
 show();
 })();
