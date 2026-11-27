@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="{{lang}}"><head>
+{{>head}}<title>{{tk_title}}</title><meta name="robots" content="noindex">
+<link rel="stylesheet" href="../css/panel.css">
+<link rel="stylesheet" href="../css/tiket.css">
+{{hreflang}}</head><body>
+{{>icons}}{{>bar}}
+<main class="page sub tk">
+<div id="msg" class="msg" hidden></div>
+<div class="card narrow" id="guest" hidden><h3>{{tk_login_h}}</h3><p>{{tk_login_p}}</p><a class="btn" id="tkLogin" href="login?next=tiket">{{tk_login_btn}}</a></div>
+<div id="wrap" hidden>
+  <h1>{{tk_h}}</h1><p class="meta">{{tk_p}}</p>
+  <div class="tk-priv" role="note"><svg class="i" aria-hidden="true"><use href="#i-eye"/></svg><div><b>{{tk_priv_h}}</b><span>{{tk_priv_p}}</span></div></div>
+
+  <form id="tkForm" novalidate onsubmit="return false">
+    <fieldset class="fs" id="tkS1"><legend>{{tk_s1}}</legend>
+      <div id="tkEvPick">
+        <label class="f"><input id="tkEvQ" type="search" autocomplete="off" placeholder="{{tk_ev_ph}}" aria-label="{{tk_ev_ph}}" aria-controls="tkEvList"></label>
+        <div class="tk-evlist" id="tkEvList" role="listbox" aria-label="{{tk_s1}}"></div>
+      </div>
+      <div class="tk-evsel" id="tkEvSel" hidden></div>
+      <details class="tk-manual"><summary>{{tk_manual_h}}</summary>
+        <label class="f">{{tk_l_evname}}<input id="tkMTitle" type="text" maxlength="120"></label>
+        <div class="g2">
+          <label class="f">{{tk_l_evdate}}<input id="tkMDate" type="date"></label>
+          <label class="f">{{tk_l_evvenue}}<input id="tkMVenue" type="text" maxlength="120"></label>
+        </div>
+      </details>
+    </fieldset>
+
+    <fieldset class="fs" id="tkS2"><legend>{{tk_s2}}</legend>
+      <div class="kind k2" id="tkKind" role="group" aria-label="{{tk_s2}}">
+        <button type="button" data-kind="kuasa" class="on"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg><span>{{tk_k_kuasa}}</span></button>
+        <button type="button" data-kind="alih"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg><span>{{tk_k_alih}}</span></button>
+      </div>
+      <p class="meta" id="tkKindD">{{tk_k_kuasa_d}}</p>
+      <div class="f"><span>{{tk_l_lang}}</span><div class="seg" id="tkLang" role="group" aria-label="{{tk_l_lang}}"><button type="button" data-lang="id" class="on">Bahasa Indonesia</button><button type="button" data-lang="en">English</button></div></div>
+      <div class="g2">
+        <label class="f">{{tk_l_type}}<input id="tk_type" type="text" maxlength="60" placeholder="{{tk_ph_type}}"></label>
+        <label class="f">{{tk_l_qty}}<input id="tk_qty" type="number" min="1" max="20" inputmode="numeric" value="1"></label>
+      </div>
+      <label class="f"><span>{{tk_l_tid}} <i class="req">*</i></span><input id="tk_id" type="text" maxlength="80" autocomplete="off" placeholder="{{tk_ph_tid}}"></label>
+    </fieldset>
+
+    <label class="chk tk-consent"><input id="tk_ok" type="checkbox"> <span>{{tk_consent}}</span></label>
+
+    <fieldset class="fs tk-party" id="tkP1"><legend>{{tk_s3}}</legend>
+      
+      <label class="pv drop tk-drop" id="p1_pv" for="p1_file">{{tk_drop}}</label>
+      <input class="sr" id="p1_file" type="file" accept="image/jpeg,image/png,image/webp" data-n="1">
+      <div class="tk-prog" id="p1_prog" role="status" aria-live="polite" hidden><i></i><span></span></div>
+      <p class="meta tk-hint" id="p1_ocr" hidden></p>
+      <label class="f"><span>{{tk_l_nama}} <i class="req">*</i></span><input id="p1_nama" type="text" maxlength="80" autocomplete="off" autocapitalize="characters"></label>
+      <label class="f"><span>{{tk_l_nik}} <i class="req">*</i></span><input id="p1_nik" type="text" inputmode="numeric" maxlength="19" autocomplete="off" placeholder="3273xxxxxxxxxxxx"></label>
+      <p class="meta tk-hint" id="p1_nikh" role="status" hidden></p>
+      <div class="g2">
+        <label class="f">{{tk_l_tempat}}<input id="p1_tempat" type="text" maxlength="60" autocomplete="off"></label>
+        <label class="f">{{tk_l_lahir}}<input id="p1_lahir" type="date"></label>
+      </div>
+      <label class="f">{{tk_l_alamat}}<textarea id="p1_alamat" rows="2" maxlength="240" autocomplete="off"></textarea></label>
+      <div class="g2">
+        <label class="f">{{tk_l_email}}<input id="p1_email" type="email" maxlength="120" autocomplete="off" inputmode="email"></label>
+        <label class="f">{{tk_l_wa}}<input id="p1_wa" type="tel" maxlength="20" autocomplete="off" inputmode="tel" placeholder="08xxxxxxxxxx"></label>
+      </div>
+      <button class="lnk tk-rm" id="p1_rm" type="button" hidden>{{tk_rm_img}}</button>
+    </fieldset>
+    <fieldset class="fs tk-party" id="tkP2"><legend>{{tk_s4}}</legend>
+      <p class="meta">{{tk_s4_opt}}</p>
+      <label class="pv drop tk-drop" id="p2_pv" for="p2_file">{{tk_drop}}</label>
+      <input class="sr" id="p2_file" type="file" accept="image/jpeg,image/png,image/webp" data-n="2">
+      <div class="tk-prog" id="p2_prog" role="status" aria-live="polite" hidden><i></i><span></span></div>
+      <p class="meta tk-hint" id="p2_ocr" hidden></p>
+      <label class="f"><span>{{tk_l_nama}} <i class="req">*</i></span><input id="p2_nama" type="text" maxlength="80" autocomplete="off" autocapitalize="characters"></label>
+      <label class="f"><span>{{tk_l_nik}} <i class="req">*</i></span><input id="p2_nik" type="text" inputmode="numeric" maxlength="19" autocomplete="off" placeholder="3273xxxxxxxxxxxx"></label>
+      <p class="meta tk-hint" id="p2_nikh" role="status" hidden></p>
+      <div class="g2">
+        <label class="f">{{tk_l_tempat}}<input id="p2_tempat" type="text" maxlength="60" autocomplete="off"></label>
+        <label class="f">{{tk_l_lahir}}<input id="p2_lahir" type="date"></label>
+      </div>
+      <label class="f">{{tk_l_alamat}}<textarea id="p2_alamat" rows="2" maxlength="240" autocomplete="off"></textarea></label>
+      <div class="g2">
+        <label class="f">{{tk_l_email}}<input id="p2_email" type="email" maxlength="120" autocomplete="off" inputmode="email"></label>
+        <label class="f">{{tk_l_wa}}<input id="p2_wa" type="tel" maxlength="20" autocomplete="off" inputmode="tel" placeholder="08xxxxxxxxxx"></label>
+      </div>
+      <button class="lnk tk-rm" id="p2_rm" type="button" hidden>{{tk_rm_img}}</button>
+    </fieldset>
+
+    <fieldset class="fs" id="tkS5"><legend>{{tk_s5}}</legend>
+      <div class="g2">
+        <label class="f"><span>{{tk_l_place}} <i class="req">*</i></span><input id="tk_place" type="text" maxlength="60" autocomplete="off"></label>
+        <label class="f"><span>{{tk_l_date}} <i class="req">*</i></span><input id="tk_date" type="date"></label>
+      </div>
+      <label class="chk"><input id="tk_stamp" type="checkbox" checked> <span>{{tk_stamp}}</span></label>
+      <label class="chk"><input id="tk_attach" type="checkbox" checked> <span>{{tk_attach}}</span></label>
+    </fieldset>
+  </form>
+
+  <section class="tk-out" id="tkOut">
+    <h2>{{tk_s6}}</h2>
+    <div class="msg err f-sum" id="tkErr" role="alert" hidden></div>
+    <div class="tk-paperwrap"><article class="tk-paper" id="tkPaper" aria-label="{{tk_s6}}"></article></div>
+    <div class="tk-dl">
+      <button class="btn pri" id="dlPdf" type="button"><svg class="i" aria-hidden="true"><use href="#ia-down"/></svg>{{tk_dl_pdf}}</button>
+      <button class="btn ghost" id="dlDocx" type="button"><svg class="i" aria-hidden="true"><use href="#ia-down"/></svg>{{tk_dl_docx}}</button>
+      <button class="btn ghost" id="dlTxt" type="button">{{tk_dl_txt}}</button>
+      <button class="btn ghost" id="dlPrint" type="button">{{tk_print}}</button>
+    </div>
+    <p class="meta tk-stat" id="tkStat" role="status" aria-live="polite"></p>
+    <button class="lnk tk-clear" id="tkClear" type="button">{{tk_clear}}</button>
+    <p class="meta tk-disc">{{tk_disc}}</p>
+  </section>
+</div>
+{{>foot}}
+</main>
+<div id="toast" role="status"></div>
+{{>libs}}<script src="../js/share.js"></script><script src="../js/tiket-core.js"></script><script src="../js/tiket.js"></script>
+</body></html>

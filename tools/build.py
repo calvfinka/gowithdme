@@ -5,8 +5,6 @@ sys.path.insert(0,os.path.dirname(__file__))
 from strings import S,J,PROV_EN
 import gen_og  # kartu pratinjau /og/<slug>.jpg untuk og:image
 import gen_dsk  # css/dsk.css dan css/dsk-b.css (mode "situs desktop" di HP) dibuat dari css lain
-import seo  # JSON-LD entitas/halaman, meta robots, OG cadangan, llms.txt
-import html as _hh
 ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Alamat situs untuk canonical, hreflang, dan sitemap. Default: domain utama gowithdme.com.
 # Untuk alamat lain (mis. uji coba):  GWM_SITE=https://alamat-lain python3 tools/build.py
@@ -19,7 +17,7 @@ OWNER_SOCIAL=[("Blog","https://calvfinka.blogspot.com"),("GitHub","https://githu
 _ol={"id":"Sosial media","en":"Social"}
 S["owner_links"]=tuple((f'<p>{_ol[x]}: '+" · ".join(f'<a href="{u}" rel="me noopener" target="_blank">{n}</a>' for n,u in OWNER_SOCIAL)+"</p>") for x in ("id","en"))
 LANGS=["id","en"]; IDX={"id":0,"en":1}
-PAGES=["index","event","gunung","login","privacy","terms","copyright","template","about","ajukan","komunitas","teman","profil","bantuan","pesan"]
+PAGES=["index","event","gunung","login","privacy","terms","copyright","template","about","ajukan","komunitas","teman","profil","bantuan","pesan","tiket"]
 # halaman /statistik hanya ada bila data/statistik.json berstatus aktif (sakelar 'publik' di Supabase); selain itu tidak dibangun dan file lamanya dihapus
 try: STAT_ON=bool(json.load(open(ROOT+"/data/statistik.json",encoding="utf-8")).get("aktif"))
 except Exception: STAT_ON=False
@@ -28,7 +26,7 @@ else:
     for _f in ("id/statistik.html","en/statistik.html","statistik.html"):
         if os.path.exists(f"{ROOT}/{_f}"): os.remove(f"{ROOT}/{_f}")
 STAT_LINK='<a href="statistik"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg>{{nv_stats}}</a>'
-NOINDEX=("login","ajukan","profil","pesan")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
+NOINDEX=("login","ajukan","profil","pesan","tiket")  # halaman formulir: tidak diindeks, tanpa hreflang, tidak masuk sitemap
 APP=("index","event","gunung")  # halaman dengan sidebar, pencarian, jam, dan cuaca
 def path(p): return "" if p=="index" else p
 def inc(h):
@@ -72,6 +70,7 @@ SX_PAGES=[
  ("about","about","sx_p_about","page","tentang about jurkon studio pemilik owner gwm"),
  ("login","login","sx_p_login","page","masuk login daftar register sign up akun google password lupa"),
  ("profile","profil","sx_p_profile","page","profil profile akun edit nama panggilan nickname kota bio foto pengunjung"),
+ ("ticket","tiket","sx_p_tiket","page","pindah tiket transfer ticket surat kuasa pengalihan tiket konser ktp nik ganti nama pemilik letter of attorney"),
  ("msgs","pesan","sx_p_msgs","page","pesan chat dm inbox voice note gambar kirim pesan message messages"),
  ("saved","event?kat=tersimpan","sx_p_saved","cat","tersimpan favorit simpan saved bookmark"),
  ("done","event?kat=selesai","sx_p_done","cat","selesai lewat arsip riwayat ended past archive"),
@@ -86,26 +85,6 @@ sx={"pages":[{"k":k,"h":h,"t":[J[tk][0],J[tk][1]],"type":ty,"kw":kw} for k,h,tk,
     "faq":[{"n":n,"q":[plain(S[f"fq{n}_q"][0]),plain(S[f"fq{n}_q"][1])],"a":[plain(S[f"fq{n}_a"][0]),plain(S[f"fq{n}_a"][1])]} for n in range(1,14)]}
 sx["prov"]=PROV_EN
 open(ROOT+"/js/search-index.js","w",encoding="utf-8").write("/* Dibuat oleh tools/build.py dari tools/strings.py. Jangan edit tangan. */\nwindow.IB_SX="+json.dumps(sx,ensure_ascii=False)+";\n")
-# ---- SEO per halaman: meta robots, OG cadangan, JSON-LD (entitas + halaman + breadcrumb + FAQ) ----
-CONTACT_EMAIL="halo@gowithdme.com"
-SIBLINGS=["https://blog.gowithdme.com","https://artis.gowithdme.com"]
-CRUMB_PARENT={"komunitas":"index","teman":"index"}
-WTYPE={"about":"AboutPage","event":"CollectionPage","gunung":"CollectionPage","bantuan":"WebPage"}
-def seo_page(h,l,p):
-    url=f"{BASE}/{l}/{path(p)}"
-    title=plain(_hh.unescape(re.search(r"<title>(.*?)</title>",h,re.S).group(1)))
-    m=re.search(r'<meta name="description" content="([^"]*)"',h); desc=_hh.unescape(m.group(1)) if m else ""
-    extra=seo.ROBOTS_META
-    if 'property="og:title"' not in h: extra+=seo.og_block(BASE,l,url,title,desc,f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png")
-    if p!="template":  # template sudah punya SoftwareApplication sendiri
-        graph=[]
-        if p in ("index","about","copyright"): graph+=seo.entity(BASE,l,OWNER_NAME,OWNER_SOCIAL,CONTACT_EMAIL,OWNER_SOCIAL_URLS(l))
-        main={"@id":f"{BASE}/#organization"} if p=="about" else None  # definisi lengkap organisasi ikut di halaman ini (lihat baris di atas)
-        graph+=seo.webpage(BASE,l,p,url,title,desc,WTYPE.get(p,"WebPage"),main)
-        if p=="bantuan": graph.append(seo.faq_node(url,[(plain(S[f"fq{n}_q"][IDX[l]]),plain(S[f"fq{n}_a"][IDX[l]])) for n in range(1,14)]))
-        extra+=seo.ldj({"@context":"https://schema.org","@graph":graph})
-    return h.replace("</head>",extra+"</head>",1)
-def OWNER_SOCIAL_URLS(l): return SIBLINGS  # sameAs organisasi: situs saudara resmi. Akun sosial pribadi pemilik ada di node Person (founder)
 # ---- halaman per bahasa ----
 for l in LANGS:
     o="en" if l=="id" else "id"
@@ -120,10 +99,14 @@ for l in LANGS:
         hl="" if p in NOINDEX else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
             +"".join(f'<link rel="alternate" hreflang="{x}" href="{BASE}/{x}/{path(p)}">' for x in LANGS)
             +f'<link rel="alternate" hreflang="x-default" href="{BASE}/id/{path(p)}">')
+        if p=="index":
+            ld={"@context":"https://schema.org","@graph":[
+                {"@type":"WebSite","name":"GoWithDME","url":f"{BASE}/{l}/","inLanguage":l},
+                {"@type":"Organization","name":"GoWithDME","url":f"{BASE}/{l}/","logo":f"{BASE}/assets/icon-512.png","founder":{"@type":"Person","name":OWNER_NAME,"sameAs":[u for _,u in OWNER_SOCIAL]}}]}
+            hl+='<script type="application/ld+json">'+json.dumps(ld,ensure_ascii=False).replace("</","<\\/")+'</script>'
         h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl).replace("{{og_img}}",f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png")
         h=re.sub(r"\{\{(\w+)\}\}",lambda m:S[m.group(1)][IDX[l]],h)
         assert "{{" not in h,(l,p)
-        if p not in NOINDEX: h=seo_page(h,l,p)
         need=[x for x in ("i18n","config","word-filter","portal-core","monetize-core","next-core","lineup-core","events-src","regions","geo-core","blogtab-core","gunung-data","search-index","search","navauth","naver","portal-pro","track") if f"../js/{x}.js" not in h]
         h=h.replace("</body>","".join(f'<script src="../js/{x}.js"></script>' for x in need)+"\n</body>",1)
         h=re.sub(r'(\.\./(?:js|css)/[\w.-]+\.(?:js|css))"',r'\1?v='+VER+'"',h)
@@ -185,30 +168,12 @@ _NOW=os.environ.get("GWM_TODAY") or (_dtm.now(_tzm.utc)+_tdm(hours=7)).date().is
 def fday(l,d):
     y,m,dd=map(int,d[:10].split("-")); return DAYS[l][_date(y,m,dd).weekday()]+", "+fdate(l,d)
 def seo_title(l,e,title):
-    # Google menampilkan ~60 karakter. Kandidat dari terlengkap ke tersingkat; nama event tidak pernah dipotong.
-    city=(e.get("city") or "").strip(); d=fdate(l,e["event_date"][:10])
-    c=city if city and city.lower() not in title.lower() else ""
-    tail=("Tiket & Lineup" if l=="id" else "Tickets & Lineup") if e.get("category") in ("konser","festival") else ("Info & Tiket" if l=="id" else "Info & Tickets")
-    cands=[f"{title} {c} {d}: {tail}",f"{title} {d}: {tail}",f"{title} {c} {d}",f"{title} {d}",f"{title} {c}",title]
-    cands=[re.sub(r"\s+"," ",x).strip() for x in cands]
-    for x in cands:
-        if len(x)<=60: return x
-    return cands[-1]
-def title_tag(stitle): return stitle+" | GoWithDME" if len(stitle)<=47 else stitle  # merek hanya bila tidak mendorong judul lewat batas
-def meta_desc(l,e,title,sd,ed,where,past):
-    # <=155 karakter, segmen ditambah berurutan sesuai prioritas: apa+kapan+di mana, harga, lineup, ajakan
-    when=fday(l,sd)+(" – "+fdate(l,ed) if ed!=sd else "")
-    id_=l=="id"
-    s1=(f"{title}: {'sudah digelar' if past else 'digelar'} {when}" if id_ else f"{title}: {'took place' if past else 'takes place'} {when}")+((" di " if id_ else " at ")+where if where else "")+"."
-    segs=[]
-    if e.get("price_label"): segs.append(("Harga: " if id_ else "Price: ")+str(e["price_label"]).rstrip(".")+".")
-    lu=[x for x in split_lineup(e.get("lineup") or "")][:3]
-    if lu: segs.append(("Lineup: " if id_ else "Line-up: ")+", ".join(lu)+".")
-    segs.append((("Cek event serupa di GoWithDME." if past else "Tiket resmi, rute & tips di GoWithDME.") if id_ else ("See similar events on GoWithDME." if past else "Official tickets, route & tips on GoWithDME.")))
-    out=s1
-    for x in segs:
-        if len(out)+1+len(x)<=155: out+=" "+x
-    return out if len(out)<=160 else out[:157].rsplit(" ",1)[0]+"..."
+    city=(e.get("city") or "").strip(); sd=e["event_date"][:10]
+    parts=[title]
+    if city and city.lower() not in title.lower(): parts.append(city)
+    parts.append(fdate(l,sd))
+    tail=("Lineup & Tiket" if l=="id" else "Lineup & Tickets") if e.get("category") in ("konser","festival") else ("Info & Tiket" if l=="id" else "Info & Tickets")
+    return " ".join(parts)+": "+tail
 def fdate(l,d):
     y,m,dd=map(int,d[:10].split("-")); return f"{dd} {MON[l][m-1]} {y}"
 def price_num(lb):
@@ -281,7 +246,7 @@ def ev_page(l,e):
     img=pu or f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"
     if not re.match(r"https?://",img): img=BASE+"/"+img.lstrip("/")  # og:image dan JSON-LD wajib URL absolut
     ogimg=f"{BASE}/og/{e['slug']}.jpg" if e['slug'] in OG_OK else f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"  # pratinjau medsos: kartu 1200x630 di domain sendiri
-    ogd=meta_desc(l,e,title,sd,ed,where,past)
+    ogd=(fday(l,sd)+(' – '+fdate(l,ed) if ed!=sd else '')+(' · '+where if where else '')+'. '+desc)[:200]
     ogm=(f'<meta property="og:type" content="website"><meta property="og:site_name" content="GoWithDME"><meta property="og:locale" content="{"id_ID" if l=="id" else "en_US"}">'
          f'<meta property="og:url" content="{u}"><meta property="og:title" content="{esc(stitle)}"><meta property="og:description" content="{esc(ogd)}">'
          f'<meta property="og:image" content="{esc(ogimg)}"><meta property="og:image:secure_url" content="{esc(ogimg)}"><meta property="og:image:type" content="image/{"jpeg" if e["slug"] in OG_OK else "png"}">'
@@ -309,9 +274,6 @@ def ev_page(l,e):
     qa=guide.faq(l,e,title,when_txt,where,past)
     faq=f'<h2>{t["faq"]}</h2>'+"".join(f"<h3>{esc(q)}</h3><p>{esc(a)}</p>" for q,a in qa)
     faqld={"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in qa]}
-    bcld={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"GoWithDME","item":f"{BASE}/{l}/"},{"@type":"ListItem","position":2,"name":t["all"],"item":f"{BASE}/{l}/event"},{"@type":"ListItem","position":3,"name":title,"item":u}]}
-    ld["@id"]=u+"#event"; ld["mainEntityOfPage"]=u; ld["isAccessibleForFree"]=(pn==0) if pn is not None else None
-    if ld["isAccessibleForFree"] is None: del ld["isAccessibleForFree"]
     rp="".join(f"<p>{esc(x)}</p>" for x in guide.route(l,e,where))
     routeh=(f'<h2>{G["route"]}</h2>{rp}<p><a class="b l" href="{esc(guide.maps_dir(e))}" rel="noopener nofollow" target="_blank">{G["maps"]}</a></p>') if (e.get("venue") or e.get("city")) else ""
     tipsh="" if past else f'<h2>{G["tips"]}</h2><ul>'+"".join(f"<li>{esc(x)}</li>" for x in guide.tips(l,e))+"</ul>"
@@ -319,12 +281,12 @@ def ev_page(l,e):
     relh=(f'<h2>{G["related"]}</h2><ul>'+"".join(f'<li><a href="{esc(x["slug"])}">{esc(x["title"])}</a> <small>{esc(fdate(l,x["event_date"]))}{(" · "+esc(x["city"])) if x.get("city") else ""} · {esc(" · ".join(why))}</small></li>' for x,why in rel)+f'</ul><p><a href="../event">{G["rel_more"]}</a></p>') if rel else f'<h2>{G["related"]}</h2><p>{G["rel_none"]}</p><p><a href="../event">{G["rel_more"]}</a></p>'
     return f"""<!DOCTYPE html>
 <html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(title_tag(stitle))}</title><meta name="description" content="{esc(ogd)}">
+<title>{esc(stitle)} | GoWithDME</title><meta name="description" content="{esc((fday(l,sd)+(' – '+fdate(l,ed) if ed!=sd else '')+' · '+where+'. '+desc)[:300])}">
 <link rel="canonical" href="{u}"><link rel="alternate" hreflang="{l}" href="{u}"><link rel="alternate" hreflang="{o}" href="{BASE}/{o}/e/{e['slug']}"><link rel="alternate" hreflang="x-default" href="{BASE}/id/e/{e['slug']}">
 {ogm}
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <style>body{{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}}main{{max-width:720px;margin:0 auto;padding:20px 16px 48px}}img{{max-width:100%;border-radius:14px;display:block}}h1{{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}}.c{{color:#0E5A46;font-weight:600;font-size:.9rem}}dl{{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0}}dt{{font-weight:600}}dd{{margin:0}}.b{{display:inline-block;background:#0E5A46;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin:4px 6px 4px 0}}.b.l{{background:#fff;color:#0E5A46;border:1px solid #0E5A46}}small{{color:#5b6a63}}.end{{background:#fff3cd;color:#5c4400;padding:10px 14px;border-radius:10px}}h2{{font-size:1.15rem;margin:28px 0 6px}}h3{{font-size:1rem;margin:14px 0 0}}h3+p{{margin:2px 0 0}}main a:not(.b){{color:#0E5A46;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(14,90,70,.35)}}main a:not(.b):visited{{color:#0E5A46}}main a:not(.b):hover{{text-decoration-color:currentColor}}@media(prefers-color-scheme:dark){{body{{background:#101613;color:#e8efeb}}.b.l{{background:transparent;color:#7fd1b4;border-color:#7fd1b4}}.c,main a:not(.b),main a:not(.b):visited{{color:#7fd1b4}}main a:not(.b){{text-decoration-color:rgba(127,209,180,.4)}}small{{color:#9bb0a6}}}}</style>
-{seo.ROBOTS_META}{ldj(ld)}{ldj(faqld)}{ldj(bcld)}</head><body><main>
+{ldj(ld)}{ldj(faqld)}</head><body><main>
 <nav><a href="../">GoWithDME</a> › <a href="../event">{t["all"]}</a></nav>
 {f'<img src="{esc(pimg)}" alt="{esc(title)}" loading="eager">' if pimg else ""}
 <div class="c">{esc(cat)}{(" · "+esc(e["genre"])) if e.get("genre") else ""}</div>
@@ -342,21 +304,6 @@ for l in LANGS:
     for f in os.listdir(f"{ROOT}/{l}/e"): os.remove(f"{ROOT}/{l}/e/{f}")
     for e in EV: open(f"{ROOT}/{l}/e/{e['slug']}.html","w",encoding="utf-8").write(ev_page(l,e))
     AP.tulis(ROOT,l,ARTISTS,ARTIS_BASE,ARTIS_PENGALIH)  # halaman lama /<bahasa>/a/... -> pengalih ke artis.gowithdme.com
-# ---- ItemList event mendatang di /<bahasa>/event + llms.txt ----
-def _ttl(l,e): return e.get("title_en") if l=="en" and e.get("title_en") else e["title"]
-UP=sorted([e for e in EV if (e.get("end_date") or e["event_date"])[:10]>=_NOW],key=lambda e:e["event_date"])
-for l in LANGS:
-    f=f"{ROOT}/{l}/event.html"; h=open(f,encoding="utf-8").read()
-    if UP and "#upcoming" not in h:
-        node={"@context":"https://schema.org","@graph":[seo.event_itemlist(BASE,l,f"{BASE}/{l}/event",UP,lambda e,l=l:_ttl(l,e))]}
-        open(f,"w",encoding="utf-8").write(h.replace("</head>",seo.ldj(node)+"</head>",1))
-_PG={}
-for l in LANGS:
-    _PG[l]={}
-    for k,tk,dk in (("","idx_title","idx_desc"),("event","ev_title","ev_desc"),("gunung","gn_title","gn_desc"),("teman","ct_title","ct_desc"),("komunitas","kom_title","kom_desc"),("bantuan","hp_title","hp_desc"),("about","ab_title","ab_desc"),("privacy","pv_title","pv_desc"),("terms","tm_title","tm_desc"),("copyright","cr_title","cr_desc")):
-        _PG[l][k]=(plain(S[tk][IDX[l]]),plain(S[dk][IDX[l]]))
-def _llm_date(e): return fdate("en",e["event_date"][:10])+((" – "+fdate("en",e["end_date"][:10])) if e.get("end_date") and e["end_date"][:10]!=e["event_date"][:10] else "")+((", "+e["city"]) if e.get("city") else "")
-open(ROOT+"/llms.txt","w",encoding="utf-8").write(seo.llms_txt(BASE,OWNER_NAME,CONTACT_EMAIL,UP[:40],_llm_date,lambda e:_ttl("en",e),_PG))
 # ---- sitemap.xml dan robots.txt (ikut BASE, jadi tidak perlu diedit tangan saat pindah domain) ----
 from urllib.parse import urlparse
 pub=[p for p in PAGES if p not in NOINDEX]
@@ -381,7 +328,7 @@ _dates=[x for x in _dates if x]
 _LMTAG=f"<lastmod>{max(_dates)}</lastmod>" if _dates else ""
 open(ROOT+"/sitemap.xml","w",encoding="utf-8").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+"".join(rows).replace("@@LM@@",_LMTAG)+"</urlset>\n")
 pre=urlparse(BASE).path.rstrip("/")
-open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("login","id/login","en/login","ajukan","id/ajukan","en/ajukan","profil","id/profil","en/profil","pesan","id/pesan","en/pesan"))+f"Sitemap: {BASE}/sitemap.xml\n")
+open(ROOT+"/robots.txt","w",encoding="utf-8").write("User-agent: *\nAllow: /\n"+"".join(f"Disallow: {pre}/{x}\n" for x in ("login","id/login","en/login","ajukan","id/ajukan","en/ajukan","profil","id/profil","en/profil","pesan","id/pesan","en/pesan","tiket","id/tiket","en/tiket"))+f"Sitemap: {BASE}/sitemap.xml\n")
 
 # ---- sw.js: service worker (offline + cepat). VER ikut build, jadi cache versi lama dibuang otomatis ----
 # cangkang offline: halaman utama dua bahasa + semua CSS/JS (dengan ?v= yang sama persis dengan yang diminta halaman) + data event.

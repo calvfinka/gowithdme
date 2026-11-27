@@ -12,4 +12,7 @@ Disallow: /en/profil
 Disallow: /pesan
 Disallow: /id/pesan
 Disallow: /en/pesan
+Disallow: /tiket
+Disallow: /id/tiket
+Disallow: /en/tiket
 Sitemap: https://gowithdme.com/sitemap.xml
