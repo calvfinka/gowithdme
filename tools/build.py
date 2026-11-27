@@ -185,12 +185,30 @@ _NOW=os.environ.get("GWM_TODAY") or (_dtm.now(_tzm.utc)+_tdm(hours=7)).date().is
 def fday(l,d):
     y,m,dd=map(int,d[:10].split("-")); return DAYS[l][_date(y,m,dd).weekday()]+", "+fdate(l,d)
 def seo_title(l,e,title):
-    city=(e.get("city") or "").strip(); sd=e["event_date"][:10]
-    parts=[title]
-    if city and city.lower() not in title.lower(): parts.append(city)
-    parts.append(fdate(l,sd))
-    tail=("Lineup & Tiket" if l=="id" else "Lineup & Tickets") if e.get("category") in ("konser","festival") else ("Info & Tiket" if l=="id" else "Info & Tickets")
-    return " ".join(parts)+": "+tail
+    # Google menampilkan ~60 karakter. Kandidat dari terlengkap ke tersingkat; nama event tidak pernah dipotong.
+    city=(e.get("city") or "").strip(); d=fdate(l,e["event_date"][:10])
+    c=city if city and city.lower() not in title.lower() else ""
+    tail=("Tiket & Lineup" if l=="id" else "Tickets & Lineup") if e.get("category") in ("konser","festival") else ("Info & Tiket" if l=="id" else "Info & Tickets")
+    cands=[f"{title} {c} {d}: {tail}",f"{title} {d}: {tail}",f"{title} {c} {d}",f"{title} {d}",f"{title} {c}",title]
+    cands=[re.sub(r"\s+"," ",x).strip() for x in cands]
+    for x in cands:
+        if len(x)<=60: return x
+    return cands[-1]
+def title_tag(stitle): return stitle+" | GoWithDME" if len(stitle)<=47 else stitle  # merek hanya bila tidak mendorong judul lewat batas
+def meta_desc(l,e,title,sd,ed,where,past):
+    # <=155 karakter, segmen ditambah berurutan sesuai prioritas: apa+kapan+di mana, harga, lineup, ajakan
+    when=fday(l,sd)+(" – "+fdate(l,ed) if ed!=sd else "")
+    id_=l=="id"
+    s1=(f"{title}: {'sudah digelar' if past else 'digelar'} {when}" if id_ else f"{title}: {'took place' if past else 'takes place'} {when}")+((" di " if id_ else " at ")+where if where else "")+"."
+    segs=[]
+    if e.get("price_label"): segs.append(("Harga: " if id_ else "Price: ")+str(e["price_label"]).rstrip(".")+".")
+    lu=[x for x in split_lineup(e.get("lineup") or "")][:3]
+    if lu: segs.append(("Lineup: " if id_ else "Line-up: ")+", ".join(lu)+".")
+    segs.append((("Cek event serupa di GoWithDME." if past else "Tiket resmi, rute & tips di GoWithDME.") if id_ else ("See similar events on GoWithDME." if past else "Official tickets, route & tips on GoWithDME.")))
+    out=s1
+    for x in segs:
+        if len(out)+1+len(x)<=155: out+=" "+x
+    return out if len(out)<=160 else out[:157].rsplit(" ",1)[0]+"..."
 def fdate(l,d):
     y,m,dd=map(int,d[:10].split("-")); return f"{dd} {MON[l][m-1]} {y}"
 def price_num(lb):
@@ -263,7 +281,7 @@ def ev_page(l,e):
     img=pu or f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"
     if not re.match(r"https?://",img): img=BASE+"/"+img.lstrip("/")  # og:image dan JSON-LD wajib URL absolut
     ogimg=f"{BASE}/og/{e['slug']}.jpg" if e['slug'] in OG_OK else f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png"  # pratinjau medsos: kartu 1200x630 di domain sendiri
-    ogd=(fday(l,sd)+(' – '+fdate(l,ed) if ed!=sd else '')+(' · '+where if where else '')+'. '+desc)[:200]
+    ogd=meta_desc(l,e,title,sd,ed,where,past)
     ogm=(f'<meta property="og:type" content="website"><meta property="og:site_name" content="GoWithDME"><meta property="og:locale" content="{"id_ID" if l=="id" else "en_US"}">'
          f'<meta property="og:url" content="{u}"><meta property="og:title" content="{esc(stitle)}"><meta property="og:description" content="{esc(ogd)}">'
          f'<meta property="og:image" content="{esc(ogimg)}"><meta property="og:image:secure_url" content="{esc(ogimg)}"><meta property="og:image:type" content="image/{"jpeg" if e["slug"] in OG_OK else "png"}">'
@@ -301,7 +319,7 @@ def ev_page(l,e):
     relh=(f'<h2>{G["related"]}</h2><ul>'+"".join(f'<li><a href="{esc(x["slug"])}">{esc(x["title"])}</a> <small>{esc(fdate(l,x["event_date"]))}{(" · "+esc(x["city"])) if x.get("city") else ""} · {esc(" · ".join(why))}</small></li>' for x,why in rel)+f'</ul><p><a href="../event">{G["rel_more"]}</a></p>') if rel else f'<h2>{G["related"]}</h2><p>{G["rel_none"]}</p><p><a href="../event">{G["rel_more"]}</a></p>'
     return f"""<!DOCTYPE html>
 <html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(stitle)} | GoWithDME</title><meta name="description" content="{esc((fday(l,sd)+(' – '+fdate(l,ed) if ed!=sd else '')+' · '+where+'. '+desc)[:300])}">
+<title>{esc(title_tag(stitle))}</title><meta name="description" content="{esc(ogd)}">
 <link rel="canonical" href="{u}"><link rel="alternate" hreflang="{l}" href="{u}"><link rel="alternate" hreflang="{o}" href="{BASE}/{o}/e/{e['slug']}"><link rel="alternate" hreflang="x-default" href="{BASE}/id/e/{e['slug']}">
 {ogm}
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
