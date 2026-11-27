@@ -64,6 +64,12 @@ def og_block(BASE,l,url,title,desc,img):
             f'<meta property="og:image" content="{img}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
             f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{q(title)}"><meta name="twitter:description" content="{q(desc)}"><meta name="twitter:image" content="{img}">')
 
+def ascii_safe(t):
+    """GitHub Pages mengirim .txt tanpa charset, sehingga browser/crawler bisa salah baca UTF-8 (tanda hubung jadi 'â€”'). Jadi llms.txt dibuat ASCII murni."""
+    import unicodedata
+    t=t.translate({0x2014:"-",0x2013:"-",0x2018:"'",0x2019:"'",0x201c:'"',0x201d:'"',0x00b7:"-",0x2026:"..."})
+    return unicodedata.normalize("NFKD",t).encode("ascii","ignore").decode()
+
 def llms_txt(BASE,owner,email,events,fmt_date,title_of,pages):
     """/llms.txt: ringkasan situs untuk asisten AI (usulan llmstxt.org). Dibuat ulang tiap build, jadi daftar event selalu segar."""
     L=[]
@@ -100,4 +106,4 @@ def llms_txt(BASE,owner,email,events,fmt_date,title_of,pages):
     L.append(f"- [Sitemap]({BASE}/sitemap.xml)")
     L.append(f"- [Event data (JSON)]({BASE}/data/events.json)")
     L.append("")
-    return "\n".join(L)
+    return ascii_safe("\n".join(L))
