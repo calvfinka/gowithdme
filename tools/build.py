@@ -4,6 +4,7 @@ import os,re,json,sys,time
 sys.path.insert(0,os.path.dirname(__file__))
 from strings import S,J,PROV_EN
 import gen_og  # kartu pratinjau /og/<slug>.jpg untuk og:image
+import seo  # data terstruktur (JSON-LD), robots, OG: dipakai di bagian "lapisan SEO" di bawah
 import gen_dsk  # css/dsk.css dan css/dsk-b.css (mode "situs desktop" di HP) dibuat dari css lain
 ROOT=os.path.join(os.path.dirname(__file__),"..")
 # Alamat situs untuk canonical, hreflang, dan sitemap. Default: domain utama gowithdme.com.
@@ -99,11 +100,6 @@ for l in LANGS:
         hl="" if p in NOINDEX else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
             +"".join(f'<link rel="alternate" hreflang="{x}" href="{BASE}/{x}/{path(p)}">' for x in LANGS)
             +f'<link rel="alternate" hreflang="x-default" href="{BASE}/id/{path(p)}">')
-        if p=="index":
-            ld={"@context":"https://schema.org","@graph":[
-                {"@type":"WebSite","name":"GoWithDME","url":f"{BASE}/{l}/","inLanguage":l},
-                {"@type":"Organization","name":"GoWithDME","url":f"{BASE}/{l}/","logo":f"{BASE}/assets/icon-512.png","founder":{"@type":"Person","name":OWNER_NAME,"sameAs":[u for _,u in OWNER_SOCIAL]}}]}
-            hl+='<script type="application/ld+json">'+json.dumps(ld,ensure_ascii=False).replace("</","<\\/")+'</script>'
         h=h.replace("{{lang}}",l).replace("{{switch}}",sw).replace("{{hreflang}}",hl).replace("{{og_img}}",f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png")
         h=re.sub(r"\{\{(\w+)\}\}",lambda m:S[m.group(1)][IDX[l]],h)
         assert "{{" not in h,(l,p)
@@ -275,6 +271,7 @@ def ev_page(l,e):
     qa=guide.faq(l,e,title,when_txt,where,past)
     faq=f'<h2>{t["faq"]}</h2>'+"".join(f"<h3>{esc(q)}</h3><p>{esc(a)}</p>" for q,a in qa)
     faqld={"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in qa]}
+    crumb={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":i+1,"name":n,"item":u2} for i,(n,u2) in enumerate(((seo.CRUMB[l],f"{BASE}/{l}/"),(t["all"],f"{BASE}/{l}/event"),(title,u)))]}
     rp="".join(f"<p>{esc(x)}</p>" for x in guide.route(l,e,where))
     routeh=(f'<h2>{G["route"]}</h2>{rp}<p><a class="b l" href="{esc(guide.maps_dir(e))}" rel="noopener nofollow" target="_blank">{G["maps"]}</a></p>') if (e.get("venue") or e.get("city")) else ""
     tipsh="" if past else f'<h2>{G["tips"]}</h2><ul>'+"".join(f"<li>{esc(x)}</li>" for x in guide.tips(l,e))+"</ul>"
@@ -287,7 +284,7 @@ def ev_page(l,e):
 {ogm}
 <meta name="theme-color" content="#0E5A46"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <style>body{{font:16px/1.6 Inter,system-ui,sans-serif;margin:0;background:#f6f7f6;color:#14201b}}main{{max-width:720px;margin:0 auto;padding:20px 16px 48px}}img{{max-width:100%;border-radius:14px;display:block}}h1{{font-size:1.6rem;line-height:1.25;margin:16px 0 4px}}.c{{color:#0E5A46;font-weight:600;font-size:.9rem}}dl{{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:16px 0}}dt{{font-weight:600}}dd{{margin:0}}.b{{display:inline-block;background:#0E5A46;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin:4px 6px 4px 0}}.b.l{{background:#fff;color:#0E5A46;border:1px solid #0E5A46}}small{{color:#5b6a63}}.end{{background:#fff3cd;color:#5c4400;padding:10px 14px;border-radius:10px}}h2{{font-size:1.15rem;margin:28px 0 6px}}h3{{font-size:1rem;margin:14px 0 0}}h3+p{{margin:2px 0 0}}main a:not(.b){{color:#0E5A46;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(14,90,70,.35)}}main a:not(.b):visited{{color:#0E5A46}}main a:not(.b):hover{{text-decoration-color:currentColor}}@media(prefers-color-scheme:dark){{body{{background:#101613;color:#e8efeb}}.b.l{{background:transparent;color:#7fd1b4;border-color:#7fd1b4}}.c,main a:not(.b),main a:not(.b):visited{{color:#7fd1b4}}main a:not(.b){{text-decoration-color:rgba(127,209,180,.4)}}small{{color:#9bb0a6}}}}</style>
-{ldj(ld)}{ldj(faqld)}</head><body><main>
+{ldj(ld)}{ldj(faqld)}{ldj(crumb)}</head><body><main>
 <nav><a href="../">GoWithDME</a> › <a href="../event">{t["all"]}</a></nav>
 {f'<img src="{esc(pimg)}" alt="{esc(title)}" loading="eager">' if pimg else ""}{''.join(f'<img src="{esc(x)}" alt="{esc(title)}" loading="lazy">' for x in exs)}
 <div class="c">{esc(cat)}{(" · "+esc(e["genre"])) if e.get("genre") else ""}</div>
@@ -305,6 +302,27 @@ for l in LANGS:
     for f in os.listdir(f"{ROOT}/{l}/e"): os.remove(f"{ROOT}/{l}/e/{f}")
     for e in EV: open(f"{ROOT}/{l}/e/{e['slug']}.html","w",encoding="utf-8").write(ev_page(l,e))
     AP.tulis(ROOT,l,ARTISTS,ARTIS_BASE,ARTIS_PENGALIH)  # halaman lama /<bahasa>/a/... -> pengalih ke artis.gowithdme.com
+# ---- lapisan SEO (tools/seo.py): JSON-LD + meta robots + OG untuk halaman publik (NOINDEX tetap polos) ----
+# Dijalankan setelah EV dimuat, karena ItemList event mendatang butuh daftar event. Membaca file yang baru ditulis loop halaman di atas.
+SEO_EMAIL="halo@gowithdme.com"; SEO_SAME=["https://instagram.com/gowithdme"]
+UPCOMING=sorted([e for e in EV if (e.get("end_date") or e["event_date"])[:10]>=_NOW],key=lambda e:e["event_date"])
+for l in LANGS:
+    for p in PAGES:
+        if p in NOINDEX: continue
+        f=f"{ROOT}/{l}/{p}.html"; h=open(f,encoding="utf-8").read()
+        tm=re.search(r"<title>(.*?)</title>",h,re.S); dm=re.search(r'<meta name="description" content="([^"]*)"',h)
+        title=_h.unescape(tm.group(1)) if tm else "GoWithDME"; desc=_h.unescape(dm.group(1)) if dm else ""
+        pu=f"{BASE}/{l}/{path(p)}"; g=[]
+        if p in ("index","about","copyright"): g+=seo.entity(BASE,l,OWNER_NAME,OWNER_SOCIAL,SEO_EMAIL,SEO_SAME)
+        main=None
+        if p=="bantuan":
+            g.append(seo.faq_node(pu,[(plain(S[f"fq{n}_q"][IDX[l]]),plain(S[f"fq{n}_a"][IDX[l]])) for n in range(1,14)])); main={"@id":pu+"#faq"}
+        g=seo.webpage(BASE,l,p,pu,title,desc,"AboutPage" if p=="about" else "WebPage",main)+g
+        if p=="event": g.append(seo.event_itemlist(BASE,l,pu,UPCOMING,lambda e:(e.get("title_en") if l=="en" and e.get("title_en") else e["title"])))
+        blk=seo.ldj({"@context":"https://schema.org","@graph":g})+seo.ROBOTS_META
+        if 'property="og:title"' not in h: blk+=seo.og_block(BASE,l,pu,title,desc,f"{BASE}/assets/og-image{'' if l=='id' else '-en'}.png")
+        assert "</head>" in h,(l,p)
+        open(f,"w",encoding="utf-8").write(h.replace("</head>",blk+"</head>",1))
 # ---- halaman template pindah ke subdomain: pengalih supaya tautan lama tidak 404 (301 asli diatur di Cloudflare) ----
 for _f,_to in (("template.html","https://template.gowithdme.com/"),("id/template.html","https://template.gowithdme.com/"),("en/template.html","https://template.gowithdme.com/en/")):
     open(f"{ROOT}/{_f}","w",encoding="utf-8").write('<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
