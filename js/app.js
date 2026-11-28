@@ -220,6 +220,7 @@ function render(){
     if(zero&&!cta){cta=document.createElement("a");cta.className="stat cta";cta.href="event";cta.innerHTML="<b></b><span></span>";bx.appendChild(cta)}
     if(cta){cta.hidden=!zero;cta.firstChild.textContent=tr("st_cta_h");cta.lastChild.textContent=tr("st_cta_p")}}
   $("sNext").textContent=live.length?tr("st_now"):up.length?(function(n){return tr(n===1?"st_day1":"st_days",{n:n})})(Math.min.apply(null,up.map(function(e){return status(e).n}))):"-";
+  var sLb=$("sNext").nextElementSibling;if(sLb)sLb.textContent=tr(live.length?"st_livenow":"st_until");
   nav();$("city").value=state.city;$("cnt").textContent=tr("found",{n:l.length});
   $("vGrid").setAttribute("aria-pressed",state.view==="grid");$("vList").setAttribute("aria-pressed",state.view==="list");
   $("list").innerHTML=l.length?group(l):'<div class="group"><div class="empty"><b>'+(state.cat==="tersimpan"?tr("empty_saved"):(MODE==="home"?tr("empty_home"):tr("empty")))+'</b>'+(state.cat==="tersimpan"?'':MODE==="home"?'<a class="btn line" href="event">'+tr("see_all")+'</a>':'<button class="btn line" id="reset2" type="button">'+tr("reset_f")+'</button>')+'</div></div>';

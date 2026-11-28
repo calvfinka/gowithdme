@@ -115,7 +115,7 @@ S = {
 "nav_aria": ("Navigasi", "Navigation"), "nav_browse": ("Jelajah", "Browse"), "nav_city": ("Kota", "City"), "nav_mine": ("Milikmu", "Yours"),
 "now_aria": ("Tanggal, waktu, dan cuaca", "Date, time, and weather"), "aria_kind": ("Jenis event", "Event type"),
 "aria_view": ("Tampilan", "View"), "v_grid": ("Tampilan kisi", "Grid view"), "v_list": ("Tampilan daftar", "List view"),
-"st_week": ('orang cari teman', 'people looking for company'), "st_next": ("sampai event pertama", "until the first event"),
+"st_week": ('orang cari teman', 'people looking for company'),
 "tick_h": ("Akan datang", "Coming up"), "tick_aria": ("Event yang akan datang (berjalan otomatis, arahkan atau sentuh untuk menjeda)", "Upcoming events (scrolls automatically, hover or touch to pause)"),
 "lg_rec_h": ("Buat password baru", "Set a new password"),
 "lg_rec_p": ("Tautan reset berhasil. Isi password baru untuk akunmu.", "Reset link accepted. Enter a new password for your account."),
@@ -828,7 +828,7 @@ PORTAL_PRO = {
 "rail_pulse_h": ("Denyut Wilayah Indonesia", "Indonesia Regional Pulse"),
 "rail_pulse_p": ("Sebaran event aktif lintas pulau & akses cepat kota sekitar.", "Active event density across regions and nearby city jumps."),
 "rail_near_h": ("Kota Sekitar {c}", "Near {c}"),
-"rail_sponsor_h": ("Mitra & Monetisasi", "Partners & Monetize"),
+"rail_sponsor_h": ("Mitra", "Partners"),
 "l_host_fee": ("Jasa Host / Admin (%)", "Host / Guide Fee (%)"),
 "host_fee_note": ("Sudah termasuk cadangan {a}% + jasa host {h}% (Total Rp{g})", "Includes {a}% buffer + {h}% host fee (Grand total Rp{g})"),
 "sb_f5": ("5. Paket Promosi & Jangkauan (Opsional)", "5. Promotion & Reach Tier (Optional)"),
@@ -1105,6 +1105,9 @@ _STAT={
 "sx_p_stats": ("Statistik konser", "Concert stats"),
 }
 S.update(_STAT); J.update(_STAT)
+# label kartu statistik Beranda (kartu ke-4): "Sekarang" + "event sedang berlangsung", atau "3 hari" + "sampai event terdekat"
+_HS={"st_until":("sampai event terdekat","until the next event"),"st_livenow":("event sedang berlangsung","events happening now")}
+S.update(_HS); J.update(_HS)
 
 N = {
 "ph_email": ("nama@email.com", "name@email.com"),
