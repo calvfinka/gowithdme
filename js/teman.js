@@ -88,7 +88,7 @@ function card(i){var me=st.me,mine=!!i.is_mine,m=st.mem.filter(function(z){retur
   var ev=i.event_id&&i.event_title?'<div class="meta">'+ic("ticket")+' <a class="lnk" href="event?e='+encodeURIComponent(i.event_slug||i.event_id)+'">'+esc(i.event_title)+'</a></div>':"";
   return'<div class="aj tm-card'+(st.focus===i.id?' focus':'')+'" id="tm-'+esc(i.id)+'"><div class="tm-bs">'+badges(i)+'</div><b>'+esc(i.title)+'</b>'+ev+
    '<div class="meta">'+ic("pin")+' '+esc(placeTxt(i))+(i.when_date?' · '+ic("cal")+' '+esc(dfmt(i.when_date)):'')+'</div>'+
-   '<div class="meta">'+tr("aj_by")+' '+host+' · '+i.filled+'/'+i.capacity+' '+tr("aj_people")+(i.meeting_point?' · '+esc(i.meeting_point):'')+(i.cost_share?' · '+esc(i.cost_share):'')+'</div>'+
+   '<div class="meta">'+tr("aj_by")+' '+host+' · '+i.filled+'/'+i.capacity+' '+tr("aj_people")+(i.meeting_point?' · '+tr("aj_meet_lbl")+': '+esc(i.meeting_point):'')+(i.cost_share?' · '+tr("aj_cost_lbl")+': '+esc(i.cost_share):'')+'</div>'+
    (i.note?'<p>'+esc(i.note)+'</p>':'')+
    '<div class="row">'+wl+a+'<button class="btn line sm" type="button" data-x="share" data-i="'+i.id+'">'+tr("share")+'</button>'+rep+'</div>'+rq+'</div>'}
 

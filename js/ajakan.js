@@ -56,7 +56,7 @@ function card(e,me,i,M,C){
    '<div class="g2"><label class="f">'+tr("aj_f_cap")+'<input name="c" type="number" min="2" max="20" required value="'+i.capacity+'"></label><label class="f">'+tr("aj_f_cost")+'<input name="p" maxlength="60" value="'+esc(i.cost_share||"")+'"></label></div>'+
    '<label class="f">'+tr("aj_f_note")+'<textarea name="n" maxlength="500">'+esc(i.note||"")+'</textarea></label><button class="btn" type="submit">'+tr("aj_f_save")+'</button></form>':"";
   return'<div class="aj"><b>'+esc(i.title)+'</b><div class="meta">'+tr("aj_by")+' '+(i.host_ref?'<a class="lnk" href="profil?u='+encodeURIComponent(i.host_ref)+'">':'')+esc(i.host_name||tr("aj_user"))+(i.host_verified?" ✓":"")+(i.host_ref?'</a>':'')+' · '+i.filled+'/'+i.capacity+' '+tr("aj_people")+
-   (i.meeting_point?' · '+esc(i.meeting_point):'')+(i.cost_share?' · '+esc(i.cost_share):'')+'</div>'+(i.note?'<p>'+esc(i.note)+'</p>':'')+
+   (i.meeting_point?' · '+tr("aj_meet_lbl")+': '+esc(i.meeting_point):'')+(i.cost_share?' · '+tr("aj_cost_lbl")+': '+esc(i.cost_share):'')+'</div>'+(i.note?'<p>'+esc(i.note)+'</p>':'')+
    '<div class="row">'+wl+a+'<button class="btn line sm ajsh" type="button" data-x="share" data-i="'+i.id+'">'+tr("share")+'</button>'+rep+'</div>'+rq+ed+'</div>'}
 
 function draw(e,box,me,L,M,C,soc,mineInt){
