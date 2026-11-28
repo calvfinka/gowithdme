@@ -1039,6 +1039,11 @@ _TPL = {"f_template": ("Template", "Templates"),
 "tpl_og": ("https://gowithdme.com/assets/og-template.png", "https://gowithdme.com/assets/og-template-en.png")}
 S.update(_TPL); J.update(_TPL)
 
+# ---- Footer mini (kunci ft_* terpisah supaya menu samping tidak ikut berubah) ----
+_FOOT = {"f_docs": ("Docs", "Docs"), "f_sitemap": ("Sitemap", "Sitemap"),
+"ft_terms": ("Syarat", "Terms &amp; Conditions"), "ft_privacy": ("Privasi", "Privacy Policy")}
+S.update(_FOOT)
+
 # ---- Daftar ajakan kosong: selalu ada jalan berikutnya (js/empty-core.js + js/teman.js) ----
 _EMPTY = {
 "ct_e_all": ("Lihat semua kota", "See all cities"),
