@@ -1070,8 +1070,8 @@ S.update(_SUG); J.update(_SUG)
 
 # ---- Masa percobaan akun baru: galat ramah + catatan awal (js/probation-core.js) ----
 _PROB = {
-"pb_msg": ("Akun baru dibatasi {n} {what} selama 48 jam pertama. Coba lagi besok. {tip}", "New accounts are limited to {n} {what} during the first 48 hours. Try again tomorrow. {tip}"),
-"pb_note": ("Akun baru punya batas awal selama 48 jam pertama: {n} {what}.", "New accounts have a starting limit for the first 48 hours: {n} {what}."),
+"pb_msg": ("Akun baru dibatasi {n} {what}. Coba lagi besok. {tip}", "New accounts are limited to {n} {what}. Try again tomorrow. {tip}"),
+"pb_note": ("Akun baru punya batas awal: {n} {what}.", "New accounts have a starting limit: {n} {what}."),
 "pb_w_inv": ("ajakan baru per hari", "new invites per day"),
 "pb_w_post": ("kiriman forum per hari", "forum posts per day"),
 "pb_w_reply": ("balasan forum per hari", "forum replies per day"),
