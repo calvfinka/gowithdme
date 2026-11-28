@@ -17,7 +17,7 @@ OWNER_SOCIAL=[("Blog","https://calvfinka.blogspot.com"),("GitHub","https://githu
 _ol={"id":"Sosial media","en":"Social"}
 S["owner_links"]=tuple((f'<p>{_ol[x]}: '+" · ".join(f'<a href="{u}" rel="me noopener" target="_blank">{n}</a>' for n,u in OWNER_SOCIAL)+"</p>") for x in ("id","en"))
 LANGS=["id","en"]; IDX={"id":0,"en":1}
-PAGES=["index","event","gunung","login","privacy","terms","copyright","template","about","ajukan","komunitas","teman","profil","bantuan","pesan","tiket"]
+PAGES=["index","event","gunung","login","privacy","terms","copyright","about","ajukan","komunitas","teman","profil","bantuan","pesan","tiket"]
 # halaman /statistik hanya ada bila data/statistik.json berstatus aktif (sakelar 'publik' di Supabase); selain itu tidak dibangun dan file lamanya dihapus
 try: STAT_ON=bool(json.load(open(ROOT+"/data/statistik.json",encoding="utf-8")).get("aktif"))
 except Exception: STAT_ON=False
@@ -94,7 +94,7 @@ for l in LANGS:
         h=h.replace("{{search}}",inc("{{>search}}"))
         h=h.replace("{{stat_link}}",STAT_LINK if STAT_ON else "")
         h=h.replace("{{pgshare}}",'<button class="mm-share" id="pgShare" type="button"><svg class="i" aria-hidden="true"><use href="#ia-share"/></svg>{{sh_aria}}</button>' if p in APP else "")
-        if p in("privacy","terms","copyright","template","about"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
+        if p in("privacy","terms","copyright","about"): h=h.replace("{{body}}",open(f"{ROOT}/src/{p}.{l}.body.html",encoding="utf-8").read())
         sw=f'<a class="lang" href="../{o}/{path(p)}" data-sw="{o}" hreflang="{o}" lang="{o}" aria-label="{S["lang_label"][IDX[l]]}">{o.upper()}</a>'
         hl="" if p in NOINDEX else (f'<link rel="canonical" href="{BASE}/{l}/{path(p)}">'
             +"".join(f'<link rel="alternate" hreflang="{x}" href="{BASE}/{x}/{path(p)}">' for x in LANGS)
@@ -305,6 +305,11 @@ for l in LANGS:
     for f in os.listdir(f"{ROOT}/{l}/e"): os.remove(f"{ROOT}/{l}/e/{f}")
     for e in EV: open(f"{ROOT}/{l}/e/{e['slug']}.html","w",encoding="utf-8").write(ev_page(l,e))
     AP.tulis(ROOT,l,ARTISTS,ARTIS_BASE,ARTIS_PENGALIH)  # halaman lama /<bahasa>/a/... -> pengalih ke artis.gowithdme.com
+# ---- halaman template pindah ke subdomain: pengalih supaya tautan lama tidak 404 (301 asli diatur di Cloudflare) ----
+for _f,_to in (("template.html","https://template.gowithdme.com/"),("id/template.html","https://template.gowithdme.com/"),("en/template.html","https://template.gowithdme.com/en/")):
+    open(f"{ROOT}/{_f}","w",encoding="utf-8").write('<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+      f'<title>Template pindah | GoWithDME</title><link rel="canonical" href="{_to}"><script>location.replace("{_to}"+location.search+location.hash)</script>'
+      f'<meta http-equiv="refresh" content="0; url={_to}"></head><body><p>Halaman template sudah pindah ke <a href="{_to}">{_to}</a>.</p></body></html>\n')
 # ---- sitemap.xml dan robots.txt (ikut BASE, jadi tidak perlu diedit tangan saat pindah domain) ----
 from urllib.parse import urlparse
 pub=[p for p in PAGES if p not in NOINDEX]
@@ -313,7 +318,7 @@ rows=[]
 for l in LANGS:
     for p in pub:
         alt="".join(f'<xhtml:link rel="alternate" hreflang="{x}" href="{url(x,p)}"/>' for x in LANGS)
-        rows.append(f"<url><loc>{url(l,p)}</loc>"+("<lastmod>2026-11-21</lastmod>" if p=="template" else "@@LM@@")+f"{alt}</url>")
+        rows.append(f"<url><loc>{url(l,p)}</loc>"+"@@LM@@"+f"{alt}</url>")
 # ---- blog: sudah pindah ke repo sendiri (blog.gowithdme.com). Di sini data/posts.json hanya dipakai untuk lastmod halaman inti
 #      dan cadangan tab "Panduan & Komunitas" di beranda; halaman blog/ di repo ini tinggal pengalih (lihat blog/*.html). ----
 POSTS=json.load(open(ROOT+"/data/posts.json",encoding="utf-8")) if os.path.exists(ROOT+"/data/posts.json") else []

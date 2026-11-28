@@ -1031,12 +1031,7 @@ _PWA = {"nv_install": ("Pasang aplikasi", "Install app")}
 S.update(_PWA); J.update(_PWA)
 
 # ---- Halaman Template gratis ----
-_TPL = {"f_template": ("Template", "Templates"),
-"tpl_title": ("Template Blogger Gratis GoWithDME Majalah | Unduh + Demo", "Free Blogger Magazine Template | GoWithDME, Download + Demo"),
-"tpl_desc": ("Template Blogger gratis bergaya majalah untuk blog berita dan opini. Mode gelap, dua bahasa, Mode Atur. Unduh XML gratis dan lihat demo.", "Free magazine-style Blogger template for news and opinion blogs. Dark mode, two languages, Setup Mode. Download the XML free and see the demo."),
-"tpl_ogt": ("Template Blogger Gratis: GoWithDME Majalah", "Free Blogger Template: GoWithDME Magazine"),
-"tpl_loc": ("id_ID", "en_US"),
-"tpl_og": ("https://gowithdme.com/assets/og-template.png", "https://gowithdme.com/assets/og-template-en.png")}
+_TPL = {"f_template": ("Template", "Templates")}
 S.update(_TPL); J.update(_TPL)
 
 # ---- Footer mini (kunci ft_* terpisah supaya menu samping tidak ikut berubah) ----
