@@ -47,9 +47,9 @@ test("isNew: dalam 48 jam benar, lewat salah, tanggal tak valid salah, masa depa
   assert.equal(P.isNew(null, NOW), false);
   assert.equal(P.isNew({ created_at: new Date(NOW + 9e6).toISOString() }, NOW), false);
 });
-test("note: hanya untuk akun baru dan kegiatan yang punya batas", () => {
+test("note: dinonaktifkan, selalu kosong (batas 48 jam di server sudah dicabut)", () => {
   const nu = { created_at: new Date(NOW - 36e5).toISOString() }, old = { created_at: new Date(NOW - 99 * 36e5).toISOString() };
-  assert.match(P.note("inv", nu, NOW), /^<p class="meta pb-note">pb_note/);
+  assert.equal(P.note("inv", nu, NOW), "");
   assert.equal(P.note("inv", old, NOW), "");
   assert.equal(P.note("tidakada", nu, NOW), "");
   assert.equal(P.note("inv", null, NOW), "");

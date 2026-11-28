@@ -46,12 +46,9 @@
 
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
-  /* Catatan satu baris di atas formulir untuk akun baru; string kosong bila akun sudah lewat 48 jam. */
-  function note(kind, user, now){
-    if (!LIMITS[kind] || !isNew(user, now)) return "";
-    var tr = T();
-    return '<p class="meta pb-note">' + esc(tr("pb_note", { n: LIMITS[kind], what: tr("pb_w_" + kind) })) + "</p>";
-  }
+  /* Catatan awal di atas formulir dinonaktifkan: batas 48 jam di server sudah dicabut (supabase/batal_pengguna_baru.sql).
+     Selalu mengembalikan string kosong supaya pemanggil di ajakan.js, komunitas.js, dan teman.js tidak perlu diubah. */
+  function note(){ return ""; }
 
   return { parse: parse, isNew: isNew, errText: errText, note: note, LIMITS: LIMITS, HOURS: HOURS };
 });
